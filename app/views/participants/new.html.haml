@@ -1,0 +1,8 @@
+=form_for @participant do |f|
+  =f.label :first_name
+  =f.text_field  :first_name
+  =f.label :midle_name
+  =f.text_field  :middle_name
+  =f.label :last_name
+  =f.text_field  :last_name
+  =f.button "Create",:class=>"btn btn-mini btn-success"

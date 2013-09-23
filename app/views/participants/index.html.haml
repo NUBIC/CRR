@@ -1,0 +1,13 @@
+.row-fluid
+  =link_to "Add Participant",new_participant_path,:class=>"btn btn-small btn-primary"
+.row-fluid
+  %table.table.table-condensed.table-bordered.table-striped{:id=>'participant_list'}
+    %thead
+      %tr
+        - %w(Name Last\ Update).each do |header|
+          %th= header
+    %tbody
+      - @participants.each do |participant|
+        %tr
+          %td=participant.name
+          %td=participant.updated_at

@@ -1,0 +1,39 @@
+.DS_Store
+*.swo
+*.swp
+*.log
+log/*.*
+db/*.sqlite3
+db/*.sqlite3-journal
+tmp/*
+public/uploads/*
+public/results/*
+vendor/bundle/*
+app/stylesheets/.sass-cache/*
+public/javascripts/cache/*.js
+public/stylesheets/compiled/*.css
+public/assets/*
+rerun.txt
+coverage.data
+coverage/*
+webrat-*.html
+lib/tasks/alz_enotis_import/
+
+# to get passenger working in development http://markmail.org/message/b77hluatbr7hb3zu
+config/setup_load_paths.rb
+
+# Bundler
+.bundle/*
+lock/
+
+#cache
+.sass-cache/*
+
+# db/schema.rb
+# if schema.rb isn't included in source control, it is generated on the fly on the server without group write permissions, preventing other developers from running migrations on the same deployment
+# see also:
+#   http://www.pathf.com/blogs/2008/07/resolved-should-schemarb-be-included-in-your-source-control/
+#   http://railscasts.com/episodes/96-git-on-rails comment #22
+
+# pow
+.powrc

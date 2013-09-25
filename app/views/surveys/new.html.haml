@@ -1,0 +1,13 @@
+=form_for @survey , :html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
+  .row-fluid
+    =f.label :title
+    =f.text_field :title
+    =f.label :description
+    =f.text_area :description,:class=>"wysiwyg",:rows=>3
+  .row-fluid
+    .btn-group
+      =f.button "update",:class=>"btn btn-mini btn-success"
+      =link_to 'cancel',surveys_path,"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
+
+
+

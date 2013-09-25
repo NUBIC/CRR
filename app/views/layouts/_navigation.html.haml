@@ -1,4 +1,11 @@
 %ul.nav
   %li=link_to 'Participants',participants_path
+  %li.divider-vertical
+  %li.dropdown
+    =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do 
+      Settings
+      %b.caret
+    %ul.dropdown-menu
+      %li=link_to "Instruments",surveys_path
 
 

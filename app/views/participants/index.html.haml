@@ -9,5 +9,5 @@
     %tbody
       - @participants.each do |participant|
         %tr
-          %td=participant.name
+          %td=link_to participant.name, participant
           %td=participant.updated_at

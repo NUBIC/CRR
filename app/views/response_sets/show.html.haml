@@ -1,0 +1,33 @@
+%script{:type => "text/javascript"}
+  $(document).ready(function(){
+  $('#survey_form :input').attr('disabled', true);
+  $('#survey_form .add_row').remove()
+  $('#survey_form .disabled').remove()
+  $('#survey_form input[type=text], textarea').each(function() {
+  if ($(this).val())
+  $(this).replaceWith($(this).val())
+  else
+  $(this).replaceWith("--")
+  });
+  });
+
+.row-fluid
+  .span12
+    .alert.alert-info.text-center
+      -if @response_set.involvement.name.eql?("(no name)") and !@response_set.involvement.case_number.blank?
+        =@response_set.involvement.case_number
+      -else
+        =@response_set.involvement.name
+.row-fluid
+  .span12
+    %h4.text-center= @survey.title
+.row.fluid
+  - unless (types = flash.keys.select{|k| [:notice, :error, :warning].include?(k)}).blank?
+    .surveyor_flash
+      = flash_messages(types)
+      .close
+  = semantic_form_for(@response_set, :as => :r, :url => update_my_survey_path, :html => {:method => :put, :id => "survey_form", :class => @survey.custom_class}) do |f|
+    = hidden_field_tag :surveyor_javascript_enabled, true
+    -@survey.sections.each do |section|
+      - @section = section
+      = render "/partials/view_section", :f => f

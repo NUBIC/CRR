@@ -1,0 +1,21 @@
+.span11.offset1
+  .row-fluid
+    =answer.text
+  .row-fluid
+    .span3
+      ="reference identifier #{answer.reference_identifier}"
+    .span2
+      ="weight: #{answer.weight}"
+    .span3
+      ="display order: #{answer.display_order}"
+    -unless answer.question.survey_section.survey.active?
+      .span3
+        .span2
+          =link_to "Edit" ,edit_answer_path(answer),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#answer_#{answer.id}"
+        .span2
+          =form_tag(answer_path(answer),:method=>"delete",:class=>"ajax-form","data-target"=>"#q_#{answer.question.id}") do
+            =submit_tag('Delete',:class=>"btn btn-mini btn-danger")
+      
+ 
+  
+

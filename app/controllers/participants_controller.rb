@@ -16,6 +16,11 @@ class ParticipantsController < ApplicationController
     end
   end
 
+  def show
+    @participant = Participant.find(params[:id])
+
+  end
+
   def edit
     @participant = Participant.find(params[:id])
     respond_to do |format|

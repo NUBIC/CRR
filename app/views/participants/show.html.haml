@@ -1,0 +1,12 @@
+.alert.alert-success
+  %h4=@participant.name
+%ul.nav.nav-tabs
+  %li{:class=>'active'}=link_to 'Instruments','#intruments',"data-toggle"=>'tab'
+  %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
+  %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
+  %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
+.tab-content
+  #intruments.tab-pane
+  #studies.tab-pane
+  #relationships.tab-pane
+  #contact_log.tab-pane

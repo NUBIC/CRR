@@ -1,0 +1,34 @@
+%h5="Text: #{question.text}"
+.row-fluid
+  %h6=" Options"
+  .row-fluid
+    .span3
+      ="Response Type: #{question.response_type}"
+    -if question.response_type.eql?("choice")
+      .span3
+        ="Pick: #{question.pick}"
+    .span3
+      ="Variable Name: #{question.reference_identifier}"
+    .span3
+      ="Mandatory: #{question.is_mandatory? ? "Yes" : "No"}"
+  .row-fluid
+    .span3
+      ="Dispaly Order: #{question.display_order}"
+  -unless question.survey_section.survey.active?
+    .row-fluid
+      .span2
+        =link_to "edit question" ,edit_question_path(question),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#q_#{question.id}"
+      .span1
+        =form_tag(question_path(question),:method=>"delete",:class=>"ajax-form","data-target"=>"#section_#{question.survey_section.id}") do
+          =submit_tag('Delete',:class=>"btn btn-mini btn-danger")
+-if ["single_choice","multiple_choice"].include?question.response_type
+  %h6 Answers
+  .row-fluid
+    -question.answers.each do |a|
+      .row-fluid{:id=>"answer_#{a.id}"}
+        =render :partial=>"answers/answer",locals: {answer: a}
+  -unless question.survey_section.survey.active?
+    =link_to "Add Answer",new_answer_path(:question_id=>question.id),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#q_#{question.id}_new_answer"
+    .row-fluid{:id=>"q_#{question.id}_new_answer"}
+%hr
+

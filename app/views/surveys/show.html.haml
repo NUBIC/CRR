@@ -1,0 +1,19 @@
+.row-fluid
+  .span12
+    %h2="Title: #{@survey.title}"
+  -if @survey.active?
+    =form_for @survey,:url=>deactivate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+      =f.submit "Deactivate",:class=>"btn btn-mini btn-danger"
+  -else
+    =form_for @survey,:url=>activate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+      =f.submit "Activate",:class=>"btn btn-mini btn-success"
+    %hr
+-@survey.sections.each do |s|
+  .span11.offset1
+    .row-fluid{:id=>"section_#{s.id}"}
+      =render :partial=>"sections/section",locals: {section: s}
+    %hr
+-unless @survey.active?
+  .row-fluid{:id=>"new_section"}
+    =link_to "Add Section",new_section_path(:survey_id=>@survey.id),:class=>"btn btn-small btn-primary","data-async"=>true,"data-target"=>"#new_section"
+      

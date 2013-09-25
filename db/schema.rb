@@ -11,7 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130923071115) do
+ActiveRecord::Schema.define(version: 20130925111114) do
+
+  create_table "answers", force: true do |t|
+    t.integer  "question_id"
+    t.text     "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "contact_logs", force: true do |t|
     t.integer  "participant_id"
@@ -36,6 +43,42 @@ ActiveRecord::Schema.define(version: 20130923071115) do
     t.string   "state"
     t.string   "zip"
     t.text     "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "questions", force: true do |t|
+    t.integer  "survey_id"
+    t.text     "text"
+    t.string   "reference"
+    t.boolean  "is_mandatory"
+    t.string   "response_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "response_sets", force: true do |t|
+    t.integer  "survey_id"
+    t.integer  "participant_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "responses", force: true do |t|
+    t.integer  "question_id"
+    t.integer  "answer_id"
+    t.text     "text"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sections", force: true do |t|
+  end
+
+  create_table "surveys", force: true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.text     "state"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

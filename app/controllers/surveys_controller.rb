@@ -33,7 +33,7 @@ class SurveysController < ApplicationController
 
   def update
     @survey = Survey.find(params[:id])
-    saved = @survey.update_attributes(params[:survey])
+    saved = @survey.update_attributes(survey_params)
     if saved
       flash[:notice] = "Updated"
     else
@@ -47,7 +47,7 @@ class SurveysController < ApplicationController
   end
 
   def create
-    @survey =  Survey.new(params[:survey])
+    @survey =  Survey.new(survey_params)
     if @survey.save
       flash[:notice] = "Updated"
     else
@@ -55,7 +55,7 @@ class SurveysController < ApplicationController
       @study = @survey.study
     end
     respond_to do |format|
-      format.html {redirect_to edit_study_path(@study)}
+      format.html {redirect_to surveys_path}
       format.js {render (@survey.save ? :show : :index),:layout => false}
     end
   end
@@ -94,4 +94,7 @@ class SurveysController < ApplicationController
       format.js {render :show,:layout => false}
     end
   end
+ def survey_params
+   params.require(:survey).permit(:title,:description,:multiple_sections)
+ end
 end

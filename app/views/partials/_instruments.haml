@@ -4,17 +4,11 @@
     %tr
       %th Form Title
       %th State
-      %th Active On
-      %th Inactive On
-      %th Interface
       %th 
   %tbody
     -Survey.all.each do |survey|
       %tr
         %td=survey.title
         %td=survey.active? ? "Active" : "Inactive"
-        %td=survey.active_at.to_date unless survey.active_at.blank?
-        %td=survey.inactive_at.to_date unless survey.inactive_at.blank?
-        %td=survey.is_public ? "coordinator" : "subject"
         %td= link_to "View/Edit", survey,"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-primary"
 

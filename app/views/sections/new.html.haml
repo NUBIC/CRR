@@ -1,0 +1,14 @@
+=form_for @section ,:url=>sections_path(@section) ,:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+  .row-fluid
+    =f.hidden_field :survey_id
+    =f.label :title
+    =f.text_field :title
+    =f.label :display_order
+    =f.text_field :display_order
+  .row-fluid
+    .btn-group
+      =f.button "update",:class=>"btn btn-mini btn-success"
+      =link_to 'cancel',survey_path(@section.survey),"data-async"=>true,"data-target"=>"#study_forms .accordion-inner",:class=>"btn btn-mini btn-warning"
+
+
+

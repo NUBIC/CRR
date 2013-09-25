@@ -2,6 +2,7 @@ require 'csv'
 class Survey < ActiveRecord::Base
   has_many :response_sets,:dependent=>:destroy
   has_many :questions,:dependent=>:destroy
+  has_many :sections, :dependent=>:destroy
 
 
   #attr_accessible :score_configurations_attributes, :access_code, :active_at, :inactive_at, :study_id, :irb_number, :is_public, :title,:custom_numbering

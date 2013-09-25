@@ -9,6 +9,7 @@ AudiologyRegistry::Application.routes.draw do
       put :deactivate
     end
   end
+  resources :sections
   resources :questions
   resources :answers
   resources :response_sets

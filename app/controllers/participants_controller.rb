@@ -14,11 +14,11 @@ class ParticipantsController < ApplicationController
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
     end
+    redirect_to participants_path
   end
 
   def show
     @participant = Participant.find(params[:id])
-
   end
 
   def edit
@@ -40,7 +40,6 @@ class ParticipantsController < ApplicationController
       format.html
       format.js {render :layout=>false}
     end
-
   end
 
  def participant_params

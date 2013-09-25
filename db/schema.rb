@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20130925111114) do
 
   create_table "questions", force: true do |t|
     t.integer  "survey_id"
+    t.integer  "section_id"
     t.text     "text"
     t.string   "reference"
     t.boolean  "is_mandatory"
@@ -73,6 +74,9 @@ ActiveRecord::Schema.define(version: 20130925111114) do
   end
 
   create_table "sections", force: true do |t|
+    t.integer "survey_id"
+    t.text    "title"
+    t.integer "display_order"
   end
 
   create_table "surveys", force: true do |t|

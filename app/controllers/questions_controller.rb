@@ -1,9 +1,8 @@
 class QuestionsController < ApplicationController
-  include Aker::Rails::SecuredController
 
 
   def index
-    @section= SurveySection.find(params[:survey_section_id])
+    @section= Section.find(params[:survey_section_id])
     authorize! :show, @section
     respond_to do |format|
       format.html
@@ -12,7 +11,7 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    @section = SurveySection.find(params[:survey_section_id])
+    @section = Section.find(params[:survey_section_id])
     @question = @section.questions.new
     authorize! :edit, @question
     respond_to do |format|

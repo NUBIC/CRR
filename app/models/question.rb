@@ -12,10 +12,7 @@ class Question < ActiveRecord::Base
 
   default_scope {order("display_order ASC")}
   
-  # Scopes
-  attr_accessible :score_code
-
-  validates_presence_of :text, :display_order,:response_type
+  validates_presence_of :text, :display_order,:response_type,:section_id
   validates_inclusion_of :is_mandatory, :in => [true, false]
   validates_inclusion_of :response_type, :in => VALID_RESPONSE_TYPES.keys
 
@@ -26,8 +23,6 @@ class Question < ActiveRecord::Base
 
   validate :validate_question_type
   
-        # Whitelisting attributes
-  attr_accessible :survey_section, :question_group, :survey_section_id, :question_group_id, :text, :help_text,:reference_identifier, :display_order, :is_mandatory,  :response_type
 
 
       # Instance Methods
@@ -60,7 +55,7 @@ class Question < ActiveRecord::Base
 
   private
   def default_args
-    self.display_order ||= self.survey_section.questions.size
+    self.display_order ||= self.section.questions.size
     self.reference_identifier ||= self.text.downcase.gsub(" ","_") unless text.blank?
   end
 

@@ -29,6 +29,7 @@ GEM
     arel (4.0.0)
     atomic (1.1.14)
     builder (3.1.4)
+    cancan (1.6.10)
     capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
@@ -145,6 +146,7 @@ PLATFORMS
 
 DEPENDENCIES
   american_date
+  cancan
   capistrano
   exception_notification
   haml

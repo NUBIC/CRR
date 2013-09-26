@@ -10,6 +10,7 @@ gem 'exception_notification'
 gem 'jquery-rails'
 gem "twitter-bootstrap-rails"
 gem 'therubyracer'
+gem 'cancan'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'

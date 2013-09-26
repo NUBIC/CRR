@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130925111114) do
+ActiveRecord::Schema.define(version: 20130926194714) do
 
   create_table "answers", force: true do |t|
     t.integer  "question_id"
@@ -54,8 +54,13 @@ ActiveRecord::Schema.define(version: 20130925111114) do
     t.string   "reference"
     t.boolean  "is_mandatory"
     t.string   "response_type"
+    t.integer  "display_order"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "relationships", force: true do |t|
+    t.integer "name"
   end
 
   create_table "response_sets", force: true do |t|
@@ -77,6 +82,12 @@ ActiveRecord::Schema.define(version: 20130925111114) do
     t.integer "survey_id"
     t.text    "title"
     t.integer "display_order"
+  end
+
+  create_table "studies", force: true do |t|
+    t.string "irb_number"
+    t.date   "active_on"
+    t.date   "inactive_on"
   end
 
   create_table "surveys", force: true do |t|

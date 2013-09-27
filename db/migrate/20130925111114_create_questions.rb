@@ -8,6 +8,7 @@ class CreateQuestions < ActiveRecord::Migration
       t.boolean :is_mandatory
       t.string  :response_type
       t.integer :display_order
+      t.text    :help_text
       t.timestamps
     end
   end

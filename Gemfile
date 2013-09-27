@@ -1,4 +1,5 @@
-source 'https://rubygems.org'
+#source "http://download.bioinformatics.northwestern.edu/gems/"
+source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
@@ -11,6 +12,7 @@ gem 'jquery-rails'
 gem "twitter-bootstrap-rails"
 gem 'therubyracer'
 gem 'cancan'
+gem 'rest-client'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
@@ -18,6 +20,12 @@ gem 'less-rails'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
+
+#aker
+#gem "bcdatabase"
+#gem "aker"
+#gem "aker-rails",'3.0.2'
+#gem "aker-nubic"
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -46,3 +54,4 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+gem "simple_form"

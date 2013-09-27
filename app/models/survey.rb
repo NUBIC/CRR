@@ -1,7 +1,7 @@
 require 'csv'
 class Survey < ActiveRecord::Base
   has_many :response_sets,:dependent=>:destroy
-  has_many :questions,:dependent=>:destroy
+  #has_many :questions,:dependent=>:destroy
   has_many :sections, :dependent=>:destroy
 
 
@@ -14,6 +14,9 @@ class Survey < ActiveRecord::Base
 
   validate :activation_check
 
+  def questions
+    Question.where("section_id in (?)",sections.collect{|s| s.id})
+  end
 
   def initialize(*args)
     super(*args)

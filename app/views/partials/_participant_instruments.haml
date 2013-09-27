@@ -1,0 +1,17 @@
+=link_to "Start Instrument",new_response_set_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-small btn-primary"
+%table.table.bordered
+  %thead
+    %tr
+      %th Form
+      %th Date
+      %th Entry Start
+      %th Entry Completion
+      %th
+  %tbody
+    -participant.response_sets.each do |response_set|
+      %tr
+        %td=response_set.survey.title
+        %td=response_set.effective_date
+        %td=response_set.created_at
+        %td=""
+        %td=link_to "Edit",edit_response_set_path(response_set)

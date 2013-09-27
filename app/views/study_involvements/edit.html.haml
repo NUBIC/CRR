@@ -1,0 +1,23 @@
+=form_for @study_involvement, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"studies"} do |f|
+  .row-fluid
+    =f.hidden_field :participant_id
+    .control-group
+      =f.label :study_id,"Study"
+      .controls
+        =f.select :study_id,Study.all.collect{|s| [s.irb_number,s.id]}
+    .control-group
+      =f.label :start_date
+      .controls
+        =f.text_field :start_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+    .control-group
+      =f.label :end_date
+      .controls
+        =f.text_field :end_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+    .control-group
+      =f.label :notes
+      .controls
+        =f.text_area :notes,:rows=>3
+  .row-fluid
+    .btn-group
+      =f.button "Create",:class=>"btn btn-mini btn-success"
+      =link_to "Cancel",study_involvements_path(:participant_id=>@study_involvement.participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#studies"

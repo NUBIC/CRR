@@ -1,0 +1,18 @@
+#users.row-fluid
+  =link_to "Add User",new_user_path,"data-async"=>true,"data-target"=>"#users",:class=>"btn btn-mini btn-primary"
+  %table.table.bordered
+    %thead
+      %tr
+        %th Name
+        %th netid
+        %th Admin Access
+        %th Researcher Access
+        %th 
+    %tbody
+      -@users.each do |user|
+        %tr
+          %td=user.name
+          %td=user.netid
+          %td=user.admin?
+          %td=user.researcher?
+          %td=link_to "Edit",edit_user_path(user)

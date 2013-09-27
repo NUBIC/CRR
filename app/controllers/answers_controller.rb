@@ -1,12 +1,10 @@
 class AnswersController < ApplicationController
-  include Aker::Rails::SecuredController
 
 
 
   def new
     @question = Question.find(params[:question_id])
     @answer = @question.answers.new
-    authorize! :edit, @answer
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -15,7 +13,6 @@ class AnswersController < ApplicationController
 
   def show
     @answer = Answer.find(params[:id])
-    authorize! :edit, @answer
     respond_to do |format|
       format.js {render :layout => false}
     end
@@ -23,7 +20,6 @@ class AnswersController < ApplicationController
 
   def edit
     @answer = Answer.find(params[:id])
-    authorize! :edit, @answer
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -32,8 +28,7 @@ class AnswersController < ApplicationController
 
   def update
     @answer = Answer.find(params[:id])
-    authorize! :update, @answer
-    saved = @answer.update_attributes(params[:answer])
+    saved = @answer.update_attributes(answer_params)
     if saved
       flash[:notice] = "Updated"
     else
@@ -45,9 +40,8 @@ class AnswersController < ApplicationController
   end
 
   def create
-    @answer = Answer.new(params[:answer])
+    @answer = Answer.new(answer_params)
     @question = @answer.question
-    authorize! :update, @answer
     if @answer.save
       flash[:notice] = "Updated"
     else
@@ -62,11 +56,13 @@ class AnswersController < ApplicationController
   def destroy
     @answer = Answer.find(params[:id])
     @question = @answer.question
-    authorize! :destroy, @answer
     @answer.destroy
     @question.reload
     respond_to do |format|
       format.js {render "questions/show",:layout => false}
     end
   end
+ def answer_params
+   params.require(:answer).permit(:text,:reference,:help_text,:display_order,:question_id,:weight)
+ end
 end

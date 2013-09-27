@@ -1,12 +1,63 @@
 .alert.alert-success
   %h4=@participant.name
 %ul.nav.nav-tabs
-  %li{:class=>'active'}=link_to 'Instruments','#intruments',"data-toggle"=>'tab'
+  %li{:class=>'active'}=link_to 'Basics','#basics',"data-toggle"=>'tab'
+  %li=link_to 'Instruments','#instruments',"data-toggle"=>'tab'
   %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
   %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
   %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
 .tab-content
-  #intruments.tab-pane
+  #basics.tab-pane.active
+    .row-fluid
+      .span4
+        %h5 Identifiers
+        %table.table
+          %tbody
+            %tr
+              %th.muted First Name:
+              %td= @participant.first_name
+            %tr
+              %th.muted Middle Name:
+              %td= @participant.middle_name
+            %tr
+              %th.muted Last Name:
+              %td= @participant.last_name
+      .span4
+        %h5 Participation
+        %table.table
+          %tbody
+            %tr
+              %th.muted On Study:
+              %td= @participant.on_study? ? "Yes" : "No"
+            %tr
+              %th.muted Study Count:
+              %td= @participant.study_involvements.count
+            %tr
+              %th.muted Last Contact:
+              %td= @participant.contact_logs.last.date unless @participant.contact_logs.empty?
+            %tr
+              %th.muted Contact Count:
+              %td= @participant.contact_logs.count
+      .span4
+        %h5 Contact
+        %table.table
+          %tbody
+            %tr
+              %th.muted Address
+              %td= @participant.address 
+            %tr
+              %th.muted  Primary Phone
+              %td=@participant.primary_phone
+            %tr
+              %th.muted  Secondary Phone
+              %td=@participant.secondary_phone 
+            %tr
+              %th.muted  Email
+              %td=@participant.email
+  #instruments.tab-pane
+    = render :partial => 'partials/participant_instruments', :locals => {:participant => @participant}
   #studies.tab-pane
+    = render :partial => 'partials/participant_studies', :locals => {:participant => @participant}
   #relationships.tab-pane
   #contact_log.tab-pane
+    = render :partial => 'partials/participant_contact_logs', :locals => {:participant => @participant}

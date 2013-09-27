@@ -7,12 +7,12 @@ class CreateParticipants < ActiveRecord::Migration
       t.string :last_name
       t.string :primary_phone
       t.string :secondary_phone
-      t.date   :birthdate
       t.string :address_line1
       t.string :address_line2
       t.string :city
       t.string :state
       t.string :zip
+      t.boolean :do_not_contact
       t.text   :notes
       t.timestamps
     end

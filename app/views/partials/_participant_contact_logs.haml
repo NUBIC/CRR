@@ -1,0 +1,13 @@
+=link_to "Add Encounter",new_contact_log_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#contact_log",:class=>"btn btn-mini btn-primary"
+%table.table.bordered
+  %thead
+    %tr
+      %th Date
+      %th Notes
+      %th 
+  %tbody
+    -participant.contact_logs.each do |cl|
+      %tr
+        %td=cl.date
+        %td=cl.notes
+        %th=link_to "edit",edit_contact_log_path(cl),"data-async"=>true,"data-target"=>"#contact_log",:class=>"btn btn-mini btn-primary"

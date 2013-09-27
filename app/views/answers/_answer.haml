@@ -3,12 +3,12 @@
     =answer.text
   .row-fluid
     .span3
-      ="reference identifier #{answer.reference_identifier}"
+      ="reference #{answer.reference}"
     .span2
       ="weight: #{answer.weight}"
     .span3
       ="display order: #{answer.display_order}"
-    -unless answer.question.survey_section.survey.active?
+    -unless answer.question.section.survey.active?
       .span3
         .span2
           =link_to "Edit" ,edit_answer_path(answer),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#answer_#{answer.id}"

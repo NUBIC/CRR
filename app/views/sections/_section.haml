@@ -6,6 +6,6 @@
       =render :partial=>"questions/question",locals: {question: q}
 .row_fluid{:id=>"section_#{section.id}_new_question"}
   -unless section.survey.active?
-    =link_to "Add Question",new_question_path(:survey_section_id=>section.id),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#section_#{section.id}_new_question"
+    =link_to "Add Question",new_question_path(:section_id=>section.id),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#section_#{section.id}_new_question"
 %hr
 

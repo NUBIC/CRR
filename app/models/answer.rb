@@ -17,7 +17,7 @@ class Answer < ActiveRecord::Base
 
   def default_args
     self.display_order ||= self.question.answers.size
-    self.reference_identifier ||= self.text.downcase.gsub(" ","_") unless text.blank?
+    self.reference ||= self.text.downcase.gsub(" ","_") unless text.blank?
   end
   private
   def check_display_order

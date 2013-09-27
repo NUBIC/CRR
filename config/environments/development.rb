@@ -12,6 +12,11 @@ AudiologyRegistry::Application.configure do
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
+  config.assets.compress = true
+  config.serve_static_assets = false
+  config.assets.compile = false
+  config.assets.digest = true
+  config.assets.precompile += %w(application.css applicaiton.js public.js main.js surveyor.js)
   config.assets.precompile += %w(application.css application.js)
 
   # Don't care if the mailer can't send.
@@ -27,4 +32,9 @@ AudiologyRegistry::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+  #config.aker  do
+  #  audiology = Aker::Authorities::Audiology.new
+  #  authorities :cas, audiology
+  #  central '/etc/nubic/aker-local.yml'
+  #end
 end

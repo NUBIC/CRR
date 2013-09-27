@@ -2,8 +2,7 @@ class QuestionsController < ApplicationController
 
 
   def index
-    @section= Section.find(params[:survey_section_id])
-    authorize! :show, @section
+    @section= Section.find(params[:section_id])
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -11,9 +10,8 @@ class QuestionsController < ApplicationController
   end
 
   def new
-    @section = Section.find(params[:survey_section_id])
+    @section = Section.find(params[:section_id])
     @question = @section.questions.new
-    authorize! :edit, @question
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -22,7 +20,6 @@ class QuestionsController < ApplicationController
 
   def show
     @question = Question.find(params[:id])
-    authorize! :edit, @question
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -31,7 +28,6 @@ class QuestionsController < ApplicationController
 
   def edit
     @question = Question.find(params[:id])
-    authorize! :edit, @question
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -40,8 +36,7 @@ class QuestionsController < ApplicationController
 
   def update
     @question = Question.find(params[:id])
-    authorize! :update, @question
-    saved = @question.update_attributes(params[:question])
+    saved = @question.update_attributes(question_params)
     if saved
       flash[:notice] = "Updated"
     else
@@ -54,9 +49,8 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question =  Question.new(params[:question])
-    @section = @question.survey_section
-    authorize! :update, @question
+    @question =  Question.new(question_params)
+    @section = @question.section
     if @question.save
       flash[:notice] = "Updated"
     else
@@ -69,8 +63,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     @question = Question.find(params[:id])
-    @section = @question.survey_section
-    authorize! :destroy, @question
+    @section = @question.section
     @question.destroy
     flash[:notice] = "Question Deleted"
     @section.reload
@@ -78,4 +71,7 @@ class QuestionsController < ApplicationController
       format.js {render "sections/show",:layout => false}
     end
   end
+ def question_params
+   params.require(:question).permit(:text,:response_type,:reference,:help_text,:display_order,:is_mandatory,:survey_id,:section_id)
+ end
 end

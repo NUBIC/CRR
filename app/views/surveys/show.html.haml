@@ -2,10 +2,10 @@
   .span12
     %h2="Title: #{@survey.title}"
   -if @survey.active?
-    =form_for @survey,:url=>deactivate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+    =form_for @survey,:url=>deactivate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
       =f.submit "Deactivate",:class=>"btn btn-mini btn-danger"
   -else
-    =form_for @survey,:url=>activate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+    =form_for @survey,:url=>activate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
       =f.submit "Activate",:class=>"btn btn-mini btn-success"
     %hr
 -@survey.sections.each do |s|

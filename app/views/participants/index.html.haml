@@ -4,10 +4,11 @@
   %table.table.table-condensed.table-bordered.table-striped{:id=>'participant_list'}
     %thead
       %tr
-        - %w(Name Last\ Update).each do |header|
+        - %w(Name On\ Study Last\ Update).each do |header|
           %th= header
     %tbody
       - @participants.each do |participant|
         %tr
           %td=link_to participant.name, participant
+          %td=participant.on_study? ? "Yes" : "No"
           %td=participant.updated_at

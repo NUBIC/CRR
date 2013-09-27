@@ -1,0 +1,18 @@
+=link_to "Add To Study",new_study_involvement_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#studies",:class=>"btn btn-mini btn-primary"
+%table.table.bordered
+  %thead
+    %tr
+      %th IRB Number
+      %th Start Date
+      %th End Date
+      %th Notes
+      %th 
+  %tbody
+    -participant.study_involvements.each do |si|
+      %tr
+        %td=si.study.irb_number
+        %td=si.start_date
+        %td=si.end_date
+        %td=si.notes
+        %th=link_to "Edit",edit_study_involvement_path(si),"data-async"=>true,"data-target"=>"#studies",:class=>"btn btn-primary btn-mini"
+

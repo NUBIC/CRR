@@ -12,8 +12,6 @@ class Response < ActiveRecord::Base
 
         #base.send :include, Surveyor::ActsAsResponse # includes "as" instance method
 
-        # Whitelisting attributes
-  attr_accessible :response_set, :question, :answer, :response_set_id, :question_id, :answer_id, :survey_section_id,:text
 
   validate :validate_question_type
 

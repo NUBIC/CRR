@@ -1,13 +1,9 @@
 =form_for @response_set,:class=>"form-horizontal" do |f|
-  =f.hidden_field :involvement_id
+  =f.hidden_field :participant_id
   .control-group
     =f.label 'survey_id','Select Form',:class=>"control-label"
     .controls
       =f.select :survey_id,@surveys.map{|s|[s.title,s.id]},{:prompt => 'Select Form'}
-  .control-group
-    =f.label 'visit_name',:class=>"control-label"
-    .controls
-      =f.text_field :visit_name,:class=>"input-small"
   .control-group
     =f.label :effective_date,'Visit Date',:class=>"control-label"
     .controls
@@ -16,5 +12,5 @@
     .controls
       .btn-group
         =f.submit "Start",:class=>"btn btn-success btn-mini"
-        =link_to "cancel", forms_involvement_path(@involvement),"data-async"=>true,"data-target"=>"#involvement_forms .accordion-inner",:class=>"btn btn-warning btn-mini"
+        =link_to "cancel", response_sets_path(:participant_id=>@participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-warning btn-mini"
 

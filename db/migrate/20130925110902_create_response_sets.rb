@@ -3,6 +3,7 @@ class CreateResponseSets < ActiveRecord::Migration
     create_table :response_sets do |t|
       t.integer  :survey_id
       t.integer  :participant_id
+      t.date     :effective_date
       t.timestamps
     end
   end

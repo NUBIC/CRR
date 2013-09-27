@@ -1,33 +1,21 @@
 class ResponseSet < ActiveRecord::Base
-  require './lib/scoring'
 
-  has_many :scores,:dependent=>:destroy
   has_many :responses,:dependent=>:destroy
   has_many :answers, :through => :responses
-  belongs_to :involvement, :touch=>true
+  belongs_to :participant, :touch=>true
   belongs_to :visit_template
   belongs_to :survey
-  attr_accessible :involvement,:involvement_id,:visit_name,:effective_date,:responses_attributes, :survey,:survey_id
 
   scope :completed, :conditions => ['response_sets.completed_at IS NOT NULL']
 
 
           # Validations
-  validates_presence_of :survey_id,:involvement_id
+  validates_presence_of :survey_id,:participant_id
   #validates_associated :responses
   #validates_associated_bubbling :responses
 
   after_initialize :create_question_methods
   #validates_uniqueness_of :access_code
-
-
-        # Attributes
-  attr_protected :completed_at
-
-
-  before_create :ensure_start_timestamp
-
-
 
   def create_question_methods
     return nil if survey.nil?
@@ -114,7 +102,4 @@ class ResponseSet < ActiveRecord::Base
     end
   end
   
-  def ensure_start_timestamp
-    self.started_at ||= Time.now
-  end
 end

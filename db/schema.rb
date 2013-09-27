@@ -11,11 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130926194714) do
+ActiveRecord::Schema.define(version: 20130926224626) do
 
   create_table "answers", force: true do |t|
     t.integer  "question_id"
-    t.text     "answer"
+    t.text     "text"
+    t.text     "help_text"
+    t.integer  "display_order"
+    t.string   "reference"
+    t.integer  "weight"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -55,22 +59,29 @@ ActiveRecord::Schema.define(version: 20130926194714) do
     t.boolean  "is_mandatory"
     t.string   "response_type"
     t.integer  "display_order"
+    t.text     "help_text"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "relationships", force: true do |t|
-    t.integer "name"
+    t.integer  "name"
+    t.integer  "origin_id"
+    t.integer  "destination_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "response_sets", force: true do |t|
     t.integer  "survey_id"
     t.integer  "participant_id"
+    t.date     "effective_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "responses", force: true do |t|
+    t.integer  "response_set_id"
     t.integer  "question_id"
     t.integer  "answer_id"
     t.text     "text"
@@ -90,10 +101,28 @@ ActiveRecord::Schema.define(version: 20130926194714) do
     t.date   "inactive_on"
   end
 
+  create_table "study_involvements", force: true do |t|
+    t.integer  "study_id"
+    t.integer  "participant_id"
+    t.date     "start_date"
+    t.date     "end_date"
+    t.text     "notes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "surveys", force: true do |t|
     t.string   "title"
     t.text     "description"
     t.text     "state"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "netid"
+    t.boolean  "admin"
+    t.boolean  "researcher"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

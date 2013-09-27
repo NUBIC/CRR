@@ -12,12 +12,12 @@ class Question < ActiveRecord::Base
 
   default_scope {order("display_order ASC")}
   
-  validates_presence_of :text, :display_order,:response_type,:section_id
+  validates_presence_of :text, :display_order,:response_type,:section_id,:section
   validates_inclusion_of :is_mandatory, :in => [true, false]
   validates_inclusion_of :response_type, :in => VALID_RESPONSE_TYPES.keys
 
-  validates_uniqueness_of :display_order,:scope=>:survey_section_id
-  validates_uniqueness_of :reference_identifier,:scope=>:survey_section_id
+  validates_uniqueness_of :display_order,:scope=>:section_id
+  validates_uniqueness_of :reference,:scope=>:section_id
 
   before_validation  :check_display_order
 
@@ -56,12 +56,12 @@ class Question < ActiveRecord::Base
   private
   def default_args
     self.display_order ||= self.section.questions.size
-    self.reference_identifier ||= self.text.downcase.gsub(" ","_") unless text.blank?
+    self.reference ||= self.text.downcase.gsub(" ","_") unless text.blank?
   end
 
   def check_display_order
-    if self.display_order_changed? and survey_section.questions.where(:display_order=>self.display_order).exists? 
-        q = survey_section.questions.find_by_display_order(self.display_order)
+    if self.display_order_changed? and section.questions.where(:display_order=>self.display_order).exists? 
+        q = section.questions.find_by_display_order(self.display_order)
         q.display_order=self.display_order+1
         q.save
     end

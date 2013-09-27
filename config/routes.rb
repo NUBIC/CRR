@@ -16,6 +16,7 @@ AudiologyRegistry::Application.routes.draw do
   resources :study_involvements
   resources :contact_logs
   resources :users
+  resources :searches
 
   get '/' =>  "participants#index"
 end

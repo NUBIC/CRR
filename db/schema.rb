@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130926224626) do
+ActiveRecord::Schema.define(version: 20130927115431) do
 
   create_table "answers", force: true do |t|
     t.integer  "question_id"
@@ -87,6 +87,12 @@ ActiveRecord::Schema.define(version: 20130926224626) do
     t.text     "text"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "searches", force: true do |t|
+    t.text    "parameters"
+    t.string  "connector"
+    t.integer "study_id"
   end
 
   create_table "sections", force: true do |t|

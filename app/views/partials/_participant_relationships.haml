@@ -1,0 +1,15 @@
+=link_to "New Relationship",new_relationship_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#relationships",:class=>"btn btn-mini btn-primary"
+%table.table.bordered
+  %thead
+    %tr
+      %th Name
+      %th Relationship
+      %th Notes
+      %th 
+  %tbody
+    -participant.relationships.each do |relationship|
+      %tr
+        %td=relationship.origin.eql?(participant) ? participant.name : relationship.destination.name
+        %td=relationship.category
+        %td=relationship.notes
+        %th=link_to "edit",edit_relationship_path(relationship),"data-async"=>true,"data-target"=>"#relationships",:class=>"btn btn-mini btn-primary"

@@ -4,7 +4,7 @@ class AddContactLog < ActiveRecord::Migration
       t.integer :participant_id
       t.date    :date
       t.string  :contacter
-      t.string  :category
+      t.string  :mode
       t.text    :notes
       t.timestamps
     end

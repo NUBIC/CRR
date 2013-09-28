@@ -1,4 +1,11 @@
 class ParticipantsController < ApplicationController
+
+  def search
+    @participants = Participant.search(params[:q])
+    respond_to do |format|
+      format.json {render :json => @participants.to_json(:only=>[:id],:methods=>[:search_display])}
+    end
+  end
   def index
     @participants = Participant.all
   end
@@ -30,19 +37,17 @@ class ParticipantsController < ApplicationController
   end
   
   def update
-    @participant.attributes = params[:participant]
+    @participant =  Participant.find(params[:id])
+    @participant.update_attributes(participant_params)
     if @participant.save
       flash[:notice] = "Successfully updated"
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
     end
-    respond_to do |format|
-      format.html
-      format.js {render :layout=>false}
-    end
+    redirect_to @participant
   end
 
  def participant_params
-   params.require(:participant).permit(:first_name, :last_name,:middle_name)
+   params.require(:participant).permit(:first_name, :last_name,:middle_name,:address_line1,:address_line2,:city,:state,:zip,:primary_phone,:secondary_phone,:email)
  end
 end

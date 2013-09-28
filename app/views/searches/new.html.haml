@@ -3,12 +3,7 @@
     %h5 Please Select Search Criteria
   =form_tag(searches_path) do
     .row-fluid
-      .span1
-        =radio_button_tag("search[connector]","or",true)
-        =label_tag("search_type_or","OR search")
-      .span1
-        =radio_button_tag("search[connector]","and",false)
-        =label_tag("search_type_and","AND search")
+      =select_tag("search[connector]",options_for_select([["Participants with Any of the Selected","or"],["Participants with All of the Selected present","and"]]))
     .row-fluid
       #search_surveys.accordion
         .accordion-group

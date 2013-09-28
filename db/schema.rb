@@ -65,9 +65,10 @@ ActiveRecord::Schema.define(version: 20130927115431) do
   end
 
   create_table "relationships", force: true do |t|
-    t.integer  "name"
+    t.string   "category"
     t.integer  "origin_id"
     t.integer  "destination_id"
+    t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -93,6 +94,9 @@ ActiveRecord::Schema.define(version: 20130927115431) do
     t.text    "parameters"
     t.string  "connector"
     t.integer "study_id"
+    t.date    "request_date"
+    t.date    "request_process_date"
+    t.date    "request_decline_date"
   end
 
   create_table "sections", force: true do |t|
@@ -129,6 +133,8 @@ ActiveRecord::Schema.define(version: 20130927115431) do
     t.string   "netid"
     t.boolean  "admin"
     t.boolean  "researcher"
+    t.string   "first_name"
+    t.string   "last_name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

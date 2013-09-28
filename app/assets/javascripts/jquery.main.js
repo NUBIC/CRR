@@ -12,6 +12,13 @@ $(document).ready(function() {
     $($(this).attr("data-target")).load( $(this).attr("href"));
     return false;
   });
+
+  $(".tokeninput").livequery(
+    function(){
+    $(this).tokenInput($(this).data("url"),{crossDomain: false,propertyToSearch: 'search_display',minChars: 3,tokenLimit: 1, hintText: $(this).data("data-hint-text")});
+    }
+  );
+
    $("form.ajax-form").livequery(function(){
      var $form = $(this);
      var $target = $($form.attr('data-target'));

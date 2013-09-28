@@ -1,0 +1,14 @@
+=form_for @relationship, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationship"} do |f|
+  .row-fluid
+    .control-group
+      =f.label :category,"Relationship"
+      .controls
+        =f.select :category, Relationship::CATEGORIES
+    .control-group
+      =f.label :notes
+      .controls
+        =f.text_area :notes
+  .row-fluid
+    .btn-group
+      =f.button "Create",:class=>"btn btn-mini btn-success"
+      =link_to "Cancel",relationships_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#relationship"

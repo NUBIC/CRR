@@ -1,0 +1,19 @@
+=form_for @relationship, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationship"} do |f|
+  .row-fluid
+    =f.hidden_field :origin_id
+    .control-group
+      =f.label :destination_id,"Participant"
+      .controls
+        =f.text_field :destination_id,:class=>"tokeninput","data-url"=>search_participants_path(:format=>:json),"data-limit"=>1,"data-hint-text"=>"Search participant name"
+    .control-group
+      =f.label :category,"Relationship"
+      .controls
+        =f.select :category, Relationship::CATEGORIES
+    .control-group
+      =f.label :notes
+      .controls
+        =f.text_area :notes
+  .row-fluid
+    .btn-group
+      =f.button "Create",:class=>"btn btn-mini btn-success"
+      =link_to "Cancel",relationships_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#relationships"

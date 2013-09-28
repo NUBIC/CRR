@@ -9,6 +9,8 @@
 .tab-content
   #basics.tab-pane.active
     .row-fluid
+      =link_to "Edit", edit_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
+    .row-fluid
       .span4
         %h5 Identifiers
         %table.table

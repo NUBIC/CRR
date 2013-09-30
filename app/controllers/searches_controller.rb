@@ -57,7 +57,7 @@ class SearchesController < ApplicationController
  end
 
  def search_params
-   params.require(:search).permit(:connector).tap do |whitelisted|
+   params.require(:search).permit(:connector,:study_id).tap do |whitelisted|
        whitelisted[:parameters] = params[:search][:parameters]
    end
  end

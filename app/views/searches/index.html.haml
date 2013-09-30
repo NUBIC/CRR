@@ -2,12 +2,14 @@
 %table.table.bordered
   %thead
     %tr
+      %th Study
       %th State
       %th Request Date
       %th Release Date
   %tbody
     -@searches.each do |search|
       %tr
+        %td=search.study.irb_number
         %td=link_to search.state.titleize,search
         %td=search.request_date
         %td=search.process_date

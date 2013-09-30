@@ -4,7 +4,7 @@ class Search < ActiveRecord::Base
 
   belongs_to :study
   serialize :parameters, Hash
-  validates_presence_of :connector, :parameters
+  validates_presence_of :connector, :parameters,:study
 
   aasm_column :state
   aasm_state :new, :initial => true
@@ -16,7 +16,7 @@ class Search < ActiveRecord::Base
   end
 
   aasm_event :release_data do 
-    transitions :to => :data_released, :from=>[:new],:on_transition=>[:process_release]
+    transitions :to => :data_released, :from=>[:data_requested],:on_transition=>[:process_release]
   end
 
   def result
@@ -45,6 +45,15 @@ class Search < ActiveRecord::Base
   def pretty_parameters
     full_parameters
   end
+  def process_release
+    result.each do |participant|
+      participant.study_involvements.create(:start_date=>Date.today,:study_id=>study.id) unless participant.do_not_contact
+    end
+  end
+  def set_request_date
+    self.request_date=Date.today
+    save
+  end
   private
     def response_set_includes_all_of(response_set, answer_ids)
       answer_ids_in_responses = response_set.responses.collect{|r| r.answer_id.to_s}
@@ -59,10 +68,4 @@ class Search < ActiveRecord::Base
       Answer.find(parameters.values.flatten.collect{|v| v.to_i})
     end
 
-    def process_release
-    end
-    def set_request_date
-      self.request_date=Date.today
-      save
-    end
 end

@@ -27,7 +27,7 @@ class Participant < ActiveRecord::Base
   end
 
   def on_study?
-    study_involvements.where("start_date < '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')").count > 0
+    study_involvements.where("start_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')").count > 0
   end
 
   def search_display

@@ -1,0 +1,14 @@
+=link_to "New Search", new_search_path,:class=>"btn btn-primary btn-mini"
+%table.table
+  %thead
+    %tr
+      %th State
+      %th Request Date
+      %th Release Date
+  %tbody
+    -@searches.each do |search|
+      %tr
+        %td=link_to search.state.titleize,search
+        %td=search.request_date
+        %td=search.process_date
+  

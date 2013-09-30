@@ -4,6 +4,7 @@
   =form_tag(searches_path) do
     .row-fluid
       =select_tag("search[connector]",options_for_select([["Participants with ANY of the selected","or"],["Participants with ALL of the selected","and"]]),:class=>"input-xlarge")
+      =select_tag("search[study_id]",options_for_select(Study.all.collect{|s| [s.irb_number,s.id]}),:class=>"input-xlarge")
     .row-fluid
       #search_surveys.accordion
         .accordion-group
@@ -23,6 +24,6 @@
                           =q.text
                         .row-fluid.offset1
                           -q.answers.each do |ans|  
-                            =check_box_tag("search[parameters][#{ans.id}]",ans.id,ans.text)
-                            =label_tag("search[parameters][#{ans.id}]", ans.text)
+                            =check_box_tag("search[parameters][#{q.id}][]",ans.id,ans.text)
+                            =label_tag("search[parameters][#{q.id}][]", ans.text)
       =submit_tag("Search",:class=>"btn btn-small btn-success")

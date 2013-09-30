@@ -23,8 +23,8 @@ AudiologyRegistry::Application.routes.draw do
   resources :users
   resources :searches do 
     member do 
-      patch :request
-      patch :process 
+      patch :request_data
+      patch :release_data
     end
   end
 

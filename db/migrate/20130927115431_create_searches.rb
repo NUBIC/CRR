@@ -4,9 +4,10 @@ class CreateSearches < ActiveRecord::Migration
       t.text    :parameters
       t.string  :connector
       t.integer :study_id
+      t.string  :state
       t.date    :request_date
-      t.date    :request_process_date
-      t.date    :request_decline_date
+      t.date    :process_date
+      t.date    :decline_date
     end
   end
 end

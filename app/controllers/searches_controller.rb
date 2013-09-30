@@ -10,10 +10,11 @@ class SearchesController < ApplicationController
  def create
    @search = Search.new(search_params)
    if @search.save
+     redirect_to @search
    else
      flash[:error] = @search.errors.full_messages.to_sentence
+     redirect_to new_search_path
    end
-   render :show
  end
 
  def show
@@ -29,6 +30,27 @@ class SearchesController < ApplicationController
      flash[:error] = @search.errors.full_messages.to_sentence
    end
    render :show
+ end
+
+ def request_data
+   @search = Search.find(params[:id])
+   @search.request_data
+   if @search.save
+     flash[:notice] = "Data Request Submitted"
+   else
+     flash[:error] = @search.errors.full_messages.to_sentence
+   end
+   redirect_to @search
+ end
+ def release_data
+   @search = Search.find(params[:id])
+   @search.release_data
+   if @search.save
+     flash[:notice] = "Data Request Submitted"
+   else
+     flash[:error] = @search.errors.full_messages.to_sentence
+   end
+   redirect_to @search
  end
  def destroy
    @search = Search.find(params[:id])

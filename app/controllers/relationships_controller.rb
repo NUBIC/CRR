@@ -20,7 +20,7 @@ class RelationshipsController < ApplicationController
    @participant = @relationship.participant
    @relationship.update_attributes(relationship_params)
    if @relationship.save
-     flash[:notice]="Updated study association"
+     flash[:notice]="Updated relationship"
    else
      flash[:notice]=@relationship.errors.full_messages.to_sentence
    end
@@ -31,7 +31,7 @@ class RelationshipsController < ApplicationController
  def create
    @relationship = Relationship.new(relationship_params)
    if @relationship.save
-     flash[:notice]="Added new study association"
+     flash[:notice]="Added relationship"
    else
      flash[:notice]=@relationship.errors.full_messages.to_sentence
    end

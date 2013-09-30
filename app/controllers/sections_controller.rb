@@ -10,7 +10,7 @@ class SectionsController < ApplicationController
   end
 
   def show
-    @section = SurveySection.find(params[:id])
+    @section = Section.find(params[:id])
     respond_to do |format|
       format.html
       format.js {render :layout => false}

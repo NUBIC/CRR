@@ -83,7 +83,7 @@
     transition: 'fade',
     fadeOut: {
       enabled: true,
-      delay: 10000
+      delay: 1000
     },
     message: null,
     onClose: function () {},

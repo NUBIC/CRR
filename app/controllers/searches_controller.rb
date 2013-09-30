@@ -1,6 +1,6 @@
 class SearchesController < ApplicationController
  def index
-   @searches = Search.all
+   @searches = Search.data_requested + Search.data_released
  end
 
  def new

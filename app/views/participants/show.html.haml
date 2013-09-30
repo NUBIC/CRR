@@ -59,6 +59,11 @@
             %tr
               %th.muted  Email
               %td=@participant.email
+    .row-fluid
+      %h5="Notes:"
+      .offset1
+        =@participant.notes
+
   #instruments.tab-pane
     = render :partial => 'partials/participant_instruments', :locals => {:participant => @participant}
   #studies.tab-pane

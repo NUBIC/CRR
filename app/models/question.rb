@@ -56,7 +56,7 @@ class Question < ActiveRecord::Base
   private
   def default_args
     self.display_order ||= self.section.questions.size
-    self.reference ||= self.text.downcase.gsub(" ","_") unless text.blank?
+    self.reference ||= "q_#{display_order}"
   end
 
   def check_display_order

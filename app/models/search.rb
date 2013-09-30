@@ -45,10 +45,6 @@ class Search < ActiveRecord::Base
   def pretty_parameters
     full_parameters
   end
-    def set_request_date
-      request_date=Date.today
-      save
-    end
   private
     def response_set_includes_all_of(response_set, answer_ids)
       answer_ids_in_responses = response_set.responses.collect{|r| r.answer_id.to_s}
@@ -64,5 +60,9 @@ class Search < ActiveRecord::Base
     end
 
     def process_release
+    end
+    def set_request_date
+      self.request_date=Date.today
+      save
     end
 end

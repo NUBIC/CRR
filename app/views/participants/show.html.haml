@@ -29,6 +29,9 @@
         %table.table
           %tbody
             %tr
+              %th.muted Ok to contact:
+              %td= @participant.do_not_contact? ? "No" : "Yes"
+            %tr
               %th.muted On Study:
               %td= @participant.on_study? ? "Yes" : "No"
             %tr

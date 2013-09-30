@@ -9,7 +9,9 @@
   %tbody
     -participant.relationships.each do |relationship|
       %tr
-        %td=relationship.origin.eql?(participant) ? participant.name : relationship.destination.name
+        %td
+          -p = relationship.origin.eql?(participant) ? relationship.destination : relationship.origin
+          =link_to p.name, p 
         %td=relationship.category
         %td=relationship.notes
         %th=link_to "edit",edit_relationship_path(relationship),"data-async"=>true,"data-target"=>"#relationships",:class=>"btn btn-mini btn-primary"

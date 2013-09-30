@@ -1,14 +1,20 @@
 .alert.alert-success
   %h5= "#{@search.result.size} participants returned"
-%table.table.bordered
-  %thead
-    %tr
-      %th Name
-      %th Current Status
-      %th Last Contact
-  %tbody
-    -@search.result.each do |participant|
+-if true
+  %table.table.bordered
+    %thead
       %tr
-        %td=participant.name
-        %td=participant.on_study? ? "On study" : "Available"
-        %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+        %th Name
+        %th Current Status
+        %th Last Contact
+    %tbody
+      -@search.result.each do |participant|
+        %tr
+          %td=participant.name
+          %td=participant.on_study? ? "On study" : "Available"
+          %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+-else
+  -if @search.request_date.blank?
+    =form_for @search,request_search_path(@search) do |f|
+      =f.submit "Request Results",:class=>"btn btn-mini btn-success"
+      

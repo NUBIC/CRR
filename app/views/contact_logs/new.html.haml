@@ -6,9 +6,13 @@
       .controls
         =f.text_field :date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
     .control-group
+      =f.label :mode,"Method"
+      .controls
+        =f.select :mode, ContactLog::MODES
+    .control-group
       =f.label :notes
       .controls
-        =f.text_area :notes,:rows=>3
+        =f.text_area :notes,:rows=>3,:class=>"input-block-level"
   .row-fluid
     .btn-group
       =f.button "Create",:class=>"btn btn-mini btn-success"

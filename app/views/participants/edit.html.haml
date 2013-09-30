@@ -13,6 +13,10 @@
         =f.label :last_name
         .controls
           =f.text_field  :last_name
+      .control-group
+        =f.label :do_not_contact
+        .controls
+          =f.check_box  :do_not_contact
     .span4
       .control-group
         =f.label :address_line1
@@ -47,6 +51,11 @@
         =f.label :secondary_phone
         .controls
           =f.text_field  :secondary_phone
+  .row-fluid
+    .control-group
+      =f.label :notes
+      .controls
+        =f.text_area  :notes,:rows=>3,:class=>"input-block-level"
   .row-fluid
     .btn-group
       =f.button "Save",:class=>"btn btn-mini btn-success"

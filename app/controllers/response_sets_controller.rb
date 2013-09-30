@@ -34,14 +34,17 @@ class ResponseSetsController < ApplicationController
 
   def edit
     @response_set= ResponseSet.find(params[:id]).reload
-    Rails.logger.info @response_set.methods.sort
     @survey = @response_set.survey
     @section = @survey.sections.find_by_id(params[:section_id]).nil? ? @survey.sections.first : @survey.sections.find_by_id(params[:section_id])
   end
 
   def update
     @response_set= ResponseSet.find(params[:id])
-    @response_set.update_attributes(params.require(:response_set).permit(@response_set.methods.collect{|att| att.to_sym}))
+    #result = params.require(:response_set).permit(:effective_date).tap do |whitelisted|
+      
+    #end
+    #@response_set.update_attributes(params.require(:response_set).permit(@response_set.methods.collect{|att| att.to_sym}))
+    @response_set.update_attributes(response_set_params)
     if @response_set.save
       if params[:button].eql?("finish") 
         @response_set.complete! 
@@ -61,6 +64,10 @@ class ResponseSetsController < ApplicationController
   end
 
  def response_set_params
-   params.require(:response_set).permit(:participant_id,:effective_date,:survey_id)
+   params.require(:response_set).permit(:all).tap do |whitelist|
+     params[:response_set].each do |key,val|
+       whitelist[key] = params[:response_set][key]
+     end
+   end
  end
 end

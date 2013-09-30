@@ -3,7 +3,7 @@
     %h5 Please Select Search Criteria
   =form_tag(searches_path) do
     .row-fluid
-      =select_tag("search[connector]",options_for_select([["Participants with Any of the Selected","or"],["Participants with All of the Selected present","and"]]))
+      =select_tag("search[connector]",options_for_select([["Participants with ANY of the selected","or"],["Participants with ALL of the selected","and"]]),:class=>"input-xlarge")
     .row-fluid
       #search_surveys.accordion
         .accordion-group
@@ -17,12 +17,12 @@
                 .tab-content
                   -survey.sections.each_with_index do |section,si|
                     .tab-pane{:id=>"section_#{section.id}",:class=>"#{'active' if si==0}"}  
-                      -questions = section.questions.select{|q| ['single_choice'].include?(q.response_type)}
+                      -questions = section.questions.select{|q| ['single_choice','multiple_choice'].include?(q.response_type)}
                       -questions.each do |q|
                         .row-fluid
                           =q.text
                         .row-fluid.offset1
                           -q.answers.each do |ans|  
-                            =check_box_tag("search[parameters][#{ans.id}]",ans.text)
+                            =check_box_tag("search[parameters][#{ans.id}]",ans.id,ans.text)
                             =label_tag("search[parameters][#{ans.id}]", ans.text)
       =submit_tag("Search",:class=>"btn btn-small btn-success")

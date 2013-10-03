@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: responses
+#
+#  id              :integer          not null, primary key
+#  response_set_id :integer
+#  question_id     :integer
+#  answer_id       :integer
+#  text            :text
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class Response < ActiveRecord::Base
 
   belongs_to :response_set

@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: answers
+#
+#  id            :integer          not null, primary key
+#  question_id   :integer
+#  text          :text
+#  help_text     :text
+#  display_order :integer
+#  reference     :string(255)
+#  weight        :integer
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
 class Answer < ActiveRecord::Base
   belongs_to :question
   has_many :responses

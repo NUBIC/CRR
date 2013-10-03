@@ -24,6 +24,10 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'bcdatabase', '~> 1.0.6'
 
+group :development, :test do
+  gem 'annotate', '~> 2.5.0'
+end
+
 #aker
 #gem "bcdatabase"
 #gem "aker"

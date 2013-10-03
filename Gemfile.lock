@@ -27,6 +27,8 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     american_date (1.1.0)
+    annotate (2.5.0)
+      rake
     arel (4.0.0)
     atomic (1.1.14)
     bcdatabase (1.0.6)
@@ -157,6 +159,7 @@ PLATFORMS
 DEPENDENCIES
   aasm
   american_date
+  annotate (~> 2.5.0)
   bcdatabase (~> 1.0.6)
   cancan
   capistrano

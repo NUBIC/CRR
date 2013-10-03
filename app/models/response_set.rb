@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: response_sets
+#
+#  id             :integer          not null, primary key
+#  survey_id      :integer
+#  participant_id :integer
+#  effective_date :date
+#  created_at     :datetime
+#  updated_at     :datetime
+#
+
 class ResponseSet < ActiveRecord::Base
 
   has_many :responses,:dependent=>:destroy

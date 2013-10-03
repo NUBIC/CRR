@@ -1,3 +1,25 @@
+# == Schema Information
+#
+# Table name: participants
+#
+#  id              :integer          not null, primary key
+#  email           :string(255)
+#  first_name      :string(255)
+#  middle_name     :string(255)
+#  last_name       :string(255)
+#  primary_phone   :string(255)
+#  secondary_phone :string(255)
+#  address_line1   :string(255)
+#  address_line2   :string(255)
+#  city            :string(255)
+#  state           :string(255)
+#  zip             :string(255)
+#  do_not_contact  :boolean
+#  notes           :text
+#  created_at      :datetime
+#  updated_at      :datetime
+#
+
 class Participant < ActiveRecord::Base
   # condensed form of name
 

@@ -1,3 +1,15 @@
+# == Schema Information
+#
+# Table name: surveys
+#
+#  id          :integer          not null, primary key
+#  title       :string(255)
+#  description :text
+#  state       :text
+#  created_at  :datetime
+#  updated_at  :datetime
+#
+
 require 'csv'
 class Survey < ActiveRecord::Base
   has_many :response_sets,:dependent=>:destroy

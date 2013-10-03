@@ -22,6 +22,8 @@ gem 'less-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
+gem 'bcdatabase', '~> 1.0.6'
+
 #aker
 #gem "bcdatabase"
 #gem "aker"

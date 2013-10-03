@@ -29,6 +29,10 @@ GEM
     american_date (1.1.0)
     arel (4.0.0)
     atomic (1.1.14)
+    bcdatabase (1.0.6)
+      activesupport (>= 2.0)
+      highline (~> 1.5)
+      i18n
     builder (3.1.4)
     cancan (1.6.10)
     capistrano (2.15.5)
@@ -153,6 +157,7 @@ PLATFORMS
 DEPENDENCIES
   aasm
   american_date
+  bcdatabase (~> 1.0.6)
   cancan
   capistrano
   exception_notification

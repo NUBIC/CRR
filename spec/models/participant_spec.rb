@@ -95,7 +95,7 @@ describe Participant do
     end
   end
 
-  describe '#search' do
+  describe 'search scope' do
     it 'returns all the participant with first_name or last_name with "J"' do
       par1 = FactoryGirl.create(:participant, first_name: 'Jacob')
       par2 = FactoryGirl.create(:participant, last_name: 'jim')

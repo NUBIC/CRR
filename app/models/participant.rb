@@ -21,22 +21,23 @@
 #
 
 class Participant < ActiveRecord::Base
-  # condensed form of name
-
   has_many :response_sets
   has_many :contact_logs
   has_many :study_involvements
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
 
-  validates_presence_of :first_name
-  validates_presence_of :last_name
+  validates_presence_of :first_name, :last_name
+  validates :email, :format => {:with =>/\A([\A@\s]+)@((?:[-a-z0-9]+.)+[a-z]{2,})\z/i }, allow_blank: true
+  validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
+  validates :zip, :numericality => true, allow_blank: true, :length => { :maximum => 5 }
 
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
+  # condensed form of name
   def name
-    "#{self.first_name} #{self.last_name}"
+    [first_name, last_name].join(' ')
   end
 
   def relationships
@@ -45,7 +46,10 @@ class Participant < ActiveRecord::Base
 
   # condensed form of address
   def address
-    "#{self.address_line1} #{self.address_line2} #{self.city},#{self.state} #{self.zip}"
+    # "#{self.address_line1} #{self.address_line2} #{self.city},#{self.state} #{self.zip}"
+    addr = [address_line1, address_line2, city].reject(&:blank?).join(' ').strip
+    addr1 = [state, zip].reject(&:blank?).join(' ').strip
+    addr1.blank? ? addr.blank? ? nil : addr : addr << "," << addr1
   end
 
   def on_study?
@@ -53,7 +57,8 @@ class Participant < ActiveRecord::Base
   end
 
   def search_display
-    "#{name} - #{address} - #{email} - #{primary_phone}"
+    # "#{name} - #{address} - #{email} - #{primary_phone}"
+    [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
   end
 
 end

@@ -8,6 +8,8 @@ describe Participant do
 
   it { should validate_presence_of :first_name }
   it { should validate_presence_of :last_name }
+  it { should have_many(:origin_relationships) }
+  it { should have_many(:destination_relationships) }
   it { should ensure_length_of(:zip).is_at_most(5) }
   it { should validate_numericality_of(:zip) }
 
@@ -103,6 +105,28 @@ describe Participant do
       partcipants.should include par1
       partcipants.should include par2
       partcipants.should_not include par3
+    end
+  end
+
+  describe '#relationships' do
+    before(:each) do
+      sib1 = FactoryGirl.create(:participant, first_name: 'Jacob')
+      sib2 = FactoryGirl.create(:participant)
+      parent = FactoryGirl.create(:participant, first_name: 'Martha')
+
+      rel1 = FactoryGirl.create(:relationship, origin: sib1, destination: sib2)
+      rel2 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib1)
+      rel3 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib2)
+    end
+
+    it 'includes origin_relationships and destination_relationships' do
+      relationships = sib1.relationships
+      relationships.should include rel1
+      relationships.should include rel2
+    end
+
+    it 'does not include any other relationships' do
+      relationships.should_not include rel3
     end
   end
 end

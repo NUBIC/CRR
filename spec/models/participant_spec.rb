@@ -10,6 +10,7 @@ describe Participant do
   it { should validate_presence_of :last_name }
   it { should have_many(:origin_relationships) }
   it { should have_many(:destination_relationships) }
+  it { should have_many(:study_involvements) }
   it { should ensure_length_of(:zip).is_at_most(5) }
   it { should validate_numericality_of(:zip) }
 

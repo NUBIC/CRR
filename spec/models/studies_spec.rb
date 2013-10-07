@@ -9,6 +9,7 @@ describe Study do
   end
 
   it { should validate_presence_of :active_on }
+  it { should have_many(:study_involvements) }
 
   # describe 'active scope' do
   #   it 'includes study which has past active date and does not have inactive date' do

@@ -114,19 +114,20 @@ describe Participant do
       sib2 = FactoryGirl.create(:participant)
       parent = FactoryGirl.create(:participant, first_name: 'Martha')
 
-      rel1 = FactoryGirl.create(:relationship, origin: sib1, destination: sib2)
-      rel2 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib1)
-      rel3 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib2)
+      @rel1 = FactoryGirl.create(:relationship, origin: sib1, destination: sib2)
+      @rel2 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib1)
+      @rel3 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib2)
+
+      @relationships = sib1.relationships
     end
 
     it 'includes origin_relationships and destination_relationships' do
-      relationships = sib1.relationships
-      relationships.should include rel1
-      relationships.should include rel2
+      @relationships.should include @rel1
+      @relationships.should include @rel2
     end
 
     it 'does not include any other relationships' do
-      relationships.should_not include rel3
+      @relationships.should_not include @rel3
     end
   end
 end

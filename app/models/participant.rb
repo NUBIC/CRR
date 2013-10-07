@@ -46,7 +46,6 @@ class Participant < ActiveRecord::Base
 
   # condensed form of address
   def address
-    # "#{self.address_line1} #{self.address_line2} #{self.city},#{self.state} #{self.zip}"
     addr = [address_line1, address_line2, city].reject(&:blank?).join(' ').strip
     addr1 = [state, zip].reject(&:blank?).join(' ').strip
     addr1.blank? ? addr.blank? ? nil : addr : addr << "," << addr1
@@ -57,7 +56,6 @@ class Participant < ActiveRecord::Base
   end
 
   def search_display
-    # "#{name} - #{address} - #{email} - #{primary_phone}"
     [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
   end
 

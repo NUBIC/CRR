@@ -17,4 +17,12 @@ class StudyInvolvement < ActiveRecord::Base
   belongs_to :participant
 
   validates_presence_of :start_date, :participant, :study
+  validate :end_date_cannot_be_before_start_date
+
+  private
+  def end_date_cannot_be_before_start_date
+    if end_date.present? && end_date < start_date
+      errors.add(:end_date, "can't be before start_date")
+    end
+  end
 end

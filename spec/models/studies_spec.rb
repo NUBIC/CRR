@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Study do
-  let(:date) { Date.today }
+  let(:date) { Date.new(2013, 10, 10) }
   
   it "creates a new instance given valid attributes" do
     study = FactoryGirl.create(:study)
@@ -10,6 +10,23 @@ describe Study do
 
   it { should validate_presence_of :active_on }
   it { should have_many(:study_involvements) }
+
+  describe 'validates inactive_on' do
+    it 'should not be before active_on' do
+      study = FactoryGirl.build(:study, active_on: date, inactive_on: date - 1.days)
+      study.should_not be_valid
+    end
+
+    it 'should be after active_on' do
+      study = FactoryGirl.build(:study, active_on: date, inactive_on: date + 1.days)
+      study.should be_valid
+    end
+
+    it 'can be nil' do
+      study = FactoryGirl.build(:study, active_on: date)
+      study.should be_valid
+    end
+  end
 
   # describe 'active scope' do
   #   it 'includes study which has past active date and does not have inactive date' do

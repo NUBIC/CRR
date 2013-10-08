@@ -15,5 +15,8 @@
 class ContactLog < ActiveRecord::Base
   belongs_to :participant
 
-  MODES=['phone','email','in_persion','mail']
+  MODES = ['phone','email','in_person','mail']
+
+  validates_presence_of :participant, :mode
+  validates_inclusion_of :mode, :in => MODES
 end

@@ -11,6 +11,7 @@ describe Participant do
   it { should have_many(:origin_relationships) }
   it { should have_many(:destination_relationships) }
   it { should have_many(:study_involvements) }
+  it { should have_many(:contact_logs) }
   it { should ensure_length_of(:zip).is_at_most(5) }
   it { should validate_numericality_of(:zip) }
 

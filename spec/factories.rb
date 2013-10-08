@@ -14,9 +14,14 @@ FactoryGirl.define do
     s.active_on Date.new(2013, 10, 3)
   end
 
-  factory :study_involvement do |r|
-    r.start_date Date.new(2013, 10, 5)
-    r.association :study, :factory => :study
-    r.association :participant, :factory => :participant
+  factory :study_involvement do |si|
+    si.start_date Date.new(2013, 10, 5)
+    si.association :study, :factory => :study
+    si.association :participant, :factory => :participant
+  end
+
+  factory :contact_log do |cl|
+    cl.mode 'phone'
+    cl.association :participant, :factory => :participant
   end
 end

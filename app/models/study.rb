@@ -25,7 +25,7 @@ class Study < ActiveRecord::Base
 
   def inactive_on_cannot_be_before_active_on
     if inactive_on.present? && inactive_on < active_on
-      errors.add(:inactive_on, "can't be before active on")
+      errors.add(:inactive_on, "can't be before active_on")
     end
   end
 end

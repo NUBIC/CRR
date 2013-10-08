@@ -15,6 +15,8 @@ describe Study do
     it 'should not be before active_on' do
       study = FactoryGirl.build(:study, active_on: date, inactive_on: date - 1.days)
       study.should_not be_valid
+      study.should have(1).error_on(:inactive_on)
+      study.errors[:inactive_on].should == ["can't be before active_on"]
     end
 
     it 'should be after active_on' do

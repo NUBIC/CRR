@@ -43,7 +43,7 @@ class ContactLogsController < ApplicationController
  end
 
  def cl_params
-   params.require(:contact_log).permit(:participant_id,:date,:notes)
+   params.require(:contact_log).permit(:participant_id, :date, :notes, :mode)
  end
 end
 

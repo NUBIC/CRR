@@ -132,4 +132,83 @@ describe Participant do
       @relationships.should_not include @rel3
     end
   end
+
+  describe '#on_study?' do
+    let(:study) { FactoryGirl.create(:study) }
+    let(:date) { Date.new(2013, 10, 10) }
+
+    it 'returns true if participant has any study involvement with start date is in past and no end date' do
+      FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: date)
+      participant.on_study?.should be_true
+    end
+
+    it 'returns true if participant has any study involvement with start date is in past and end date is in future' do
+      FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: date, end_date: date + 2.days)
+      participant.on_study?.should be_true
+    end
+
+    it 'returns false if participant has any study involvement with start date is in future' do
+      FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: date + 2.days)
+      participant.on_study?.should be_false
+    end
+
+    it 'returns false if participant has any study involvement with end date is in past' do
+      FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: date - 2.days, end_date: date - 1.days)
+      participant.on_study?.should be_false
+    end
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -24,4 +24,15 @@ FactoryGirl.define do
     cl.mode 'phone'
     cl.association :participant, :factory => :participant
   end
+
+  factory :search do |search|
+    search.connector 'or'
+    search.parameters do
+      {
+        '1' => 'RED',
+        '2' => 'BLUE'
+      }
+    end
+    search.association :study, :factory => :study
+  end
 end

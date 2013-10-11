@@ -3,7 +3,7 @@
     %h5 Please Select Search Criteria
   =form_tag(searches_path) do
     .row-fluid
-      =select_tag("search[connector]",options_for_select([["Participants with ANY of the selected","or"],["Participants with ALL of the selected","and"]]),:class=>"input-xlarge")
+      =select_tag("search[connector]",options_for_select([["Participants with ANY of the selected", Search::OR],["Participants with ALL of the selected", Search::AND]]),:class=>"input-xlarge")
       =select_tag("search[study_id]",options_for_select(Study.all.collect{|s| [s.irb_number,s.id]}),:class=>"input-xlarge")
     .row-fluid
       #search_surveys.accordion

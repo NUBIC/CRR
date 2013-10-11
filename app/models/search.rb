@@ -18,12 +18,17 @@ class Search < ActiveRecord::Base
 
   belongs_to :study
   serialize :parameters, Hash
-  validates_presence_of :connector, :parameters,:study
 
   aasm_column :state
   aasm_state :new, :initial => true
   aasm_state :data_requested
   aasm_state :data_released
+
+  CONNECTORS = [ OR = 'or',
+                 AND = 'and']
+
+  validates_presence_of :connector, :parameters, :study
+  validates_inclusion_of :connector, :in => CONNECTORS
 
   aasm_event :request_data do 
     transitions :to => :data_requested,:from=>[:new],:on_transition=> Proc.new {|obj, *args| obj.set_request_date }
@@ -39,9 +44,9 @@ class Search < ActiveRecord::Base
     answer_ids = parameters.values.flatten
     responses = Response.where("answer_id in (#{answer_ids.join(",")})") 
     return [] if responses.nil?
-    if connector == "or"
+    if connector == OR
       @participants = responses.collect{|r| r.response_set.participant if enrolled.include?(r.response_set.participant)}
-    elsif connector == "and"
+    elsif connector == AND
       answer_ids_to_include = parameters.keys.to_a
       @participants = responses.collect{|r| r.response_set.participant if (enrolled.include?(r.response_set.participant) && r.response_set.participant && response_set_includes_all_of(r.response_set, answer_ids_to_include))}
     end

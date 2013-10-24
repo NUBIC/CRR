@@ -13,6 +13,7 @@ gem "twitter-bootstrap-rails"
 gem 'therubyracer'
 gem 'cancan'
 gem 'rest-client'
+gem "authlogic"
 
 gem "aasm"
 # Use SCSS for stylesheets

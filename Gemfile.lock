@@ -31,6 +31,9 @@ GEM
       rake
     arel (4.0.0)
     atomic (1.1.14)
+    authlogic (3.3.0)
+      activerecord (>= 3.2)
+      activesupport (>= 3.2)
     bcdatabase (1.0.6)
       activesupport (>= 2.0)
       highline (~> 1.5)
@@ -184,6 +187,7 @@ DEPENDENCIES
   aasm
   american_date
   annotate (~> 2.5.0)
+  authlogic
   bcdatabase (~> 1.0.6)
   cancan
   capistrano (= 2.15.5)

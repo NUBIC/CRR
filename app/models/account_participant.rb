@@ -10,8 +10,5 @@
 #  updated_at     :datetime
 #
 
-require 'spec_helper'
-
-describe AccountParticipants do
-  pending "add some examples to (or delete) #{__FILE__}"
+class AccountParticipant < ActiveRecord::Base
 end

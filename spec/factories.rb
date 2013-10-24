@@ -35,4 +35,8 @@ FactoryGirl.define do
     end
     search.association :study, :factory => :study
   end
+
+  factory :account do |a|
+    a.email "test@test.com"
+  end
 end

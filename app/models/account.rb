@@ -18,8 +18,13 @@
 #  updated_at        :datetime
 #
 
-require 'spec_helper'
+class Account < ActiveRecord::Base
+  has_many :account_participants
+  has_many :participants, :through => :account_participants
 
-describe Accounts do
-  pending "add some examples to (or delete) #{__FILE__}"
+  # validates :email, :format => { :with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: false, :uniqueness => true
+
+  validates_uniqueness_of   :email, :case_sensitive => false, :allow_blank => false
+  validates_presence_of :email
+  validates_format_of :email, :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i, :message => 'is Invalid'
 end

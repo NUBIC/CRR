@@ -18,5 +18,17 @@
 #  updated_at        :datetime
 #
 
-class Accounts < ActiveRecord::Base
+require 'spec_helper'
+
+describe Account do
+  let(:account) { FactoryGirl.create(:account) }
+  it "creates a new instance given valid attributes" do
+    account.should_not be_nil
+  end
+
+  subject { account }
+  it { should validate_presence_of :email }
+  it { should validate_uniqueness_of :email }
+  it { should have_many(:account_participants) }
+  it { should have_many(:participants) }
 end

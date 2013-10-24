@@ -20,8 +20,15 @@ Things you may want to cover:
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
+  cap staging deploy:setup
+  cap staging deploy
 
-* ...
+* audiology_registry_deploy file content
+
+  audiology_registry:
+    repo: project repo
+    deploy_to: "/var/www/apps/audiology_registry"
+    staging_app_server: staging server url
 
 
 Please feel free to use a different markup language if you do not plan to run

@@ -10,8 +10,3 @@
 # Do not set this db to the same as development or production.
 <%= bcdb.test :local_postgresql, :audiology_test %>
 <%= bcdb.staging :pstage, :audiology_registry_staging %>
-
-#TODO: Add staging and production support.
-#<%= bcdb.staging :crrdb_staging, :audiology %>
-#
-#<%= bcdb.production :crrdb_prod, :audiology %>

@@ -97,6 +97,8 @@ GEM
     net-ssh (2.7.0)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
+    paper_trail (3.0.0.beta1)
+      activerecord (>= 3.0, < 5.0)
     pg (0.16.0)
     polyglot (0.3.3)
     rack (1.5.2)
@@ -199,6 +201,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   less-rails
+  paper_trail (>= 3.0.0.beta1)
   pg
   rails (= 4.0.0)
   rest-client

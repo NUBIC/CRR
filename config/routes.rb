@@ -28,5 +28,13 @@ AudiologyRegistry::Application.routes.draw do
     end
   end
 
-  get '/' =>  "participants#index"
+  resources :accounts
+  resources :account_sessions
+  get 'login' => 'account_sessions#new', :as => :login
+  get 'logout' => 'account_sessions#destroy', :as => :logout
+  get 'dashboard' => 'accounts#index', :as => :dashboard
+
+  resources :welcome
+
+  get '/' =>  "welcome#index"
 end

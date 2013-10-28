@@ -3,7 +3,7 @@ require 'spec_helper'
 describe AccountsController do
   let(:valid_attributes) { { email: "test@test.com", password: "1234", password_confirmation: "1234" } }
   let(:invalid_attributes) { { email: "test", password: "1234", password_confirmation: "1234" } }
-  
+
   # describe "GET show" do
   #   it "assigns the requested account as @account" do
   #     account = Account.create! valid_attributes
@@ -37,9 +37,9 @@ describe AccountsController do
         expect(assigns(:account)).to be_persisted
       end
 
-      it "redirects to the created account" do
+      it "redirects to the dashboard page" do
         post :create, {:account => valid_attributes}
-        expect(response).to redirect_to(Account.last)
+        expect(response).to redirect_to dashboard_path
       end
     end
 
@@ -68,9 +68,9 @@ describe AccountsController do
         expect(assigns(:account)).to eq(account)
       end
 
-      it "redirects to the account" do
+      it "redirects to the dashboard page" do
         put :update, {:id => account.id, :account => valid_attributes}
-        expect(response).to redirect_to(account)
+        expect(response).to redirect_to dashboard_path
       end
     end
 

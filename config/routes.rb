@@ -32,7 +32,7 @@ AudiologyRegistry::Application.routes.draw do
   resources :account_sessions
   get 'login' => 'account_sessions#new', :as => :login
   get 'logout' => 'account_sessions#destroy', :as => :logout
-  get 'dashboard' => 'accounts#index', :as => :dashboard
+  get 'dashboard' => 'accounts#dashboard', :as => :dashboard
 
   resources :welcome
 

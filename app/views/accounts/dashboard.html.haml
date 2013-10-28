@@ -1,0 +1,12 @@
+Welcome to the CRR. Please add yourself or someone else to the registry.
+
+%ul.nav.nav-tabs
+  %li{:class=>'active'}=link_to 'Dashboard','#dashboard',"data-toggle"=>'tab'
+  %li=link_to 'Edit Account','#account',"data-toggle"=>'tab'
+.tab-content
+  #dashboard.tab-pane.active
+    .row-fluid
+      =link_to "Add yourself", new_participant_path ,"data-async"=>true, "data-target"=>"#basics", :class=>"btn btn-mini btn-primary"
+      =link_to "Add children", new_participant_path ,"data-async"=>true, "data-target"=>"#basics", :class=>"btn btn-mini btn-primary"
+  #account.tab-pane
+    = render :partial => 'update'

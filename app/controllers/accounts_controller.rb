@@ -3,6 +3,13 @@ class AccountsController < ApplicationController
     @accounts = Account.all
   end
 
+  def dashboard
+    @account = current_user
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def new
     @account = Account.new
     respond_to do |format|
@@ -14,7 +21,7 @@ class AccountsController < ApplicationController
     @account = Account.new(account_params)
     respond_to do |format|
       if @account.save
-        format.html {  redirect_to(@account, :notice => 'Account is created') }
+        format.html { redirect_to dashboard_path }
       else
         format.html { redirect_to login_path(:anchor => "sign_up")
         flash[:notice] = "Please try again" }
@@ -28,13 +35,12 @@ class AccountsController < ApplicationController
     respond_to do |format|
       if @account.save
         flash[:notice] = "Updated"
-        format.html { redirect_to account_path(@account) }
+        format.html { redirect_to dashboard_path }
       else
         flash[:error] = @account.errors.full_messages.to_sentence
         format.html { render :action => "edit" }
       end
     end
-    # redirect_to account_path(@account)
   end
 
   def destroy

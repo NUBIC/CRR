@@ -1,0 +1,24 @@
+!!!
+%html
+  %head
+    %meta{:charset => "utf-8"}
+    %meta{:name => "viewport", :content => "width=device-width, initial-scale=1, maximum-scale=1"}
+    %title= content_for?(:title) ? yield(:title) : "audiology registry"
+    %meta{:content => "Northwestern University Audiology Registry", :name => "description"}
+    %meta{:content => "NUBIC", :name => "author"}
+    = stylesheet_link_tag "application", :media => "all"
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+    = yield(:head)
+  %body
+    .fluid
+      .container-fluid
+        .content
+          .row-fluid
+            .span12.messages
+              = render 'layouts/messages'
+          .row-fluid
+            .span12
+              = yield
+          .row-fluid.no-print
+            %p!= "Communication Research Registry &mdash; created by #{link_to("NUBIC", "http://www.nucats.northwestern.edu/resources-services/data-and-informatics-services/index.html")}"

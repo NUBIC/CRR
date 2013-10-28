@@ -38,5 +38,7 @@ FactoryGirl.define do
 
   factory :account do |a|
     a.email "test@test.com"
+    a.password "1234"
+    a.password_confirmation "1234"
   end
 end

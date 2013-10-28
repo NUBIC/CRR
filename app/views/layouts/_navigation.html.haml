@@ -3,6 +3,9 @@
   %li.divider-vertical
   %li=link_to 'Searches',searches_path
   %li.divider-vertical
+  -if current_user
+    %li=link_to "Logout", :logout
+    %li.divider-vertical
 %ul.nav.pull-right
   %li.dropdown
     =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do 

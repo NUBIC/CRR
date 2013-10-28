@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131024223752) do
+ActiveRecord::Schema.define(version: 20131028192505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,26 @@ ActiveRecord::Schema.define(version: 20131024223752) do
     t.integer  "display_order"
     t.string   "reference"
     t.integer  "weight"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "consent_signatures", force: true do |t|
+    t.integer  "consent_id"
+    t.integer  "participant_id"
+    t.date     "consent_date"
+    t.string   "consent_person_name"
+    t.boolean  "accept"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "consent_signatures", ["participant_id"], name: "index_consent_signatures_on_participant_id", using: :btree
+
+  create_table "consents", force: true do |t|
+    t.text     "content"
+    t.string   "accept_text",  default: "I Accept"
+    t.string   "decline_text", default: "I Decline"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -41,4 +41,13 @@ FactoryGirl.define do
     a.password "1234"
     a.password_confirmation "1234"
   end
+
+  factory :consent do |c|
+    c.content "This is the test consent"
+  end
+
+  factory :consent_signature do |cs|
+    cs.association :consent, :factory => :consent
+    cs.association :participant, :factory => :participant
+  end
 end

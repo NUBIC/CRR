@@ -27,7 +27,7 @@ class Participant < ActiveRecord::Base
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
 
-  validates_presence_of :first_name, :last_name
+  # validates_presence_of :first_name, :last_name
   validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
   validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
   validates :zip, :numericality => true, allow_blank: true, :length => { :maximum => 5 }

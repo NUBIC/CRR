@@ -6,6 +6,7 @@ class ParticipantsController < ApplicationController
       format.json {render :json => @participants.to_json(:only=>[:id],:methods=>[:search_display])}
     end
   end
+  
   def index
     @participants = Participant.all
   end
@@ -14,14 +15,25 @@ class ParticipantsController < ApplicationController
     @participant = Participant.new
   end
 
+  # def create
+  #   @participant = Participant.new(participant_params)
+  #   if @participant.save
+  #     flash[:notice] = "Successfully created"
+  #   else
+  #     flash[:error] = @participant.errors.full_messages.to_sentence
+  #   end
+  #   redirect_to participants_path
+  # end
+
   def create
-    @participant = Participant.new(participant_params)
-    if @participant.save
-      flash[:notice] = "Successfully created"
-    else
-      flash[:error] = @participant.errors.full_messages.to_sentence
+    @account = Account.find(params[:account_id])
+    @participant = Participant.create!
+    account_participant = AccountParticipant.new(:participant => @participant, :account => @account)
+    if params[:proxy] == true
+      account_participant.proxy = true
+      account_participant.save!
     end
-    redirect_to participants_path
+    redirect_to dashboard_path
   end
 
   def show

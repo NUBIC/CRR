@@ -6,7 +6,12 @@ Welcome to the CRR. Please add yourself or someone else to the registry.
 .tab-content
   #dashboard.tab-pane.active
     .row-fluid
-      =link_to "Add yourself", new_participant_path ,"data-async"=>true, "data-target"=>"#basics", :class=>"btn btn-mini btn-primary"
-      =link_to "Add children", new_participant_path ,"data-async"=>true, "data-target"=>"#basics", :class=>"btn btn-mini btn-primary"
+      =form_tag(participants_path, :method => 'post') do
+        = hidden_field_tag "account_id", @account.id
+        = submit_tag('Add yourself', :class=>"btn btn-mini btn-primary", :confirm => "Are you sure you want to add yourself?")
+      =form_tag(participants_path, :method => 'post') do
+        = hidden_field_tag "account_id", @account.id
+        = hidden_field_tag "proxy", true
+        = submit_tag('Add Child', :class=>"btn btn-mini btn-primary", :confirm => "Are you sure you want to add Child?")
   #account.tab-pane
     = render :partial => 'update'

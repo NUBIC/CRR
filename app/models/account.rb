@@ -19,10 +19,12 @@
 #
 
 class Account < ActiveRecord::Base
+  acts_as_authentic do |c|
+    c.validate_email_field = false
+  end
+
   has_many :account_participants
   has_many :participants, :through => :account_participants
-
-  # validates :email, :format => { :with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: false, :uniqueness => true
 
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_blank => false
   validates_presence_of :email

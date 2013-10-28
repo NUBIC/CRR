@@ -14,4 +14,5 @@
 
 class ConsentSignature < ActiveRecord::Base
   belongs_to :consent
+  belongs_to :participant
 end

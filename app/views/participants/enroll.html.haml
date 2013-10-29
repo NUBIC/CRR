@@ -1,7 +1,7 @@
 - if @participant.consent?
   = render :partial => 'participant_consent'
 - elsif @participant.demographics?
-  = render :partial => 'participant_edit'
+  = render :partial => 'participant_demographic'
 - elsif @participant.completed?
   Thank you for participating in the CRR. Someone from CRR will contact you if more information is needed.
 = render :partial => 'participant_surveys'

@@ -18,19 +18,59 @@
 #  notes           :text
 #  created_at      :datetime
 #  updated_at      :datetime
+#  stage           :string(255)
 #
 
 class Participant < ActiveRecord::Base
+  include AASM
   has_many :response_sets
   has_many :contact_logs
   has_many :study_involvements
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
+  has_many :consent_signatures
 
   # validates_presence_of :first_name, :last_name
   validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
   validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
   validates :zip, :numericality => true, allow_blank: true, :length => { :maximum => 5 }
+
+  after_create :signup!
+  aasm_column :stage
+  aasm_state :new, :initial => true
+  aasm_state :consent
+  aasm_state :consent_denied
+  aasm_state :demographics
+  aasm_state :relationships
+  aasm_state :survey
+  aasm_state :survey_started
+  aasm_state :completed
+  aasm_state :verification_needed
+  aasm_state :enrolled
+
+  aasm_event :signup do
+    transitions :to => :consent, :from =>:new
+  end
+
+  aasm_event :sign_consent do
+    transitions :to => :demographics, :from => :consent, :on_transition => :create_consent_signature
+  end
+
+  aasm_event :take_survey do
+    transitions :to => :survey, :from => :demographics
+  end
+
+  aasm_event :start_survey do
+    transitions :to => :survey_started, :from => :survey
+  end
+
+  aasm_event :finish_survey do
+    transitions :to => :completed, :from => :survey_started
+  end
+
+  aasm_event :decline_consent do
+   transitions :to => :consent_denied, :from =>:consent
+  end
 
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
@@ -57,6 +97,10 @@ class Participant < ActiveRecord::Base
 
   def search_display
     [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
+  end
+
+  def create_consent_signature
+    self.consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true)
   end
 
 end

@@ -5,6 +5,10 @@ AudiologyRegistry::Application.routes.draw do
     collection do 
       get :search
     end
+    member do
+      get :enroll
+      post :consent_signature
+    end
   end
   
   resources :surveys do 

@@ -8,6 +8,7 @@
 #  effective_date :date
 #  created_at     :datetime
 #  updated_at     :datetime
+#  completed_at   :datetime
 #
 
 class ResponseSet < ActiveRecord::Base
@@ -107,7 +108,7 @@ class ResponseSet < ActiveRecord::Base
   def complete!
     if mandatory_questions_complete? 
       self.completed_at = Time.now
-      Scoring.score(self)
+      # Scoring.score(self)
       save!
     else
       self.errors.add(:form,"Mandatory questions not complete")

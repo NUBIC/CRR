@@ -116,6 +116,10 @@ class Survey < ActiveRecord::Base
     self.state.eql?("active")
   end
 
+  def adult_survey?
+    self.title.eql?("Adult Survey") && self.state.eql?("active")
+  end
+
   #this method checks that the survey is in fact valid for activation
   #checks things like it has at least one section, at least one question etc
   def soft_errors

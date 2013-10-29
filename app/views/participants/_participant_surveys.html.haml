@@ -1,0 +1,25 @@
+-if @participant.survey?
+  %h5="Thank you for your interest in the CRR. We’d appreciate 5 to 10 minutes of your time to take this survey and fill out the questionnaire. Plese click on individual link to take survey."   
+  =form_tag(response_sets_path, :method => "post", :html => { :class=>"form-horizontal" }) do
+    =hidden_field_tag 'participant_id', @participant.id
+    =hidden_field_tag 'response_set[survey_id]', @survey.id
+    .control-group
+      .controls
+        =submit_tag @survey.title, :class=> "btn btn-link"
+-elsif @participant.survey_started?
+  %table.table.bordered
+    %thead
+      %tr
+        %th Survey
+        %th Date
+        %th Entry Start
+        %th Entry Completion
+        %th
+    %tbody
+      -@participant.response_sets.each do |response_set|
+        %tr
+          %td=response_set.survey.title
+          %td=response_set.effective_date
+          %td=response_set.created_at
+          %td=response_set.completed_at
+          %td=link_to "Complete",edit_response_set_path(response_set),:class=>"btn btn-mini btn-primary"

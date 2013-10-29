@@ -17,13 +17,14 @@ class ResponseSetsController < ApplicationController
   end
 
   def create
-     @participant = Participant.find(params[:response_set][:participant_id])
-     @response_set= @participant.response_sets.new(response_set_params)
-     if @response_set.save
-       redirect_to(edit_response_set_path(@response_set))
-     else
-       flash[:notice] = @response_set.errors.full_messages.to_sentence
-       redirect_to @participant
+    participant = Participant.find(params[:participant_id])
+    @response_set= participant.response_sets.new(response_set_params)
+    if @response_set.save
+      participant.start_survey! if participant.survey?
+      redirect_to(edit_response_set_path(@response_set))
+    else
+      flash[:notice] = @response_set.errors.full_messages.to_sentence
+      redirect_to redirect_to enroll_participant_path(participant)
     end
   end
 
@@ -40,34 +41,29 @@ class ResponseSetsController < ApplicationController
 
   def update
     @response_set= ResponseSet.find(params[:id])
-    #result = params.require(:response_set).permit(:effective_date).tap do |whitelisted|
-      
-    #end
-    #@response_set.update_attributes(params.require(:response_set).permit(@response_set.methods.collect{|att| att.to_sym}))
     @response_set.update_attributes(response_set_params)
+    participant = @response_set.participant
     if @response_set.save
       if params[:button].eql?("finish") 
         @response_set.complete! 
-        flash[:notice] = @response_set.responses.collect{|r| r.errors.full_messages.to_sentence}.to_sentence  unless @response_set.save
+        @response_set.participant.finish_survey! if participant.survey_started?
+        return redirect_to enroll_participant_path(participant)
+      elsif params[:button].eql?("exit")
+        return redirect_to enroll_participant_path(participant)
       else
-        flash[:notice] = "Form Successfully Saved"
+        redirect_to edit_response_set_path(@response_set, :section_id => params[:button])
       end
     else
       flash[:notice] = @response_set.responses.collect{|r| r.errors.full_messages.to_sentence}.to_sentence
-    end
-    return redirect_to participant_path(@response_set.participant,:tab=>"forms") if params[:button].eql?("exit")
-    respond_to do |format|
-      format.html do
-        redirect_to edit_response_set_path(@response_set,:section_id=>params[:button])
-      end
+      redirect_to edit_response_set_path(@response_set)
     end
   end
 
- def response_set_params
-   params.require(:response_set).permit(:all).tap do |whitelist|
-     params[:response_set].each do |key,val|
-       whitelist[key] = params[:response_set][key]
-     end
-   end
- end
+  def response_set_params
+    params.require(:response_set).permit(:all).tap do |whitelist|
+      params[:response_set].each do |key,val|
+        whitelist[key] = params[:response_set][key]
+      end
+    end
+  end
 end

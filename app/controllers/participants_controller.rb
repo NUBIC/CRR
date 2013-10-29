@@ -23,10 +23,8 @@ class ParticipantsController < ApplicationController
     @account = Account.find(params[:account_id])
     @participant = Participant.create!
     account_participant = AccountParticipant.new(:participant => @participant, :account => @account)
-    if params[:proxy] == true
-      account_participant.proxy = true
-      account_participant.save!
-    end
+    account_participant.proxy = true if params[:proxy] == true
+    account_participant.save!
     redirect_to enroll_participant_path(@participant)
   end
 

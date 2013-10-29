@@ -29,4 +29,8 @@ class Account < ActiveRecord::Base
   validates_uniqueness_of   :email, :case_sensitive => false, :allow_blank => false
   validates_presence_of :email
   validates_format_of :email, :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i, :message => 'is Invalid'
+
+  def current_participants
+    participants.reject { |p| p.new? || p.consent? || p.demographics? }
+  end
 end

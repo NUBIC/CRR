@@ -12,4 +12,8 @@
 
 class Consent < ActiveRecord::Base
   has_many :consent_signatures
+
+  def self.active_consent
+    Consent.all.last
+  end
 end

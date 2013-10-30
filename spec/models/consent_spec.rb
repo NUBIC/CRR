@@ -8,6 +8,7 @@
 #  decline_text :string(255)      default("I Decline")
 #  created_at   :datetime
 #  updated_at   :datetime
+#  consent_type :string(255)
 #
 
 require 'spec_helper'

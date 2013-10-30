@@ -31,6 +31,7 @@ AudiologyRegistry::Application.routes.draw do
       patch :release_data
     end
   end
+  resources :consents
 
   resources :accounts
   resources :account_sessions

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131029163120) do
+ActiveRecord::Schema.define(version: 20131030043917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 20131029163120) do
     t.boolean  "proxy",          default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "child",          default: false, null: false
   end
 
   add_index "account_participants", ["account_id"], name: "index_account_participants_on_account_id", using: :btree
@@ -74,6 +75,7 @@ ActiveRecord::Schema.define(version: 20131029163120) do
     t.string   "decline_text", default: "I Decline"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "consent_type"
   end
 
   create_table "contact_logs", force: true do |t|

@@ -1,0 +1,12 @@
+#consents.row-fluid
+  =link_to "Add Consent", new_consent_path,"data-async"=>true,"data-target"=>"#consents",:class=>"btn btn-primary"
+  %table.table.bordered
+    %thead
+      %tr
+        %th Consent.Type
+        %th 
+    %tbody
+      -@consents.each do |consent|
+        %tr
+          %td=consent.consent_type
+          %td=link_to "Edit", edit_consent_path(consent)

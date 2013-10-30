@@ -13,12 +13,12 @@
         .control-group
           =label_tag 'Password'
           .controls
-            =text_field_tag 'account[password]'
+            =password_field_tag 'account[password]'
       .row-fluid
         .control-group
           =label_tag 'Verify Password'
           .controls
-            =text_field_tag 'account[password_confirmation]'
+            =password_field_tag 'account[password_confirmation]'
       .row-fluid
         .btn-group
           = submit_tag('Create an Account', :class=>"btn btn-success")

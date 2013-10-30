@@ -15,12 +15,12 @@ html, body {
   height: 100%;
 }
 
-.main {
+/*.main {
   overflow:auto;
-  padding-bottom:150px; /* this needs to be bigger than footer height*/
+  padding-bottom:150px;  this needs to be bigger than footer height
   max-height: 1160px;
   min-height: 300px;
-}
+}*/
 
 .footer {
   position: relative;

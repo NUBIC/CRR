@@ -6,18 +6,21 @@ Welcome to the CRR.
 .tab-content
   #dashboard.tab-pane.active
     .row-fluid
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = submit_tag('Myself', :class=>"btn", :confirm => "Are you sure you want to add yourself?")
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = hidden_field_tag "proxy", true
-        = hidden_field_tag "child", true
-        = submit_tag('Child', :class=>"btn", :confirm => "Are you sure you want to add child?")
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = hidden_field_tag "proxy", true
-        = submit_tag('Another Adult', :class=>"btn", :confirm => "Are you sure you want to add an adult?")
+      .span1
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = submit_tag('Myself', :class=>"btn", :confirm => "Are you sure you want to add yourself?")
+      .span1
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = hidden_field_tag "child", true
+          = submit_tag('Child', :class=>"btn", :confirm => "Are you sure you want to add child?")
+      .span1
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = submit_tag('Another Adult', :class=>"btn", :confirm => "Are you sure you want to add an adult?")
   #account.tab-pane
     = render :partial => 'account_update'
   #participants.tab-pane

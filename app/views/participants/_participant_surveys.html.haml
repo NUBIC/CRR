@@ -1,3 +1,5 @@
+.alert.alert-success
+  %h4=@participant.name
 -if @participant.survey?
   %h5="Thank you for your interest in the CRR. We’d appreciate 5 to 10 minutes of your time to take this survey and fill out the questionnaire. Plese click on individual link to take survey."   
   =form_tag(response_sets_path, :method => "post", :html => { :class=>"form-horizontal" }) do
@@ -22,4 +24,4 @@
           %td=response_set.effective_date
           %td=response_set.created_at
           %td=response_set.completed_at
-          %td=link_to "Complete",edit_response_set_path(response_set),:class=>"btn btn-mini btn-primary"
+          %td=link_to "Complete",edit_response_set_path(response_set),:class=>"btn btn-success"

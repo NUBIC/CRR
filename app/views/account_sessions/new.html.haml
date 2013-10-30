@@ -21,19 +21,17 @@
             =text_field_tag 'account[password_confirmation]'
       .row-fluid
         .btn-group
-          = submit_tag('Create an Account', :class=>"btn btn-mini btn-success")
+          = submit_tag('Create an Account', :class=>"btn btn-success")
   #login_tab.tab-pane
     =form_for @account_session, :html => { :class => "form-horizontal" }  do |f|
       .row-fluid
         .control-group
           =f.label :email
-          .controls
-            =f.text_field :email
+          =f.text_field :email
       .row-fluid
         .control-group
           =f.label :password
-          .controls
-            =f.password_field :password
+          =f.password_field :password
       .row-fluid
         .btn-group
-          =f.button "login",:class=>"btn btn-mini btn-success"
+          =f.button "login",:class=>"btn btn-success"

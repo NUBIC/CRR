@@ -1,0 +1,14 @@
+.row-fluid
+  %table.table.table-condensed.table-striped
+    %thead
+      %tr
+        %th="Name"
+        %th="Phone Number"
+        %th="Address"
+    %tbody
+      - @current_user.current_participants.each do |participant|
+        %tr
+          %td=link_to participant.name, enroll_participant_path(participant)
+          %td=participant.primary_phone
+          %td=participant.address
+

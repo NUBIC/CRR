@@ -2,6 +2,6 @@
 .row-fluid
   =form_tag(consent_signature_participant_path(@participant), :method => 'post') do
     = hidden_field_tag "consent_response", "accept"
-    = submit_tag(Consent.active_consent.accept_text, :class=>"btn btn-mini btn-primary")
+    = submit_tag(Consent.active_consent.accept_text, :class=>"btn btn-success")
   =form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-    = submit_tag(Consent.active_consent.decline_text, :class=>"btn btn-mini btn-primary")
+    = submit_tag(Consent.active_consent.decline_text, :class=>"btn btn-danger")

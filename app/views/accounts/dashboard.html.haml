@@ -12,6 +12,7 @@ Welcome to the CRR.
       =form_tag(participants_path, :method => 'post') do
         = hidden_field_tag "account_id", @account.id
         = hidden_field_tag "proxy", true
+        = hidden_field_tag "child", true
         = submit_tag('Child', :class=>"btn", :confirm => "Are you sure you want to add child?")
       =form_tag(participants_path, :method => 'post') do
         = hidden_field_tag "account_id", @account.id

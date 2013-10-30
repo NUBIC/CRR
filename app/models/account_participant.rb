@@ -8,6 +8,7 @@
 #  proxy          :boolean          default(FALSE), not null
 #  created_at     :datetime
 #  updated_at     :datetime
+#  child          :boolean          default(FALSE), not null
 #
 
 class AccountParticipant < ActiveRecord::Base

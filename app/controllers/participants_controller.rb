@@ -23,8 +23,9 @@ class ParticipantsController < ApplicationController
     @account = Account.find(params[:account_id])
     @participant = Participant.create!
     account_participant = AccountParticipant.new(:participant => @participant, :account => @account)
-    account_participant.proxy = true if params[:proxy] == true
-    account_participant.save!
+    account_participant.proxy = true if params[:proxy] == "true"
+    account_participant.child = true if params[:child] == "true"
+    account_participant.save
     redirect_to enroll_participant_path(@participant)
   end
 
@@ -54,7 +55,7 @@ class ParticipantsController < ApplicationController
 
   def consent_signature
     @participant = Participant.find(params[:id])
-    params[:consent_response] == 'accept' ? @participant.sign_consent! : @participant.decline_consent!
+    params[:consent_response] == 'accept' ? @participant.sign_consent!(nil, params[:consent_name]) : @participant.decline_consent!
     respond_to do |format|
       format.html { redirect_to enroll_participant_path(@participant) }
     end

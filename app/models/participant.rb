@@ -30,6 +30,9 @@ class Participant < ActiveRecord::Base
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
   has_many :consent_signatures
 
+  has_one :account_participant
+  has_one :account, :through => :account_participant
+
   # validates_presence_of :first_name, :last_name
   validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
   validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
@@ -99,8 +102,16 @@ class Participant < ActiveRecord::Base
     [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
   end
 
-  def create_consent_signature
-    self.consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true)
+  def create_consent_signature(name=nil)
+    self.consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
+  end
+
+  def adult_proxy?
+    !self.account_participant.child && self.account_participant.proxy
+  end
+
+  def child_proxy?
+    self.account_participant.child && self.account_participant.proxy
   end
 
 end

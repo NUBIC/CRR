@@ -1,4 +1,28 @@
 AudiologyRegistry::Application.routes.draw do
+  namespace :admin do 
+    resources :sections
+    resources :questions
+    resources :answers
+    resources :surveys do 
+      member do 
+        patch :activate
+        patch :deactivate
+      end
+    end
+    resources :response_sets
+    resources :study_involvements
+    resources :contact_logs
+    resources :relationships
+    resources :users
+    resources :searches do 
+      member do 
+        patch :request_data
+        patch :release_data
+      end
+    end
+    resources :consents
+  end
+
 
   resources :studies
   resources :participants do 
@@ -11,27 +35,6 @@ AudiologyRegistry::Application.routes.draw do
     end
   end
   
-  resources :surveys do 
-    member do 
-      patch :activate
-      patch :deactivate
-    end
-  end
-  resources :sections
-  resources :questions
-  resources :answers
-  resources :response_sets
-  resources :study_involvements
-  resources :contact_logs
-  resources :relationships
-  resources :users
-  resources :searches do 
-    member do 
-      patch :request_data
-      patch :release_data
-    end
-  end
-  resources :consents
 
   resources :accounts
   resources :account_sessions
@@ -40,6 +43,5 @@ AudiologyRegistry::Application.routes.draw do
   get 'dashboard' => 'accounts#dashboard', :as => :dashboard
 
   resources :welcome
-
   get '/' =>  "welcome#index"
 end

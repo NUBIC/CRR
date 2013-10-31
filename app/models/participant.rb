@@ -2,23 +2,31 @@
 #
 # Table name: participants
 #
-#  id              :integer          not null, primary key
-#  email           :string(255)
-#  first_name      :string(255)
-#  middle_name     :string(255)
-#  last_name       :string(255)
-#  primary_phone   :string(255)
-#  secondary_phone :string(255)
-#  address_line1   :string(255)
-#  address_line2   :string(255)
-#  city            :string(255)
-#  state           :string(255)
-#  zip             :string(255)
-#  do_not_contact  :boolean
-#  notes           :text
-#  created_at      :datetime
-#  updated_at      :datetime
-#  stage           :string(255)
+#  id                            :integer          not null, primary key
+#  email                         :string(255)
+#  first_name                    :string(255)
+#  middle_name                   :string(255)
+#  last_name                     :string(255)
+#  primary_phone                 :string(255)
+#  secondary_phone               :string(255)
+#  address_line1                 :string(255)
+#  address_line2                 :string(255)
+#  city                          :string(255)
+#  state                         :string(255)
+#  zip                           :string(255)
+#  do_not_contact                :boolean
+#  notes                         :text
+#  created_at                    :datetime
+#  updated_at                    :datetime
+#  stage                         :string(255)
+#  primary_guardian_first_name   :string(255)
+#  primary_guardian_last_name    :string(255)
+#  primary_guardian_email        :string(255)
+#  primary_guardian_phone        :string(255)
+#  secondary_guardian_first_name :string(255)
+#  secondary_guardian_last_name  :string(255)
+#  secondary_guardian_email      :string(255)
+#  secondary_guardian_phone      :string(255)
 #
 
 class Participant < ActiveRecord::Base
@@ -103,15 +111,19 @@ class Participant < ActiveRecord::Base
   end
 
   def create_consent_signature(name=nil)
-    self.consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
+    consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
   end
 
   def adult_proxy?
-    !self.account_participant.child && self.account_participant.proxy
+    !account_participant.child && account_participant.proxy
   end
 
   def child_proxy?
-    self.account_participant.child && self.account_participant.proxy
+    account_participant.child && account_participant.proxy
+  end
+
+  def proxy?
+    account_participant.proxy
   end
 
   def consented?

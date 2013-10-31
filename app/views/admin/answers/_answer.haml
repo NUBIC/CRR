@@ -1,20 +1,16 @@
-.span11.offset1
-  .row-fluid
+.row-fluid
+  .span3
     =answer.text
-  .row-fluid
+  .span2
+    ="weight: #{answer.weight}"
+  .span2
+    ="code: #{answer.code}"
+  -unless answer.question.section.survey.active?
     .span3
-      ="reference #{answer.reference}"
-    .span2
-      ="weight: #{answer.weight}"
-    .span3
-      ="display order: #{answer.display_order}"
-    -unless answer.question.section.survey.active?
-      .span3
-        .span2
+      =form_tag(answer_path(answer),:method=>"delete",:class=>"ajax-form","data-target"=>"#q_#{answer.question.id}") do
+        .btn-group
           =link_to "Edit" ,edit_answer_path(answer),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#answer_#{answer.id}"
-        .span2
-          =form_tag(answer_path(answer),:method=>"delete",:class=>"ajax-form","data-target"=>"#q_#{answer.question.id}") do
-            =submit_tag('Delete',:class=>"btn btn-mini btn-danger")
+          =submit_tag('Delete',:class=>"btn btn-mini btn-danger")
       
  
   

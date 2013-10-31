@@ -1,25 +1,15 @@
 =form_for @answer, :html=>{:class=>"ajax-form form-horizontal","data-target"=>"#answer_#{@answer.id}"} do |f|
   .row-fluid
-    .control-group
-      =f.label :text
-      .controls
-        =f.text_area :text,:rows=>3
-    .control-group
-      =f.label :reference
-      .controls
-        =f.text_field :reference
-    .control-group
-      =f.label :weight
-      .controls
-        =f.text_field :weight, :size=>2
-    .control-group
-      =f.label :display_order
-      .controls
-        =f.select :display_order, (0...@answer.question.answers.size).collect{|display_order| [display_order]},:class=>"input-mini"
-  .row_fluid
-    .btn-group
-      =f.button "update",:class=>"btn btn-mini btn-success"
-      =link_to 'cancel',answer_path(@answer),"data-async"=>true,"data-target"=>"#answer_#{@answer.id}",:class=>"btn btn-mini btn-warning"
+    .span3
+      =f.text_field :text,:class=>"input-large",:placeholder=>"answer text..."
+    .span1
+      =f.text_field :weight, :size=>2,:class=>"input-mini",:placeholder=>"weight"
+    .span2
+      =f.text_field :code,:class=>"input-mini",:placeholder=>"code..."
+    .span2
+      .btn-group
+        =f.button "update",:class=>"btn btn-mini btn-success"
+        =link_to 'cancel',answer_path(@answer),"data-async"=>true,"data-target"=>"#answer_#{@answer.id}",:class=>"btn btn-mini btn-warning"
 
 
   

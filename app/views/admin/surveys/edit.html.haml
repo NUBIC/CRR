@@ -1,13 +1,13 @@
-=form_for @survey , :html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
+=form_for @survey , :html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
   .row-fluid
     =f.label :title
-    =f.text_field :title
+    =f.text_field :title,:class=>"input-xxlarge"
     =f.label :description
-    =f.text_area :description,:class=>"input-block-level",:rows=>3
+    =f.text_area :description,:rows=>2,:class=>"input-xxlarge"
   .row-fluid
     .btn-group
       =f.button "update",:class=>"btn btn-mini btn-success"
-      =link_to 'cancel',survey_path(@survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
+      =link_to 'cancel',survey_path(@survey),"data-async"=>true,"data-target"=>"#study_forms .accordion-inner",:class=>"btn btn-mini btn-warning"
 
 
 

@@ -1,19 +1,33 @@
 .row-fluid
   .span12
     %h2="Title: #{@survey.title}"
+.row-fluid
+  %h5.muted="Description:"
+  .row-fluid
+    .offset1
+      %h6=@survey.description
+.row-fluid
   -if @survey.active?
-    =form_for @survey,:url=>deactivate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
-      =f.submit "Deactivate",:class=>"btn btn-mini btn-danger"
+    =form_for @survey,:url=>deactivate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+      .btn-group
+        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#study_forms .accordion-inner"
+        =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
   -else
-    =form_for @survey,:url=>activate_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
-      =f.submit "Activate",:class=>"btn btn-mini btn-success"
-    %hr
--@survey.sections.each do |s|
-  .span11.offset1
-    .row-fluid{:id=>"section_#{s.id}"}
-      =render :partial=>"sections/section",locals: {section: s}
-    %hr
--unless @survey.active?
-  .row-fluid{:id=>"new_section"}
-    =link_to "Add Section",new_section_path(:survey_id=>@survey.id),:class=>"btn btn-small btn-primary","data-async"=>true,"data-target"=>"#new_section"
+    =form_for @survey,:url=>activate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+      .btn-group
+        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#study_forms .accordion-inner"
+        =f.button "Activate",:class=>"btn btn-mini btn-success"
+  %hr
+.tabbable.tabs-left
+  %ul.nav.nav-tabs
+    -@survey.sections.each_with_index do |s,si|
+      %li{:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id == s.id)}"}=link_to s.title, "#section_#{s.id}","data-toggle"=>"tab"
+    -unless @survey.active?
+      =link_to "Add Section",new_section_path(:survey_id=>@survey.id),:class=>"btn btn-mini btn-block btn-primary","data-async"=>true,"data-target"=>".tabbable"
+    =link_to "Exit",surveys_path(:study_id=>@survey.study.irb_number),:class=>"btn btn-mini btn-block btn-warning","data-async"=>true,"data-target"=>"#study_forms .accordion-inner"
+  .tab-content
+    -@survey.sections.each_with_index do |s,si|
+      .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id==s.id)}"}
+        =render :partial=>"sections/section",locals: {section: s}
+.row-fluid
       

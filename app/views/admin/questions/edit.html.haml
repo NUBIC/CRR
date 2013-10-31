@@ -1,34 +1,41 @@
 =form_for @question, :html=>{:class=>"ajax-form form-horizontal","data-target"=>"#q_#{@question.id}"} do |f|
   .row-fluid
-    .control-group
-      =f.label :text,:class=>"control-label" 
-      .controls
-        =f.text_area :text,:rows=>3,:class=>"input-block-level"
-    .control-group
-      =f.label :help_text,"Hint",:class=>"control-label"
-      .controls
-        =f.text_field :help_text
-    .control-group
-      =f.label :reference,"Variable Name",:class=>"control-label"
-      .controls
-        =f.text_field :reference
-    .control-group
-      =f.label :response_type,"Type",:class=>"control-label" 
-      .controls
-        =f.select :response_type, Question::VALID_RESPONSE_TYPES.keys.collect{|k|[k.titleize,k]}
-    .control-group
-      =f.label :is_mandatory ,"Mandatory"
-      .controls
-        =f.check_box :is_mandatory
-    .control-group
-      =f.label :display_order,:class=>"control-label" 
-      .controls
-        =f.select :display_order, (0...@question.section.questions.size).collect{|display_order| [display_order,display_order]},:class=>"input-mini"
-  .control-group
-    .controls
-      .btn-group
-        =f.button "update",:class=>"btn btn-mini btn-success"
-        =link_to 'cancel',question_path(@question),"data-async"=>true,"data-target"=>"#q_#{@question.id}",:class=>"btn btn-mini btn-warning"
+    =f.text_area :text,:rows=>1,:class=>"input-xxlarge"
+    =f.text_field :help_text,:placeholder=>"Hint text.."
+  .row-fluid
+    %h6.muted Options
+  .row-fluid
+    .span3
+      =f.select :response_type, Question::VALID_RESPONSE_TYPES.collect{|k|[ Question::VIEW_RESPONSE_TYPE_TRANSLATION[k],k]}
+    .span3
+      .control-group
+        =f.label :code,"Code",:class=>"control-label"
+        .controls
+          =f.text_field :code,:class=>"input-small"
+    .span3
+      .control-group
+        =f.label :display_order,:class=>"control-label" 
+        .controls
+          =f.select :display_order, (1..@question.section.questions.size).collect{|display_order| [display_order,display_order]},{},:class=>"input-mini"
+  .row-fluid
+    .span3
+      .control-group
+        =f.label :is_mandatory ,"Mandatory",:class=>"control-label"
+        .controls
+          =f.check_box :is_mandatory
+    .span3
+      .control-group
+        =f.label :dependent ,"Dependent?",:class=>"control-label"
+        .controls
+          =f.check_box :dependent,"data-toggle"=>"collapse","data-target"=>".dependency-conditions"
+  .dependency-conditions{:class=>"#{'collapse' unless @question.dependent?}"}
+    .row-fluid
+      .span10
+        =f.text_area :dependency_conditions,:rows=>1,:class=>"input-xxlarge",:placeholder=>"conditions..."
+  .row-fluid
+    .btn-group
+      =f.button "update",:class=>"btn btn-mini btn-success"
+      =link_to 'cancel',question_path(@question),"data-async"=>true,"data-target"=>"#q_#{@question.id}",:class=>"btn btn-mini btn-warning"
 
 
   

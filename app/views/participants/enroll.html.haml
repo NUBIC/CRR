@@ -2,6 +2,9 @@
   = render :partial => 'participant_consent'
 - elsif @participant.demographics?
   = render :partial => 'participant_demographic'
+-elsif @participant.survey? or @participant.survey_started?
+  = render :partial => 'participant_surveys'
 - elsif @participant.completed?
-  Thank you for participating in the CRR. Someone from CRR will contact you if more information is needed.
-= render :partial => 'participant_surveys'
+  .row-fluid
+    %h5="Thank you for participating in the CRR. Someone from CRR will contact you if more information is needed."
+    =link_to "Dashboard", dashboard_path

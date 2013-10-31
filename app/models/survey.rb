@@ -116,8 +116,13 @@ class Survey < ActiveRecord::Base
     self.state.eql?("active")
   end
 
+  # TODO: Add criteria to decide adult or child survey, not just on title. Something else?
   def adult_survey?
     self.title.eql?("Adult Survey") && self.state.eql?("active")
+  end
+
+  def child_survey?
+    self.title.eql?("Child Survey") && self.state.eql?("active")
   end
 
   #this method checks that the survey is in fact valid for activation

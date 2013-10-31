@@ -1,7 +1,11 @@
 class ParticipantsController < ApplicationController
   def enroll
     @participant = Participant.find(params[:id])
-    @survey = Survey.all.select {|s| s.adult_survey? }.first
+    if @participant.child_proxy?
+      @survey = Survey.all.select {|s| s.child_survey? }.first
+    else
+      @survey = Survey.all.select {|s| s.adult_survey? }.first
+    end
   end
 
   def search

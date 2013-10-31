@@ -114,4 +114,8 @@ class Participant < ActiveRecord::Base
     self.account_participant.child && self.account_participant.proxy
   end
 
+  def consented?
+    [:completed, :survey, :survey_started].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+  end
+
 end

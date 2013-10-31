@@ -12,7 +12,7 @@ class ParticipantsController < ApplicationController
   end
   
   def index
-    @participants = Participant.all
+    @participants = Participant.all.reject { |p| !p.consented? }
   end
 
   def new

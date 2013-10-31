@@ -1,4 +1,4 @@
-class AccountSessionsController < ApplicationController
+class AccountSessionsController < PublicController
   layout "/layouts/public"
   # GET /account_sessions/new
   def new

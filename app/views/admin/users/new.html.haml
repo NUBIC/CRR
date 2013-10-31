@@ -1,0 +1,18 @@
+=form_for @user,:url=>admin_users_path, :html=>{:class=>"form-horizontal"}  do |f|
+  .row-fluid
+    .control-group
+      =f.label :netid
+      .controls
+        =f.text_field :netid
+    .control-group
+      =f.label :admin
+      .controls
+        =f.check_box :admin
+    .control-group
+      =f.label :researcher
+      .controls
+        =f.check_box :researcher
+  .row-fluid
+    .btn-group
+      =f.button "Create",:class=>"btn btn-mini btn-success"
+      =link_to "Cancel",admin_users_path,:class=>"btn btn-mini btn-warning"

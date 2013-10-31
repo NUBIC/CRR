@@ -1,0 +1,74 @@
+.alert.alert-success
+  %h4=@participant.name
+%ul.nav.nav-tabs
+  %li{:class=>'active'}=link_to 'Basics','#basics',"data-toggle"=>'tab'
+  %li=link_to 'Instruments','#instruments',"data-toggle"=>'tab'
+  %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
+  %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
+  %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
+.tab-content
+  #basics.tab-pane.active
+    .row-fluid
+      =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
+    .row-fluid
+      .span4
+        %h5 Identifiers
+        %table.table
+          %tbody
+            %tr
+              %th.muted First Name:
+              %td= @participant.first_name
+            %tr
+              %th.muted Middle Name:
+              %td= @participant.middle_name
+            %tr
+              %th.muted Last Name:
+              %td= @participant.last_name
+      .span4
+        %h5 Participation
+        %table.table
+          %tbody
+            %tr
+              %th.muted Ok to contact:
+              %td= @participant.do_not_contact? ? "No" : "Yes"
+            %tr
+              %th.muted On Study:
+              %td= @participant.on_study? ? "Yes" : "No"
+            %tr
+              %th.muted Study Count:
+              %td= @participant.study_involvements.count
+            %tr
+              %th.muted Last Contact:
+              %td= @participant.contact_logs.last.date unless @participant.contact_logs.empty?
+            %tr
+              %th.muted Contact Count:
+              %td= @participant.contact_logs.count
+      .span4
+        %h5 Contact
+        %table.table
+          %tbody
+            %tr
+              %th.muted Address
+              %td= @participant.address 
+            %tr
+              %th.muted  Primary Phone
+              %td=@participant.primary_phone
+            %tr
+              %th.muted  Secondary Phone
+              %td=@participant.secondary_phone 
+            %tr
+              %th.muted  Email
+              %td=@participant.email
+    .row-fluid
+      %h5="Notes:"
+      .offset1
+        =@participant.notes
+
+  #instruments.tab-pane
+    = render :partial => 'partials/admin/participant_instruments', :locals => {:participant => @participant}
+  #studies.tab-pane
+    = render :partial => 'partials/admin/participant_studies', :locals => {:participant => @participant}
+  #relationships.tab-pane
+    = render :partial => 'partials/admin/participant_relationships', :locals => {:participant => @participant}
+  #contact_log.tab-pane
+    = render :partial => 'partials/admin/participant_contact_logs', :locals => {:participant => @participant}

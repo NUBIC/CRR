@@ -1,0 +1,10 @@
+-if current_user
+  = link_to "Home", dashboard_path, :class => 'brand'
+%ul.nav.pull-right
+  -if current_user
+    %li=link_to "Logout", :logout
+    %li.divider-vertical
+  -else
+    %li=link_to "Login", :login
+
+

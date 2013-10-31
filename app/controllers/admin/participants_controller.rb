@@ -1,4 +1,6 @@
-class ParticipantsController < ApplicationController
+class Admin::ParticipantsController < ApplicationController
+  include Aker::Rails::SecuredController
+
   def enroll
     @participant = Participant.find(params[:id])
     @survey = Survey.all.select {|s| s.adult_survey? }.first
@@ -11,6 +13,9 @@ class ParticipantsController < ApplicationController
     end
   end
   
+  def index
+    @participants = Participant.all
+  end
 
   def new
     @participant = Participant.new

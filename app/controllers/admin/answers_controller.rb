@@ -1,4 +1,5 @@
-class AnswersController < ApplicationController
+class Admin::AnswersController < ApplicationController
+  include Aker::Rails::SecuredController
 
 
 

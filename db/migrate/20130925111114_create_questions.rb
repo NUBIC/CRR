@@ -4,7 +4,7 @@ class CreateQuestions < ActiveRecord::Migration
       t.integer :survey_id
       t.integer :section_id
       t.text    :text 
-      t.string  :reference
+      t.string  :code
       t.boolean :is_mandatory
       t.string  :response_type
       t.integer :display_order

@@ -1,4 +1,5 @@
-class ResponseSetsController < PublicController
+class Admin::ResponseSetsController < PublicController
+  include Aker::Rails::SecuredController
 
   def index
     @participant = Participant.find(params[:participant_id])

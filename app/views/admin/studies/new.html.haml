@@ -1,0 +1,17 @@
+=form_for @study,:url=>admin_studies_path,:class=>"form-horizontal"  do |f|
+  .row-fluid
+    .control-group
+      =f.label :irb_number
+      .controls
+        =f.text_field :irb_number
+    .control-group
+      =f.label :active_on
+      .controls
+        =f.text_field :active_on,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+    .control-group
+      =f.label :inactive_on
+      .controls
+        =f.text_field :inactive_on,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+  .row-fluid
+    .btn-group
+      =f.button "Create",:class=>"btn btn-mini btn-success"

@@ -11,6 +11,10 @@
     = csrf_meta_tags
     = yield(:head)
   %body
+    .navbar.navbar-fluid-top.no-print
+      .navbar-inner
+        .container
+          = render 'layouts/public_navigation'
     .fluid.main{:role => "main"}
       .container-fluid
         .content
@@ -20,6 +24,5 @@
           .row-fluid
             .span12
               = yield
-    .footer
-      .navbar.navbar-fluid-bottom
-        = render 'partials/footer'
+          .row-fluid.no-print
+            %p!= "Communication Research Registry &mdash; created by #{link_to("NUBIC", "http://www.nucats.northwestern.edu/resources-services/data-and-informatics-services/index.html")} for Northwestern University"

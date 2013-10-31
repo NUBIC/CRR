@@ -1,5 +1,4 @@
-class WelcomeController < ApplicationController
-  layout "layouts/public"
+class WelcomeController < PublicController
 
   def index
   end

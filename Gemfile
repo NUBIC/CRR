@@ -1,4 +1,4 @@
-#source "http://download.bioinformatics.northwestern.edu/gems/"
+source "http://download.bioinformatics.northwestern.edu/gems/"
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -36,10 +36,9 @@ group :development, :test do
 end
 
 #aker
-#gem "bcdatabase"
-#gem "aker"
-#gem "aker-rails",'3.0.2'
-#gem "aker-nubic"
+gem "aker"
+gem "aker-rails", :github => 'NUBIC/aker-rails', :branch => 'rails4'
+gem "aker-nubic"
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby

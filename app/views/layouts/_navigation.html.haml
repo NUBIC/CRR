@@ -6,22 +6,19 @@
 /   -if current_user
 /     %li=link_to "Logout", :logout
 /     %li.divider-vertical
+= link_to "Home", admin_default_path, :class => 'brand'
 %ul.nav.pull-right
   -if current_user
     %li=link_to "Logout", :logout
     %li.divider-vertical
-    %li=link_to "Dashboard", dashboard_path
-    %li.divider-vertical
   %li.dropdown
     =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do 
-      Admin
+      Settings
       %b.caret
     %ul.dropdown-menu
-      %li=link_to "Participants",participants_path
-      %li=link_to "Searches",searches_path
-      %li=link_to "Manage Studies",studies_path
-      %li=link_to "Manage Users",users_path
-      %li=link_to "Manage Instruments",surveys_path
-      %li=link_to "Manage Consents",consents_path
+      %li=link_to "Manage Studies",admin_studies_path
+      %li=link_to "Manage Users",admin_users_path
+      %li=link_to "Manage Instruments",admin_surveys_path
+      %li=link_to "Manage Consents",admin_consents_path
 
 

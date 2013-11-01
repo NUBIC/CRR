@@ -48,5 +48,15 @@ $(document).ready(function() {
       "sSearch": "Filter: "
         }});});
 
+  // TODO: Move to the seperate js and simply
+  $(".proxy_consent_name").hide();
+  $(".proxy_agree").click(function(){
+    $(".proxy_consent_name").show();
+    $("#consent_response").val("accept");
+  });
+  $(".proxy_disagree").click(function(){
+    $(".proxy_consent_name").hide();
+    $("#consent_response").val("decline");
+  });
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

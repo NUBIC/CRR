@@ -1,28 +1,46 @@
 .row-fluid
-  =Consent.active_consent.content
+  .span12
+    =Consent.active_consent.content
+    %br
+    %br
+.row-fluid
   -if @participant.adult_proxy?
-    =form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-      = submit_tag("I disagree on behalf of the another adult", :class=>"btn btn-danger")
     = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-      = hidden_field_tag "consent_response", "accept"
-      = submit_tag("I agree on behalf of the another adult", :class=>"btn btn-success")
       .row-fluid
-        .control-group
-          =label_tag 'My name is'
-          =text_field_tag 'consent_name'
+        .span3
+          = hidden_field_tag "consent_response"
+          = link_to 'I agree on behalf of someone', '#accept', :class=>"btn btn-success proxy_agree"
+        .span3
+          = link_to 'I disagree on behalf of someone', '#decline', :class=>"btn btn-danger proxy_disagree"
+      %br
+      %br
+      .row-fluid
+        .controls.controls-row.proxy_consent_name
+          = label_tag "consent_name", 'My name is', :class => 'span3'
+          = text_field_tag 'consent_name'
+      .row-fluid
+        = submit_tag("Next", :class=>"btn")
   -elsif @participant.child_proxy?
     = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-      = submit_tag("I disagree on behalf of the child", :class=>"btn btn-danger")
-    = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-      = hidden_field_tag "consent_response", "accept"
-      = submit_tag("I agree on behalf of the child", :class=>"btn btn-success")
       .row-fluid
-        .control-group
-          =label_tag 'My name is'
-          =text_field_tag 'consent_name'
+        .span3
+          = hidden_field_tag "consent_response"
+          = link_to 'I agree on behalf of the child', '#accept', :class=>"btn btn-success proxy_agree"
+        .span3
+          = link_to 'I dsagree on behalf of the child', '#decline', :class=>"btn btn-danger proxy_disagree"
+      %br
+      %br
+      .row-fluid
+        .controls.controls-row.proxy_consent_name
+          = label_tag "consent_name", 'My name is', :class => 'span3'
+          = text_field_tag 'consent_name'
+      .row-fluid
+        = submit_tag("Next", :class=>"btn")
   -else
-    = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-      = hidden_field_tag "consent_response", "accept"
-      = submit_tag(Consent.active_consent.accept_text, :class=>"btn btn-success")
-    = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
-      = submit_tag(Consent.active_consent.decline_text, :class=>"btn btn-danger")
+    .span1
+      = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
+        = hidden_field_tag "consent_response", "accept"
+        = submit_tag(Consent.active_consent.accept_text, :class=>"btn btn-success")
+    .span1
+      = form_tag(consent_signature_participant_path(@participant), :method => 'post') do
+        = submit_tag(Consent.active_consent.decline_text, :class=>"btn btn-danger")

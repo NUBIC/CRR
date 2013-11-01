@@ -15,4 +15,5 @@
       .controls
         =password_field_tag 'account[password_confirmation]'
   .row-fluid
-    = submit_tag "Update Password"
+    = submit_tag "Update Password", :class => "btn btn-succes"
+    = link_to 'Cancel', dashboard_path, :class => "btn btn-warning"

@@ -2,30 +2,26 @@
   .row-fluid
     .span4
       .control-group
-        =f.label :first_name
+        =f.label :first_name, "First Name"
         .controls
           =f.text_field  :first_name
       .control-group
-        =f.label :midle_name
+        =f.label :midlle_name, "Middle Name"
         .controls
           =f.text_field  :middle_name
       .control-group
-        =f.label :last_name
+        =f.label :last_name, "Last Name"
         .controls
           =f.text_field  :last_name
-      .control-group
-        =f.label :do_not_contact
-        .controls
-          =f.check_box  :do_not_contact
     .span4
       .control-group
-        =f.label :address_line1
+        =f.label :address_line1, "Address Line1"
         .controls
           =f.text_field  :address_line1
       .control-group
-        =f.label :address_line2
+        =f.label :address_line2, "Address Line2"
         .controls
-          =f.text_field  :address_line2,:class=>"input-small"
+          =f.text_field  :address_line2
       .control-group
         =f.label :city
         .controls
@@ -40,17 +36,19 @@
           =f.text_field  :zip
     .span4
       .control-group
-        =f.label :email
+        =f.label :email, "Email Address"
         .controls
           =f.text_field  :email
       .control-group
-        =f.label :primary_phone
+        =f.label :primary_phone, "Primary Phone Number"
         .controls
           =f.text_field  :primary_phone
       .control-group
-        =f.label :secondary_phone
+        =f.label :secondary_phone, "Secondary Phone Number"
         .controls
           =f.text_field  :secondary_phone
+  -if @participant.proxy?
+    = render :partial => 'participant_guardian', :locals => {:f => f}
   .row-fluid
     .control-group
       =f.label :notes
@@ -59,4 +57,4 @@
   .row-fluid
     .btn-group
       =f.button "Save",:class=>"btn btn-success"
-      =link_to "Cancel",@participant,:class=>"btn btn-warning"
+      =link_to "Cancel", dashboard_path, :class=>"btn btn-warning"

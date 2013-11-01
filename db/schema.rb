@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131030043917) do
+ActiveRecord::Schema.define(version: 20131031152725) do
 
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
@@ -104,6 +104,14 @@ ActiveRecord::Schema.define(version: 20131030043917) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "stage"
+    t.string   "primary_guardian_first_name"
+    t.string   "primary_guardian_last_name"
+    t.string   "primary_guardian_email"
+    t.string   "primary_guardian_phone"
+    t.string   "secondary_guardian_first_name"
+    t.string   "secondary_guardian_last_name"
+    t.string   "secondary_guardian_email"
+    t.string   "secondary_guardian_phone"
   end
 
   create_table "questions", force: true do |t|

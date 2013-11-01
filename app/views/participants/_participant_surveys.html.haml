@@ -7,7 +7,7 @@
     =hidden_field_tag 'response_set[survey_id]', @survey.id
     .control-group
       .controls
-        =submit_tag @survey.title, :class=> "btn btn-link"
+        =submit_tag "Start Survey", :class=> "btn btn-link"
 -elsif @participant.survey_started?
   .alert.alert-success
     %h4=@participant.name

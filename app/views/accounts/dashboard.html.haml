@@ -1,24 +1,21 @@
-Welcome to the CRR.
-%ul.nav.nav-tabs
-  %li{:class=>'active'}=link_to 'Dashboard','#dashboard',"data-toggle"=>'tab'
-  %li=link_to 'Account','#account',"data-toggle"=>'tab'
-  %li=link_to 'Members','#participants',"data-toggle"=>'tab'
-.tab-content
-  #dashboard.tab-pane.active
-    .row-fluid
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = submit_tag('Myself', :class=>"btn", :confirm => "Are you sure you want to add yourself?")
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = hidden_field_tag "proxy", true
-        = hidden_field_tag "child", true
-        = submit_tag('Child', :class=>"btn", :confirm => "Are you sure you want to add child?")
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = hidden_field_tag "proxy", true
-        = submit_tag('Another Adult', :class=>"btn", :confirm => "Are you sure you want to add an adult?")
-  #account.tab-pane
-    = render :partial => 'account_update'
-  #participants.tab-pane
-    = render :partial => 'account_participants'
+%h4="Welcome to the CRR"
+= render :partial => 'account_participants.html.haml'
+.row-fluid
+  .row-fluid
+    .well.well-small
+      %h5="Add new particpant"
+  .span1
+    =form_tag(participants_path, :method => 'post') do
+      = hidden_field_tag "account_id", @account.id
+      = submit_tag('Myself', :class=>"btn", :confirm => "Are you sure you want to add yourself?")
+  .span1
+    =form_tag(participants_path, :method => 'post') do
+      = hidden_field_tag "account_id", @account.id
+      = hidden_field_tag "proxy", true
+      = hidden_field_tag "child", true
+      = submit_tag('Child', :class=>"btn", :confirm => "Are you sure you want to add child?")
+  .span1
+    =form_tag(participants_path, :method => 'post') do
+      = hidden_field_tag "account_id", @account.id
+      = hidden_field_tag "proxy", true
+      = submit_tag('Another Adult', :class=>"btn", :confirm => "Are you sure you want to add an adult?")

@@ -17,6 +17,10 @@ class AccountsController < PublicController
     end
   end
 
+  def edit
+    @account = Account.find(params[:id])
+  end
+
   def create
     @account = Account.new(account_params)
     respond_to do |format|

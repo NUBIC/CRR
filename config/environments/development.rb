@@ -39,7 +39,7 @@ AudiologyRegistry::Application.configure do
   #end
   config.aker  do
       #crr = Aker::Authorities::Crr.new
-      authorities :cas #, crr
+      authorities :cas# , crr
       central '/etc/nubic/aker-local.yml'
   end
 end

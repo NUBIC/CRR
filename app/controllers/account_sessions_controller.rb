@@ -1,5 +1,4 @@
 class AccountSessionsController < PublicController
-  layout "/layouts/public"
   # GET /account_sessions/new
   def new
     @account_session = AccountSession.new
@@ -27,7 +26,7 @@ class AccountSessionsController < PublicController
   def destroy
     @account_session = AccountSession.find
     @account_session.destroy
-    redirect_to welcome_index_path
+    redirect_to :public_login
     flash[:notice] = "Successfully logged out"
   end
 end

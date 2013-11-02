@@ -9,7 +9,7 @@ class PublicController < ApplicationController
   end
 
   def current_user
-    return @current_user if defined?(@current_user)
+    #return @current_user if defined?(@current_user)
     @current_user = current_account_session && current_account_session.record
   end
 end

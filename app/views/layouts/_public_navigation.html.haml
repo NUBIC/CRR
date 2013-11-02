@@ -2,9 +2,9 @@
   = link_to "Home", dashboard_path, :class => 'brand'
 %ul.nav.pull-right
   -if current_user
-    %li=link_to "Logout", :logout
+    %li=link_to "Logout", :public_logout
     %li.divider-vertical
   -else
-    %li=link_to "Login", :login
+    %li=link_to "Login", :public_login
 
 

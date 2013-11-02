@@ -1,4 +1,4 @@
-=form_for @study_involvement, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#studies"} do |f|
+=form_for @study_involvement,:url=>admin_study_involvements_path, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#studies"} do |f|
   .row-fluid
     =f.hidden_field :participant_id
     .control-group
@@ -20,4 +20,4 @@
   .row-fluid
     .btn-group
       =f.button "Create",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",study_involvements_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#studies"
+      =link_to "Cancel",admin_study_involvements_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#studies"

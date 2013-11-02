@@ -1,4 +1,4 @@
-=form_for @study,:url=> edit_admin_study_path(@study),:class=>"form-horizontal"  do |f|
+=form_for @study,:url=> admin_study_path(@study),:class=>"form-horizontal"  do |f|
   .row-fluid
     .control-group
       =f.label :irb_number
@@ -14,4 +14,5 @@
         =f.text_field :inactive_on,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
   .row-fluid
     .btn-group
-      =f.button "Create",:class=>"btn btn-mini btn-success"
+      =f.button "Update",:class=>"btn btn-mini btn-success"
+      =link_to "Cancel",admin_studies_path,:class=>"btn btn-mini btn-warning"

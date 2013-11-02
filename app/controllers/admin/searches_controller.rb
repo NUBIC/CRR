@@ -14,7 +14,7 @@ class Admin::SearchesController < ApplicationController
      redirect_to @search
    else
      flash[:error] = @search.errors.full_messages.to_sentence
-     redirect_to new_search_path
+     redirect_to new_admin_search_path
    end
  end
 
@@ -41,7 +41,7 @@ class Admin::SearchesController < ApplicationController
    else
      flash[:error] = @search.errors.full_messages.to_sentence
    end
-   redirect_to @search
+   redirect_to admin_search_path*@search)
  end
  def release_data
    @search = Search.find(params[:id])
@@ -51,7 +51,7 @@ class Admin::SearchesController < ApplicationController
    else
      flash[:error] = @search.errors.full_messages.to_sentence
    end
-   redirect_to @search
+   redirect_to admin_search_path(@search)
  end
  def destroy
    @search = Search.find(params[:id])

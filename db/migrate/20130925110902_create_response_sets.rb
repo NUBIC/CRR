@@ -4,6 +4,7 @@ class CreateResponseSets < ActiveRecord::Migration
       t.integer  :survey_id
       t.integer  :participant_id
       t.date     :effective_date
+      t.datetime :completed_at
       t.timestamps
     end
   end

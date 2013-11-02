@@ -26,12 +26,12 @@ class Admin::UsersController < ApplicationController
    else
      flash[:error] = @user.errors.full_messages.to_sentence
    end
-   redirect_to users_path
+   redirect_to admin_users_path
  end
  def destroy
    @user = User.find(params[:id])
    @user.destroy
-   redirect_to users_path
+   redirect_to admin_users_path
  end
 
  def dashboard

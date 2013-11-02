@@ -3,6 +3,7 @@
   %table.table.bordered
     %thead
       %tr
+        %th ID
         %th Irb Number
         %th Active On
         %th Inactive On
@@ -11,8 +12,9 @@
     %tbody
       -@studies.each do |study|
         %tr
+          %th=study.id
           %td=study.irb_number
           %td=study.active_on
           %td=study.inactive_on
           %td=study.state
-          %td=link_to "Edit",edit_admin_study_path(study)
+          %td=link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"

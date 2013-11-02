@@ -2,7 +2,11 @@ AudiologyRegistry::Application.routes.draw do
   namespace :admin do 
 
     get '/' => "participants#index", :as=>:default
-    resources :participants
+    resources :participants do 
+      collection do 
+        get :search
+      end
+    end
     resources :studies
     resources :sections
     resources :questions

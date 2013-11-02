@@ -14,7 +14,7 @@ class Admin::StudiesController < ApplicationController
    else
      flash[:error] = @study.errors.full_messages.to_sentence
    end
-   redirect_to studies_path
+   redirect_to admin_studies_path
  end
  def edit
    @study = Study.find(params[:id])
@@ -27,14 +27,14 @@ class Admin::StudiesController < ApplicationController
    else
      flash[:error] = @study.errors.full_messages.to_sentence
    end
-   redirect_to studies_path
+   redirect_to admin_studies_path
  end
  def destroy
    @study = Study.find(params[:id])
  end
 
  def study_params
-   params.require(:study).permit(:irb_number,:active_on,:inactive_on)
+   params.require(:study).permit(:irb_number,:active_on,:inactive_on,:name)
  end
 end
 

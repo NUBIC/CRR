@@ -1,0 +1,14 @@
+=form_for @relationship, :url=>admin_relationships_path,:html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationships"} do |f|
+  .row-fluid
+    .control-group
+      =f.label :category,"Relationship"
+      .controls
+        =f.select :category, Relationship::CATEGORIES
+    .control-group
+      =f.label :notes
+      .controls
+        =f.text_area :notes
+  .row-fluid
+    .btn-group
+      =f.button "Update",:class=>"btn btn-mini btn-success"
+      =link_to "Cancel",admin_relationships_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#relationships"

@@ -1,4 +1,4 @@
-=form_for @contact_log, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#contact_log"} do |f|
+=form_for @contact_log, :url=>admin_contact_log_path(@contact_log),:html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#contact_log"} do |f|
   .row-fluid
     =f.hidden_field :participant_id
     .control-group
@@ -12,4 +12,4 @@
   .row-fluid
     .btn-group
       =f.button "Update",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",study_involvements_path(:participant_id=>@contact_log.participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#contact_log"
+      =link_to "Cancel",admin_contact_logs_path(:participant_id=>@contact_log.participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#contact_log"

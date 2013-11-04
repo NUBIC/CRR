@@ -2,7 +2,12 @@
   = link_to "Home", dashboard_path, :class => 'brand'
 %ul.nav.pull-right
   -if current_user
-    %li=link_to "Logout", :public_logout
+    %li.dropdown
+      =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do 
+        =current_user.email
+        %b.caret
+      %ul.dropdown-menu
+        %li=link_to "Logout", :public_logout
     %li.divider-vertical
   -else
     %li=link_to "Login", :public_login

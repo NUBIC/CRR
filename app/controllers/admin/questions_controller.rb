@@ -58,7 +58,7 @@ class Admin::QuestionsController < ApplicationController
       flash[:error] = @question.errors.full_messages.to_sentence
     end
     respond_to do |format|
-      format.js {render "sections/show",:layout => false}
+      format.js {render "admin/sections/show",:layout => false}
     end
   end
 
@@ -69,7 +69,7 @@ class Admin::QuestionsController < ApplicationController
     flash[:notice] = "Question Deleted"
     @section.reload
     respond_to do |format|
-      format.js {render "sections/show",:layout => false}
+      format.js {render "admin/sections/show",:layout => false}
     end
   end
  def question_params

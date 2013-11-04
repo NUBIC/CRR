@@ -1,13 +1,3 @@
-# == Schema Information
-#
-# Table name: sections
-#
-#  id            :integer          not null, primary key
-#  survey_id     :integer
-#  title         :text
-#  display_order :integer
-#
-
 class Section < ActiveRecord::Base
      
   # Associations
@@ -17,19 +7,22 @@ class Section < ActiveRecord::Base
   # Scopes
   scope :with_includes, { :include => {:questions => [:answers, :question_group, {:dependency => :dependency_conditions}]}}
 
+  default_scope {order("display_order ASC")}
       # Validations
-  validates_presence_of :title, :display_order,:survey,:survey_id
+  validates_presence_of :title, :display_order
 
+    # Whitelisting attributes
+  after_initialize :default_args
 
   # Instance Methods
 
-  def initialize(*args)
-    super(*args)
-    default_args
-  end
+  #def initialize(*args)
+  #  super(*args)
+  #  default_args
+  #end
 
   def default_args
-    self.display_order ||= self.survey.sections.size
+    self.display_order ||= survey.sections.size+1
   end
 
   def soft_errors

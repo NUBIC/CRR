@@ -1,4 +1,4 @@
-=form_for @answer, :html=>{:class=>"ajax-form form-horizontal","data-target"=>"#q_#{@question.id}"} do |f|
+=form_for @answer, :url=>admin_answers_path,:html=>{:class=>"ajax-form form-horizontal","data-target"=>"#q_#{@question.id}"} do |f|
   .row-fluid
     =f.hidden_field :question_id
     .span3
@@ -10,7 +10,7 @@
     .span2
       .btn-group
         =f.button "update",:class=>"btn btn-mini btn-success"
-        =link_to 'cancel',question_path(@question),"data-async"=>true,"data-target"=>"#q_#{@question.id}",:class=>"btn btn-mini btn-warning"
+        =link_to 'cancel',admin_question_path(@question),"data-async"=>true,"data-target"=>"#q_#{@question.id}",:class=>"btn btn-mini btn-warning"
 
 
   

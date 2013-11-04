@@ -1,4 +1,4 @@
-=form_for @question, :html=>{:class=>"ajax-form form-horizontal","data-target"=>"#section_#{@question.section.id}"} do |f|
+=form_for @question, :url=>admin_questions_path,:html=>{:class=>"ajax-form form-horizontal","data-target"=>"#section_#{@question.section.id}"} do |f|
   .row-fluid
     =f.hidden_field :section_id
     =f.text_area :text,:rows=>1,:class=>"input-xxlarge"
@@ -24,19 +24,10 @@
         =f.label :is_mandatory ,"Mandatory",:class=>"control-label"
         .controls
           =f.check_box :is_mandatory
-    .span3
-      .control-group
-        =f.label :dependent ,"Dependent?",:class=>"control-label"
-        .controls
-          =f.check_box :dependent,"data-toggle"=>"collapse","data-target"=>".dependency-conditions"
-  .dependency-conditions.collapse
-    .row-fluid
-      .span10
-        =f.text_area :dependency_conditions,:rows=>1,:class=>"input-xxlarge",:placeholder=>"conditions..."
   .row-fluid
     .btn-group
       =f.button "update",:class=>"btn btn-mini btn-success"
-      =link_to 'cancel',section_path(@question.section),"data-async"=>true,"data-target"=>"#section_#{@question.section.id}",:class=>"btn btn-mini btn-warning"
+      =link_to 'cancel',admin_section_path(@question.section),"data-async"=>true,"data-target"=>"#section_#{@question.section.id}",:class=>"btn btn-mini btn-warning"
 
 
   

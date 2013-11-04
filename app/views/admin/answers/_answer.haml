@@ -7,9 +7,9 @@
     ="code: #{answer.code}"
   -unless answer.question.section.survey.active?
     .span3
-      =form_tag(answer_path(answer),:method=>"delete",:class=>"ajax-form","data-target"=>"#q_#{answer.question.id}") do
+      =form_tag(admin_answer_path(answer),:method=>"delete",:class=>"ajax-form","data-target"=>"#q_#{answer.question.id}") do
         .btn-group
-          =link_to "Edit" ,edit_answer_path(answer),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#answer_#{answer.id}"
+          =link_to "Edit" ,edit_admin_answer_path(answer),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#answer_#{answer.id}"
           =submit_tag('Delete',:class=>"btn btn-mini btn-danger")
       
  

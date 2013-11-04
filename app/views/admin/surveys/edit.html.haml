@@ -1,4 +1,4 @@
-=form_for @survey , :html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+=form_for @survey ,:url=>admin_survey_path(@survey), :html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
   .row-fluid
     =f.label :title
     =f.text_field :title,:class=>"input-xxlarge"
@@ -7,7 +7,7 @@
   .row-fluid
     .btn-group
       =f.button "update",:class=>"btn btn-mini btn-success"
-      =link_to 'cancel',survey_path(@survey),"data-async"=>true,"data-target"=>"#study_forms .accordion-inner",:class=>"btn btn-mini btn-warning"
+      =link_to 'cancel',admin_survey_path(@survey),"data-async"=>true,"data-target"=>"#study_forms .accordion-inner",:class=>"btn btn-mini btn-warning"
 
 
 

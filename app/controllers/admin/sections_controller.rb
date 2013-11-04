@@ -47,11 +47,10 @@ class Admin::SectionsController < ApplicationController
     if @section.save
       flash[:notice] = "Updated"
     else
-      Rails.logger.info @section.errors.full_messages.to_sentence
       flash[:error] = @section.errors.full_messages.to_sentence
     end
     respond_to do |format|
-      format.js {render "surveys/show",:layout => false}
+      format.js {render "admin/surveys/show",:layout => false}
     end
   end
 
@@ -61,7 +60,7 @@ class Admin::SectionsController < ApplicationController
     @section.destroy
     @survey.reload
     respond_to do |format|
-      format.js {render "surveys/show",:layout => false}
+      format.js {render "admin/surveys/show",:layout => false}
     end
   end
  def section_params

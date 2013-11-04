@@ -41,7 +41,7 @@ class Search < ActiveRecord::Base
   def result
     enrolled = Participant.all
     Rails.logger.info parameters.values.inspect
-    answer_ids = parameters.values.flatten
+    answer_ids = parameters.values.flatten.collect{|q| q[:answer_ids]}.flatten.compact.uniq
     responses = Response.where("answer_id in (#{answer_ids.join(",")})") 
     return [] if responses.nil?
     if connector == OR
@@ -56,7 +56,13 @@ class Search < ActiveRecord::Base
   def full_parameters
     result = {}
     questions.each do |question|
-     result[question]= question.answers.select{|a| answers.include?(a)}
+     if ['pick_one','pick_many'].include?(question.response_type)    
+       result[question]= question.answers.select{|a| answers.include?(a)}.collect{|answer| answer.text}
+     elsif ['date'].include?(question.response_type)
+       result[question]= "#{parameters[question.id.to_s.to_sym][:start_date]} to #{parameters[question.id.to_s.to_sym][:end_date]}"
+     elsif ['number'].include?(question.response_type)
+       result[question]= "#{parameters[question.id.to_s.to_sym][:min]} to #{parameters[question.id.to_s.to_sym][:max]}"
+     end
     end
     return result
   end
@@ -84,7 +90,7 @@ class Search < ActiveRecord::Base
     end
 
     def answers
-      Answer.find(parameters.values.flatten.collect{|v| v.to_i})
+      Answer.find(parameters.values.flatten.collect{|q| q[:answer_ids]}.flatten.compact.uniq.collect{|v| v.to_i})
     end
 
 end

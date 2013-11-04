@@ -50,7 +50,7 @@ class Admin::AnswersController < ApplicationController
     end
     respond_to do |format|
       format.html {redirect_to edit_question_path(@question)}
-      format.js {render "questions/show",:layout => false}
+      format.js {render "admin/questions/show",:layout => false}
     end
   end
 
@@ -60,7 +60,7 @@ class Admin::AnswersController < ApplicationController
     @answer.destroy
     @question.reload
     respond_to do |format|
-      format.js {render "questions/show",:layout => false}
+      format.js {render "admin/questions/show",:layout => false}
     end
   end
  def answer_params

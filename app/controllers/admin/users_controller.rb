@@ -1,4 +1,5 @@
 class Admin::UsersController < ApplicationController
+  include Aker::Rails::SecuredController
  def index
    @users = User.all
  end

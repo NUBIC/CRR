@@ -1,4 +1,4 @@
-class ParticipantsController < ApplicationController
+class ParticipantsController < PublicController
   def enroll
     @participant = Participant.find(params[:id])
     if @participant.child_proxy?

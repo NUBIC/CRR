@@ -7,15 +7,15 @@
   .span1
     =form_tag(participants_path, :method => 'post') do
       = hidden_field_tag "account_id", @account.id
-      = submit_tag('Myself', :class=>"btn", :confirm => "Are you sure you want to add yourself?")
+      = submit_tag('Myself', :class=>"btn")
   .span1
     =form_tag(participants_path, :method => 'post') do
       = hidden_field_tag "account_id", @account.id
       = hidden_field_tag "proxy", true
       = hidden_field_tag "child", true
-      = submit_tag('Child', :class=>"btn", :confirm => "Are you sure you want to add child?")
+      = submit_tag('Child', :class=>"btn")
   .span1
     =form_tag(participants_path, :method => 'post') do
       = hidden_field_tag "account_id", @account.id
       = hidden_field_tag "proxy", true
-      = submit_tag('Another Adult', :class=>"btn", :confirm => "Are you sure you want to add an adult?")
+      = submit_tag('Another Adult', :class=>"btn")

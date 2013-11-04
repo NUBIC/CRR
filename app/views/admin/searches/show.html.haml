@@ -19,7 +19,7 @@
   .offset1
     %h5= "#{@search.result.size} participants returned"
 .row-fluid
-  -if true
+  -if current_user.admin?
     %table.table.bordered
       %thead
         %tr
@@ -33,10 +33,10 @@
             %td=participant.on_study? ? "On study" : "Available"
             %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
     -if @search.data_requested?
-      =form_for @search,:url=>release_data_search_path(@search) do |f|
+      =form_for @search,:url=>release_admin_search_path(@search) do |f|
         =f.submit "Release Results",:class=>"btn btn-mini btn-success"
   -else
     -if @search.new?
-      =form_for @search,:url=>request_data_search_path(@search) do |f|
+      =form_for @search,:url=>request_admin_search_path(@search) do |f|
         =f.submit "Request Results",:class=>"btn btn-mini btn-success"
       

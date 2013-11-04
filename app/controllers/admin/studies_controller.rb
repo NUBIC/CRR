@@ -4,6 +4,10 @@ class Admin::StudiesController < ApplicationController
    @studies = Study.all
  end
 
+ def search
+
+ end
+
  def new
    @study = Study.new
  end

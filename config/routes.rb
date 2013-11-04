@@ -1,7 +1,7 @@
 AudiologyRegistry::Application.routes.draw do
   namespace :admin do 
 
-    get '/' => "participants#index", :as=>:default
+    get '/' => "users#dashboard", :as=>:default
     resources :participants do 
       collection do 
         get :search
@@ -24,8 +24,8 @@ AudiologyRegistry::Application.routes.draw do
     resources :users
     resources :searches do 
       member do 
-        patch :request_data
-        patch :release_data
+        patch :request
+        patch :release
       end
     end
     resources :consents

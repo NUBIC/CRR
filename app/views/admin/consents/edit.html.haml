@@ -1,9 +1,9 @@
-=form_for @consent,:class=>"form-horizontal"  do |f|
+=form_for @consent,:url=>admin_consent_path(@consent),:class=>"form-horizontal"  do |f|
   .row-fluid
     .control-group
       =f.label :content
       .controls
-        =f.text_area :content
+        =f.text_area :content,:class=>"input-block-level",:rows=>10
     .control-group
       =f.label :consent_type
       .controls

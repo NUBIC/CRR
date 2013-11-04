@@ -1,7 +1,7 @@
 %h4= "Section: #{section.title}"
-=form_tag(section_path(section),:method=>"delete",:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner") do
+=form_tag(section_admin_path(section),:method=>"delete",:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner") do
   .btn-group
-    =link_to "Edit",edit_section_path(section),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#section_#{section.id}"
+    =link_to "Edit",edit_admin_section_path(section),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#section_#{section.id}"
     =button_tag "Delete",:class=>"btn btn-mini btn-danger"
 %hr
 -section.questions.each do |q|
@@ -11,6 +11,6 @@
 .row_fluid
   .span12{:class=>"offset0.5",:id=>"section_#{section.id}_new_question"}
     -unless section.survey.active?
-      =link_to "Add Question",new_question_path(:section_id=>section.id),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#section_#{section.id}_new_question"
+      =link_to "Add Question",new_admin_question_path(:section_id=>section.id),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#section_#{section.id}_new_question"
 %hr
 

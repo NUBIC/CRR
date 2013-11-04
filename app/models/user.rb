@@ -14,7 +14,13 @@
 
 class User < ActiveRecord::Base
 
-  def name
-  end
+  has_many :user_studies
+  has_many :studies,:through=>:user_studies
 
+  validates_uniqueness_of   :netid, :case_sensitive => false, :allow_blank => false
+
+  def name
+    "#{first_name} #{last_name}"
+  end
+  
 end

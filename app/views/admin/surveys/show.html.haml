@@ -8,14 +8,14 @@
       %h6=@survey.description
 .row-fluid
   -if @survey.active?
-    =form_for @survey,:url=>deactivate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+    =form_for @survey,:url=>deactivate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms .accordion-inner"} do |f|
       .btn-group
-        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#study_forms .accordion-inner"
+        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#forms .accordion-inner"
         =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
   -else
-    =form_for @survey,:url=>activate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#study_forms .accordion-inner"} do |f|
+    =form_for @survey,:url=>activate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms .accordion-inner"} do |f|
       .btn-group
-        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#study_forms .accordion-inner"
+        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#forms .accordion-inner"
         =f.button "Activate",:class=>"btn btn-mini btn-success"
   %hr
 .tabbable.tabs-left
@@ -23,11 +23,11 @@
     -@survey.sections.each_with_index do |s,si|
       %li{:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id == s.id)}"}=link_to s.title, "#section_#{s.id}","data-toggle"=>"tab"
     -unless @survey.active?
-      =link_to "Add Section",new_section_path(:survey_id=>@survey.id),:class=>"btn btn-mini btn-block btn-primary","data-async"=>true,"data-target"=>".tabbable"
-    =link_to "Exit",surveys_path(:study_id=>@survey.study.irb_number),:class=>"btn btn-mini btn-block btn-warning","data-async"=>true,"data-target"=>"#study_forms .accordion-inner"
+      =link_to "Add Section",new_admin_section_path(:survey_id=>@survey.id),:class=>"btn btn-mini btn-block btn-primary","data-async"=>true,"data-target"=>".tabbable"
+    =link_to "Exit",admin_surveys_path,:class=>"btn btn-mini btn-block btn-warning","data-async"=>true,"data-target"=>"#forms .accordion-inner"
   .tab-content
     -@survey.sections.each_with_index do |s,si|
       .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id==s.id)}"}
-        =render :partial=>"sections/section",locals: {section: s}
+        =render :partial=>"admin/sections/section",locals: {section: s}
 .row-fluid
       

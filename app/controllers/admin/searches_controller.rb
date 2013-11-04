@@ -1,8 +1,8 @@
 class Admin::SearchesController < ApplicationController
   include Aker::Rails::SecuredController
- def index
-   @searches = Search.data_requested + Search.data_released
- end
+  def index
+    @searches = Search.data_requested + Search.data_released
+  end
 
  def new
    @search = Search.new
@@ -11,7 +11,7 @@ class Admin::SearchesController < ApplicationController
  def create
    @search = Search.new(search_params)
    if @search.save
-     redirect_to @search
+     redirect_to admin_search_path(@search)
    else
      flash[:error] = @search.errors.full_messages.to_sentence
      redirect_to new_admin_search_path
@@ -19,6 +19,7 @@ class Admin::SearchesController < ApplicationController
  end
 
  def show
+   current_user.admin?
    @search = Search.find(params[:id])
  end
 
@@ -41,7 +42,7 @@ class Admin::SearchesController < ApplicationController
    else
      flash[:error] = @search.errors.full_messages.to_sentence
    end
-   redirect_to admin_search_path*@search)
+   redirect_to admin_search_path(@search)
  end
  def release_data
    @search = Search.find(params[:id])

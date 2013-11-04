@@ -14,11 +14,10 @@
 #  city                          :string(255)
 #  state                         :string(255)
 #  zip                           :string(255)
-#  do_not_contact                :boolean
-#  notes                         :text
-#  created_at                    :datetime
-#  updated_at                    :datetime
 #  stage                         :string(255)
+#  do_not_contact                :boolean
+#  child                         :boolean
+#  notes                         :text
 #  primary_guardian_first_name   :string(255)
 #  primary_guardian_last_name    :string(255)
 #  primary_guardian_email        :string(255)
@@ -27,6 +26,8 @@
 #  secondary_guardian_last_name  :string(255)
 #  secondary_guardian_email      :string(255)
 #  secondary_guardian_phone      :string(255)
+#  created_at                    :datetime
+#  updated_at                    :datetime
 #
 
 require 'spec_helper'

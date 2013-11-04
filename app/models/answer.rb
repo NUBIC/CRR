@@ -7,7 +7,7 @@
 #  text          :text
 #  help_text     :text
 #  display_order :integer
-#  reference     :string(255)
+#  code          :string(255)
 #  weight        :integer
 #  created_at    :datetime
 #  updated_at    :datetime

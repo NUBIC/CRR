@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.text     "text"
     t.text     "help_text"
     t.integer  "display_order"
-    t.string   "reference"
+    t.string   "code"
     t.integer  "weight"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -68,6 +68,8 @@ ActiveRecord::Schema.define(version: 20131104083104) do
 
   create_table "consents", force: true do |t|
     t.text     "content"
+    t.date     "active_on"
+    t.date     "inactive_on"
     t.string   "accept_text",  default: "I Accept"
     t.string   "decline_text", default: "I Decline"
     t.datetime "created_at"
@@ -97,11 +99,10 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
-    t.boolean  "do_not_contact"
-    t.text     "notes"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.string   "stage"
+    t.boolean  "do_not_contact"
+    t.boolean  "child"
+    t.text     "notes"
     t.string   "primary_guardian_first_name"
     t.string   "primary_guardian_last_name"
     t.string   "primary_guardian_email"
@@ -110,13 +111,15 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.string   "secondary_guardian_last_name"
     t.string   "secondary_guardian_email"
     t.string   "secondary_guardian_phone"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "questions", force: true do |t|
     t.integer  "survey_id"
     t.integer  "section_id"
     t.text     "text"
-    t.string   "reference"
+    t.string   "code"
     t.boolean  "is_mandatory"
     t.string   "response_type"
     t.integer  "display_order"
@@ -138,9 +141,9 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.integer  "survey_id"
     t.integer  "participant_id"
     t.date     "effective_date"
+    t.datetime "completed_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "completed_at"
   end
 
   create_table "responses", force: true do |t|
@@ -170,6 +173,7 @@ ActiveRecord::Schema.define(version: 20131104083104) do
 
   create_table "studies", force: true do |t|
     t.string "irb_number"
+    t.string "name"
     t.date   "active_on"
     t.date   "inactive_on"
   end
@@ -201,6 +205,7 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.string   "netid"
     t.boolean  "admin"
     t.boolean  "researcher"
+    t.boolean  "data_manager"
     t.string   "first_name"
     t.string   "last_name"
     t.datetime "created_at"

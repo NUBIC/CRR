@@ -6,7 +6,7 @@
 #  survey_id     :integer
 #  section_id    :integer
 #  text          :text
-#  reference     :string(255)
+#  code          :string(255)
 #  is_mandatory  :boolean
 #  response_type :string(255)
 #  display_order :integer

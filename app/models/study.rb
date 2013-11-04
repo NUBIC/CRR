@@ -4,6 +4,7 @@
 #
 #  id          :integer          not null, primary key
 #  irb_number  :string(255)
+#  name        :string(255)
 #  active_on   :date
 #  inactive_on :date
 #

@@ -1,4 +1,5 @@
 class ResponseSetsController < PublicController
+  before_filter :require_account
 
   def index
     @participant = Participant.find(params[:participant_id])

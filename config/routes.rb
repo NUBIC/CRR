@@ -33,7 +33,7 @@ AudiologyRegistry::Application.routes.draw do
 
   resources :response_sets
 
-  resources :participants do 
+  resources :participants, :except=>["index"] do 
     collection do 
       get :search
     end

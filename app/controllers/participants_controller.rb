@@ -1,4 +1,7 @@
 class ParticipantsController < PublicController
+  before_filter :require_account
+
+
   def enroll
     @participant = Participant.find(params[:id])
     if @participant.child_proxy?
@@ -15,9 +18,6 @@ class ParticipantsController < PublicController
     end
   end
   
-  def index
-    @participants = Participant.all.reject { |p| !p.consented? }
-  end
 
   def new
     @participant = Participant.new

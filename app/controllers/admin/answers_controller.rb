@@ -48,6 +48,7 @@ class Admin::AnswersController < ApplicationController
     else
       flash[:error] = @answer.errors.full_messages.to_sentence
     end
+    @question.reload
     respond_to do |format|
       format.html {redirect_to edit_question_path(@question)}
       format.js {render "admin/questions/show",:layout => false}

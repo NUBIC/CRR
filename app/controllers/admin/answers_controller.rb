@@ -65,6 +65,6 @@ class Admin::AnswersController < ApplicationController
     end
   end
  def answer_params
-   params.require(:answer).permit(:text,:reference,:help_text,:display_order,:question_id,:weight)
+   params.require(:answer).permit(:text,:code,:help_text,:display_order,:question_id,:weight)
  end
 end

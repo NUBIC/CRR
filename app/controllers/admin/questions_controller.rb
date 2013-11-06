@@ -73,6 +73,6 @@ class Admin::QuestionsController < ApplicationController
     end
   end
  def question_params
-   params.require(:question).permit(:text,:response_type,:reference,:help_text,:display_order,:is_mandatory,:survey_id,:section_id)
+   params.require(:question).permit(:text,:response_type,:code,:help_text,:display_order,:is_mandatory,:survey_id,:section_id)
  end
 end

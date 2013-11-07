@@ -33,4 +33,12 @@ class Account < ActiveRecord::Base
   def current_participants
     participants.reject { |p| !p.consented? }
   end
+
+  def self_link
+    account_participants.detect {|ap| ap.proxy == false }
+  end
+
+  def self_participant
+    self_link.try(:participant)
+  end
 end

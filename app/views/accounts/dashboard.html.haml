@@ -4,10 +4,11 @@
   .row-fluid
     .well.well-small
       %h5="Who are you enrolling?"
-  .span1
-    =form_tag(participants_path, :method => 'post') do
-      = hidden_field_tag "account_id", @account.id
-      = submit_tag('Myself', :class=>"btn")
+  -unless current_user.self_participant
+    .span1
+      =form_tag(participants_path, :method => 'post') do
+        = hidden_field_tag "account_id", @account.id
+        = submit_tag('Myself', :class=>"btn")
   .span1
     =form_tag(participants_path, :method => 'post') do
       = hidden_field_tag "account_id", @account.id

@@ -49,6 +49,7 @@ $(document).ready(function() {
         }});});
 
   // TODO: Move to the seperate js and simply
+  $(".participant_demographic").validate();
   $("#new_consent_sign").validate();
   $("#consent_next_button").attr("disabled", "disabled");
   $(".proxy_consent_name").hide();

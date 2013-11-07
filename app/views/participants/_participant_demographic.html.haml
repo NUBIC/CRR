@@ -52,11 +52,6 @@
   -if @participant.proxy?
     = render :partial => 'participant_guardian', :locals => {:f => f}
   .row-fluid
-    .control-group
-      =f.label :notes
-      .controls
-        =f.text_area  :notes,:rows=>3,:class=>"input-block-level"
-  .row-fluid
     .btn-group
       =f.button "Save",:class=>"btn btn-success"
       =link_to "Cancel", dashboard_path, :class=>"btn btn-warning"

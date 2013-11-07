@@ -49,14 +49,18 @@ $(document).ready(function() {
         }});});
 
   // TODO: Move to the seperate js and simply
+  $("#new_consent_sign").validate();
+  $("#consent_next_button").attr("disabled", "disabled");
   $(".proxy_consent_name").hide();
-  $(".proxy_agree").click(function(){
+  $(".consent_agree").click(function(ele){
     $(".proxy_consent_name").show();
     $("#consent_response").val("accept");
+    $("#consent_next_button").removeAttr("disabled");
   });
-  $(".proxy_disagree").click(function(){
+  $(".consent_disagree").click(function(){
     $(".proxy_consent_name").hide();
     $("#consent_response").val("decline");
+    $("#consent_next_button").removeAttr("disabled");
   });
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

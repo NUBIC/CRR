@@ -3,7 +3,7 @@
 .row-fluid
   .row-fluid
     .well.well-small
-      %h5="Add new particpant"
+      %h5="Who are you enrolling?"
   .span1
     =form_tag(participants_path, :method => 'post') do
       = hidden_field_tag "account_id", @account.id

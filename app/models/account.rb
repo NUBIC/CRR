@@ -34,6 +34,10 @@ class Account < ActiveRecord::Base
     participants.reject { |p| !p.consented? }
   end
 
+  def has_active_participants?
+    active_participants.size > 0
+  end
+
   def self_link
     account_participants.detect {|ap| ap.proxy == false }
   end

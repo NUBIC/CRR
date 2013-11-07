@@ -51,7 +51,7 @@
           =f.text_field  :secondary_phone
   -if @participant.proxy?
     = render :partial => 'participant_guardian', :locals => {:f => f}
-  -if current_user.active_participants.size > 0
+  -if current_user.has_active_participants?
     .well.well-small
       %h5="Relationships"
     -current_user.active_participants.each_with_index do |destination_participant, index|

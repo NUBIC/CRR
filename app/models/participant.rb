@@ -116,11 +116,11 @@ class Participant < ActiveRecord::Base
   end
 
   def adult_proxy?
-    !account_participant.child && account_participant.proxy
+    !child && account_participant.proxy
   end
 
   def child_proxy?
-    account_participant.child && account_participant.proxy
+    child && account_participant.proxy
   end
 
   def proxy?

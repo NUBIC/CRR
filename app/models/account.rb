@@ -42,11 +42,7 @@ class Account < ActiveRecord::Base
     participants.select { |p| p.inactive? }
   end
 
-  def self_link
-    account_participants.detect {|ap| ap.proxy == false }
-  end
-
-  def self_participant
-    self_link.try(:participant)
+  def has_self_participant?
+    account_participants.detect {|ap| ap.proxy == false && ap.participant.consented? }
   end
 end

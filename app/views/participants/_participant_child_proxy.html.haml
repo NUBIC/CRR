@@ -1,0 +1,59 @@
+.row-fluid
+  %h4="Child Participant:"
+.row-fluid
+  .span4
+    .control-group
+      =f.label :first_name, "Child's First Name"
+      .controls
+        =f.text_field  :first_name
+  .span4
+    .control-group
+      =f.label :midlle_name, "Child's Middle Name"
+      .controls
+        =f.text_field  :middle_name
+  .span4
+    .control-group
+      =f.label :last_name, "Child's Last Name"
+      .controls
+        =f.text_field  :last_name
+.row-fluid
+  %h4="Household Address:"
+.row-fluid
+  .span4
+    .control-group
+      =f.label :address_line1, "Address Line1"
+      .controls
+        =f.text_field  :address_line1
+  .span4
+    .control-group
+      =f.label :address_line2, "Address Line2"
+      .controls
+        =f.text_field  :address_line2
+.row-fluid
+  .span4
+    .control-group
+      =f.label :city
+      .controls
+        =f.text_field  :city
+  .span4
+    .control-group
+      =f.label :state
+      .controls
+        =f.text_field  :state
+  .span4
+    .control-group
+      =f.label :zip
+      .controls
+        =f.text_field  :zip
+.row-fluid
+  .span4
+    .control-group
+      =f.label :primary_phone, "Primary Phone Number"
+      .controls
+        =f.text_field  :primary_phone
+  .span4
+    .control-group
+      =f.label :secondary_phone, "Secondary Phone Number"
+      .controls
+        =f.text_field  :secondary_phone
+= render :partial => 'participant_guardian', :locals => {:f => f}

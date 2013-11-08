@@ -131,4 +131,8 @@ class Participant < ActiveRecord::Base
     [:completed, :survey, :survey_started].include?(self.aasm_current_state) and !self.consent_signatures.empty?
   end
 
+  def inactive?
+    [:new, :consent, :demographics].include?(self.aasm_current_state)
+  end
+
 end

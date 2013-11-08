@@ -11,7 +11,7 @@
         .control-group
           =f.label :first_name, "First Name"
           .controls
-            =f.text_field  :first_name
+            =f.text_field  :first_name, :class => "required"
       .span4
         .control-group
           =f.label :midlle_name, "Middle Name"
@@ -21,7 +21,7 @@
         .control-group
           =f.label :last_name, "Last Name"
           .controls
-            =f.text_field  :last_name
+            =f.text_field  :last_name, :class => "required"
     .row-fluid
       %h4="Participant Address:"
     .row-fluid

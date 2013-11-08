@@ -3,7 +3,7 @@
     %b
       %span.participant_full_name
     %span is the
-    = relationships_field.select :category, Relationship::CATEGORIES, { prompt: 'Select Relationship'} , :class => "required"
+    = relationships_field.select :category, Relationship::CATEGORIES, { prompt: 'Select Relationship'}, :class => "required"
     %span of
     %b
       =destination_participant.name

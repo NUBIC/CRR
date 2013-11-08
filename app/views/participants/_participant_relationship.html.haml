@@ -3,7 +3,7 @@
     .span2
       Participant is the
     .span2
-      = relationships_field.select :category, Relationship::CATEGORIES
+      = relationships_field.select :category, Relationship::CATEGORIES, { prompt: 'Select Relationship'} , :class => "required"
     .span1
       of
     .span2

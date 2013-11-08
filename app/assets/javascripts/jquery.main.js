@@ -50,6 +50,11 @@ $(document).ready(function() {
 
   // TODO: Move to the seperate js and simply
   $(".participant_demographic").validate();
+  $(".relationship").hide();
+  $('input[id=participant_last_name]').blur(function() {
+    $(".relationship").show();
+    $(".participant_full_name").text($("#participant_first_name").val() + " " + $(this).val());
+  });
   $("#new_consent_sign").validate();
   $("#consent_next_button").attr("disabled", "disabled");
   $(".proxy_consent_name").hide();

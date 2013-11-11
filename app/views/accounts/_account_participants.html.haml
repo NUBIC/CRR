@@ -1,4 +1,4 @@
-- if @current_user.current_participants.size > 0
+- if @current_user.has_active_participants?
   .row-fluid
     .row-fluid
       .well.well-small
@@ -12,7 +12,7 @@
           %th="Survey Status"
           %th
       %tbody
-        - @current_user.current_participants.each do |participant|
+        - @current_user.active_participants.each do |participant|
           %tr
             %td=link_to participant.name, edit_participant_path(participant)
             %td=participant.consent_signatures.last.created_at.to_date

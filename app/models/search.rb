@@ -40,16 +40,12 @@ class Search < ActiveRecord::Base
 
   def result
     enrolled = connector.eql?(AND) ?  Participant.all : []
-    search_responses = Response.arel_table
-    results = []
-    Rails.logger.info parameters.values.inspect
-    answer_ids = parameters.values.flatten.collect{|q| q[:answer_ids]}.flatten.compact.uniq
     parameters.each do |k,parameter|
       question = questions.detect{|q| q.id.eql?(k.to_i)}   
       if question.multiple_choice?
         parameter[:answer_ids].each do |answer_id|
-          enrolled = enrolled & Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_ids) if connector == AND
-          enrolled = enrolled | Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_ids) if connector == OR
+          enrolled = enrolled & Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_id) if connector == AND
+          enrolled = enrolled | Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_id) if connector == OR
         end
       elsif question.number? and !parameter[:min].blank?  and !parameter[:max].blank?
         enrolled =enrolled & Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == AND

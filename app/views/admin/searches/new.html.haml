@@ -24,8 +24,8 @@
                             =q.text
                           .row-fluid.offset1
                             -q.answers.each do |ans|  
-                              =check_box_tag("search[parameters][#{q.id}][answer_ids][]",ans.id,ans.text)
                               =label_tag("search[parameters][#{q.id}][answer_ids][]", ans.text)
+                              =check_box_tag("search[parameters][#{q.id}][answer_ids][]",ans.id)
                         -elsif q.response_type.eql?('date')
                           .row-fluid
                             =q.text

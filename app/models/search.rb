@@ -47,8 +47,10 @@ class Search < ActiveRecord::Base
     parameters.each do |k,parameter|
       question = questions.detect{|q| q.id.eql?(k.to_i)}   
       if question.multiple_choice?
-        enrolled = enrolled & Participant.joins(:response_sets=>:responses).where("answer_id in (?)",parameter[:answer_ids]) if connector == AND
-        enrolled = enrolled | Participant.joins(:response_sets=>:responses).where("answer_id in (?)",parameter[:answer_ids]) if connector == OR
+        parameter[:answer_ids].each do |answer_id|
+          enrolled = enrolled & Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_ids) if connector == AND
+          enrolled = enrolled | Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_ids) if connector == OR
+        end
       elsif question.number? and !parameter[:min].blank?  and !parameter[:max].blank?
         enrolled =enrolled & Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == AND
         enrolled =enrolled | Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == OR
@@ -58,6 +60,13 @@ class Search < ActiveRecord::Base
       end
     end
     enrolled
+  end
+
+  def parameters=(params)
+    params.each do |k,v|
+     params.delete(k) if v[:answer_ids].blank? and (v[:min].blank? or v[:max].blank?)
+    end
+    super(params)
   end
 
   def full_parameters

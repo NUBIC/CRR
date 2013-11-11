@@ -15,7 +15,7 @@ class Admin::ConsentsController < ApplicationController
     else
       flash[:error] = @consent.errors.full_messages.to_sentence
     end
-    redirect_to consents_path
+    redirect_to admin_consents_path
   end
 
   def edit

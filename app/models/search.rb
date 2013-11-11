@@ -39,18 +39,25 @@ class Search < ActiveRecord::Base
   end
 
   def result
-    enrolled = Participant.all
+    enrolled = connector.eql?(AND) ?  Participant.all : []
+    search_responses = Response.arel_table
+    results = []
     Rails.logger.info parameters.values.inspect
     answer_ids = parameters.values.flatten.collect{|q| q[:answer_ids]}.flatten.compact.uniq
-    responses = Response.where("answer_id in (#{answer_ids.join(",")})") 
-    return [] if responses.nil?
-    if connector == OR
-      @participants = responses.collect{|r| r.response_set.participant if enrolled.include?(r.response_set.participant)}
-    elsif connector == AND
-      answer_ids_to_include = parameters.keys.to_a
-      @participants = responses.collect{|r| r.response_set.participant if (enrolled.include?(r.response_set.participant) && r.response_set.participant && response_set_includes_all_of(r.response_set, answer_ids_to_include))}
+    parameters.each do |k,parameter|
+      question = questions.detect{|q| q.id.eql?(k.to_i)}   
+      if question.multiple_choice?
+        enrolled = enrolled & Participant.joins(:response_sets=>:responses).where("answer_id in (?)",parameter[:answer_ids]) if connector == AND
+        enrolled = enrolled | Participant.joins(:response_sets=>:responses).where("answer_id in (?)",parameter[:answer_ids]) if connector == OR
+      elsif question.number? and !parameter[:min].blank?  and !parameter[:max].blank?
+        enrolled =enrolled & Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == AND
+        enrolled =enrolled | Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == OR
+      elsif question.date?
+        enrolled =enrolled & Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::date > ? and text::date < ?",parameter[:min],parameter[:max]) if connector == AND
+        enrolled =enrolled | Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::date > ? and text::date < ?",parameter[:min],parameter[:max]) if connector == OR
+      end
     end
-    @participants.uniq.compact
+    enrolled
   end
 
   def full_parameters
@@ -59,7 +66,7 @@ class Search < ActiveRecord::Base
      if ['pick_one','pick_many'].include?(question.response_type)    
        result[question]= question.answers.select{|a| answers.include?(a)}.collect{|answer| answer.text}
      elsif ['date'].include?(question.response_type)
-       result[question]= "#{parameters[question.id.to_s.to_sym][:start_date]} to #{parameters[question.id.to_s.to_sym][:end_date]}"
+       result[question]= "#{parameters[question.id.to_s.to_sym][:min]} to #{parameters[question.id.to_s.to_sym][:max]}"
      elsif ['number'].include?(question.response_type)
        result[question]= "#{parameters[question.id.to_s.to_sym][:min]} to #{parameters[question.id.to_s.to_sym][:max]}"
      end
@@ -80,10 +87,6 @@ class Search < ActiveRecord::Base
     save
   end
   private
-    def response_set_includes_all_of(response_set, answer_ids)
-      answer_ids_in_responses = response_set.responses.collect{|r| r.answer_id.to_s}
-      answer_ids.all?{|ai| answer_ids_in_responses.include?(ai) }
-    end
 
     def questions
       Question.find(parameters.keys.flatten.collect{|v| v.to_i})

@@ -49,14 +49,24 @@ $(document).ready(function() {
         }});});
 
   // TODO: Move to the seperate js and simply
+  $(".participant_demographic").validate();
+  $(".relationship").hide();
+  $('input[id=participant_last_name]').blur(function() {
+    $(".relationship").show();
+    $(".participant_full_name").text($("#participant_first_name").val() + " " + $(this).val());
+  });
+  $("#new_consent_sign").validate();
+  $("#consent_next_button").attr("disabled", "disabled");
   $(".proxy_consent_name").hide();
-  $(".proxy_agree").click(function(){
+  $(".consent_agree").click(function(ele){
     $(".proxy_consent_name").show();
     $("#consent_response").val("accept");
+    $("#consent_next_button").removeAttr("disabled");
   });
-  $(".proxy_disagree").click(function(){
+  $(".consent_disagree").click(function(){
     $(".proxy_consent_name").hide();
     $("#consent_response").val("decline");
+    $("#consent_next_button").removeAttr("disabled");
   });
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

@@ -24,16 +24,16 @@
                             =q.text
                           .row-fluid.offset1
                             -q.answers.each do |ans|  
-                              =check_box_tag("search[parameters][#{q.id}][answer_ids][]",ans.id,ans.text)
                               =label_tag("search[parameters][#{q.id}][answer_ids][]", ans.text)
+                              =check_box_tag("search[parameters][#{q.id}][answer_ids][]",ans.id)
                         -elsif q.response_type.eql?('date')
                           .row-fluid
                             =q.text
                           .row-fluid
                             .span2.offset1
-                              =text_field_tag("search[parameters][#{q.id}][start_date]","",:class=>"input-small",:placeholder=>"Start Date","data-provide"=>'datepicker')
+                              =text_field_tag("search[parameters][#{q.id}][min]","",:class=>"input-small",:placeholder=>"Start Date","data-provide"=>'datepicker')
                             .span2
-                              =text_field_tag("search[parameters][#{q.id}][end_date]","",:class=>"input-small",:placeholder=>"End Date","data-provide"=>'datepicker')
+                              =text_field_tag("search[parameters][#{q.id}][max]","",:class=>"input-small",:placeholder=>"End Date","data-provide"=>'datepicker')
                           .row-fluid.offset1
                         -elsif q.response_type.eql?('number')
                           .row-fluid

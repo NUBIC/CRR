@@ -116,11 +116,11 @@ class Participant < ActiveRecord::Base
   end
 
   def adult_proxy?
-    !account_participant.child && account_participant.proxy
+    !child && account_participant.proxy
   end
 
   def child_proxy?
-    account_participant.child && account_participant.proxy
+    child && account_participant.proxy
   end
 
   def proxy?
@@ -129,6 +129,10 @@ class Participant < ActiveRecord::Base
 
   def consented?
     [:completed, :survey, :survey_started].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+  end
+
+  def inactive?
+    [:new, :consent, :demographics].include?(self.aasm_current_state)
   end
 
 end

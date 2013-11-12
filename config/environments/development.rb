@@ -42,4 +42,5 @@ AudiologyRegistry::Application.configure do
       authorities :cas, crr
       central '/etc/nubic/aker-local.yml'
   end
+  OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
 end

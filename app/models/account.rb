@@ -30,7 +30,19 @@ class Account < ActiveRecord::Base
   validates_presence_of :email
   validates_format_of :email, :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i, :message => 'is Invalid'
 
-  def current_participants
-    participants.reject { |p| !p.consented? }
+  def active_participants
+    participants.select { |p| p.consented? }
+  end
+
+  def has_active_participants?
+    active_participants.size > 0
+  end
+
+  def inactive_participants
+    participants.select { |p| p.inactive? }
+  end
+
+  def has_self_participant?
+    account_participants.detect {|ap| ap.proxy == false && ap.participant.consented? }
   end
 end

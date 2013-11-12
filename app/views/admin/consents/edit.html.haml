@@ -1,4 +1,4 @@
-=form_for @consent,:url=>admin_consent_path(@consent),:class=>"form-horizontal"  do |f|
+=form_for @consent,:url=>admin_consent_path(@consent),:html=>{:class=>"form-horizontal"}  do |f|
   .row-fluid
     .control-group
       =f.label :content
@@ -8,6 +8,15 @@
       =f.label :consent_type
       .controls
         =f.select :consent_type, Consent::TYPES
+    .control-group
+      =f.label :active_on
+      .controls
+        =f.text_field :active_on,:class=>"input-small","data-provide"=>"datepicker"
+    .control-group
+      =f.label :inactive_on
+      .controls
+        =f.text_field :inactive_on,:class=>"input-small","data-provide"=>"datepicker"
   .row-fluid
     .btn-group
-      =f.button "Create",:class=>"btn btn-success"
+      =f.button "Create",:class=>"btn btn-success btn-small"
+      =link_to "Cancel",admin_consents_path, :class=>"btn btn-warning btn-small"

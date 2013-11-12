@@ -9,4 +9,4 @@
       -@consents.each do |consent|
         %tr
           %td=consent.consent_type
-          %td=link_to "Edit", edit_admin_consent_path(consent)
+          %td=link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"

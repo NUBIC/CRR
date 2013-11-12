@@ -7,7 +7,12 @@
         Participants
         %b.caret
       %ul.dropdown-menu
-        %li=link_to "View All",admin_participants_path
+        %li=link_to "Pending Approval (#{Participant.verification_needed.count})",admin_participants_path(:state=>"verification_needed")
+        %li=link_to "Enrolled (#{Participant.enrolled.count})",admin_participants_path(:state=>"enrolled")
+        %li
+          =link_to(new_admin_participant_path) do
+            %i.fa-plus
+            Add New
   %li.divider-vertical
   %li=link_to 'Searches',admin_searches_path
 %ul.nav.pull-right

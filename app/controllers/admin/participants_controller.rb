@@ -14,7 +14,7 @@ class Admin::ParticipantsController < ApplicationController
   end
   
   def index
-    @participants = Participant.all
+    @participants = params[:state].blank? ? [] : Participant.send(params[:state])
   end
 
   def new

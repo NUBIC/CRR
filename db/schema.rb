@@ -72,9 +72,9 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.date     "inactive_on"
     t.string   "accept_text",  default: "I Accept"
     t.string   "decline_text", default: "I Decline"
+    t.string   "consent_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "consent_type"
   end
 
   create_table "contact_logs", force: true do |t|

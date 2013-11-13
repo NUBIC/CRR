@@ -4,10 +4,8 @@ class ParticipantsController < PublicController
 
   def enroll
     @participant = Participant.find(params[:id])
-    if @participant.child_proxy?
-      @survey = Survey.all.select {|s| s.child_survey? }.first
-    else
-      @survey = Survey.all.select {|s| s.adult_survey? }.first
+    if @participant.consented?
+      @survey = @participant.child_proxy? ? Survey.child_survey : Survey.adult_survey
     end
   end
 

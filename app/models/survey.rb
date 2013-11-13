@@ -6,6 +6,7 @@
 #  title       :string(255)
 #  description :text
 #  state       :text
+#  code        :string(255)
 #  created_at  :datetime
 #  updated_at  :datetime
 #
@@ -15,7 +16,7 @@ class Survey < ActiveRecord::Base
   has_many :response_sets,:dependent=>:destroy
   #has_many :questions,:dependent=>:destroy
   has_many :sections, :dependent=>:destroy
-
+  CODES = ['adult', 'child']
 
   #attr_accessible :score_configurations_attributes, :access_code, :active_at, :inactive_at, :study_id, :irb_number, :is_public, :title,:custom_numbering
  # scope :active, where("active_at < '#{Time.now}' and (inactive_at is null or inactive_at > '#{Time.now}')")
@@ -25,6 +26,7 @@ class Survey < ActiveRecord::Base
   validates_presence_of :title,:state#,:description
 
   validate :activation_check
+  validates_inclusion_of :code, :in => CODES
 
   def questions
     Question.where("section_id in (?)",sections.collect{|s| s.id})
@@ -116,13 +118,12 @@ class Survey < ActiveRecord::Base
     self.state.eql?("active")
   end
 
-  # TODO: Add criteria to decide adult or child survey, not just on title. Something else?
-  def adult_survey?
-    self.title.eql?("Adult Survey") && self.state.eql?("active")
+  def self.adult_survey
+    Survey.where("code ='adult' AND state ='active'").order("created_at DESC").first
   end
 
-  def child_survey?
-    self.title.eql?("Child Survey") && self.state.eql?("active")
+  def self.child_survey
+    Survey.where("code ='child' AND state ='active'").order("created_at DESC").first
   end
 
   #this method checks that the survey is in fact valid for activation
@@ -130,10 +131,10 @@ class Survey < ActiveRecord::Base
   def soft_errors
     activation_errors = []
     if sections.size < 1
-      activation_errors << "must have at least one section" 
+      activation_errors << "must have at least one section"
     else
       sections.each do |section|
-        activation_errors << section.soft_errors 
+        activation_errors << section.soft_errors
       end
     end
     return activation_errors.flatten.uniq.compact

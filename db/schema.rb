@@ -13,13 +13,15 @@
 
 ActiveRecord::Schema.define(version: 20131104083104) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
     t.integer  "participant_id"
     t.boolean  "proxy",          default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "child",          default: false, null: false
   end
 
   add_index "account_participants", ["account_id"], name: "index_account_participants_on_account_id", using: :btree
@@ -192,6 +194,7 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.string   "title"
     t.text     "description"
     t.text     "state"
+    t.string   "code"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

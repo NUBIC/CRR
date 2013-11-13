@@ -4,6 +4,8 @@
     =f.text_field :title,:class=>"input-xxlarge"
     =f.label :description
     =f.text_area :description,:rows=>2,:class=>"input-xxlarge"
+    =f.label :code
+    =f.select :code, Survey::CODES
   .row-fluid
     .btn-group
       =f.button "update",:class=>"btn btn-mini btn-success"

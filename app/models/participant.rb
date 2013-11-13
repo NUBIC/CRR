@@ -150,4 +150,16 @@ class Participant < ActiveRecord::Base
     !inactive?
   end
 
+  def copy_from(participant)
+    [ :address_line1, :address_line2, :city, :state, :zip, :email, :primary_phone, :secondary_phone ].each do |fillin_attr|
+      self.send("#{fillin_attr}=", participant.send(fillin_attr))
+    end
+
+    if proxy?
+      [ :primary_guardian_first_name, :primary_guardian_last_name, :primary_guardian_email, :primary_guardian_phone,
+        :secondary_guardian_first_name, :secondary_guardian_last_name, :secondary_guardian_email, :secondary_guardian_phone].each do |fillin_attr|
+        self.send("#{fillin_attr}=", participant.send(fillin_attr))
+      end
+    end
+  end
 end

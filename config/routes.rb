@@ -9,7 +9,11 @@ AudiologyRegistry::Application.routes.draw do
     end
     resources :studies
     resources :sections
-    resources :questions
+    resources :questions do
+      collection do 
+        get :search
+      end
+    end
     resources :answers
     resources :surveys do 
       member do 
@@ -28,6 +32,8 @@ AudiologyRegistry::Application.routes.draw do
         patch :release
       end
     end
+    resources :search_condition_groups
+    resources :search_conditions
     resources :consents
   end
 

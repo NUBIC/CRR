@@ -1,0 +1,17 @@
+.row-fluid{:id=>"search_condition_group_#{search_condition_group.id}"}
+  .offset1
+    .row-fluid
+      %h4 (
+      .offset1
+        -search_condition_group.search_conditions.each do |sc|
+          .row-fluid
+            =render :partial=>"admin/search_conditions/search_condition",locals: {search_condition: sc}
+        .row-fluid{:id=>"#{search_condition_group.id}_new_condition"}
+          =link_to "Add Condition",new_admin_search_condition_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition",:class=>"btn btn-mini"
+    .row-fluid
+      -search_condition_group.search_condition_groups.each do |scg|
+        =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: scg}
+    .row-fluid{:id=>"#{search_condition_group.id}_new_condition_group"}
+      =link_to "Add Group",new_admin_search_condition_group_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition_group",:class=>"btn btn-mini"
+    %h4 )
+  

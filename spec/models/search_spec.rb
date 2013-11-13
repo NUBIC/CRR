@@ -3,8 +3,6 @@
 # Table name: searches
 #
 #  id           :integer          not null, primary key
-#  parameters   :text
-#  connector    :string(255)
 #  study_id     :integer
 #  state        :string(255)
 #  request_date :date

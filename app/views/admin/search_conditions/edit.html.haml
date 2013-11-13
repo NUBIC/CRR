@@ -1,0 +1,27 @@
+=form_for @search_condition, :url=>admin_search_condition_path(@search_condition), :html=>{:class=>"form-horizontal"}  do |f|
+  .row-fluid
+    .span2
+      =@search_condition.question.search_display
+    -if @search_condition.question.multiple_choice?
+      .span3
+        .control-group
+          .controls
+            =f.select :operator,SearchCondition::VALID_ANSWER_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{},:class=>"input-small"
+      .span2
+        .control-group
+          .controls
+            =f.select :value,@search_condition.question.answers.collect{|a|[ a.text,a.id]}
+    -else 
+      .span3
+        .control-group
+          .controls
+            =f.select :operator,SearchCondition::VALID_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{},:class=>"input-small"
+      .span2
+        .control-group
+          .controls
+            =f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small"
+  .row-fluid
+    .span3
+      .btn-group
+        =f.button "Continue",:class=>"btn btn-mini btn-success"
+        =link_to "Cancel",admin_search_path(:id=>@search_condition.search),:class=>"btn btn-mini btn-warning"

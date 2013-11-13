@@ -9,6 +9,12 @@ class Admin::QuestionsController < ApplicationController
       format.js {render :layout => false}
     end
   end
+  def search
+    @questions = Question.search(params[:q])
+    respond_to do |format|
+      format.json {render :json => @questions.to_json(:only=>[:id],:methods=>[:search_display])}
+    end
+  end
 
   def new
     @section = Section.find(params[:section_id])

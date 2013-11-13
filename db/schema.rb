@@ -157,9 +157,20 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.datetime "updated_at"
   end
 
+  create_table "search_condition_groups", force: true do |t|
+    t.integer "search_id"
+    t.integer "search_condition_group_id"
+    t.string  "operator"
+  end
+
+  create_table "search_conditions", force: true do |t|
+    t.integer "search_condition_group_id"
+    t.string  "operator"
+    t.integer "question_id"
+    t.integer "value"
+  end
+
   create_table "searches", force: true do |t|
-    t.text    "parameters"
-    t.string  "connector"
     t.integer "study_id"
     t.string  "state"
     t.date    "request_date"

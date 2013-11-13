@@ -3,44 +3,7 @@
     %h5 Please Select Search Criteria
   =form_tag(admin_searches_path) do
     .row-fluid
-      =select_tag("search[connector]",options_for_select([["Participants with ANY of the selected", Search::OR],["Participants with ALL of the selected", Search::AND]]),:class=>"input-xlarge")
       =select_tag("search[study_id]",options_for_select(Study.all.collect{|s| [s.irb_number,s.id]}),:class=>"input-xlarge")
     .row-fluid
-      #search_surveys.accordion
-        .accordion-group
-          -@surveys.each do |survey|
-            .accordion-heading=link_to survey.title,"#survey_#{survey.id}",'data-toggle'=>"collapse", 'data-parent'=>"#seach_surveys",:class=>"accordion-toggle"
-            .accordion-body.collapse{:id=>"survey_#{survey.id}"}
-              .tabbable.tabs-left
-                %ul.nav.nav-tabs
-                  -survey.sections.each_with_index do |s,si|
-                    %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
-                .tab-content
-                  -survey.sections.each_with_index do |section,si|
-                    .tab-pane{:id=>"section_#{section.id}",:class=>"#{'active' if si==0}"}  
-                      -section.questions.each do |q|
-                        -if ['pick_one','pick_many'].include?(q.response_type)
-                          .row-fluid
-                            =q.text
-                          .row-fluid.offset1
-                            -q.answers.each do |ans|  
-                              =label_tag("search[parameters][#{q.id}][answer_ids][]", ans.text)
-                              =check_box_tag("search[parameters][#{q.id}][answer_ids][]",ans.id)
-                        -elsif q.response_type.eql?('date')
-                          .row-fluid
-                            =q.text
-                          .row-fluid
-                            .span2.offset1
-                              =text_field_tag("search[parameters][#{q.id}][min]","",:class=>"input-small",:placeholder=>"Start Date","data-provide"=>'datepicker')
-                            .span2
-                              =text_field_tag("search[parameters][#{q.id}][max]","",:class=>"input-small",:placeholder=>"End Date","data-provide"=>'datepicker')
-                          .row-fluid.offset1
-                        -elsif q.response_type.eql?('number')
-                          .row-fluid
-                            =q.text
-                          .row-fluid
-                            .span2.offset1
-                              =text_field_tag("search[parameters][#{q.id}][min]","",:class=>"input-mini",:placeholder=>"min")
-                            .span2.offset1
-                              =text_field_tag("search[parameters][#{q.id}][max]","",:class=>"input-mini",:placeholder=>"min")
-        =submit_tag("Search",:class=>"btn btn-small btn-success")
+      =submit_tag("Start",:class=>"btn btn-small btn-success")
+      =link_to("Start",admin_searches_path, :class=>"btn btn-small btn-warning")

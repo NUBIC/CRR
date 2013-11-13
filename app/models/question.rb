@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: questions
+#
+#  id            :integer          not null, primary key
+#  survey_id     :integer
+#  section_id    :integer
+#  text          :text
+#  code          :string(255)
+#  is_mandatory  :boolean
+#  response_type :string(255)
+#  display_order :integer
+#  help_text     :text
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
 class Question < ActiveRecord::Base
 
   belongs_to :survey
@@ -32,6 +49,9 @@ class Question < ActiveRecord::Base
 
   after_initialize :default_args
 
+  scope :search , proc {|param|
+    where("text ilike ? ","%#{param}%")}
+
   def soft_errors
     if ["pick_one","pick_many"].include?(response_type)
       return "multiple choice questions must have at least 2 answers" if answers.size < 2
@@ -56,6 +76,11 @@ class Question < ActiveRecord::Base
   end
   def label?
     response_type.eql?('none')
+  end
+
+
+  def search_display
+    "#{section.survey.title} - #{text}"
   end
 
 

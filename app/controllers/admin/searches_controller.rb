@@ -19,7 +19,6 @@ class Admin::SearchesController < ApplicationController
  end
 
  def show
-   current_user.admin?
    @search = Search.find(params[:id])
  end
 
@@ -59,9 +58,7 @@ class Admin::SearchesController < ApplicationController
  end
 
  def search_params
-   params.require(:search).permit(:connector,:study_id).tap do |whitelisted|
-       whitelisted[:parameters] = params[:search][:parameters]
-   end
+   params.require(:search).permit(:study_id)
  end
 end
 

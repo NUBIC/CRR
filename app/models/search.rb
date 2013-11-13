@@ -3,8 +3,6 @@
 # Table name: searches
 #
 #  id           :integer          not null, primary key
-#  parameters   :text
-#  connector    :string(255)
 #  study_id     :integer
 #  state        :string(255)
 #  request_date :date
@@ -17,18 +15,13 @@ class Search < ActiveRecord::Base
   include AASM
 
   belongs_to :study
-  serialize :parameters, Hash
+  has_one :search_condition_group
 
   aasm_column :state
   aasm_state :new, :initial => true
   aasm_state :data_requested
   aasm_state :data_released
 
-  CONNECTORS = [ OR = 'or',
-                 AND = 'and']
-
-  validates_presence_of :connector, :parameters, :study
-  validates_inclusion_of :connector, :in => CONNECTORS
 
   aasm_event :request_data do 
     transitions :to => :data_requested,:from=>[:new],:on_transition=> Proc.new {|obj, *args| obj.set_request_date }
@@ -38,32 +31,13 @@ class Search < ActiveRecord::Base
     transitions :to => :data_released, :from=>[:data_requested],:on_transition=>[:process_release]
   end
 
+  after_create :create_condition_group
+
   def result
-    enrolled = connector.eql?(AND) ?  Participant.all : []
-    parameters.each do |k,parameter|
-      question = questions.detect{|q| q.id.eql?(k.to_i)}   
-      if question.multiple_choice?
-        parameter[:answer_ids].each do |answer_id|
-          enrolled = enrolled & Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_id) if connector == AND
-          enrolled = enrolled | Participant.joins(:response_sets=>:responses).where("answer_id in (?)",answer_id) if connector == OR
-        end
-      elsif question.number? and !parameter[:min].blank?  and !parameter[:max].blank?
-        enrolled =enrolled & Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == AND
-        enrolled =enrolled | Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::decimal > ? and text::decimal < ?",parameter[:min],parameter[:max]) if connector == OR
-      elsif question.date?
-        enrolled =enrolled & Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::date > ? and text::date < ?",parameter[:min],parameter[:max]) if connector == AND
-        enrolled =enrolled | Participant.joins(:response_sets=>:responses).where("question_id = #{question.id} and text::date > ? and text::date < ?",parameter[:min],parameter[:max]) if connector == OR
-      end
-    end
-    enrolled
+    return [] if search_condition_group.nil? || search_condition_group.result.nil?
+    return search_condition_group.result
   end
 
-  def parameters=(params)
-    params.each do |k,v|
-     params.delete(k) if v[:answer_ids].blank? and (v[:min].blank? or v[:max].blank?)
-    end
-    super(params)
-  end
 
   def full_parameters
     result = {}
@@ -99,6 +73,10 @@ class Search < ActiveRecord::Base
 
     def answers
       Answer.find(parameters.values.flatten.collect{|q| q[:answer_ids]}.flatten.compact.uniq.collect{|v| v.to_i})
+    end
+
+    def create_condition_group
+      SearchConditionGroup.create(:search_id=>self.id,:operator=>"|")
     end
 
 end

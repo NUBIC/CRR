@@ -8,11 +8,9 @@
 
 .row-fluid
   %h4 Search Parameters:
-  .offset1
-    %h5="Participants matching #{@search.connector.eql?('or') ? 'any':'all'} of the following criteria"
-    -@search.full_parameters.each do |k,v|
-      ="#{k.text}: #{v}"
-      %br
+  .row-fluid
+  .row-fuid
+    =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: @search.search_condition_group}
 .row-fluid
   %h4 Search Results:
   .offset1

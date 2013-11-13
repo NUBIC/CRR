@@ -19,7 +19,6 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.boolean  "proxy",          default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "child",          default: false, null: false
   end
 
   add_index "account_participants", ["account_id"], name: "index_account_participants_on_account_id", using: :btree
@@ -72,9 +71,9 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.date     "inactive_on"
     t.string   "accept_text",  default: "I Accept"
     t.string   "decline_text", default: "I Decline"
+    t.string   "consent_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "consent_type"
   end
 
   create_table "contact_logs", force: true do |t|
@@ -155,9 +154,20 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.datetime "updated_at"
   end
 
+  create_table "search_condition_groups", force: true do |t|
+    t.integer "search_id"
+    t.integer "search_condition_group_id"
+    t.string  "operator"
+  end
+
+  create_table "search_conditions", force: true do |t|
+    t.integer "search_condition_group_id"
+    t.string  "operator"
+    t.integer "question_id"
+    t.integer "value"
+  end
+
   create_table "searches", force: true do |t|
-    t.text    "parameters"
-    t.string  "connector"
     t.integer "study_id"
     t.string  "state"
     t.date    "request_date"

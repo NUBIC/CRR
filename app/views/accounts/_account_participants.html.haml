@@ -20,12 +20,12 @@
               %td
                 Not started
               %td
-                =link_to "Start survey", enroll_participant_path(participant)
+                =link_to "Start survey", edit_response_set_path(participant.response_sets.last)
             -elsif participant.survey_started?
               %td
                 Started
               %td
-                =link_to "Finish survey", enroll_participant_path(participant)
+                =link_to "Finish survey", edit_response_set_path(participant.response_sets.last)
             -else
               %td
                 Completed

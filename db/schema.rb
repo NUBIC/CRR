@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20131104083104) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
     t.integer  "participant_id"

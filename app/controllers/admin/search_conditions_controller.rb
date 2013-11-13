@@ -17,6 +17,10 @@ class Admin::SearchConditionsController < ApplicationController
    end
  end
 
+ def edit
+   @search_condition = SearchCondition.find(params[:id])
+ end
+
  def show
    @search_condition = SearchCondition.find(params[:id])
  end
@@ -34,6 +38,9 @@ class Admin::SearchConditionsController < ApplicationController
 
  def destroy
    @search_condition = SearchCondition.find(params[:id])
+   @search = @search_condition.search
+   @search_condition.destroy
+   redirect_to admin_search_path(@search)
  end
 
  def search_condition_params

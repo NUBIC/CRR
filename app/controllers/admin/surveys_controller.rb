@@ -95,6 +95,15 @@ class Admin::SurveysController < ApplicationController
       format.js {render :show,:layout => false}
     end
   end
+
+  def preview
+    @survey = Survey.find(params[:id])
+    @response_set = @survey.response_sets.new
+    respond_to do |format|
+      format.html
+      format.js {render :layout => false}
+    end
+  end
  def survey_params
    params.require(:survey).permit(:title,:description,:multiple_sections,:code)
  end

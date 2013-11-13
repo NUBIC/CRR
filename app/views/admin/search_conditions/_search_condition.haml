@@ -5,3 +5,8 @@
     =SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
   .span2
     =search_condition.display_value
+  .span3
+    =form_tag(admin_search_condition_path(search_condition),:method=>"delete") do
+      .btn-group
+        =link_to "Edit" ,edit_admin_search_condition_path(search_condition),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#search_condition_#{search_condition.id}"
+        =button_tag('Delete',:class=>"btn btn-mini btn-danger")

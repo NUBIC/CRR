@@ -19,6 +19,7 @@ AudiologyRegistry::Application.routes.draw do
       member do 
         patch :activate
         patch :deactivate
+        get   :preview
       end
     end
     resources :response_sets

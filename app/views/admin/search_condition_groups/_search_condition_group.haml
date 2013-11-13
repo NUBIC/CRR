@@ -4,7 +4,7 @@
       %h4 (
       .offset1
         -search_condition_group.search_conditions.each do |sc|
-          .row-fluid
+          .row-fluid{:id=>"search_condition_#{sc.id}"}
             =render :partial=>"admin/search_conditions/search_condition",locals: {search_condition: sc}
         .row-fluid{:id=>"#{search_condition_group.id}_new_condition"}
           =link_to "Add Condition",new_admin_search_condition_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition",:class=>"btn btn-mini"

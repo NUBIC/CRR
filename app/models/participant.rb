@@ -135,4 +135,8 @@ class Participant < ActiveRecord::Base
     [:new, :consent, :demographics].include?(self.aasm_current_state)
   end
 
+  def active?
+    !inactive?
+  end
+
 end

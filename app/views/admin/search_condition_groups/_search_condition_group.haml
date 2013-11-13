@@ -2,14 +2,19 @@
   .offset1
     .row-fluid
       %h4 (
+      =link_to "Edit Comparator",edit_admin_search_condition_group_path(search_condition_group),"data-async"=>true,"data-target"=>"#search_condition_group_#{search_condition_group.id}",:class=>"btn btn-small btn-primary"
       .offset1
-        -search_condition_group.search_conditions.each do |sc|
+        -search_condition_group.search_conditions.each_with_index do |sc,i|
+          -unless i==0
+            %h4= "Or"
           .row-fluid{:id=>"search_condition_#{sc.id}"}
             =render :partial=>"admin/search_conditions/search_condition",locals: {search_condition: sc}
         .row-fluid{:id=>"#{search_condition_group.id}_new_condition"}
           =link_to "Add Condition",new_admin_search_condition_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition",:class=>"btn btn-mini"
     .row-fluid
       -search_condition_group.search_condition_groups.each do |scg|
+        .offset1
+          %h4= "Or"
         =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: scg}
     .row-fluid{:id=>"#{search_condition_group.id}_new_condition_group"}
       =link_to "Add Group",new_admin_search_condition_group_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition_group",:class=>"btn btn-mini"

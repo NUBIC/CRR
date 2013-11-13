@@ -5,7 +5,7 @@
       .span6
         =f.label :question_id,"Question"
         .controls
-          =f.text_field :question_id,:class=>"tokeninput","data-url"=>search_admin_questions_path(:format=>:json),"data-limit"=>1,"data-hint-text"=>"enter question text..."
+          =f.text_field :question_id,:class=>"tokeninput","data-url"=>search_admin_questions_path(:format=>:json),"data-limit"=>1,"data-hint-text"=>"enter question text...","data-theme"=>"facebook"
   .row-fluid
     .btn-group
       =f.button "Continue",:class=>"btn btn-mini btn-success"

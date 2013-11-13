@@ -17,7 +17,6 @@ class Admin::SearchConditionGroupsController < ApplicationController
  end
 
  def show
-   current_user.admin?
    @search_condition_group = SearchConditionGroup.find(params[:id])
  end
 
@@ -29,11 +28,14 @@ class Admin::SearchConditionGroupsController < ApplicationController
    else
      flash[:error] = @search_condition_group.errors.full_messages.to_sentence
    end
-   render :show
+   redirect_to admin_search_path(@search_condition_group.search)
  end
 
  def destroy
    @search_condition_group = SearchConditionGroup.find(params[:id])
+   @search = @search_condition_group .search
+   @search_condition_group.destroy
+   redirect_to admin_search_path(@search)
  end
 
  def search_condition_group_params

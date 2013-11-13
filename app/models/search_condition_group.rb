@@ -30,4 +30,9 @@ class SearchConditionGroup < ActiveRecord::Base
     super.nil? ? self.search_condition_group.search : super
   end
 
+  def invert_operator
+    return "&" if operator.operator.eql?("|")
+    return "|" if operator.operator.eql?("&")
+  end
+
 end

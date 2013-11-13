@@ -45,9 +45,9 @@ class ResponseSetsController < PublicController
     @response_set.update_attributes(response_set_params)
     participant = @response_set.participant
     if @response_set.save
-      if params[:button].eql?("finish") 
-        @response_set.complete! 
-        @response_set.participant.finish_survey! if participant.survey_started?
+      if params[:button].eql?("finish")
+        @response_set.complete!
+        @response_set.participant.process_enrollment! if participant.survey_started?
         return redirect_to enroll_participant_path(participant)
       elsif params[:button].eql?("exit")
         return redirect_to enroll_participant_path(participant)

@@ -53,10 +53,8 @@ class Participant < ActiveRecord::Base
   aasm_state :consent
   aasm_state :consent_denied
   aasm_state :demographics
-  aasm_state :relationships
   aasm_state :survey
   aasm_state :survey_started
-  aasm_state :completed
   aasm_state :verification_needed
   aasm_state :enrolled
 
@@ -82,6 +80,15 @@ class Participant < ActiveRecord::Base
 
   aasm_event :decline_consent do
    transitions :to => :consent_denied, :from =>:consent
+  end
+
+  aasm_event :process_enrollment do
+    transitions :to => :enrolled, :from => :survey_started, :guard => Proc.new {|p| !p.proxy? }
+    transitions :to => :verification_needed, :from => :survey_started, :guard => :proxy?
+  end
+
+  aasm_event :enroll do
+    transitions :to => :enrolled, :from => :verification_needed
   end
 
   scope :search , proc {|param|
@@ -128,7 +135,11 @@ class Participant < ActiveRecord::Base
   end
 
   def consented?
-    [:completed, :survey, :survey_started].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+    [:completed, :survey, :survey_started, :verification_needed, :enrolled].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+  end
+
+  def completed?
+    [:verification_needed, :enrolled].include?(self.aasm_current_state)
   end
 
   def inactive?

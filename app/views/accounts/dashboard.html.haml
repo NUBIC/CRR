@@ -1,9 +1,9 @@
-%h4="Welcome to the CRR"
+%h3="Welcome to the Communication Research Registry"
 = render :partial => 'account_participants.html.haml'
+.well.well-small
+  %h4="Add a participant"
+%h5="Who are you enrolling?"
 .row-fluid
-  .row-fluid
-    .well.well-small
-      %h5="Who are you enrolling?"
   -unless current_user.has_self_participant?
     .span1
       =form_tag(participants_path, :method => 'post') do

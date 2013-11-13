@@ -27,7 +27,7 @@ class AccountsController < PublicController
       if @account.save
         format.html { redirect_to dashboard_path }
       else
-        format.html { redirect_to login_path(:anchor => "sign_up")
+        format.html { redirect_to public_login_path(:anchor => "sign_up")
         flash[:notice] = "Please try again" }
       end
     end

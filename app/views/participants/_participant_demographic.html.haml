@@ -45,7 +45,7 @@
         .control-group
           =f.label :state
           .controls
-            =f.text_field  :state
+            = f.select :state, us_states, { prompt: 'Select State'}
       .span4
         .control-group
           =f.label :zip

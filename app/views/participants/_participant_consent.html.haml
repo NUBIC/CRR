@@ -35,7 +35,7 @@
           = label_tag "consent_name", 'My name is', :class => 'span3'
           = text_field_tag 'consent_name', nil, :class => 'required'
       .row-fluid
-        = submit_tag("Next", :class=>"btn")
+        = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
   -else
     = form_tag(consent_signature_participant_path(@participant), :method => 'post', :id => 'new_consent_sign') do
       .row-fluid

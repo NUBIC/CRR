@@ -1,4 +1,3 @@
-=link_to "New Search", new_admin_search_path,:class=>"btn btn-primary btn-mini"
 %table.table.bordered
   %thead
     %tr
@@ -10,7 +9,7 @@
     -@searches.each do |search|
       %tr
         %td=search.study.irb_number
-        %td=link_to search.state.titleize,search
+        %td=link_to search.state.titleize,admin_search_path(search)
         %td=search.request_date
         %td=search.process_date
   

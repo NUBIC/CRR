@@ -14,7 +14,14 @@
             %i.fa-plus
             Add New
   %li.divider-vertical
-  %li=link_to 'Searches',admin_searches_path
+  %li.dropdown
+    =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do 
+      Searches
+      %b.caret
+    %ul.dropdown-menu
+      %li=link_to 'Data Requests',admin_searches_path(:state=>"data_requested")
+      %li=link_to 'View All',admin_searches_path
+      %li=link_to "Start New", new_admin_search_path
 %ul.nav.pull-right
   -if current_user.admin?
     %li.dropdown

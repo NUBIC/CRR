@@ -62,6 +62,13 @@ class Question < ActiveRecord::Base
     ["pick_one","pick_many"].include?(response_type)
   end
 
+  def pick_many?
+    response_type.eql?('pick_many')
+  end
+  def pick_one?
+    response_type.eql?('pick_one')
+  end
+
   def date?
     response_type.eql?('date')
   end

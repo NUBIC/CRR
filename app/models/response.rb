@@ -18,12 +18,10 @@ class Response < ActiveRecord::Base
   belongs_to :answer
 
   validates_presence_of :question_id
-  validates_presence_of :answer_id, :if=>:choice?
+  validates_presence_of :answer_id, :if=>:multiple_choice?
   validates_presence_of :text, :if=>:data_entry?
   validates_uniqueness_of :answer_id, :scope => :response_set_id,:allow_blank=>true
-  validates_uniqueness_of :question_id, :scope => :response_set_id,:allow_blank=>true,:unless=>:multiple_choice?
-
-        #base.send :include, Surveyor::ActsAsResponse # includes "as" instance method
+  validates_uniqueness_of :question_id, :scope => :response_set_id,:allow_blank=>true,:unless=>:pick_many?
 
 
   validate :validate_question_type
@@ -34,12 +32,12 @@ class Response < ActiveRecord::Base
    ["short_text","long_text","date","number"].include?(self.question.response_type)
   end
 
-  def choice?
-    ["single_choice","multiple_choice"].include?(self.question.response_type)
+  def pick_many?
+    question.pick_many?
   end
 
   def multiple_choice?
-    question.response_type.eql?("multiple_choice")
+    question.multiple_choice?
   end
 
   private

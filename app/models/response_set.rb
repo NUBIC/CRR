@@ -30,7 +30,7 @@ class ResponseSet < ActiveRecord::Base
 
 
 
-  before_create :ensure_start_timestamp
+  #before_create :ensure_start_timestamp
 
 
 
@@ -112,8 +112,8 @@ class ResponseSet < ActiveRecord::Base
   end
  
   private
-    def ensure_start_timestamp
-      self.started_at ||= Time.now
-    end
+    #def ensure_start_timestamp
+    #  self.started_at ||= Time.now
+    #end
 
 end

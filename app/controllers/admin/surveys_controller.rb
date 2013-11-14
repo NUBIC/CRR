@@ -1,6 +1,4 @@
-class Admin::SurveysController < ApplicationController
-  include Aker::Rails::SecuredController
-
+class Admin::SurveysController < Admin::AdminController
   def index
     respond_to do |format|
       format.html

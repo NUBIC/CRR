@@ -71,6 +71,12 @@ AudiologyRegistry::Application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+  config.middleware.use ExceptionNotification::Rack,
+    :email => {
+      :email_prefix => "[#{Rails.env}] ",
+      :sender_address => %w(noreply@northwestern.edu),
+      :exception_recipients => %w(d-were@northwestern.edu jalpa-patel@northwestern.edu,)
+    }
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false

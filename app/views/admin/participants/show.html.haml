@@ -2,7 +2,7 @@
   %h4=@participant.name
 %ul.nav.nav-tabs
   %li{:class=>'active'}=link_to 'Basics','#basics',"data-toggle"=>'tab'
-  %li=link_to 'Instruments','#instruments',"data-toggle"=>'tab'
+  %li=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
   %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
   %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
   %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
@@ -65,7 +65,7 @@
         =@participant.notes
 
   #instruments.tab-pane
-    = render :partial => 'partials/admin/participant_instruments', :locals => {:participant => @participant}
+    = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
   #studies.tab-pane
     = render :partial => 'partials/admin/participant_studies', :locals => {:participant => @participant}
   #relationships.tab-pane

@@ -1,5 +1,4 @@
-class Admin::StudiesController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::StudiesController < Admin::AdminController
  def index
    @studies = Study.all
  end

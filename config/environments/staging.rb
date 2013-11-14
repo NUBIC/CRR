@@ -69,8 +69,16 @@ AudiologyRegistry::Application.configure do
   # the I18n.default_locale when a translation can not be found).
   config.i18n.fallbacks = true
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { :address => "ns.northwestern.edu", :port => 25, :domain => "northwestern.edu" }
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+  config.middleware.use ExceptionNotification::Rack,
+    :email => {
+      :email_prefix => "[#{Rails.env}] ",
+      :sender_address => %w(noreply@northwestern.edu),
+      :exception_recipients => %w(d-were@northwestern.edu jalpa-patel@northwestern.edu)
+    }
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false

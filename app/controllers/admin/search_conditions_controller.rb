@@ -1,5 +1,4 @@
-class Admin::SearchConditionsController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::SearchConditionsController < Admin::AdminController
   def index
     @search_condition_conditions = SearchCondition.data_requested + SearchCondition.data_released
   end

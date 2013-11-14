@@ -22,6 +22,8 @@ class Search < ActiveRecord::Base
   aasm_state :data_requested
   aasm_state :data_released
 
+  validates_presence_of :study
+
 
   aasm_event :request_data do 
     transitions :to => :data_requested,:from=>[:new],:on_transition=> Proc.new {|obj, *args| obj.set_request_date }
@@ -39,23 +41,6 @@ class Search < ActiveRecord::Base
   end
 
 
-  def full_parameters
-    result = {}
-    questions.each do |question|
-     if ['pick_one','pick_many'].include?(question.response_type)    
-       result[question]= question.answers.select{|a| answers.include?(a)}.collect{|answer| answer.text}
-     elsif ['date'].include?(question.response_type)
-       result[question]= "#{parameters[question.id.to_s.to_sym][:min]} to #{parameters[question.id.to_s.to_sym][:max]}"
-     elsif ['number'].include?(question.response_type)
-       result[question]= "#{parameters[question.id.to_s.to_sym][:min]} to #{parameters[question.id.to_s.to_sym][:max]}"
-     end
-    end
-    return result
-  end
-
-  def pretty_parameters
-    full_parameters
-  end
   def process_release
     result.each do |participant|
       participant.study_involvements.create(:start_date=>Date.today,:study_id=>study.id) unless participant.do_not_contact

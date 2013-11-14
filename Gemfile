@@ -30,6 +30,7 @@ group :development, :test do
   gem 'annotate', '~> 2.5.0'
   gem 'database_cleaner'
   gem 'factory_girl'
+  gem "faker"
   gem "factory_girl_rails", "~> 4.0"
   gem 'rspec-rails'
   gem 'shoulda'

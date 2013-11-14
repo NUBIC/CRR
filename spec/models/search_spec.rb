@@ -19,17 +19,15 @@ describe Search do
     search.should_not be_nil
   end
 
-  it { should validate_presence_of :connector }
-  it { should validate_presence_of :parameters }
   it { should validate_presence_of :study }
 
-  describe 'connector' do
-    it "should allow valid values" do
-      Search::CONNECTORS.each do |v|
-        should allow_value(v).for(:connector)
-      end
-    end
-    it { should_not allow_value("other").for(:connector) }
-  end
+  #describe 'connector' do
+  #  it "should allow valid values" do
+  #    Search::CONNECTORS.each do |v|
+  #      should allow_value(v).for(:operator)
+  #    end
+  #  end
+  #  it { should_not allow_value("other").for(:connector) }
+  #end
   
 end

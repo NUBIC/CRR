@@ -1,4 +1,10 @@
 FactoryGirl.define do
+
+
+  sequence :irb_number do |n|
+    "STU008888#{"%03d" % n}"
+  end
+
   factory :participant do |p|
     p.first_name "Brian"
     p.last_name "Lee"
@@ -12,6 +18,8 @@ FactoryGirl.define do
 
   factory :study do |s|
     s.active_on Date.new(2013, 10, 3)
+    s.irb_number {generate :irb_number}
+    s.name    {Faker::Company.name}
   end
 
   factory :study_involvement do |si|
@@ -26,13 +34,6 @@ FactoryGirl.define do
   end
 
   factory :search do |search|
-    search.connector 'or'
-    search.parameters do
-      {
-        '1' => 'RED',
-        '2' => 'BLUE'
-      }
-    end
     search.association :study, :factory => :study
   end
 

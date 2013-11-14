@@ -39,7 +39,12 @@ AudiologyRegistry::Application.routes.draw do
     end
     resources :search_condition_groups
     resources :search_conditions
-    resources :consents
+    resources :consents do
+      member do 
+        patch :activate
+        patch :deactivate
+      end
+    end
   end
 
   resources :response_sets

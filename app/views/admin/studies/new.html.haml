@@ -9,13 +9,9 @@
       .controls
         =f.text_field :name,:class=>"input-xxlarge"
     .control-group
-      =f.label :active_on
+      =f.label :notes
       .controls
-        =f.text_field :active_on,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
-    .control-group
-      =f.label :inactive_on
-      .controls
-        =f.text_field :inactive_on,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_area :notes,:class=>"input-block-level",:rows=>10
   .row-fluid
     .btn-group
       =f.button "Create",:class=>"btn btn-mini btn-success"

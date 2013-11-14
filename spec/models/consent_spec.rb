@@ -4,13 +4,12 @@
 #
 #  id           :integer          not null, primary key
 #  content      :text
-#  active_on    :date
-#  inactive_on  :date
+#  state        :string(255)
 #  accept_text  :string(255)      default("I Accept")
 #  decline_text :string(255)      default("I Decline")
+#  consent_type :string(255)
 #  created_at   :datetime
 #  updated_at   :datetime
-#  consent_type :string(255)
 #
 
 require 'spec_helper'

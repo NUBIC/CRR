@@ -4,9 +4,25 @@
     %thead
       %tr
         %th Consent.Type
+        %th State
+        %th Created On
         %th 
     %tbody
       -@consents.each do |consent|
         %tr
           %td=consent.consent_type
-          %td=link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
+          %td=consent.state
+          %td=consent.created_at.to_date
+          %td
+            .span12
+              -if consent.active?
+                .span3
+                  =form_for consent ,:url=> deactivate_admin_consent_path(consent) do |f|
+                    =f.submit "Deactivate",:class=>"btn btn-mini btn-danger"
+              -else
+                .span3
+                  =form_for consent, :url=> activate_admin_consent_path(consent) do |f|
+                    =f.submit "Activate",:class=>"btn btn-mini btn-success"
+              -if consent.editable?
+                .span3
+                  =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"

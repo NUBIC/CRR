@@ -38,7 +38,7 @@ AudiologyRegistry::Application.configure do
   #end
   config.aker  do
       crr = Aker::Authorities::Crr.new
-      authorities :cas,:netid, crr
+      authorities :cas,crr
       central '/etc/nubic/aker-local.yml'
   end
   OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE

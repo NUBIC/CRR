@@ -20,8 +20,8 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of   :netid, :case_sensitive => false, :allow_blank => false
 
-  validate  :check_netid
-  after_create :update_from_ldap
+  #validate  :check_netid
+  #after_create :update_from_ldap
   attr_accessor :study_tokens
 
   def study_tokens=(ids)

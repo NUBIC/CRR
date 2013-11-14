@@ -8,10 +8,6 @@
       =f.label :consent_type
       .controls
         =f.select :consent_type, Consent::TYPES
-    .control-group
-      =f.label :active_on
-      .controls
-        =f.text_field :active_on,:class=>"input-small","data-provide"=>"datepicker"
   .row-fluid
     .btn-group
       =f.button "Create",:class=>"btn btn-success btn-small"

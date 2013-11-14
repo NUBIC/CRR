@@ -67,8 +67,7 @@ ActiveRecord::Schema.define(version: 20131104083104) do
 
   create_table "consents", force: true do |t|
     t.text     "content"
-    t.date     "active_on"
-    t.date     "inactive_on"
+    t.string   "state"
     t.string   "accept_text",  default: "I Accept"
     t.string   "decline_text", default: "I Decline"
     t.string   "consent_type"
@@ -184,8 +183,8 @@ ActiveRecord::Schema.define(version: 20131104083104) do
   create_table "studies", force: true do |t|
     t.string "irb_number"
     t.string "name"
-    t.date   "active_on"
-    t.date   "inactive_on"
+    t.text   "notes"
+    t.string "state"
   end
 
   create_table "study_involvements", force: true do |t|

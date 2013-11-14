@@ -3,8 +3,8 @@ class CreateStudies < ActiveRecord::Migration
     create_table :studies do |t|
       t.string  :irb_number
       t.string  :name
-      t.date    :active_on
-      t.date    :inactive_on
+      t.text    :notes
+      t.string  :state
     end
   end
 end

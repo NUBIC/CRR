@@ -31,6 +31,11 @@ class ParticipantsController < PublicController
       @participant.child = true
       @participant.save
     end
+    if @account.has_active_participants?
+      @participant.copy_from(@account.active_participants.first)
+      @participant.save
+    end
+
     redirect_to enroll_participant_path(@participant)
   end
 
@@ -49,13 +54,13 @@ class ParticipantsController < PublicController
   def update
     @participant =  Participant.find(params[:id])
     @participant.update_attributes(participant_params)
-    if participant_relationship_params[:relationships]
-      participant_relationship_params[:relationships].each_value do |relationship_params|
-        @participant.origin_relationships.create( :category => relationship_params[:category],
-                                                  :destination_id => relationship_params[:destination_id])
-      end
-    end
     if @participant.save
+      if participant_relationship_params[:relationships]
+        participant_relationship_params[:relationships].each_value do |relationship_params|
+          @participant.origin_relationships.create( :category => relationship_params[:category],
+                                                  :destination_id => relationship_params[:destination_id])
+        end
+      end
       @participant.take_survey! if @participant.demographics?
       flash[:notice] = "Successfully updated"
     else

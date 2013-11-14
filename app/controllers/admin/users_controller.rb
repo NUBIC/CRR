@@ -13,7 +13,7 @@ class Admin::UsersController < Admin::AdminController
    else
      flash[:error] = @user.errors.full_messages.to_sentence
    end
-   redirect_to users_path
+   redirect_to admin_users_path
  end
  def edit
    @user = User.find(params[:id])

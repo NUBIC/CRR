@@ -58,15 +58,19 @@ $(document).ready(function() {
   $("#new_consent_sign").validate();
   $("#consent_next_button").attr("disabled", "disabled");
   $(".proxy_consent_name").hide();
-  $(".consent_agree").click(function(ele){
+  $(".consent_agree").click(function(){
     $(".proxy_consent_name").show();
     $("#consent_response").val("accept");
     $("#consent_next_button").removeAttr("disabled");
+    $(".consent_disagree").attr("disabled", "disabled");
+    $(".consent_disagree").unbind('click');
   });
   $(".consent_disagree").click(function(){
     $(".proxy_consent_name").hide();
     $("#consent_response").val("decline");
     $("#consent_next_button").removeAttr("disabled");
+    $(".consent_agree").attr("disabled", "disabled");
+    $(".consent_agree").unbind('click');
   });
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

@@ -20,8 +20,8 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of   :netid, :case_sensitive => false, :allow_blank => false
 
-  #validate  :check_netid
-  #after_create :update_from_ldap
+  validate  :check_netid
+  after_create :update_from_ldap
   attr_accessor :study_tokens
 
   def study_tokens=(ids)
@@ -40,11 +40,13 @@ class User < ActiveRecord::Base
   private
 
   def check_netid
-    errors.add(:netid,"Not recognized") if Aker.authority.find_user(netid).nil?
+    errors.add(:netid,"Not recognized") if (Aker.authority.find_user(netid).nil? and !Rails.env.development?)
   end
   def update_from_ldap
-    aker_user = Aker.authority.find_user(netid)
-    self.update_attributes(:email => aker_user.email, :first_name => aker_user.first_name, :last_name => aker_user.last_name) 
+    unless Rails.env.development?
+      aker_user = Aker.authority.find_user(netid)
+      self.update_attributes(:email => aker_user.email, :first_name => aker_user.first_name, :last_name => aker_user.last_name) 
+    end
   end
   
 end

@@ -1,7 +1,4 @@
-class Admin::AnswersController < ApplicationController
-  include Aker::Rails::SecuredController
-
-
+class Admin::AnswersController < Admin::AdminController
 
   def new
     @question = Question.find(params[:question_id])

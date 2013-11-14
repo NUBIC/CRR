@@ -1,7 +1,4 @@
-class Admin::QuestionsController < ApplicationController
-  include Aker::Rails::SecuredController
-
-
+class Admin::QuestionsController < Admin::AdminController
   def index
     @section= Section.find(params[:section_id])
     respond_to do |format|

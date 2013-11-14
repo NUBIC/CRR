@@ -1,5 +1,4 @@
-class Admin::SearchesController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::SearchesController < Admin::AdminController
   def index
     @searches = params[:state].blank? ? Search.all : Search.send(params[:state].to_sym) 
   end

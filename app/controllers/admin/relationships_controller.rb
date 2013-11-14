@@ -1,4 +1,4 @@
-class Admin::RelationshipsController < ApplicationController
+class Admin::RelationshipsController < Admin::AdminController
  def index
    @participant = Participant.find(params[:participant_id])
    respond_to do |format|

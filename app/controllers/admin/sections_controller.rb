@@ -1,5 +1,4 @@
-class Admin::SectionsController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::SectionsController < Admin::AdminController
 
   def new
     @survey = Survey.find(params[:survey_id])

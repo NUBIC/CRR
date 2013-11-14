@@ -1,5 +1,4 @@
-class Admin::ParticipantsController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::ParticipantsController < Admin::AdminController
 
   def enroll
     @participant = Participant.find(params[:id])

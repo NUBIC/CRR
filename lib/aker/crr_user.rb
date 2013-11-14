@@ -13,6 +13,11 @@ module Aker::CrrUser
     username
   end
 
+
+  def has_system_access?
+    !ActiveRecord::Base::User.find_by_netid(netid).nil?
+  end
+
   def admin?
    ActiveRecord::Base::User.find_by_netid(netid).admin?
   end

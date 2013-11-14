@@ -1,5 +1,4 @@
-class Admin::ContactLogsController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::ContactLogsController < Admin::AdminController
  def index
    @participant = Participant.find(params[:participant_id])
  end

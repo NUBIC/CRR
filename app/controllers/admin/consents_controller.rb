@@ -1,5 +1,4 @@
-class Admin::ConsentsController < ApplicationController
-  include Aker::Rails::SecuredController
+class Admin::ConsentsController < Admin::AdminController
   def index
     @consents = Consent.all
   end

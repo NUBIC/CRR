@@ -1,4 +1,4 @@
-class Admin::ResponseSetsController < PublicController
+class Admin::ResponseSetsController < ApplicationController
   include Aker::Rails::SecuredController
 
   def index

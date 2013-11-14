@@ -16,7 +16,6 @@ AudiologyRegistry::Application.configure do
   config.serve_static_assets = false
   config.assets.compile = false
   config.assets.digest = true
-  config.assets.precompile += %w(application.css applicaiton.js public.js main.js surveyor.js)
   config.assets.precompile += %w(application.css application.js)
 
   # Don't care if the mailer can't send.
@@ -39,7 +38,7 @@ AudiologyRegistry::Application.configure do
   #end
   config.aker  do
       crr = Aker::Authorities::Crr.new
-      authorities :cas, crr
+      authorities :cas,:netid, crr
       central '/etc/nubic/aker-local.yml'
   end
   OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE

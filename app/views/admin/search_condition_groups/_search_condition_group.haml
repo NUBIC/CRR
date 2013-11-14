@@ -2,11 +2,18 @@
   .offset1
     .row-fluid
       %h4 (
-      =link_to "Edit Comparator",edit_admin_search_condition_group_path(search_condition_group),"data-async"=>true,"data-target"=>"#search_condition_group_#{search_condition_group.id}",:class=>"btn btn-small btn-primary"
+      .span1
+        =form_for search_condition_group, :url=>admin_search_condition_group_path(search_condition_group) do |f|
+          =f.hidden_field :operator,:value=>search_condition_group.invert_operator
+          =f.submit "invert operator",:class=>"btn btn-mini btn-warning"
+      .span1
+        =form_for search_condition_group,:method=>"delete", :url=>admin_search_condition_group_path(search_condition_group) do |f|
+          =f.submit "delete group",:class=>"btn btn-mini btn-danger"
+    .row-fluid
       .offset1
         -search_condition_group.search_conditions.each_with_index do |sc,i|
           -unless i==0
-            %h4= "Or"
+            %h4= search_condition_group.pretty_operator
           .row-fluid{:id=>"search_condition_#{sc.id}"}
             =render :partial=>"admin/search_conditions/search_condition",locals: {search_condition: sc}
         .row-fluid{:id=>"#{search_condition_group.id}_new_condition"}
@@ -14,7 +21,7 @@
     .row-fluid
       -search_condition_group.search_condition_groups.each do |scg|
         .offset1
-          %h4= "Or"
+          %h4= search_condition_group.pretty_operator
         =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: scg}
     .row-fluid{:id=>"#{search_condition_group.id}_new_condition_group"}
       =link_to "Add Group",new_admin_search_condition_group_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition_group",:class=>"btn btn-mini"

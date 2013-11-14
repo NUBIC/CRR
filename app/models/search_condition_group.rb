@@ -18,12 +18,15 @@ class SearchConditionGroup < ActiveRecord::Base
   validates_presence_of :search, :if=>"search_condition_group.nil?"
   validates_inclusion_of :operator, :in => ["&","|"],:allow_blank=>false
   VALID_OPERATORS=["|","&"].freeze
-  OPERATOR_TRANSLATIONS={"|"=>"Any Condition","&"=>"All Conditions"}.freeze
+  OPERATOR_TRANSLATIONS={"|"=>"OR","&"=>"AND"}.freeze
 
   def result
-    temp_result = search_conditions.collect{|sc| sc.result}
-    temp_result << search_condition_groups.collect{|scg| scg.result} unless search_condition_groups.empty?
-    temp_result.empty? ? [] : temp_result.inject(operator.to_sym).flatten
+    return [] if search_conditions.empty? and search_condition_groups.empty?
+    sc_result = search_conditions.collect{|sc| sc.result}.inject(operator.to_sym)
+    return sc_result if search_condition_groups.empty?
+    scg_result = search_condition_groups.collect{|scg| scg.result}.inject(operator.to_sym) 
+    return scg_result if search_conditions.empty? 
+    [sc_result,scg_result].inject(operator.to_sym)
   end
 
   def search
@@ -31,8 +34,12 @@ class SearchConditionGroup < ActiveRecord::Base
   end
 
   def invert_operator
-    return "&" if operator.operator.eql?("|")
-    return "|" if operator.operator.eql?("&")
+    return "&" if operator.eql?("|")
+    return "|" if operator.eql?("&")
+  end
+
+  def pretty_operator
+    OPERATOR_TRANSLATIONS[operator]
   end
 
 end

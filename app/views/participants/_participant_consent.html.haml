@@ -20,6 +20,7 @@
           = text_field_tag 'consent_name', nil, :class => 'required'
       .row-fluid
         = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
+        =link_to "Cancel", dashboard_path, :class=>"btn"
   -elsif @participant.child_proxy?
     = form_tag(consent_signature_participant_path(@participant), :method => 'post', :id => 'new_consent_sign') do
       .row-fluid
@@ -27,7 +28,7 @@
           = hidden_field_tag "consent_response"
           = link_to 'I agree on behalf of the child', '#accept', :class=>"btn btn-success consent_agree"
         .span3
-          = link_to 'I dsagree on behalf of the child', '#decline', :class=>"btn btn-danger consent_disagree"
+          = link_to 'I disagree on behalf of the child', '#decline', :class=>"btn btn-danger consent_disagree"
       %br
       %br
       .row-fluid
@@ -36,6 +37,7 @@
           = text_field_tag 'consent_name', nil, :class => 'required'
       .row-fluid
         = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
+        =link_to "Cancel", dashboard_path, :class=>"btn"
   -else
     = form_tag(consent_signature_participant_path(@participant), :method => 'post', :id => 'new_consent_sign') do
       .row-fluid
@@ -48,3 +50,4 @@
       %br
       .row-fluid
         = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
+        =link_to "Cancel", dashboard_path, :class=>"btn"

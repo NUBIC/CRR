@@ -7,7 +7,11 @@ AudiologyRegistry::Application.routes.draw do
         get :search
       end
     end
-    resources :studies
+    resources :studies do
+      collection do 
+        get :search
+      end
+    end
     resources :sections
     resources :questions do
       collection do 

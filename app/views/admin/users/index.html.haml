@@ -8,6 +8,7 @@
         %th Admin 
         %th Data Manager
         %th Researcher
+        %th Studies
         %th 
     %tbody
       -@users.each do |user|
@@ -17,4 +18,8 @@
           %td=user.admin?
           %td=user.data_manager?
           %td=user.researcher?
+          %td
+            -user.studies.each do |study|
+              =study.search_display
+              %br
           %td=link_to "Edit",edit_admin_user_path(user),:class=>"btn btn-mini btn-primary"

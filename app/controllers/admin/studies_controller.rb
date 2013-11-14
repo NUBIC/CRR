@@ -5,7 +5,10 @@ class Admin::StudiesController < ApplicationController
  end
 
  def search
-
+   @searchs = Study.search(params[:q])
+   respond_to do |format|
+     format.json {render :json => @searchs.to_json(:only=>[:id],:methods=>[:search_display])}
+   end
  end
 
  def new

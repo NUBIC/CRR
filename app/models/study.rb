@@ -19,11 +19,15 @@ class Study < ActiveRecord::Base
 
   scope :active, where("active_on < '#{Date.today}' and (inactive_on is null or inactive_on > '#{Date.today}')")
 
+  scope :search , proc {|param|
+    where("irb_number ilike ? or name ilike ? ","%#{param}%","%#{param}%")}
+
+
+  def search_display
+    "#{id} - #{irb_number} - #{name}"
+  end
 
   private
-  def date_validity
-
-  end
 
   def inactive_on_cannot_be_before_active_on
     if inactive_on.present? && inactive_on < active_on

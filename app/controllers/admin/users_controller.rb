@@ -39,7 +39,7 @@ class Admin::UsersController < ApplicationController
  end
 
  def user_params
-   params.require(:user).permit(:netid,:researcher,:admin,:data_manager)
+   params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
  end
 end
 

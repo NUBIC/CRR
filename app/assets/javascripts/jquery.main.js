@@ -55,22 +55,18 @@ $(document).ready(function() {
     $(".relationship").show();
     $(".participant_full_name").text($("#participant_first_name").val() + " " + $(this).val());
   });
-  $("#new_consent_sign").validate();
-  $("#consent_next_button").attr("disabled", "disabled");
-  $(".proxy_consent_name").hide();
-  $(".consent_agree").click(function(){
-    $(".proxy_consent_name").show();
+  $("#new-consent-sign").validate();
+  $("#consent-next").attr("disabled", "disabled");
+  $(".proxy-consent-name").hide();
+  $(".consent-agree").click(function(){
+    $(".proxy-consent-name").show();
     $("#consent_response").val("accept");
-    $("#consent_next_button").removeAttr("disabled");
-    $(".consent_disagree").attr("disabled", "disabled");
-    $(".consent_disagree").unbind('click');
+    $("#consent-next").removeAttr("disabled");
   });
-  $(".consent_disagree").click(function(){
-    $(".proxy_consent_name").hide();
+  $(".consent-disagree").click(function(){
+    $(".proxy-consent-name").hide();
     $("#consent_response").val("decline");
-    $("#consent_next_button").removeAttr("disabled");
-    $(".consent_agree").attr("disabled", "disabled");
-    $(".consent_agree").unbind('click');
+    $("#consent-next").removeAttr("disabled");
   });
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

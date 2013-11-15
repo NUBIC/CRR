@@ -1,53 +1,55 @@
 .row-fluid
   .span12
     =Consent.active_consent.content
-    %br
-    %br
+%br
 .row-fluid
   -if @participant.adult_proxy?
-    = form_tag(consent_signature_participant_path(@participant), :method => 'post', :id => 'new_consent_sign') do
+    = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
+      = hidden_field_tag "consent_response"
       .row-fluid
-        .span3
-          = hidden_field_tag "consent_response"
-          = link_to 'I agree on behalf of someone', '#accept', :class=>"btn btn-success consent_agree"
-        .span3
-          = link_to 'I disagree on behalf of someone', '#decline', :class=>"btn btn-danger consent_disagree"
+        %label.radio.inline
+          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+          I agree on behalf of someone
+        %label.radio.inline
+          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+          I disagree on behalf of someone
+      .form-inline.proxy-consent-name
+        %br
+        = label_tag "consent_name", 'My name is'
+        = text_field_tag 'consent_name', nil, class: 'required'
       %br
-      %br
       .row-fluid
-        .controls.controls-row.proxy_consent_name
-          = label_tag "consent_name", 'My name is', :class => 'span3'
-          = text_field_tag 'consent_name', nil, :class => 'required'
-      .row-fluid
-        = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
-        =link_to "Cancel", dashboard_path, :class=>"btn"
+        = submit_tag("Next", class: "btn", id: "consent-next")
+        = link_to "Cancel", dashboard_path, class: "btn"
   -elsif @participant.child_proxy?
-    = form_tag(consent_signature_participant_path(@participant), :method => 'post', :id => 'new_consent_sign') do
+    = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
+      = hidden_field_tag "consent_response"
       .row-fluid
-        .span3
-          = hidden_field_tag "consent_response"
-          = link_to 'I agree on behalf of the child', '#accept', :class=>"btn btn-success consent_agree"
-        .span3
-          = link_to 'I disagree on behalf of the child', '#decline', :class=>"btn btn-danger consent_disagree"
+        %label.radio.inline
+          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+          I agree on behalf of child
+        %label.radio.inline
+          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+          I disagree on behalf of child
+      .form-inline.proxy-consent-name
+        %br
+        = label_tag "consent_name", 'My name is'
+        = text_field_tag 'consent_name', nil, class: 'required'
       %br
-      %br
       .row-fluid
-        .controls.controls-row.proxy_consent_name
-          = label_tag "consent_name", 'My name is', :class => 'span3'
-          = text_field_tag 'consent_name', nil, :class => 'required'
-      .row-fluid
-        = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
-        =link_to "Cancel", dashboard_path, :class=>"btn"
+        = submit_tag("Next", class: "btn", id: "consent-next")
+        = link_to "Cancel", dashboard_path, class: "btn"
   -else
-    = form_tag(consent_signature_participant_path(@participant), :method => 'post', :id => 'new_consent_sign') do
+    = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
+      = hidden_field_tag "consent_response"
       .row-fluid
-        .span3
-          = hidden_field_tag "consent_response", nil, :class => 'required'
-          = link_to 'I agree', '#accept', :class=>"btn btn-success consent_agree"
-        .span3
-          = link_to 'I disagree', '#decline', :class=>"btn btn-danger consent_disagree"
-      %br
+        %label.radio.inline
+          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+          I agree
+        %label.radio.inline
+          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+          I disagree
       %br
       .row-fluid
-        = submit_tag("Next", :class=>"btn", :id => "consent_next_button")
-        =link_to "Cancel", dashboard_path, :class=>"btn"
+        = submit_tag("Next", class: "btn", id: "consent-next")
+        = link_to "Cancel", dashboard_path, class: "btn"

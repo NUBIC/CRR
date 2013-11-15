@@ -62,11 +62,19 @@ class ParticipantsController < PublicController
         end
       end
       @participant.take_survey! if @participant.demographics?
-      flash[:notice] = "Successfully updated"
+      if @participant.survey?
+        survey = @participant.child_proxy? ? Survey.child_survey : Survey.adult_survey
+        response_set = @participant.response_sets.new(survey_id: survey.id)
+        @participant.start_survey!
+        redirect_to(edit_response_set_path(response_set))
+      else
+        redirect_to enroll_participant_path(@participant)
+      end
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
+      redirect_to enroll_participant_path(@participant)
     end
-    redirect_to enroll_participant_path(@participant)
+
   end
 
   def consent_signature

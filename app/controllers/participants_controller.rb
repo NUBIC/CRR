@@ -64,7 +64,7 @@ class ParticipantsController < PublicController
       @participant.take_survey! if @participant.demographics?
       if @participant.survey?
         survey = @participant.child_proxy? ? Survey.child_survey : Survey.adult_survey
-        response_set = @participant.response_sets.new(survey_id: survey.id)
+        response_set = @participant.response_sets.create!(survey_id: survey.id)
         @participant.start_survey!
         redirect_to(edit_response_set_path(response_set))
       else

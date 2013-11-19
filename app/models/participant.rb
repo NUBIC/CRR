@@ -32,7 +32,7 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  has_many :response_sets
+  has_many :response_sets, :order => 'updated_at DESC'
   has_many :contact_logs
   has_many :study_involvements
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
@@ -57,6 +57,7 @@ class Participant < ActiveRecord::Base
   aasm_state :survey_started
   aasm_state :verification_needed
   aasm_state :enrolled
+  aasm_state :withdrawn
 
   aasm_event :signup do
     transitions :to => :consent, :from =>:new
@@ -91,12 +92,20 @@ class Participant < ActiveRecord::Base
     transitions :to => :enrolled, :from => :verification_needed
   end
 
+  aasm_event :withdraw do
+    transitions :to => :withdrawn
+  end
+
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
   # condensed form of name
   def name
-    [first_name, last_name].join(' ')
+    if first_name.blank? and last_name.blank?
+      proxy? ? child_proxy? ? "No Name Child Enrollment" : "No Name Adult Enrollment" : "Self Enrollment"
+    else
+      [first_name, last_name].join(' ')
+    end
   end
 
   def relationships
@@ -122,6 +131,14 @@ class Participant < ActiveRecord::Base
     consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
   end
 
+  def create_response_set(survey)
+    response_sets.create(survey_id: survey.id)
+  end
+
+  def latest_consent_signatute
+    consent_signatures.first
+  end
+
   def adult_proxy?
     !child && account_participant.proxy
   end
@@ -134,8 +151,12 @@ class Participant < ActiveRecord::Base
     account_participant.proxy
   end
 
+  def open?
+    [:consent, :demographics, :surevey, :survey_started].include?(self.aasm_current_state)
+  end
+
   def consented?
-    [:completed, :survey, :survey_started, :verification_needed, :enrolled].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+    [:demographics, :completed, :survey, :survey_started, :verification_needed, :enrolled].include?(self.aasm_current_state) and !self.consent_signatures.empty?
   end
 
   def completed?
@@ -148,6 +169,10 @@ class Participant < ActiveRecord::Base
 
   def active?
     !inactive?
+  end
+
+  def recent_response_set
+    response_sets.first
   end
 
   def copy_from(participant)

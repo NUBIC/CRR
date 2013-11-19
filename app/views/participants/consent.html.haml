@@ -1,0 +1,13 @@
+-if @participant.consented?
+  %h5="Consent for #{@participant.name}"
+  .row-fluid
+    = Consent.active_consent.content.html_safe
+  %br
+  %em
+    ="This consent was signed on:"
+    %b
+      ="#{@participant.latest_consent_signatute.created_at.to_date}"
+    -if @participant.proxy?
+      ="by"
+      %b
+        ="#{@participant.latest_consent_signatute.consent_person_name}"

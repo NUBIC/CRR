@@ -67,14 +67,13 @@
           =f.label :secondary_phone, "Secondary Phone Number"
           .controls
             =f.text_field  :secondary_phone
-  -if current_user.has_active_participants?
+  -if current_user.active_participants.size > 1
     .relationship
       .row-fluid
         %h4="Relationships:"
-      -current_user.active_participants.each_with_index do |destination_participant, index|
+      -current_user.other_participants(@participant).each_with_index do |destination_participant, index|
         = render :partial =>  "participant_relationship", :locals => {:f => f, :index => index,
           :destination_participant => destination_participant }
   .row-fluid
     .btn-group
-      =f.button "Save",:class=>"btn btn-success"
-      =link_to "Cancel", dashboard_path, :class=>"btn btn-warning"
+      =f.button "Next",:class=>"btn btn-primary"

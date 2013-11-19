@@ -16,8 +16,6 @@
               - @survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
                 %br
-            %li=button_tag "Save",:class=>"btn btn-mini btn-block btn-primary"
-            %br
             %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
             %br
             %li=button_tag "Finish",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"

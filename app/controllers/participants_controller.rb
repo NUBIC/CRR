@@ -4,9 +4,15 @@ class ParticipantsController < PublicController
 
   def enroll
     @participant = Participant.find(params[:id])
-    if @participant.consented?
-      @survey = @participant.child_proxy? ? Survey.child_survey : Survey.adult_survey
+    if @participant.survey?
+      create_and_redirect_response_set(@participant)
+    elsif @participant.survey_started?
+      redirect_to(edit_response_set_path(@participant.recent_response_set))
     end
+  end
+
+  def consent
+    @participant = Participant.find(params[:id])
   end
 
   def search
@@ -14,11 +20,6 @@ class ParticipantsController < PublicController
     respond_to do |format|
       format.json {render :json => @participants.to_json(:only=>[:id],:methods=>[:search_display])}
     end
-  end
-
-
-  def new
-    @participant = Participant.new
   end
 
   def create
@@ -35,7 +36,6 @@ class ParticipantsController < PublicController
       @participant.copy_from(@account.active_participants.first)
       @participant.save
     end
-
     redirect_to enroll_participant_path(@participant)
   end
 
@@ -63,10 +63,7 @@ class ParticipantsController < PublicController
       end
       @participant.take_survey! if @participant.demographics?
       if @participant.survey?
-        survey = @participant.child_proxy? ? Survey.child_survey : Survey.adult_survey
-        response_set = @participant.response_sets.create!(survey_id: survey.id)
-        @participant.start_survey!
-        redirect_to(edit_response_set_path(response_set))
+        create_and_redirect_response_set(@participant)
       else
         redirect_to enroll_participant_path(@participant)
       end
@@ -85,6 +82,12 @@ class ParticipantsController < PublicController
     end
   end
 
+  def withdraw
+    @participant = Participant.find(params[:id])
+    @participant.withdraw!
+    redirect_to enroll_participant_path(@participant)
+  end
+
   def participant_params
     params.require(:participant).permit(:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
@@ -94,5 +97,12 @@ class ParticipantsController < PublicController
 
   def participant_relationship_params
     params.require(:participant).permit(relationships: [ :category, :destination_id ])
+  end
+
+  private
+  def create_and_redirect_response_set(participant)
+    response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
+    participant.start_survey!
+    redirect_to(edit_response_set_path(response_set))
   end
 end

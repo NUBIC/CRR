@@ -5,7 +5,7 @@ class ParticipantsController < PublicController
   def enroll
     @participant = Participant.find(params[:id])
     if @participant.survey?
-      create_and_redirect_response_set(participant)
+      create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?
       redirect_to(edit_response_set_path(@participant.recent_response_set))
     end
@@ -63,7 +63,7 @@ class ParticipantsController < PublicController
       end
       @participant.take_survey! if @participant.demographics?
       if @participant.survey?
-        create_and_redirect_response_set(participant)
+        create_and_redirect_response_set(@participant)
       else
         redirect_to enroll_participant_path(@participant)
       end
@@ -101,7 +101,7 @@ class ParticipantsController < PublicController
 
   private
   def create_and_redirect_response_set(participant)
-    participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
+    response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
     participant.start_survey!
     redirect_to(edit_response_set_path(response_set))
   end

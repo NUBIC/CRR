@@ -132,7 +132,7 @@ class Participant < ActiveRecord::Base
   end
 
   def create_response_set(survey)
-    response_sets.create(survey: survey.id)
+    response_sets.create(survey_id: survey.id)
   end
 
   def latest_consent_signatute

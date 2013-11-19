@@ -38,8 +38,8 @@ class Account < ActiveRecord::Base
     active_participants.size > 0
   end
 
-  def inactive_participants
-    participants.select { |p| p.inactive? }
+  def other_participants(participant)
+    active_participants.reject { |p| p == participant }
   end
 
   def has_self_participant?

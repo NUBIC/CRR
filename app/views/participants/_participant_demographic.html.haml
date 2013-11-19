@@ -71,7 +71,7 @@
     .relationship
       .row-fluid
         %h4="Relationships:"
-      -current_user.active_participants.each_with_index do |destination_participant, index|
+      -current_user.other_participants(@participant).each_with_index do |destination_participant, index|
         = render :partial =>  "participant_relationship", :locals => {:f => f, :index => index,
           :destination_participant => destination_participant }
   .row-fluid

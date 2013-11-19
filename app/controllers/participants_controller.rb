@@ -22,11 +22,6 @@ class ParticipantsController < PublicController
     end
   end
 
-
-  def new
-    @participant = Participant.new
-  end
-
   def create
     @account = Account.find(params[:account_id])
     @participant = Participant.create!

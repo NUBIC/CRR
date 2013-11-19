@@ -8,6 +8,10 @@ $(document).ready(function() {
     $($(this).attr('data-target')).load($(this).attr('href'));
   });
 
+  $(".wyswig").livequery(function(){
+    $(this).jqte();
+    });
+
   $("a[data-async=true]").livequery('click',function(){
     $($(this).attr("data-target")).load( $(this).attr("href"));
     return false;

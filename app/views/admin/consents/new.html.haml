@@ -3,9 +3,9 @@
     .control-group
       =f.label :content
       .controls
-        =f.text_area :content,:class=>"input-block-level",:rows=>10
+        =f.text_area :content,:class=>"wyswig",:rows=>40
     .control-group
-      =f.label :consent_type
+      =f.label :consent_type,"Type"
       .controls
         =f.select :consent_type, Consent::TYPES
   .row-fluid

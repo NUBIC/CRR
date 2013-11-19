@@ -6,7 +6,6 @@ class CreateAnswers < ActiveRecord::Migration
       t.text    :help_text
       t.integer :display_order
       t.string  :code
-      t.integer :weight
       t.timestamps
     end
   end

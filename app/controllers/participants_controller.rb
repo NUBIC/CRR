@@ -9,6 +9,10 @@ class ParticipantsController < PublicController
     end
   end
 
+  def consent
+    @participant = Participant.find(params[:id])
+  end
+
   def search
     @participants = Participant.search(params[:q])
     respond_to do |format|

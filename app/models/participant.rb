@@ -127,6 +127,10 @@ class Participant < ActiveRecord::Base
     consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
   end
 
+  def latest_consent_signatute
+    consent_signatures.last
+  end
+
   def adult_proxy?
     !child && account_participant.proxy
   end

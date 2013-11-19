@@ -55,6 +55,7 @@ AudiologyRegistry::Application.routes.draw do
     end
     member do
       get :enroll
+      get :consent
       post :consent_signature
       patch :withdraw
     end

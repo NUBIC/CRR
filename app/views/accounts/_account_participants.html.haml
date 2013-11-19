@@ -29,7 +29,7 @@
                 - if participant.consented?
                   %li
                     %i.icon-folder-open
-                    =link_to "View Consent", enroll_participant_path(participant)
+                    =link_to "View Consent", consent_participant_path(participant)
                 - if participant.completed?
                   %li
                     %i.icon-folder-open

@@ -1,0 +1,41 @@
+# for testing
+users:
+  brian:
+    password: secret          # password for :user auth (optional)
+    portals:            # portal & group auth info (optional)
+      - eNOTIS:             # A portal with simple groups
+        - User
+  
+  bigbro:
+    first_name: Sumboody
+    last_name: Iswatchnme
+    password: secret
+    portals:
+      - eNOTIS:
+
+  adminnie:               # username
+    password: secret          # password for :user auth (optional)
+    portals:            # portal & group auth info (optional)
+      - eNOTIS:             # A portal with simple groups
+        - Admin
+
+  usergey:
+    first_name: Sergey
+    last_name: Uservich
+    password: secret          # password for :user auth (optional)
+    portals:            # portal & group auth info (optional)
+      - eNOTIS:             # A portal with simple groups
+        - User      
+  tempi:
+    first_name: Tempi
+    last_name: Tampa
+    password: secret          # password for :user auth (optional)
+    portals:            # portal & group auth info (optional)
+      - eNOTIS:             # A portal with simple groups
+        - Temp
+        - User
+        
+groups:                  # groups for hierarchical portals
+  eNOTIS:                 # (these aren't real NOTIS groups)
+    - Admin:
+      - User

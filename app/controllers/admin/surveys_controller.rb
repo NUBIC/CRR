@@ -8,6 +8,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def new
     @survey = Survey.new
+    authorize! :new, @survey
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -16,6 +17,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def show
     @survey = Survey.find(params[:id])
+    authorize! :new, @show
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -24,6 +26,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def edit
     @survey = Survey.find(params[:id])
+    authorize! :edit, @show
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -32,6 +35,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def update
     @survey = Survey.find(params[:id])
+    authorize! :update, @show
     saved = @survey.update_attributes(survey_params)
     if saved
       flash[:notice] = "Updated"
@@ -47,6 +51,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def create
     @survey =  Survey.new(survey_params)
+    authorize! :create, @show
     if @survey.save
       flash[:notice] = "Updated"
     else
@@ -61,14 +66,16 @@ class Admin::SurveysController < Admin::AdminController
 
   def destroy
     @survey = Survey.find(params[:id])
+    authorize! :destroy, @show
     @survey.destroy
     respond_to do |format|
-      format.html {redirect_to settings_study_path(@study)}
+      format.html {redirect_to admin_studies_path(@study)}
       format.js {render :index,:layout => false}
     end
   end
   def activate
     @survey = Survey.find(params[:id])
+    authorize! :activate, @show
     @survey.state='active'
     if @survey.save
       flash[:notice]="Successfully activated"
@@ -82,6 +89,7 @@ class Admin::SurveysController < Admin::AdminController
   end
   def deactivate
     @survey = Survey.find(params[:id])
+    authorize! :activate, @show
     @survey.state='inactive'
     if @survey.save
       flash[:notice]="Successfully Deactivated"
@@ -96,6 +104,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def preview
     @survey = Survey.find(params[:id])
+    authorize! :preview, @show
     @response_set = @survey.response_sets.new
     respond_to do |format|
       format.html

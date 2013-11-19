@@ -8,7 +8,6 @@
 #  help_text     :text
 #  display_order :integer
 #  code          :string(255)
-#  weight        :integer
 #  created_at    :datetime
 #  updated_at    :datetime
 #
@@ -20,6 +19,7 @@ class Answer < ActiveRecord::Base
   # Scopes
   default_scope {order("display_order ASC")}
 
+  validate :proper_question_type
   validates_presence_of :text,:code
   validates_uniqueness_of :display_order, :scope => :question_id
   validates_uniqueness_of :text, :scope => :question_id
@@ -45,6 +45,9 @@ class Answer < ActiveRecord::Base
         a.display_order=self.display_order+1
         a.save
     end
+  end
+  def proper_question_type
+    errors.add(:question,"doesn't support answers") unless question.multiple_choice?
   end
 end
 

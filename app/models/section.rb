@@ -20,6 +20,7 @@ class Section < ActiveRecord::Base
   default_scope {order("display_order ASC")}
       # Validations
   validates_presence_of :title, :display_order
+  validates_uniqueness_of :survey_id, :unless =>  Proc.new { |s| s.survey.multiple_section? }
 
     # Whitelisting attributes
   after_initialize :default_args

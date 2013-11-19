@@ -2,13 +2,14 @@
 #
 # Table name: surveys
 #
-#  id          :integer          not null, primary key
-#  title       :string(255)
-#  description :text
-#  state       :text
-#  code        :string(255)
-#  created_at  :datetime
-#  updated_at  :datetime
+#  id               :integer          not null, primary key
+#  title            :string(255)
+#  description      :text
+#  state            :text
+#  code             :string(255)
+#  multiple_section :boolean
+#  created_at       :datetime
+#  updated_at       :datetime
 #
 
 class Survey < ActiveRecord::Base
@@ -21,6 +22,7 @@ class Survey < ActiveRecord::Base
   validates_presence_of :title,:state
 
   validate :activation_check
+  after_create :create_section, :unless => :multiple_section?
 
   def questions
     Question.where("section_id in (?)",sections.collect{|s| s.id})
@@ -65,6 +67,10 @@ class Survey < ActiveRecord::Base
     if active?
       errors.add(:survey,soft_errors.to_sentence) unless soft_errors.empty?
     end
+  end
+  private
+  def create_section
+    sections.create(:title=>"questions") 
   end
 
 end

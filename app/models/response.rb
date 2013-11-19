@@ -55,6 +55,8 @@ class Response < ActiveRecord::Base
       rescue
         errors.add(:question,"#{question.display_order} Is not a date")
       end
+    elsif self.question.multiple_choice?
+      errors.add(:answer,"doesn't match question") unless question.answers.include?(answer)
     end
   end
 end

@@ -51,7 +51,7 @@ describe AccountsController do
 
       it "re-renders the 'new' template" do
         post :create, {:account => invalid_attributes}
-        expect(response).to redirect_to(login_path(:anchor => "sign_up"))
+        expect(response).to redirect_to(public_login_path(:anchor => "sign_up"))
       end
     end
   end

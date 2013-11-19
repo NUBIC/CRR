@@ -17,7 +17,6 @@
 
 class Question < ActiveRecord::Base
 
-  belongs_to :survey
   belongs_to :section
   belongs_to :question_group, :dependent => :destroy
   has_many   :answers, :dependent => :destroy
@@ -35,7 +34,7 @@ class Question < ActiveRecord::Base
   #attr_accessible :score_code
 
   validates_presence_of :text, :display_order,:response_type,:code,:section
-  validates_inclusion_of :is_mandatory, :in => [true, false]
+  validates_inclusion_of :is_mandatory, :in => [true, false],:allow_blank=>true
   validates_inclusion_of :response_type, :in => VALID_RESPONSE_TYPES
 
   validates_uniqueness_of :display_order,:scope=>:section_id
@@ -43,12 +42,13 @@ class Question < ActiveRecord::Base
 
   before_validation  :check_display_order
 
-  validate :validate_question_type
+  validate :validate_question_type,:code_unique 
   
         # Whitelisting attributes
 
   after_initialize :default_args
 
+  #validates :code, :format => { :with => /^[a-zA-Z0-9_]*$/, :message => "Only letters numbers and underscores - no spaces" }
   scope :search , proc {|param|
     where("text ilike ? ","%#{param}%")}
 
@@ -107,9 +107,13 @@ class Question < ActiveRecord::Base
 
   def validate_question_type
     unless ["pick_one","pick_many"].include?(response_type)
-      errors.add(:question_type,"does not support having answers") unless answers.empty?
+      errors.add(:type,"does not support having answers") unless answers.empty?
     end
   end
-
+  def code_unique
+    self.section.survey.questions.each do |question|
+      errors.add(:code,"already taken") if !question.eql?(self) and question.code.eql?(self.code) 
+    end
+  end
 end
 

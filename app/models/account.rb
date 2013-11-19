@@ -39,7 +39,7 @@ class Account < ActiveRecord::Base
   end
 
   def other_participants(participant)
-    active_participants.reject { |p| p == participant }
+    active_participants.reject { |p| p == participant or p.inactive?}
   end
 
   def has_self_participant?

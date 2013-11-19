@@ -13,7 +13,7 @@
         - @current_user.active_participants.each do |participant|
           %tr
             %td=link_to participant.name, edit_participant_path(participant)
-            %td=participant.consent_signatures.last.created_at.to_date
+            %td=participant.created_at.to_date
             %td
               %ul.unstyled
                 -if participant.open?
@@ -33,7 +33,7 @@
                 - if participant.completed?
                   %li
                     %i.icon-folder-open
-                    =link_to  "View questionarie", enroll_participant_path(participant)
+                    =link_to  "View responses", enroll_participant_path(participant)
                 %li
                   %i.icon-trash
                   = link_to "Withdraw", withdraw_participant_path(participant), method: :patch, confirm: "Are you sure you want to withdraw?"

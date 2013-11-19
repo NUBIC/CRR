@@ -31,7 +31,7 @@ class Account < ActiveRecord::Base
   validates_format_of :email, :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i, :message => 'is Invalid'
 
   def active_participants
-    participants.select { |p| p.consented? }
+    participants.reject { |p| p.withdrawn? }
   end
 
   def has_active_participants?

@@ -32,7 +32,7 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  has_many :response_sets
+  has_many :response_sets, :order => 'updated_at DESC'
   has_many :contact_logs
   has_many :study_involvements
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
@@ -127,8 +127,12 @@ class Participant < ActiveRecord::Base
     consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
   end
 
+  def create_response_set(survey)
+    response_sets.create(survey: survey.id)
+  end
+
   def latest_consent_signatute
-    consent_signatures.last
+    consent_signatures.first
   end
 
   def adult_proxy?
@@ -161,6 +165,10 @@ class Participant < ActiveRecord::Base
 
   def active?
     !inactive?
+  end
+
+  def recent_response_set
+    response_sets.first
   end
 
   def copy_from(participant)

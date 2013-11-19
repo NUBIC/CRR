@@ -2,8 +2,6 @@
   = render :partial => 'participant_consent'
 - elsif @participant.demographics?
   = render :partial => 'participant_demographic'
-- elsif @participant.survey? or @participant.survey_started?
-  = render :partial => 'participant_surveys'
 - elsif @participant.completed?
   %h5="Thank you for participation! Someone from CRR will contact you if more information is needed."
 - elsif @participant.consent_denied?

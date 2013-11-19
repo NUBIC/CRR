@@ -85,6 +85,12 @@ class ParticipantsController < PublicController
     end
   end
 
+  def withdraw
+    @participant = Participant.find(params[:id])
+    @participant.withdraw!
+    redirect_to enroll_participant_path(@participant)
+  end
+
   def participant_params
     params.require(:participant).permit(:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,

@@ -57,6 +57,7 @@ class Participant < ActiveRecord::Base
   aasm_state :survey_started
   aasm_state :verification_needed
   aasm_state :enrolled
+  aasm_state :withdrawn
 
   aasm_event :signup do
     transitions :to => :consent, :from =>:new
@@ -89,6 +90,10 @@ class Participant < ActiveRecord::Base
 
   aasm_event :enroll do
     transitions :to => :enrolled, :from => :verification_needed
+  end
+
+  aasm_event :withdraw do
+    transitions :to => :withdrawn
   end
 
   scope :search , proc {|param|
@@ -132,6 +137,10 @@ class Participant < ActiveRecord::Base
 
   def proxy?
     account_participant.proxy
+  end
+
+  def open?
+    [:consent, :demographics, :surevey, :survey_started].include?(self.aasm_current_state)
   end
 
   def consented?

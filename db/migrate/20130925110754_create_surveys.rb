@@ -5,6 +5,7 @@ class CreateSurveys < ActiveRecord::Migration
       t.text    :description
       t.text    :state
       t.string  :code
+      t.boolean :multiple_section
       t.timestamps
     end
   end

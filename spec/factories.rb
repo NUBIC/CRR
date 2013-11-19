@@ -17,7 +17,6 @@ FactoryGirl.define do
   end
 
   factory :study do |s|
-    s.active_on Date.new(2013, 10, 3)
     s.irb_number {generate :irb_number}
     s.name    {Faker::Company.name}
   end
@@ -35,6 +34,28 @@ FactoryGirl.define do
 
   factory :search do |search|
     search.association :study, :factory => :study
+  end
+
+  factory :survey do |s|
+    s.title Faker::Company.name
+  end
+  factory :section do |s|
+    s.title Faker::Company.name
+    s.association :survey
+  end
+  factory :question do |q|
+    q.association :section
+  end
+  factory :answer do |q|
+    q.association :question
+  end
+  factory :response_set do |r|
+    r.association :participant
+  end
+  factory :response do |r| 
+    r.association :response_set
+    r.association :question
+    r.association :answer
   end
 
   factory :account do |a|

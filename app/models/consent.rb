@@ -24,8 +24,16 @@ class Consent < ActiveRecord::Base
 
 
 
-  def self.active_consent
-    Consent.where(:state=>'active').first
+  def self.has_active_consent?
+    child_consent or adult_consent
+  end
+
+  def self.child_consent
+    Consent.where("consent_type ='Child' AND state ='active'").order("created_at DESC").first
+  end
+
+  def self.adult_consent
+    Consent.where("consent_type ='Adult' AND state ='active'").order("created_at DESC").first
   end
 
   def active?
@@ -33,7 +41,7 @@ class Consent < ActiveRecord::Base
   end
 
   def editable?
-    !active? and consent_signatures.empty? 
+    !active? and consent_signatures.empty?
   end
 
   private

@@ -128,14 +128,15 @@ class Participant < ActiveRecord::Base
   end
 
   def create_consent_signature(name=nil)
-    consent_signatures.create(:consent => Consent.active_consent, :consent_date => Date.today, :accept => true, :consent_person_name => name)
+    consent_signatures.create(:consent => proxy? ? child_proxy? ? Consent.child_consent : Consent.adult_consent : Consent.adult_consent,
+      :consent_date => Date.today, :accept => true, :consent_person_name => name)
   end
 
   def create_response_set(survey)
     response_sets.create(survey_id: survey.id)
   end
 
-  def latest_consent_signatute
+  def most_recent_consent_signature
     consent_signatures.first
   end
 

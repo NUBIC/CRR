@@ -19,8 +19,7 @@
         = text_field_tag 'consent_name', nil, class: 'required'
       %br
       .row-fluid
-        = submit_tag("Next", class: "btn", id: "consent-next")
-        = link_to "Cancel", dashboard_path, class: "btn"
+        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
   -elsif @participant.child_proxy?
     = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
@@ -37,8 +36,7 @@
         = text_field_tag 'consent_name', nil, class: 'required'
       %br
       .row-fluid
-        = submit_tag("Next", class: "btn", id: "consent-next")
-        = link_to "Cancel", dashboard_path, class: "btn"
+        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
   -else
     = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
@@ -51,5 +49,4 @@
           I disagree
       %br
       .row-fluid
-        = submit_tag("Next", class: "btn", id: "consent-next")
-        = link_to "Cancel", dashboard_path, class: "btn"
+        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")

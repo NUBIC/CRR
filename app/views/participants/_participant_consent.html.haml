@@ -1,9 +1,8 @@
 .row-fluid
-  .span12
-    !=Consent.active_consent.content
-%br
-.row-fluid
   -if @participant.adult_proxy?
+    .row-fluid
+      !=Consent.adult_consent.content
+    %br
     = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
       .row-fluid
@@ -21,6 +20,8 @@
       .row-fluid
         = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
   -elsif @participant.child_proxy?
+    .row-fluid
+      !=Consent.child_consent.content
     = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
       .row-fluid
@@ -38,6 +39,8 @@
       .row-fluid
         = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
   -else
+    .row-fluid
+      !=Consent.adult_consent.content
     = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
       .row-fluid

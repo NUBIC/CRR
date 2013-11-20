@@ -25,6 +25,7 @@ gem 'less-rails'
 gem 'uglifier', '>= 1.3.0'
 
 gem 'bcdatabase', '~> 1.0.6'
+gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 
 group :development, :test do
   gem 'annotate', '~> 2.5.0'

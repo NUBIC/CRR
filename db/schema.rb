@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131104083104) do
+ActiveRecord::Schema.define(version: 20131120203306) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
@@ -113,7 +116,6 @@ ActiveRecord::Schema.define(version: 20131104083104) do
   end
 
   create_table "questions", force: true do |t|
-    t.integer  "survey_id"
     t.integer  "section_id"
     t.text     "text"
     t.string   "code"
@@ -178,6 +180,16 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.text    "title"
     t.integer "display_order"
   end
+
+  create_table "sessions", force: true do |t|
+    t.string   "session_id", null: false
+    t.text     "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", unique: true, using: :btree
+  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "studies", force: true do |t|
     t.string "irb_number"

@@ -49,6 +49,11 @@ class Survey < ActiveRecord::Base
     Survey.where("code ='child' AND state ='active'").order("created_at DESC").first
   end
 
+  def self.has_active_survey?
+    child_survey and adult_survey
+  end
+
+
   #this method checks that the survey is in fact valid for activation
   #checks things like it has at least one section, at least one question etc
   def soft_errors
@@ -70,7 +75,7 @@ class Survey < ActiveRecord::Base
   end
   private
   def create_section
-    sections.create(:title=>"questions") 
+    sections.create(:title=>"questions")
   end
 
 end

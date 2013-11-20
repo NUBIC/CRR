@@ -45,8 +45,8 @@ class User < ActiveRecord::Base
   def update_from_ldap
     unless Rails.env.development?
       aker_user = Aker.authority.find_user(netid)
-      self.update_attributes(:email => aker_user.email, :first_name => aker_user.first_name, :last_name => aker_user.last_name) 
+      self.update_attributes(:first_name => aker_user.first_name, :last_name => aker_user.last_name)
     end
   end
-  
+
 end

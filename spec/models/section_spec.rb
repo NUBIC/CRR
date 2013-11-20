@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: sections
+#
+#  id            :integer          not null, primary key
+#  survey_id     :integer
+#  title         :text
+#  display_order :integer
+#
+
 require 'spec_helper'
 
 describe Section do

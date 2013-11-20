@@ -24,18 +24,12 @@ class Survey < ActiveRecord::Base
   validate :activation_check
   after_create :create_section, :unless => :multiple_section?
 
+  after_initialize :default_args
+
   def questions
     Question.where("section_id in (?)",sections.collect{|s| s.id})
   end
 
-  def initialize(*args)
-    super(*args)
-    default_args
-  end
-
-  def default_args
-    self.state ||= "inactive"
-  end
 
   def active?
     self.state.eql?("active")
@@ -80,6 +74,9 @@ class Survey < ActiveRecord::Base
   private
   def create_section
     sections.create(:title=>"questions")
+  end
+  def default_args
+    self.state ||= "inactive"
   end
 
 end

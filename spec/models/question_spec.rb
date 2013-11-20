@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: questions
+#
+#  id            :integer          not null, primary key
+#  survey_id     :integer
+#  section_id    :integer
+#  text          :text
+#  code          :string(255)
+#  is_mandatory  :boolean
+#  response_type :string(255)
+#  display_order :integer
+#  help_text     :text
+#  created_at    :datetime
+#  updated_at    :datetime
+#
+
 require 'spec_helper'
 
 describe Question do

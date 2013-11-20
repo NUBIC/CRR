@@ -162,7 +162,7 @@ ActiveRecord::Schema.define(version: 20131104083104) do
     t.integer "search_condition_group_id"
     t.string  "operator"
     t.integer "question_id"
-    t.integer "value"
+    t.string  "value"
   end
 
   create_table "searches", force: true do |t|

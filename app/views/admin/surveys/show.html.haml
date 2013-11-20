@@ -10,7 +10,6 @@
   -if @survey.active?
     =form_for @survey,:url=>deactivate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
       .btn-group
-        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#forms"
         =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
   -else
     =form_for @survey,:url=>activate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|

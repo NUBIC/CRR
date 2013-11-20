@@ -16,7 +16,7 @@ class CreateSearches < ActiveRecord::Migration
       t.integer :search_condition_group_id
       t.string  :operator
       t.integer :question_id
-      t.integer :value
+      t.string :value
     end
   end
 end

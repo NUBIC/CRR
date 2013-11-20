@@ -4,7 +4,7 @@ class Admin::AdminController < ApplicationController
   #can can redirect for unauthorized error
   rescue_from CanCan::AccessDenied do |exception|
     flash[:notice]="Access Denied"
-    return redirect_to default_path
+    redirect_to admin_default_path
   end 
 
   def require_user

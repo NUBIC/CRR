@@ -10,48 +10,44 @@ class Admin::SurveysController < Admin::AdminController
     @survey = Survey.new
     authorize! :new, @survey
     respond_to do |format|
-      format.html
       format.js {render :layout => false}
     end
   end
 
   def show
     @survey = Survey.find(params[:id])
-    authorize! :new, @show
+    authorize! :new, @survey
     respond_to do |format|
-      format.html
       format.js {render :layout => false}
     end
   end
 
   def edit
     @survey = Survey.find(params[:id])
-    authorize! :edit, @show
+    authorize! :edit, @survey
     respond_to do |format|
-      format.html
       format.js {render :layout => false}
     end
   end
 
   def update
     @survey = Survey.find(params[:id])
-    authorize! :update, @show
+    authorize! :update, @survey
     saved = @survey.update_attributes(survey_params)
     if saved
       flash[:notice] = "Updated"
     else
       flash[:error] = @survey.errors.full_messages.to_sentence
     end
-    @study.reload
     respond_to do |format|
-      format.html {redirect_to edit_study_path(@study)}
-      format.js {render (saved ? :index : :edit),:layout => false}
+      format.html {render (saved ? :show : :edit)}
+      format.js {render (saved ? :show : :edit),:layout => false}
     end
   end
 
   def create
     @survey =  Survey.new(survey_params)
-    authorize! :create, @show
+    authorize! :create, @survey
     if @survey.save
       flash[:notice] = "Updated"
     else
@@ -66,7 +62,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def destroy
     @survey = Survey.find(params[:id])
-    authorize! :destroy, @show
+    authorize! :destroy, @survey
     @survey.destroy
     respond_to do |format|
       format.html {redirect_to admin_studies_path(@study)}
@@ -75,7 +71,7 @@ class Admin::SurveysController < Admin::AdminController
   end
   def activate
     @survey = Survey.find(params[:id])
-    authorize! :activate, @show
+    authorize! :activate, @survey
     @survey.state='active'
     if @survey.save
       flash[:notice]="Successfully activated"
@@ -89,7 +85,7 @@ class Admin::SurveysController < Admin::AdminController
   end
   def deactivate
     @survey = Survey.find(params[:id])
-    authorize! :activate, @show
+    authorize! :deactivate, @survey
     @survey.state='inactive'
     if @survey.save
       flash[:notice]="Successfully Deactivated"
@@ -104,7 +100,7 @@ class Admin::SurveysController < Admin::AdminController
 
   def preview
     @survey = Survey.find(params[:id])
-    authorize! :preview, @show
+    authorize! :preview, @survey
     @response_set = @survey.response_sets.new
     respond_to do |format|
       format.html

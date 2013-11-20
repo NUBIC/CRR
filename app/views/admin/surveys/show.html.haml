@@ -22,7 +22,7 @@
   %ul.nav.nav-tabs
     -@survey.sections.each_with_index do |s,si|
       %li{:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id == s.id)}"}=link_to s.title, "#section_#{s.id}","data-toggle"=>"tab"
-    -unless @survey.active?
+    -unless @survey.active? || !@survey.multiple_section?
       =link_to "Add Section",new_admin_section_path(:survey_id=>@survey.id),:class=>"btn btn-mini btn-block btn-primary","data-async"=>true,"data-target"=>".tabbable"
     =link_to "Preview",preview_admin_survey_path(@survey),:class=>"btn btn-mini btn-block btn-success","data-async"=>true,"data-target"=>"#forms"
     =link_to "Exit",admin_surveys_path,:class=>"btn btn-mini btn-block btn-warning","data-async"=>true,"data-target"=>"#forms"

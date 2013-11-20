@@ -31,10 +31,18 @@ $(document).ready(function() {
        target: $target,//$(this).attr('data-target'),
        dataType: 'html',
        success: function(data,message,xhr) {
-         $target.html(data);
-         $(".notifications").notify({
-             message: { text: xhr.getResponseHeader('x-flash') }
-               }).show(); 
+       $target.html(data);
+         if (xhr.getResponseHeader('x-flash-notice') !== null){
+             $(".notifications").notify({
+                 message: { text: xhr.getResponseHeader('x-flash-notice') }
+                   }).show(); 
+         }
+         if (xhr.getResponseHeader('x-flash-errors') !== null){
+           $(".errors").notify({
+               message: { text: xhr.getResponseHeader('x-flash-errors') },
+               type: "error"
+                 }).show(); 
+         }
        }
    } );});
 

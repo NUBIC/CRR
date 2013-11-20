@@ -3,6 +3,7 @@ class Admin::SectionsController < Admin::AdminController
   def new
     @survey = Survey.find(params[:survey_id])
     @section =@survey.sections.new
+    authorize! :new, @section
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -11,6 +12,7 @@ class Admin::SectionsController < Admin::AdminController
 
   def show
     @section = Section.find(params[:id])
+    authorize! :show, @section
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -19,6 +21,7 @@ class Admin::SectionsController < Admin::AdminController
 
   def edit
     @section = Section.find(params[:id])
+    authorize! :edit, @section
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -27,7 +30,8 @@ class Admin::SectionsController < Admin::AdminController
 
   def update
     @section = Section.find(params[:id])
-    saved = @survey.update_attributes(section_params)
+    authorize! :update, @section
+    saved = @section.update_attributes(section_params)
     if saved
       flash[:notice] = "Updated"
     else
@@ -42,6 +46,7 @@ class Admin::SectionsController < Admin::AdminController
 
   def create
     @section = Section.new(section_params)
+    authorize! :create, @section
     @survey = @section.survey
     if @section.save
       flash[:notice] = "Updated"
@@ -55,6 +60,7 @@ class Admin::SectionsController < Admin::AdminController
 
   def destroy
     @section = Section.find(params[:id])
+    authorize! :destroy, @section
     @survey = @section.survey
     @section.destroy
     @survey.reload

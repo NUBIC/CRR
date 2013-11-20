@@ -41,6 +41,10 @@ class Survey < ActiveRecord::Base
     self.state.eql?("active")
   end
 
+  def inactive?
+    !active?
+  end
+
   def self.adult_survey
     Survey.where("code ='adult' AND state ='active'").order("created_at DESC").first
   end

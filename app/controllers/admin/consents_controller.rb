@@ -17,6 +17,10 @@ class Admin::ConsentsController < Admin::AdminController
     redirect_to admin_consents_path
   end
 
+  def show
+    @consent = Consent.find(params[:id])
+  end
+
   def edit
     @consent = Consent.find(params[:id])
   end

@@ -16,13 +16,17 @@
           %td
             .span12
               -if consent.active?
-                .span3
+                .span6
                   =form_for consent ,:url=> deactivate_admin_consent_path(consent) do |f|
-                    =f.submit "Deactivate",:class=>"btn btn-mini btn-danger"
+                    .btn-group
+                      =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
+                      =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
               -else
                 .span3
                   =form_for consent, :url=> activate_admin_consent_path(consent) do |f|
-                    =f.submit "Activate",:class=>"btn btn-mini btn-success"
+                    .btn-group
+                      =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
+                      =f.submit "Activate",:class=>"btn btn-mini btn-success"
               -if consent.editable?
                 .span3
                   =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"

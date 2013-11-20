@@ -12,7 +12,7 @@
       %tbody
         - @current_user.active_participants.each do |participant|
           %tr
-            %td=link_to participant.name, edit_participant_path(participant)
+            %td=participant.name
             %td=participant.created_at.to_date
             %td
               %ul.unstyled

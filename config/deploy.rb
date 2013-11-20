@@ -2,8 +2,8 @@
 require 'bundler/capistrano'
 require 'bcdatabase'
 
-bcconf = Bcdatabase.load["audiology_registry_deploy", :audiology_registry] # Using the bcdatabase gem for server config
-set :application, "audiology_registry"
+bcconf = Bcdatabase.load["crr_deploy", :crr] # Using the bcdatabase gem for server config
+set :application, "crr"
 
 # User
 set :use_sudo, false

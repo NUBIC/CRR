@@ -25,7 +25,7 @@ class Consent < ActiveRecord::Base
 
 
   def self.has_active_consent?
-    child_consent or adult_consent
+    child_consent and adult_consent
   end
 
   def self.child_consent

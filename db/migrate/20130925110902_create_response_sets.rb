@@ -5,6 +5,7 @@ class CreateResponseSets < ActiveRecord::Migration
       t.integer  :participant_id
       t.date     :effective_date
       t.datetime :completed_at
+      t.boolean  :public
       t.timestamps
     end
   end

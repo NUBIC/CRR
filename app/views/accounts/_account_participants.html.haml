@@ -8,6 +8,7 @@
           %th="Name"
           %th="Join Date"
           %th="Status"
+          %th="Pending surveys"
           %th="Options"
       %tbody
         - @current_user.active_participants.each do |participant|
@@ -24,6 +25,9 @@
                 -else
                   %li
                     Complete
+            %td
+              -participant.open_public_response_sets.each do |response_set|
+                =link_to response_set.survey.title, edit_response_set_path(response_set)
             %td
               %ul.unstyled
                 - if participant.consented?

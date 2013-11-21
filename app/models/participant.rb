@@ -88,6 +88,10 @@ class Participant < ActiveRecord::Base
     transitions :to => :verification_needed, :from => :survey_started, :guard => :proxy?
   end
 
+  aasm_event :verify do 
+    transitions :to => :enrolled, :from => :verification_needed
+  end
+
   aasm_event :enroll do
     transitions :to => :enrolled, :from => :verification_needed
   end
@@ -174,6 +178,10 @@ class Participant < ActiveRecord::Base
 
   def recent_response_set
     response_sets.first
+  end
+
+  def open_public_response_sets
+    response_sets.where(:completed_at=>nil,:public=>true)
   end
 
   def copy_from(participant)

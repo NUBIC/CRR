@@ -17,14 +17,17 @@ class Admin::ResponseSetsController < Admin::AdminController
   end
 
   def create
-    participant = Participant.find(params[:participant_id])
-    @response_set= participant.response_sets.new(response_set_params)
-    if @response_set.save
-      participant.start_survey! if participant.survey?
-      redirect_to(edit_admin_response_set_path(@response_set))
+    @response_set= ResponseSet.new(response_set_params)
+    @participant = @response_set.participant
+    saved = @response_set.save
+    if saved
+      @participant.start_survey! if @participant.survey?
     else
       flash[:notice] = @response_set.errors.full_messages.to_sentence
-      redirect_to redirect_to enroll_participant_path(participant)
+      @surveys = Survey.all.select{|s| s.active?}
+    end
+    respond_to do |format|
+      format.js {render (saved ? (@response_set.public? ? :index : :edit) : :new), :layout => false}
     end
   end
 

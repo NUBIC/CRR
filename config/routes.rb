@@ -6,6 +6,10 @@ AudiologyRegistry::Application.routes.draw do
       collection do
         get :search
       end
+      member do 
+        patch :verify
+        patch :withdraw
+      end
     end
     resources :studies do
       collection do

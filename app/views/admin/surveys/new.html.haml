@@ -1,13 +1,20 @@
-=form_for @survey ,:url=>admin_surveys_path, :html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
-  .row-fluid
-    =f.label :title
-    =f.text_field :title,:class=>"input-xxlarge"
-    =f.label :description
-    =f.text_area :description,:rows=>2,:class=>"input-xxlarge"
-    =f.label :code
-    =f.text_field :code
-    =f.label :multiple_section, "Has Multiple sections?"
-    =f.check_box :multiple_section
+=form_for @survey ,:url=>admin_surveys_path, :html=>{:class=>"form-horizontal ajax-form","data-target"=>"#forms"} do |f|
+  .control-group
+    =f.label :title,:class=>"control-label"
+    .controls
+      =f.text_field :title,:class=>"input-xxlarge"
+  .control-group
+    =f.label :description,:class=>"control-label"
+    .controls
+      =f.text_area :description,:rows=>2,:class=>"input-xxlarge"
+  .control-group
+    =f.label :code,:class=>"control-label"
+    .controls
+      =f.text_field :code
+  .control-group
+    =f.label :multiple_section, "Has Multiple sections?",:class=>"control-label"
+    .controls
+      =f.check_box :multiple_section
   .row-fluid
     .btn-group
       =f.button "update",:class=>"btn btn-mini btn-success"

@@ -1,10 +1,6 @@
 .row-fluid
   .span12
-    .alert.alert-info.text-center
-      %h4.text-center=@response_set.participant.name
-.row-fluid
-  .span12
-    %h4.text-center= @survey.title
+    %h4.text-center= @response_set.survey.title
     %hr
 .row-fluid
   .span12
@@ -12,14 +8,14 @@
       .row-fluid
         .tabbable.tabs-left
           %ul.nav.nav-tabs.span2{}
-            -if @survey.sections.size > 1
-              - @survey.sections.each_with_index do |s,si|
+            -if @response_set.survey.sections.size > 1
+              - @response_set.survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
             %li=button_tag "Save",:class=>"btn btn-mini btn-block btn-primary"
             %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
             %li=button_tag "Finish",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
           .tab-content.offset2
-            - @survey.sections.each_with_index do |s,si|
+            - @response_set.survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}  
                 -s.questions.each_with_index do |q,i|
                   .row-fluid

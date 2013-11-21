@@ -35,6 +35,28 @@ class Admin::StudiesController < Admin::AdminController
    end
    redirect_to admin_studies_path
  end
+  def activate
+    @study = Study.find(params[:id])
+    authorize! :activate, @study
+    @study.state='active'
+    if @study.save
+      flash[:notice]="Successfully activated"
+    else
+      flash[:error]=@study.errors.full_messages.to_sentence
+    end
+    redirect_to admin_studies_path
+  end
+  def deactivate
+    @study = Study.find(params[:id])
+    authorize! :deactivate, @study
+    @study.state='inactive'
+    if @study.save
+      flash[:notice]="Successfully activated"
+    else
+      flash[:error]=@study.errors.full_messages.to_sentence
+    end
+    redirect_to admin_studies_path
+ end
  def destroy
    @study = Study.find(params[:id])
  end

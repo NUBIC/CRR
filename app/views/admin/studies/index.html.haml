@@ -15,4 +15,13 @@
           %td=study.irb_number
           %td=study.name
           %td=study.state
-          %td=link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"
+          %td
+            .span12
+              -if study.active?
+                =form_for study ,:url=> deactivate_admin_study_path(study) do |f|
+                  =link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"
+                  =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
+              -else
+                =form_for study ,:url=> activate_admin_study_path(study) do |f|
+                  =link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"
+                  =f.button "Activate",:class=>"btn btn-mini btn-success"

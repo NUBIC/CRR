@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Admin::AnswersController do
   before(:each) do
-    @study = FactoryGirl.create(:study)
-    @study.update_attribute(:irb_number,'STU00002629')
-    @survey = FactoryGirl.create(:survey,:study=>@study,:multiple_section=>true)
+    @survey = FactoryGirl.create(:survey,:multiple_section=>true)
     @section = @survey.sections.create(:title=>"section 1")
     @question = @section.questions.create(:text=>"question 1",:response_type=>"pick_one")
     @answer = @question.answers.create(:text=>"answer 1")
@@ -14,65 +12,72 @@ describe Admin::AnswersController do
   end
 
   describe "unauthorized user" do 
+    ["data_manager?","researcher?"].each do |role|
+      before(:each) do 
+        controller.current_user.stub(:admin?).and_return(false)
+        all_roles = ["data_manager?","researcher?"]
+        all_roles.each{|r| r.eql?(role) ? controller.current_user.stub(r.to_sym).and_return(true) : controller.current_user.stub(r.to_sym).and_return(false)}
+      end
   
-    it "should deny access to an attempt to create a answer by an unauthorized user" do
-      post :create, {:answer=>{:question_id=>@question.id}}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to create a answer by an unauthorized user" do
+        post :create, {:answer=>{:question_id=>@question.id}}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to a billing users  attempt to create a answer by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :create, {:answer=>{:question_id=>@question.id}}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to a billing users  attempt to create a answer by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :create, {:answer=>{:question_id=>@question.id}}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an attempt to edit a answer by an unauthorized user" do
-      post :edit, {:id=>@answer.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to edit a answer by an unauthorized user" do
+        post :edit, {:id=>@answer.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an billing users  attempt to edit a answer by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :edit, {:id=>@answer.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an billing users  attempt to edit a answer by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :edit, {:id=>@answer.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
 
-    it "should deny access to an attempt to update a answer by an unauthorized user" do
-      post :update, {:id=>@answer.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to update a answer by an unauthorized user" do
+        post :update, {:id=>@answer.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an billing users attempt to update a answer by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :update, {:id=>@answer.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an billing users attempt to update a answer by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :update, {:id=>@answer.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an attempt to delete a answer by an unauthorized user" do
-      post :destroy, {:id=>@answer.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to delete a answer by an unauthorized user" do
+        post :destroy, {:id=>@answer.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an billing users attempt to delete a answer by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :destroy, {:id=>@answer.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
+      it "should deny access to an billing users attempt to delete a answer by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :destroy, {:id=>@answer.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
     end
   end
 
   describe "authorized user" do 
 
     before(:each) do 
-      @role = FactoryGirl.create(:role, :study => @study, :netid => 'brian') 
+      controller.current_user.stub(:admin?).and_return(true)
     end
     describe "active survey" do 
       before(:each) do 

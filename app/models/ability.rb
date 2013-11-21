@@ -39,6 +39,9 @@ class Ability
         can [:new,:create,:destroy], ResponseSet do |response_set|
           response_set.survey.active? 
         end
+        can [:new,:create,:edit,:update,:destroy,:show,:activate,:deactivate], Study do |study|
+          true
+        end
       elsif user.data_manager?
       else user.researcher?
       end

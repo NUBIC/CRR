@@ -8,6 +8,7 @@
 #  help_text     :text
 #  display_order :integer
 #  code          :string(255)
+#  weight        :integer
 #  created_at    :datetime
 #  updated_at    :datetime
 #

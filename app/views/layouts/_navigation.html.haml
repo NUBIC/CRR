@@ -19,7 +19,8 @@
       Searches
       %b.caret
     %ul.dropdown-menu
-      %li=link_to 'Data Requests',admin_searches_path(:state=>"data_requested")
+      -if current_user.admin? || current_user.data_manager?
+        %li=link_to 'Data Requests',admin_searches_path(:state=>"data_requested")
       %li=link_to 'View All',admin_searches_path
       %li=link_to "Start New", new_admin_search_path
 %ul.nav.pull-right

@@ -79,7 +79,7 @@ class Admin::ParticipantsController < Admin::AdminController
   def withdraw
     @participant = Participant.find(params[:id])
     @participant.withdraw!
-    redirect_to enroll_participant_path(@participant)
+    redirect_to admin_participants_path
   end
 
   def participant_params

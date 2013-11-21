@@ -38,6 +38,7 @@ FactoryGirl.define do
 
   factory :survey do |s|
     s.title Faker::Company.name
+    s.multiple_section true
   end
   factory :section do |s|
     s.title Faker::Company.name

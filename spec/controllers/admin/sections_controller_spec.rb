@@ -10,62 +10,65 @@ describe Admin::SectionsController do
   end
 
   describe "unauthorized user(data manager)" do 
-    before(:each) do 
-      controller.current_user.stub(:admin?).and_return(false)
-      controller.current_user.stub(:data_manager?).and_return(true)
-    end
-  
-    it "should deny access to an attempt to create a section on an unauthorized user" do
-      post :create, {:section=>{:survey_id=>@survey.id}}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+    ["data_manager?","researcher?"].each do |role|
+      before(:each) do 
+        controller.current_user.stub(:admin?).and_return(false)
+        all_roles = ["data_manager?","researcher?"]
+        all_roles.each{|r| r.eql?(role) ? controller.current_user.stub(r.to_sym).and_return(true) : controller.current_user.stub(r.to_sym).and_return(false)}
+      end
+    
+      it "should deny access to an attempt to create a section on an unauthorized user" do
+        post :create, {:section=>{:survey_id=>@survey.id}}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to a billing users  attempt to create a section by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :create, {:section=>{:survey_id=>@survey.id}}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to a billing users  attempt to create a section by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :create, {:section=>{:survey_id=>@survey.id}}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an attempt to edit a section by an unauthorized user" do
-      post :edit, {:id=>@section.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to edit a section by an unauthorized user" do
+        post :edit, {:id=>@section.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an billing users  attempt to edit a section by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :edit, {:id=>@section.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an billing users  attempt to edit a section by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :edit, {:id=>@section.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
 
-    it "should deny access to an attempt to update a section by an unauthorized user" do
-      post :update, {:id=>@section.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to update a section by an unauthorized user" do
+        post :update, {:id=>@section.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an billing users attempt to update a section by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :update, {:id=>@section.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an billing users attempt to update a section by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :update, {:id=>@section.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an attempt to delete a section by an unauthorized user" do
-      post :destroy, {:id=>@section.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
-    end
+      it "should deny access to an attempt to delete a section by an unauthorized user" do
+        post :destroy, {:id=>@section.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
 
-    it "should deny access to an billing users attempt to delete a section by an unauthorized user" do
-      controller.current_user.stub(:billing?).and_return(true)
-      post :destroy, {:id=>@section.id}
-      response.should redirect_to(admin_default_path)
-      flash[:notice].should == "Access Denied"
+      it "should deny access to an billing users attempt to delete a section by an unauthorized user" do
+        controller.current_user.stub(:billing?).and_return(true)
+        post :destroy, {:id=>@section.id}
+        response.should redirect_to(admin_default_path)
+        flash[:notice].should == "Access Denied"
+      end
     end
   end
 

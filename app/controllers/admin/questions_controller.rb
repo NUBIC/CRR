@@ -16,6 +16,7 @@ class Admin::QuestionsController < Admin::AdminController
   def new
     @section = Section.find(params[:section_id])
     @question = @section.questions.new
+    authorize! :new, @question
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -24,6 +25,7 @@ class Admin::QuestionsController < Admin::AdminController
 
   def show
     @question = Question.find(params[:id])
+    authorize! :show, @question
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -32,6 +34,7 @@ class Admin::QuestionsController < Admin::AdminController
 
   def edit
     @question = Question.find(params[:id])
+    authorize! :edit, @question
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -40,6 +43,7 @@ class Admin::QuestionsController < Admin::AdminController
 
   def update
     @question = Question.find(params[:id])
+    authorize! :update, @question
     saved = @question.update_attributes(question_params)
     if saved
       flash[:notice] = "Updated"
@@ -54,6 +58,7 @@ class Admin::QuestionsController < Admin::AdminController
 
   def create
     @question =  Question.new(question_params)
+    authorize! :create, @question
     @section = @question.section
     if @question.save
       flash[:notice] = "Updated"
@@ -67,6 +72,7 @@ class Admin::QuestionsController < Admin::AdminController
 
   def destroy
     @question = Question.find(params[:id])
+    authorize! :destroy, @question
     @section = @question.section
     @question.destroy
     flash[:notice] = "Question Deleted"

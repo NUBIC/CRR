@@ -2,14 +2,13 @@
 #
 # Table name: surveys
 #
-#  id               :integer          not null, primary key
-#  title            :string(255)
-#  description      :text
-#  state            :text
-#  code             :string(255)
-#  multiple_section :boolean
-#  created_at       :datetime
-#  updated_at       :datetime
+#  id          :integer          not null, primary key
+#  title       :string(255)
+#  description :text
+#  state       :text
+#  code        :string(255)
+#  created_at  :datetime
+#  updated_at  :datetime
 #
 
 class Survey < ActiveRecord::Base
@@ -20,6 +19,7 @@ class Survey < ActiveRecord::Base
 
 
   validates_presence_of :title,:state
+  validates_uniqueness_of :code,:if=>:active?
 
   validate :activation_check
   after_create :create_section, :unless => :multiple_section?

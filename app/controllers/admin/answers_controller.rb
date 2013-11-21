@@ -3,6 +3,7 @@ class Admin::AnswersController < Admin::AdminController
   def new
     @question = Question.find(params[:question_id])
     @answer = @question.answers.new
+    authorize! :new, @answer
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -11,6 +12,7 @@ class Admin::AnswersController < Admin::AdminController
 
   def show
     @answer = Answer.find(params[:id])
+    authorize! :show, @answer
     respond_to do |format|
       format.js {render :layout => false}
     end
@@ -18,6 +20,7 @@ class Admin::AnswersController < Admin::AdminController
 
   def edit
     @answer = Answer.find(params[:id])
+    authorize! :edit, @answer
     respond_to do |format|
       format.html
       format.js {render :layout => false}
@@ -26,6 +29,7 @@ class Admin::AnswersController < Admin::AdminController
 
   def update
     @answer = Answer.find(params[:id])
+    authorize! :update, @answer
     saved = @answer.update_attributes(answer_params)
     if saved
       flash[:notice] = "Updated"
@@ -39,6 +43,7 @@ class Admin::AnswersController < Admin::AdminController
 
   def create
     @answer = Answer.new(answer_params)
+    authorize! :create, @answer
     @question = @answer.question
     if @answer.save
       flash[:notice] = "Updated"
@@ -54,6 +59,7 @@ class Admin::AnswersController < Admin::AdminController
 
   def destroy
     @answer = Answer.find(params[:id])
+    authorize! :destroy, @answer
     @question = @answer.question
     @answer.destroy
     @question.reload

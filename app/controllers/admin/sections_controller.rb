@@ -40,7 +40,7 @@ class Admin::SectionsController < Admin::AdminController
     @section.reload
     respond_to do |format|
       format.html {redirect_to edit_survey_section_path(@survey_section)}
-      format.js {render (saved ? :index : :edit),:layout => false}
+      format.js {render (saved ? :show : :edit),:layout => false}
     end
   end
 

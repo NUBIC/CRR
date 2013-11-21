@@ -3,11 +3,10 @@
 %h5="Who are you enrolling?"
 .row-fluid
   .span1
-    =form_tag(admin_participants_path, :method => 'post') do
-      = hidden_field_tag "proxy", true
-      = submit_tag('Another Adult', :class=>"btn btn-medium btn-primary")
+    =form_for @participant, :url=>admin_participants_path do |f|
+      = f.hidden_field "child", :value=>false
+      = f.submit 'Add Adult', :class=>"btn btn-medium btn-primary"
   .span1
-    =form_tag(admin_participants_path, :method => 'post') do
-      = hidden_field_tag "proxy", true
-      = hidden_field_tag "child", true
-      = submit_tag('Child', :class=>"btn btn-medim btn-primary")
+    =form_for @participant, :url=>admin_participants_path do |f|
+      = f.hidden_field "child", :value=>true
+      = f.submit 'Add Child', :class=>"btn btn-medim btn-primary"

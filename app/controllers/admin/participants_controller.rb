@@ -13,6 +13,10 @@ class Admin::ParticipantsController < Admin::AdminController
     end
   end
 
+  def new
+    @participant = Participant.new
+  end
+
   def consent
     @participant = Participant.find(params[:id])
   end
@@ -25,12 +29,9 @@ class Admin::ParticipantsController < Admin::AdminController
   end
 
   def create
-    @participant = Participant.create!
-    if params[:child] == "true"
-      @participant.child = true
-      @participant.save
-    end
-    redirect_to enroll_participant_path(@participant)
+    @participant = Participant.new(participant_params)
+    @participant.save
+    redirect_to enroll_admin_participant_path(@participant)
   end
 
   def show
@@ -89,7 +90,7 @@ class Admin::ParticipantsController < Admin::AdminController
   end
 
   def participant_params
-    params.require(:participant).permit(:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
+    params.require(:participant).permit(:child,:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
       :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
       :secondary_guardian_email, :secondary_guardian_phone)

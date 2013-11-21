@@ -12,7 +12,7 @@
       -if @participant.verification_needed?
         =form_for @participant, :url=>verify_admin_participant_path do |f|
           =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
-          =f.button "Verify",:class=>"btn btn-mini btn-success"
+          =f.button "Verify Participant",:class=>"btn btn-mini btn-success"
       -else
         =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
     .row-fluid
@@ -70,7 +70,7 @@
         =@participant.notes
     .row-fluid
       =form_for @participant, :url=>withdraw_admin_participant_path do |f|
-        =f.button "Withdraw",:class=>"btn btn-mini btn-danger"
+        =f.button "Withdraw Participant",:class=>"btn btn-mini btn-danger"
   #instruments.tab-pane
     = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
   #studies.tab-pane

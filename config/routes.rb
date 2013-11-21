@@ -7,8 +7,10 @@ AudiologyRegistry::Application.routes.draw do
         get :search
       end
       member do 
+        get   :enroll
         patch :verify
         patch :withdraw
+        post  :consent_signature
       end
     end
     resources :studies do

@@ -1,0 +1,40 @@
+.row-fluid
+  -if @participant.child?
+    .row-fluid
+      !=Consent.child_consent.content
+    = form_tag(consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
+      = hidden_field_tag "consent_response"
+      .row-fluid
+        %label.radio.inline
+          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+          I agree on behalf of child
+        %label.radio.inline
+          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+          I disagree on behalf of child
+      .form-inline.proxy-consent-name
+        %br
+        = label_tag "consent_name", 'My name is'
+        = text_field_tag 'consent_name', nil, class: 'required'
+      %br
+      .row-fluid
+  -else 
+    .row-fluid
+      !=Consent.adult_consent.content
+    %br
+    = form_tag(consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
+      = hidden_field_tag "consent_response"
+      .row-fluid
+        %label.radio.inline
+          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+          I agree on behalf of someone
+        %label.radio.inline
+          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+          I disagree on behalf of someone
+      .form-inline.proxy-consent-name
+        %br
+        = label_tag "consent_name", 'My name is'
+        = text_field_tag 'consent_name', nil, class: 'required'
+      %br
+      .row-fluid
+        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
+        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")

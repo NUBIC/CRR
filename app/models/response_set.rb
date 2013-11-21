@@ -29,6 +29,8 @@ class ResponseSet < ActiveRecord::Base
 
   after_initialize :create_question_methods
 
+  after_create :send_alert
+
 
 
   #before_create :ensure_start_timestamp
@@ -113,8 +115,8 @@ class ResponseSet < ActiveRecord::Base
   end
  
   private
-    #def ensure_start_timestamp
-    #  self.started_at ||= Time.now
-    #end
+  def send_alert
+    SurveyMailer.new_survey_alert((self).deliver if ['staging','production','test'].include?(Rails.env)
+  end
 
 end

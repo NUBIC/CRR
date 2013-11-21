@@ -57,7 +57,7 @@ class Admin::ResponseSetsController < Admin::AdminController
         redirect_to edit_admin_response_set_path(@response_set, :section_id => params[:button])
       end
     else
-      flash[:notice] = @response_set.responses.collect{|r| r.errors.full_messages.to_sentence}.to_sentence
+      flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
       redirect_to edit_admin_response_set_path(@response_set)
     end
   end

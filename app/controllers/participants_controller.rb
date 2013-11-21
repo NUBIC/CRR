@@ -32,8 +32,8 @@ class ParticipantsController < PublicController
       @participant.child = true
       @participant.save
     end
-    if @account.has_active_participants?
-      @participant.copy_from(@account.active_participants.first)
+    if @account.other_participants(@participant).size > 0
+      @participant.copy_from(@account.other_participants(@participant).last)
       @participant.save
     end
     redirect_to enroll_participant_path(@participant)

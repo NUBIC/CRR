@@ -26,7 +26,7 @@
       %tbody
         -@search.result.each do |participant|
           %tr
-            %td=participant.name
+            %td=link_to participant.name, admin_participant_path(participant)
             %td=participant.on_study? ? "On study" : "Available"
             %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
     -if @search.data_requested?

@@ -6,7 +6,7 @@
 #  search_condition_group_id :integer
 #  operator                  :string(255)
 #  question_id               :integer
-#  value                     :integer
+#  value                     :string(255)
 #
 
 class SearchCondition < ActiveRecord::Base

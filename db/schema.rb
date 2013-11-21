@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 20131120203306) do
     t.text     "help_text"
     t.integer  "display_order"
     t.string   "code"
+    t.integer  "weight"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -113,6 +114,7 @@ ActiveRecord::Schema.define(version: 20131120203306) do
   end
 
   create_table "questions", force: true do |t|
+    t.integer  "survey_id"
     t.integer  "section_id"
     t.text     "text"
     t.string   "code"
@@ -210,7 +212,6 @@ ActiveRecord::Schema.define(version: 20131120203306) do
     t.text     "description"
     t.text     "state"
     t.string   "code"
-    t.boolean  "multiple_section"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -11,7 +11,7 @@
     =simple_form_for @response_set  do |f|
       .row-fluid
         .tabbable.tabs-left
-          %ul.nav.nav-tabs
+          %ul.nav.nav-tabs.span2
             -if @survey.sections.size > 1
               - @survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"

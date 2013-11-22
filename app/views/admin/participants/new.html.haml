@@ -5,8 +5,8 @@
   .span1
     =form_for @participant, :url=>admin_participants_path do |f|
       = f.hidden_field "child", :value=>false
-      = f.submit 'Add Adult', :class=>"btn btn-medium btn-primary"
+      = f.button 'Add Adult', :class=>"btn btn-medium btn-primary"
   .span1
     =form_for @participant, :url=>admin_participants_path do |f|
       = f.hidden_field "child", :value=>true
-      = f.submit 'Add Child', :class=>"btn btn-medim btn-primary"
+      = f.button 'Add Child', :class=>"btn btn-medim btn-primary"

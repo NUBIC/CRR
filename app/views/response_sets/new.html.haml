@@ -11,6 +11,6 @@
   .control-group
     .controls
       .btn-group
-        =f.submit "Start",:class=>"btn btn-success btn-mini"
+        =f.button "Start",:class=>"btn btn-success btn-mini"
         =link_to "cancel", response_sets_path(:participant_id=>@participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-warning btn-mini"
 

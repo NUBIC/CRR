@@ -31,9 +31,9 @@
             %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
     -if @search.data_requested?
       =form_for @search,:url=>release_admin_search_path(@search) do |f|
-        =f.submit "Release Results",:class=>"btn btn-mini btn-success"
+        =f.button "Release Results",:class=>"btn btn-mini btn-success"
   -else
     -if @search.new?
       =form_for @search,:url=>request_admin_search_path(@search) do |f|
-        =f.submit "Request Results",:class=>"btn btn-mini btn-success"
+        =f.button "Request Results",:class=>"btn btn-mini btn-success"
       

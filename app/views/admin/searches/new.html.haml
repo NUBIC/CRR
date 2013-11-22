@@ -5,5 +5,5 @@
     .row-fluid
       =select_tag("search[study_id]",options_for_select(Study.all.collect{|s| [s.irb_number,s.id]}),:class=>"input-xlarge")
     .row-fluid
-      =submit_tag("Start",:class=>"btn btn-small btn-success")
+      =button_tag("Start",:class=>"btn btn-small btn-success")
       =link_to("Start",admin_searches_path, :class=>"btn btn-small btn-warning")

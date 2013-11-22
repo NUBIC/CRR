@@ -26,7 +26,7 @@
                   =form_for consent, :url=> activate_admin_consent_path(consent) do |f|
                     .btn-group
                       =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
-                      =f.submit "Activate",:class=>"btn btn-mini btn-success"
+                      =f.button "Activate",:class=>"btn btn-mini btn-success"
               -if consent.editable?
                 .span3
                   =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"

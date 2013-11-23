@@ -12,9 +12,11 @@ class Admin::StudiesController < Admin::AdminController
 
  def new
    @study = Study.new
+   authorize! :new, @study
  end
  def create
    @study = Study.new(study_params)
+   authorize! :create, @study
    if @study.save
      flash[:notice] = "Created"
    else
@@ -24,9 +26,11 @@ class Admin::StudiesController < Admin::AdminController
  end
  def edit
    @study = Study.find(params[:id])
+   authorize! :edit, @study
  end
  def update
    @study = Study.find(params[:id])
+   authorize! :update, @study
    @study.update_attributes(study_params)
    if @study.save
      flash[:notice] = "Updated"
@@ -59,6 +63,9 @@ class Admin::StudiesController < Admin::AdminController
  end
  def destroy
    @study = Study.find(params[:id])
+   authorize! :destroy, @study
+   @study.destroy
+   redirect_to admin_studies_path
  end
 
  def study_params

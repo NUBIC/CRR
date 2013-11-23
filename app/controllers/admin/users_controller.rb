@@ -5,9 +5,11 @@ class Admin::UsersController < Admin::AdminController
 
  def new
    @user = User.new
+   authorize! :new, @user
  end
  def create
    @user = User.new(user_params)
+   authorize! :create, @user
    if @user.save
      flash[:notice] = "Created"
    else
@@ -17,9 +19,11 @@ class Admin::UsersController < Admin::AdminController
  end
  def edit
    @user = User.find(params[:id])
+   authorize! :edit, @user
  end
  def update
    @user = User.find(params[:id])
+   authorize! :update, @user
    @user.update_attributes(user_params)
    if @user.save
      flash[:notice] = "Updated"
@@ -30,6 +34,7 @@ class Admin::UsersController < Admin::AdminController
  end
  def destroy
    @user = User.find(params[:id])
+   authorize! :destroy, @user
    @user.destroy
    redirect_to admin_users_path
  end

@@ -42,6 +42,15 @@ class Ability
         can [:new,:create,:edit,:update,:destroy,:show,:activate,:deactivate], Study do |study|
           true
         end
+        can [:new,:create,:show,:activate,:deactivate], Consent do |consent|
+          true
+        end
+        can [:edit,:update,:destroy], Consent do |consent|
+          consent.editable?
+        end
+        can [:new,:create,:show,:edit,:update,:destroy], User do |user|
+          true
+        end
       elsif user.data_manager?
       else user.researcher?
       end

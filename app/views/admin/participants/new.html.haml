@@ -2,11 +2,11 @@
   %h4="Add a participant"
 %h5="Who are you enrolling?"
 .row-fluid
-  .span1
+  .span2
     =form_for @participant, :url=>admin_participants_path do |f|
       = f.hidden_field "child", :value=>false
       = f.button 'Add Adult', :class=>"btn btn-medium btn-primary"
-  .span1
+  .span2
     =form_for @participant, :url=>admin_participants_path do |f|
       = f.hidden_field "child", :value=>true
       = f.button 'Add Child', :class=>"btn btn-medim btn-primary"

@@ -9,7 +9,7 @@ class Admin::ParticipantsController < Admin::AdminController
     if @participant.survey?
       create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?
-      redirect_to(edit_response_set_path(@participant.recent_response_set))
+      redirect_to(edit_admin_response_set_path(@participant.recent_response_set))
     end
   end
 
@@ -64,7 +64,7 @@ class Admin::ParticipantsController < Admin::AdminController
       end
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
-      redirect_to enroll_participant_path(@participant)
+      redirect_to enroll_admin_participant_path(@participant)
     end
 
   end
@@ -73,7 +73,7 @@ class Admin::ParticipantsController < Admin::AdminController
     @participant = Participant.find(params[:id])
     params[:consent_response] == 'accept' ? @participant.sign_consent!(nil, params[:consent_name]) : @participant.decline_consent!
     respond_to do |format|
-      format.html { redirect_to enroll_participant_path(@participant) }
+      format.html { redirect_to enroll_admin_participant_path(@participant) }
     end
   end
 
@@ -104,6 +104,6 @@ class Admin::ParticipantsController < Admin::AdminController
   def create_and_redirect_response_set(participant)
     response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
     participant.start_survey!
-    redirect_to(edit_response_set_path(response_set))
+    redirect_to(edit_admin_response_set_path(response_set))
   end
 end

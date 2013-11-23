@@ -4,10 +4,19 @@ FactoryGirl.define do
   sequence :irb_number do |n|
     "STU008888#{"%03d" % n}"
   end
+  sequence :netid do |n|
+    "tes#{"%03d" % n}"
+  end
+
+  factory :user do |u|
+    u.netid {generate :netid}
+    u.first_name {Faker::Name.first_name}
+    u.last_name {Faker::Name.last_name}
+  end
 
   factory :participant do |p|
-    p.first_name "Brian"
-    p.last_name "Lee"
+    p.first_name {Faker::Name.first_name}
+    p.last_name {Faker::Name.last_name}
   end
 
   factory :relationship do |r|

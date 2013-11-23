@@ -189,7 +189,7 @@ class Participant < ActiveRecord::Base
       self.send("#{fillin_attr}=", participant.send(fillin_attr))
     end
 
-    if proxy?
+    if !account.nil? and proxy?
       [ :primary_guardian_first_name, :primary_guardian_last_name, :primary_guardian_email, :primary_guardian_phone,
         :secondary_guardian_first_name, :secondary_guardian_last_name, :secondary_guardian_email, :secondary_guardian_phone].each do |fillin_attr|
         self.send("#{fillin_attr}=", participant.send(fillin_attr))

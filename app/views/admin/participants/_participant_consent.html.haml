@@ -2,7 +2,7 @@
   -if @participant.child?
     .row-fluid
       !=Consent.child_consent.content
-    = form_tag(consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
+    = form_tag @participant.consent_signatures.new :url=> consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
       .row-fluid
         %label.radio.inline
@@ -12,15 +12,18 @@
           = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
           I disagree on behalf of child
       .form-inline.proxy-consent-name
-        %br
-        = label_tag "consent_name", 'My name is'
-        = text_field_tag 'consent_name', nil, class: 'required'
-      %br
+        .row-fluid
+          .span3
+            = label_tag "consent_date", 'Consent given by participant on:'
+            = text_field_tag 'consent_date', nil, :class=> "required input-small","data-provide"=> "datepicker" 
+          .span3
+            = label_tag "consent_name", 'Entered By: '
+            = text_field_tag 'consent_name', current_user.name, :class=> 'required',:readonly=>true
       .row-fluid
+        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
   -else 
     .row-fluid
       !=Consent.adult_consent.content
-    %br
     = form_tag(consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
       = hidden_field_tag "consent_response"
       .row-fluid
@@ -31,9 +34,7 @@
           = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
           I disagree on behalf of someone
       .form-inline.proxy-consent-name
-        %br
         = label_tag "consent_name", 'My name is'
         = text_field_tag 'consent_name', nil, class: 'required'
-      %br
       .row-fluid
         = submit_tag("Next", class: "btn btn-primary", id: "consent-next")

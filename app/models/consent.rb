@@ -48,4 +48,10 @@ class Consent < ActiveRecord::Base
   def default_args
     self.state ||='inactive'
   end
+
+  def check_consent_signatures
+    if self.content_type_changed? or self.content_changed?
+      errors.add(:consent,"has been signed by users and can't be edited") unless answers.empty?
+    end
+  end
 end

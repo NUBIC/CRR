@@ -40,10 +40,12 @@ class User < ActiveRecord::Base
   private
 
   def check_netid
-    errors.add(:netid,"Not recognized") if (Aker.authority.find_user(netid).nil? and !Rails.env.development?)
+    if Rails.env.staging? || Rails.env.production?
+      errors.add(:netid,"Not recognized") if Aker.authority.find_user(netid).nil?
+    end
   end
   def update_from_ldap
-    unless Rails.env.development?
+    if Rails.env.staging? || Rails.env.production?
       aker_user = Aker.authority.find_user(netid)
       self.update_attributes(:first_name => aker_user.first_name, :last_name => aker_user.last_name)
     end

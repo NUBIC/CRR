@@ -50,21 +50,15 @@ class Admin::ParticipantsController < Admin::AdminController
     @participant =  Participant.find(params[:id])
     @participant.update_attributes(participant_params)
     if @participant.save
-      if participant_relationship_params[:relationships]
-        participant_relationship_params[:relationships].each_value do |relationship_params|
-          @participant.origin_relationships.create( :category => relationship_params[:category],
-                                                  :destination_id => relationship_params[:destination_id])
-        end
-      end
       @participant.take_survey! if @participant.demographics?
       if @participant.survey?
         create_and_redirect_response_set(@participant)
       else
-        redirect_to enroll_participant_path(@participant)
+        redirect_to admin_participant_path(@participant)
       end
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
-      redirect_to enroll_admin_participant_path(@participant)
+      redirect_to admin_participant_path(@participant)
     end
 
   end
@@ -93,7 +87,7 @@ class Admin::ParticipantsController < Admin::AdminController
     params.require(:participant).permit(:child,:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
       :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
-      :secondary_guardian_email, :secondary_guardian_phone)
+      :secondary_guardian_email, :secondary_guardian_phone,:notes,:do_not_contact)
   end
 
   def participant_relationship_params

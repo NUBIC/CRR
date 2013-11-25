@@ -1,4 +1,4 @@
-=form_for @participant  do |f|
+=form_for @participant, :url=>admin_participant_path(@participant) do |f|
   .row-fluid
     .span4
       .control-group
@@ -13,6 +13,11 @@
         =f.label :last_name, "Last Name"
         .controls
           =f.text_field  :last_name
+      .control-group
+        =f.label :do_not_contact
+        .controls
+          =f.check_box  :do_not_contact
+
     .span4
       .control-group
         =f.label :address_line1, "Address Line1"
@@ -57,4 +62,4 @@
   .row-fluid
     .btn-group
       =f.button "Save",:class=>"btn btn-success"
-      =link_to "Cancel", dashboard_path, :class=>"btn btn-warning"
+      =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"

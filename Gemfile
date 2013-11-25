@@ -35,6 +35,7 @@ group :development, :test do
   gem "factory_girl_rails", "~> 4.0"
   gem 'rspec-rails'
   gem 'shoulda'
+  gem "webrat"
 end
 
 #aker

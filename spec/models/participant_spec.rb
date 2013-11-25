@@ -49,7 +49,7 @@ describe Participant do
 
   describe '#name' do
     it 'joins first name and last name' do
-      participant = FactoryGirl.build(:participant)
+      participant = FactoryGirl.build(:participant,:first_name=>"Brian",:last_name=>"Lee")
       participant.name.should == "Brian Lee"
     end
   end
@@ -78,22 +78,22 @@ describe Participant do
 
   describe '#seach_display' do
     it "includes names" do
-      participant = FactoryGirl.build(:participant)
+      participant = FactoryGirl.build(:participant,:first_name=>"Brian",:last_name=>"Lee")
       participant.search_display.should == "Brian Lee"
     end
 
     it "includes names and address" do
-      participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345')
+      participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345',:first_name=>"Brian",:last_name=>"Lee")
       participant.search_display.should == "Brian Lee - 123 Main St Apt #111 Chicago,IL 12345"
     end
 
     it "includes names, address and email" do
-      participant = participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com')
+      participant = participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com',:first_name=>"Brian",:last_name=>"Lee")
       participant.search_display.should == "Brian Lee - 123 Main St Apt #111 Chicago,IL 12345 - email@test.com"
     end
 
     it "includes names" do
-      participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com', primary_phone: '1234567890')
+      participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com', primary_phone: '1234567890',:first_name=>"Brian",:last_name=>"Lee")
       participant.search_display.should == "Brian Lee - 123 Main St Apt #111 Chicago,IL 12345 - email@test.com - 1234567890"
     end
   end

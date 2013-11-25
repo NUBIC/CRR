@@ -9,15 +9,15 @@
       %label.radio.inline
         = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
         -if @participant.proxy?
-          I agree
-        -else
           I agree on behalf of participant
+        -else
+          I agree
       %label.radio.inline
         = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
         -if @participant.proxy?
-          I agree
-        -else
           I disagree on behalf of participant
+        -else
+          I disagree
     -if @participant.proxy?
       .form-inline.proxy-consent-name
         %br

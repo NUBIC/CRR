@@ -16,6 +16,7 @@ class SearchConditionGroup < ActiveRecord::Base
   has_many :search_condition_groups
 
   validates_presence_of :search, :if=>"search_condition_group.nil?"
+  validates_presence_of :search_condition_group, :if=>"search.nil?"
   validates_inclusion_of :operator, :in => ["&","|"],:allow_blank=>false
   VALID_OPERATORS=["|","&"].freeze
   OPERATOR_TRANSLATIONS={"|"=>"OR","&"=>"AND"}.freeze

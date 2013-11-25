@@ -44,6 +44,15 @@ FactoryGirl.define do
   factory :search do |search|
     search.association :study, :factory => :study
   end
+  factory :search_condition_group do |scg|
+    scg.association :search
+    scg.association :search_condition_group
+    scg.operator    ["|","&"].sample
+  end
+  factory :search_condition do |sc|
+    sc.association :search_condition
+    sc.operator   ["=","!=","<",">"].sample
+  end
 
   factory :survey do |s|
     s.title Faker::Company.name

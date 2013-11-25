@@ -1,4 +1,11 @@
 -if current_user.admin? || current_user.data_manager?
+  -unless Participant.verification_needed.empty?
+    .row-fluid
+      =link_to "#{Participant.verification_needed.size} participants awaiting verification",admin_participants_path(:state=>"verification_needed")
+  -unless Search.data_requested.empty?
+    .row-fluid
+      =link_to "#{Search.data_requested?.size} Data Requests awaiting processing",admin_searches_path(:state=>"data_requested")
+    
 -else
   
 

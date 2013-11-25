@@ -40,6 +40,9 @@ class Response < ActiveRecord::Base
     question.multiple_choice?
   end
 
+  def to_s
+    question.multiple_choice? ? answer.text : self.text 
+  end
   private
 
   def validate_question_type

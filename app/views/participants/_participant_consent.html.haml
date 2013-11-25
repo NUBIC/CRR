@@ -8,13 +8,13 @@
     .row-fluid
       %label.radio.inline
         = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-        -@participant.proxy?
+        -if @participant.proxy?
           I agree
         -else
           I agree on behalf of participant
       %label.radio.inline
         = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-        -@participant.proxy?
+        -if @participant.proxy?
           I agree
         -else
           I disagree on behalf of participant

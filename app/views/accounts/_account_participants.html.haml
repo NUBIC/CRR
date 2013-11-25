@@ -26,8 +26,11 @@
                   %li
                     Complete
             %td
-              -participant.open_public_response_sets.each do |response_set|
-                =link_to response_set.survey.title, edit_response_set_path(response_set)
+              -if participant.open_public_response_sets.empty?
+                None
+              -else
+                -participant.open_public_response_sets.each do |response_set|
+                  =link_to response_set.survey.title, edit_response_set_path(response_set)
             %td
               %ul.unstyled
                 - if participant.consented?
@@ -37,7 +40,7 @@
                 - if participant.completed?
                   %li
                     %i.icon-folder-open
-                    =link_to  "View Survey", edit_response_set_path(participant.recent_response_set)
+                    =link_to  "View Survey", response_set_path(participant.recent_response_set)
                 %li
                   %i.icon-trash
                   = link_to "Withdraw", withdraw_participant_path(participant), method: :patch, confirm: "Are you sure you want to withdraw?"

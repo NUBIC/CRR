@@ -1,23 +1,23 @@
 .row-fluid
-  %h4="Adult Participant:"
+  %h4="Participant Information"
 .row-fluid
   .span4
     .control-group
-      =f.label :first_name, "Adult's First Name"
+      =f.label :first_name, "Participant First Name"
       .controls
         =f.text_field  :first_name, :class => "required"
   .span4
     .control-group
-      =f.label :midlle_name, "Adult's Middle Name"
+      =f.label :midlle_name, "Participant Middle Name"
       .controls
         =f.text_field  :middle_name
   .span4
     .control-group
-      =f.label :last_name, "Adult's Last Name"
+      =f.label :last_name, "Participant Last Name"
       .controls
         =f.text_field  :last_name, :class => "required"
 .row-fluid
-  %h4="Adult Address:"
+  %h4="Participant Address:"
 .row-fluid
   .span4
     .control-group
@@ -61,4 +61,4 @@
       =f.label :secondary_phone, "Secondary Phone Number"
       .controls
         =f.text_field  :secondary_phone
-= render :partial => 'participant_guardian', :locals => {:f => f}
+//= render :partial => 'participant_guardian', :locals => {:f => f}

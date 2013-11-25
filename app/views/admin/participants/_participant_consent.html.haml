@@ -1,40 +1,17 @@
 .row-fluid
-  -if @participant.child?
-    .row-fluid
-      !=Consent.child_consent.content
-    = form_tag @participant.consent_signatures.new :url=> consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
-      = hidden_field_tag "consent_response"
-      .row-fluid
-        %label.radio.inline
-          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          I agree on behalf of child
-        %label.radio.inline
-          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          I disagree on behalf of child
-      .form-inline.proxy-consent-name
-        .row-fluid
-          .span3
-            = label_tag "consent_date", 'Consent given by participant on:'
-            = text_field_tag 'consent_date', nil, :class=> "required input-small","data-provide"=> "datepicker" 
-          .span3
-            = label_tag "consent_name", 'Entered By: '
-            = text_field_tag 'consent_name', current_user.name, :class=> 'required',:readonly=>true
-      .row-fluid
-        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
-  -else 
-    .row-fluid
-      !=Consent.adult_consent.content
-    = form_tag(consent_signature_admin_participant_path(@participant), method: 'post', id:'new-consent-sign') do
-      = hidden_field_tag "consent_response"
-      .row-fluid
-        %label.radio.inline
-          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          I agree on behalf of someone
-        %label.radio.inline
-          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          I disagree on behalf of someone
-      .form-inline.proxy-consent-name
-        = label_tag "consent_name", 'My name is'
-        = text_field_tag 'consent_name', nil, class: 'required'
-      .row-fluid
-        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
+  !=@participant.child? ? Consent.child_consent.content : Consent.adult_consent.content
+= form_for @participant.consent_signatures.new(:consent=>@participant.child? ? Consent.child_consent :  Consent.adult_consent), :url=>consent_signature_admin_participant_path(@participant) do |f|
+  =f.hidden_field :consent_id
+  .row-fluid
+    .span4
+      = f.label :enetered_by, 'Entered By: '
+      = f.text_field :proxy_name, :value=>current_user.name,:class=> 'required',:readonly=>true
+    .span4
+      = f.label :proxy_name, 'Given By (if other than participant): '
+      = f.text_field :proxy_name
+    .span4
+      = f.label :date, 'Consent given on:'
+      = f.text_field :date, :class=> "required input-small","data-provide"=> "datepicker" 
+
+  .row-fluid
+    = submit_tag("Next", class: "btn btn-primary")

@@ -1,9 +1,9 @@
 #consents.row-fluid
   =link_to "Add Consent", new_admin_consent_path,"data-async"=>true,"data-target"=>"#consents",:class=>"btn btn-primary btn-small"
-  %table.table.bordered
+  %table.table.table-bordered.table-striped.table-condensed
     %thead
       %tr
-        %th Consent.Type
+        %th Type
         %th State
         %th Created On
         %th 
@@ -29,4 +29,7 @@
                       =f.button "Activate",:class=>"btn btn-mini btn-success"
               -if consent.editable?
                 .span3
-                  =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
+                  =form_for consent, :url=> admin_consent_path(consent),:method=>:delete do |f|
+                    .btn-group
+                      =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
+                      =f.button "Delete",:class=>"btn btn-mini btn-danger"

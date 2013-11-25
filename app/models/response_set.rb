@@ -116,7 +116,9 @@ class ResponseSet < ActiveRecord::Base
  
   private
   def send_alert
-    SurveyMailer.new_survey_alert(self).deliver if ['staging','production','test'].include?(Rails.env)
+    if self.public?
+      SurveyMailer.new_survey_alert(self).deliver if ['staging','production'].include?(Rails.env)
+    end
   end
 
 end

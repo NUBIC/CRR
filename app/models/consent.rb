@@ -13,7 +13,7 @@
 #
 
 class Consent < ActiveRecord::Base
-  has_many :consent_signatures,:dependent=>:restrict
+  has_many :consent_signatures,:dependent=>:restrict_with_error
 
   TYPES = ['Adult','Child']
   STATES= ['active','inactive']

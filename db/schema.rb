@@ -55,9 +55,9 @@ ActiveRecord::Schema.define(version: 20131120203306) do
   create_table "consent_signatures", force: true do |t|
     t.integer  "consent_id"
     t.integer  "participant_id"
-    t.date     "consent_date"
-    t.string   "consent_person_name"
-    t.boolean  "accept"
+    t.date     "date"
+    t.string   "proxy_name"
+    t.string   "entered_by"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

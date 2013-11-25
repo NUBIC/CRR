@@ -71,7 +71,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def consent_signature
     @participant = Participant.find(params[:id])
-    params[:consent_response] == 'accept' ? @participant.sign_consent!(nil, params[:consent_name]) : @participant.decline_consent!
+    @participant.sign_consent!(nil, consent_signature_params)
     respond_to do |format|
       format.html { redirect_to enroll_admin_participant_path(@participant) }
     end
@@ -100,9 +100,13 @@ class Admin::ParticipantsController < Admin::AdminController
     params.require(:participant).permit(relationships: [ :category, :destination_id ])
   end
 
+  def consent_signature_params
+    params.require(:consent_signature).permit(:date,:consent_id,:proxy_name)
+  end
+
   private
   def create_and_redirect_response_set(participant)
-    response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
+    response_set = participant.create_response_set(participant.child? ? Survey.child_survey : Survey.adult_survey)
     participant.start_survey!
     redirect_to(edit_admin_response_set_path(response_set))
   end

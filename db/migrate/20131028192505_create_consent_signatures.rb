@@ -3,9 +3,9 @@ class CreateConsentSignatures < ActiveRecord::Migration
     create_table :consent_signatures do |t|
       t.references :consent
       t.references :participant, index: true
-      t.date :consent_date
-      t.string :consent_person_name
-      t.boolean :accept
+      t.date       :date
+      t.string     :proxy_name
+      t.string     :entered_by
       t.timestamps
     end
   end

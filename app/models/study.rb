@@ -10,7 +10,7 @@
 #
 
 class Study < ActiveRecord::Base
-  has_many :study_involvements,:dependent=>:restrict
+  has_many :study_involvements,:dependent=>:restrict_with_error
   has_many :participants,:through=>:study_involvements
   has_many :user_studies
   has_many :users, :through=>:user_studies

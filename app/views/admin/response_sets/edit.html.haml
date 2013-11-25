@@ -4,7 +4,7 @@
     %hr
 .row-fluid
   .span12
-    =simple_form_for @response_set  do |f|
+    =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set) do |f|
       .row-fluid
         .tabbable.tabs-left
           %ul.nav.nav-tabs.span2{}

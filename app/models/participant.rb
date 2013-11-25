@@ -32,7 +32,7 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  has_many :response_sets, :order => 'updated_at DESC'
+  has_many :response_sets
   has_many :contact_logs
   has_many :study_involvements
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
@@ -94,6 +94,7 @@ class Participant < ActiveRecord::Base
 
   aasm_event :enroll do
     transitions :to => :enrolled, :from => :verification_needed
+    transitions :to => :enrolled, :from => :survey_started
   end
 
   aasm_event :withdraw do
@@ -131,9 +132,8 @@ class Participant < ActiveRecord::Base
     [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
   end
 
-  def create_consent_signature(name=nil)
-    consent_signatures.create(:consent => proxy? ? child_proxy? ? Consent.child_consent : Consent.adult_consent : Consent.adult_consent,
-      :consent_date => Date.today, :accept => true, :consent_person_name => name)
+  def create_consent_signature(params)
+    consent_signatures.create(params)
   end
 
   def create_response_set(survey)

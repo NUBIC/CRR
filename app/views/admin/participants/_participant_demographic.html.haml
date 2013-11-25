@@ -1,0 +1,70 @@
+=form_for @participant, :url=>admin_participant_path(@participant), :html => {:class => 'participant_demographic'} do |f|
+  -if @participant.child?
+    = render :partial => 'participant_child_proxy', :locals => {:f => f}
+  -else
+    .row-fluid
+      %h4="Participant Information:"
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :first_name, "First Name"
+          .controls
+            =f.text_field  :first_name, :class => "required"
+      .span4
+        .control-group
+          =f.label :midlle_name, "Middle Name"
+          .controls
+            =f.text_field  :middle_name
+      .span4
+        .control-group
+          =f.label :last_name, "Last Name"
+          .controls
+            =f.text_field  :last_name, :class => "required"
+    .row-fluid
+      %h4="Participant Address:"
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :address_line1, "Address Line1"
+          .controls
+            =f.text_field  :address_line1
+      .span4
+        .control-group
+          =f.label :address_line2, "Address Line2"
+          .controls
+            =f.text_field  :address_line2
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :city
+          .controls
+            =f.text_field  :city
+      .span4
+        .control-group
+          =f.label :state
+          .controls
+            = f.select :state, us_states, { prompt: 'Select State'}
+      .span4
+        .control-group
+          =f.label :zip
+          .controls
+            =f.text_field  :zip
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :email, "Email Address"
+          .controls
+            =f.text_field  :email
+      .span4
+        .control-group
+          =f.label :primary_phone, "Primary Phone Number"
+          .controls
+            =f.text_field  :primary_phone
+      .span4
+        .control-group
+          =f.label :secondary_phone, "Secondary Phone Number"
+          .controls
+            =f.text_field  :secondary_phone
+  .row-fluid
+    .btn-group
+      =f.button "Next",:class=>"btn btn-primary"

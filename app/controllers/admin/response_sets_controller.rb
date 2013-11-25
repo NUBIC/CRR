@@ -49,10 +49,10 @@ class Admin::ResponseSetsController < Admin::AdminController
     if @response_set.save
       if params[:button].eql?("finish") 
         @response_set.complete! 
-        @response_set.participant.finish_survey! if participant.survey_started?
-        return redirect_to enroll_participant_path(participant)
+        @response_set.participant.enroll! if participant.survey_started?
+        return redirect_to admin_participant_path(@response_set.participant)
       elsif params[:button].eql?("exit")
-        return redirect_to enroll_participant_path(participant)
+        return redirect_to admin_participant_path(@response_set.participant)
       else
         redirect_to edit_admin_response_set_path(@response_set, :section_id => params[:button])
       end

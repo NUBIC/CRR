@@ -1,55 +1,28 @@
 .row-fluid
-  -if @participant.adult_proxy?
+  -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
+  !=@consent.content
+  %br
+  = form_for @participant.consent_signatures.new(:consent=>@consent), :url=>consent_signature_participant_path(@participant), :id=>"new-consent" do |f|
+    = hidden_field_tag "consent_response"
+    =f.hidden_field :consent_id
     .row-fluid
-      !=Consent.adult_consent.content
-    %br
-    = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
-      = hidden_field_tag "consent_response"
-      .row-fluid
-        %label.radio.inline
-          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          I agree on behalf of someone
-        %label.radio.inline
-          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          I disagree on behalf of someone
-      .form-inline.proxy-consent-name
-        %br
-        = label_tag "consent_name", 'My name is'
-        = text_field_tag 'consent_name', nil, class: 'required'
-      %br
-      .row-fluid
-        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
-  -elsif @participant.child_proxy?
-    .row-fluid
-      !=Consent.child_consent.content
-    = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
-      = hidden_field_tag "consent_response"
-      .row-fluid
-        %label.radio.inline
-          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          I agree on behalf of child
-        %label.radio.inline
-          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          I disagree on behalf of child
-      .form-inline.proxy-consent-name
-        %br
-        = label_tag "consent_name", 'My name is'
-        = text_field_tag 'consent_name', nil, class: 'required'
-      %br
-      .row-fluid
-        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
-  -else
-    .row-fluid
-      !=Consent.adult_consent.content
-    = form_tag(consent_signature_participant_path(@participant), method: 'post', id:'new-consent-sign') do
-      = hidden_field_tag "consent_response"
-      .row-fluid
-        %label.radio.inline
-          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+      %label.radio.inline
+        = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+        -@participant.proxy?
           I agree
-        %label.radio.inline
-          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          I disagree
-      %br
-      .row-fluid
-        = submit_tag("Next", class: "btn btn-primary", id: "consent-next")
+        -else
+          I agree on behalf of participant
+      %label.radio.inline
+        = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+        -@participant.proxy?
+          I agree
+        -else
+          I disagree on behalf of participant
+    -if @participant.proxy?
+      .form-inline.proxy-consent-name
+        %br
+        = f.label :proxy_name, 'Your Name: '
+        = f.text_field :proxy_name, class: 'required'
+    %br
+    .row-fluid
+      = f.button "Next", class: "btn btn-primary", id: "consent-next"

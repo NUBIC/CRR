@@ -46,7 +46,7 @@ class Admin::ConsentsController < Admin::AdminController
     authorize! :deactivate, @consent
     @consent.state="inactive"
     if @consent.save
-      flash[:notice] = "Activated"
+      flash[:notice] = "Deactivated"
     else
       flash[:error] = @consent.errors.full_messages.to_sentence
     end
@@ -57,7 +57,7 @@ class Admin::ConsentsController < Admin::AdminController
     authorize! :activate, @consent
     @consent.state="active"
     if @consent.save
-      flash[:notice] = "Dectivated"
+      flash[:notice] = "Activated"
     else
       flash[:error] = @consent.errors.full_messages.to_sentence
     end

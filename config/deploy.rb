@@ -56,4 +56,4 @@ namespace :deploy do
 
 end
 
-# after 'deploy:finalize_update', 'deploy:permissions'
+after 'deploy:finalize_update', 'deploy:permissions'

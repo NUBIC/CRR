@@ -19,7 +19,7 @@
     .control-group
       =f.label :study_tokens,"Studies"
       .controls
-        =f.text_field :study_tokens,:class=>"tokeninput","data-url"=>search_admin_studies_path(:format=>:json),"data-limit"=>100,"data-hint-text"=>"Enter name or IRB number...","data-pre"=>@user.studies.to_json(:only=>[:id],:methods=>[:search_display])
+        =f.text_field :study_tokens,:class=>"tokeninput","data-url"=>search_admin_studies_path(:format=>:json),"data-limit"=>100,"data-hint-text"=>"Enter study name or IRB number...","data-pre"=>@user.studies.to_json(:only=>[:id],:methods=>[:search_display])
   .row-fluid
     .btn-group
       =f.button "Update",:class=>"btn btn-mini btn-success"

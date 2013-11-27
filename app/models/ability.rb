@@ -51,8 +51,29 @@ class Ability
         can [:new,:create,:show,:edit,:update,:destroy], User do |user|
           true
         end
+        can [:new,:create,:edit,:update,:destroy,:show,:enroll,:consent,:consent_signature], Participant do |participant|
+          true
+        end
+        can [:new,:create,:edit,:update,:destroy,:show], Relationship do |relationship|
+          true
+        end
+        can [:new,:create,:edit,:update,:destroy,:show], ResponseSet do |response_set|
+          true
+        end
       elsif user.data_manager?
+        can [:new,:create,:edit,:update,:destroy,:show,:enroll,:consent,:consent_signature], Participant do |participant|
+          true
+        end
+        can [:new,:create,:edit,:update,:destroy,:show], Relationship do |relationship|
+          true
+        end
+        can [:new,:create,:edit,:update,:destroy,:show], ResponseSet do |response_set|
+          true
+        end
       else user.researcher?
+        can [:show], Participant do |participant|
+          !(participant.studies.active & current_user.studies.active).empty?
+        end
       end
     else
 

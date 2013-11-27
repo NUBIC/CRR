@@ -6,6 +6,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def enroll
     @participant = Participant.find(params[:id])
+    authorize! :enroll, @participant
     if @participant.survey?
       create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?
@@ -15,14 +16,17 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def new
     @participant = Participant.new
+    authorize! :new, @participant
   end
 
   def consent
     @participant = Participant.find(params[:id])
+    authorize! :consent, @participant
   end
 
   def search
     @participants = Participant.search(params[:q])
+    authorize! :search, @participant
     respond_to do |format|
       format.json {render :json => @participants.to_json(:only=>[:id],:methods=>[:search_display])}
     end
@@ -30,16 +34,19 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def create
     @participant = Participant.new(participant_params)
+    authorize! :create, @participant
     @participant.save
     redirect_to enroll_admin_participant_path(@participant)
   end
 
   def show
     @participant = Participant.find(params[:id])
+    authorize! :show, @participant
   end
 
   def edit
     @participant = Participant.find(params[:id])
+    authorize! :edit, @participant
     respond_to do |format|
       format.html
       format.js {render :layout=>false}
@@ -48,6 +55,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def update
     @participant =  Participant.find(params[:id])
+    authorize! :update, @participant
     @participant.update_attributes(participant_params)
     if @participant.save
       @participant.take_survey! if @participant.demographics?
@@ -65,6 +73,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def consent_signature
     @participant = Participant.find(params[:id])
+    authorize! :consent_signature, @participant
     @participant.sign_consent!(nil, consent_signature_params)
     respond_to do |format|
       format.html { redirect_to enroll_admin_participant_path(@participant) }
@@ -73,12 +82,14 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def withdraw
     @participant = Participant.find(params[:id])
+    authorize! :withdraw, @participant
     @participant.withdraw!
     redirect_to admin_participants_path
   end
 
   def verify
     @participant = Participant.find(params[:id])
+    authorize! :verify, @participant
     @participant.verify!
     redirect_to admin_participant_path(@participant)
   end

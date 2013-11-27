@@ -38,6 +38,7 @@ class Participant < ActiveRecord::Base
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
   has_many :consent_signatures
+  has_many :studies, :through=>:study_involvements
 
   has_one :account_participant
   has_one :account, :through => :account_participant

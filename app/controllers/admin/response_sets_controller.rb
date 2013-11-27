@@ -10,6 +10,7 @@ class Admin::ResponseSetsController < Admin::AdminController
   def new
     @participant = Participant.find(params[:participant_id])
     @response_set = @participant.response_sets.new
+    authorize! :new, @response_set
     @surveys = Survey.all.select{|s| s.active?}
     respond_to do |format|
       format.js {render :layout => false}
@@ -18,6 +19,7 @@ class Admin::ResponseSetsController < Admin::AdminController
 
   def create
     @response_set= ResponseSet.new(response_set_params)
+    authorize! :create, @response_set
     @participant = @response_set.participant
     saved = @response_set.save
     if saved
@@ -33,17 +35,20 @@ class Admin::ResponseSetsController < Admin::AdminController
 
   def show
     @response_set= ResponseSet.find(params[:id])
+    authorize! :show, @response_set
     @survey = @response_set.survey
   end
 
   def edit
     @response_set= ResponseSet.find(params[:id]).reload
+    authorize! :edit, @response_set
     @survey = @response_set.survey
     @section = @survey.sections.find_by_id(params[:section_id]).nil? ? @survey.sections.first : @survey.sections.find_by_id(params[:section_id])
   end
 
   def update
     @response_set= ResponseSet.find(params[:id])
+    authorize! :update, @response_set
     @response_set.update_attributes(response_set_params)
     participant = @response_set.participant
     if @response_set.save

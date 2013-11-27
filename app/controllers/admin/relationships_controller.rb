@@ -9,21 +9,24 @@ class Admin::RelationshipsController < Admin::AdminController
  def new
    @participant = Participant.find(params[:participant_id])
    @relationship = @participant.origin_relationships.new
+   authorize! :new, @relationship
  end
 
  def edit
    @participant = Participant.find(params[:participant_id])
    @relationship = Relationship.find(params[:id])
+   authorize! :edit, @relationship
  end
 
  def update
    @relationship = Relationship.find(params[:id])
-   @participant = @relationship.participant
+   authorize! :update, @relationship
+   @participant = @relationship.origin
    @relationship.update_attributes(relationship_params)
    if @relationship.save
      flash[:notice]="Updated relationship"
    else
-     flash[:notice]=@relationship.errors.full_messages.to_sentence
+     flash[:error]=@relationship.errors.full_messages.to_sentence
    end
     respond_to do |format|
       format.js {render :index,:layout => false}
@@ -31,10 +34,11 @@ class Admin::RelationshipsController < Admin::AdminController
  end
  def create
    @relationship = Relationship.new(relationship_params)
+   authorize! :create, @relationship
    if @relationship.save
      flash[:notice]="Added relationship"
    else
-     flash[:notice]=@relationship.errors.full_messages.to_sentence
+     flash[:error]=@relationship.errors.full_messages.to_sentence
    end
    @participant = @relationship.origin
     respond_to do |format|
@@ -43,7 +47,11 @@ class Admin::RelationshipsController < Admin::AdminController
  end
  def destroy
    @relationship = Relationship.find(params[:id])
+   authorize! :destroy, @relationship
    @relationship.destroy
+   respond_to do |format|
+    format.js {render :index,:layout => false}
+   end
  end
 
  def relationship_params

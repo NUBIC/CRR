@@ -5,7 +5,6 @@
   -unless Search.data_requested.empty?
     .row-fluid
       =link_to "#{Search.data_requested?.size} Data Requests awaiting processing",admin_searches_path(:state=>"data_requested")
-    
--else
+  
   
 

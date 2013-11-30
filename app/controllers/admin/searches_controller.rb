@@ -44,9 +44,9 @@ class Admin::SearchesController < Admin::AdminController
  end
  def release_data
    @search = Search.find(params[:id])
-   @search.release_data
+   @search.release_data(nil,params)
    if @search.save
-     flash[:notice] = "Data Request Submitted"
+     flash[:notice] = "Participant Data Released"
    else
      flash[:error] = @search.errors.full_messages.to_sentence
    end

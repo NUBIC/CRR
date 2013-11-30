@@ -3,7 +3,7 @@
     %h5 Please Select Search Criteria
   =form_tag(admin_searches_path) do
     .row-fluid
-      =select_tag("search[study_id]",options_for_select(Study.all.collect{|s| [s.irb_number,s.id]}),:class=>"input-xlarge")
+      =select_tag("search[study_id]",options_for_select(Study.active.collect{|s| ["#{s.irb_number} - #{s.name}",s.id]}),:class=>"input-xlarge")
     .row-fluid
       =button_tag("Start",:class=>"btn btn-small btn-success")
       =link_to("Start",admin_searches_path, :class=>"btn btn-small btn-warning")

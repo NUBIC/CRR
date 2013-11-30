@@ -3,7 +3,9 @@
   %thead
     %tr
       %th IRB Number
+      %th Name
       %th Start Date
+      %th Warning Date
       %th End Date
       %th Notes
       %th 
@@ -11,7 +13,9 @@
     -participant.study_involvements.each do |si|
       %tr
         %td=si.study.irb_number
+        %td=si.study.name
         %td=si.start_date
+        %td=si.warning_date
         %td=si.end_date
         %td=si.notes
         %th=link_to "Edit",edit_admin_study_involvement_path(si),"data-async"=>true,"data-target"=>"#studies",:class=>"btn btn-primary btn-mini"

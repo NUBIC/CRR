@@ -30,7 +30,7 @@ class Search < ActiveRecord::Base
   end
 
   aasm_event :release_data do 
-    transitions :to => :data_released, :from=>[:data_requested],:on_transition=>[:process_release]
+    transitions :to => :data_released, :from=>[:data_requested,:new],:on_transition=>[:process_release]
   end
 
   after_create :create_condition_group
@@ -41,10 +41,13 @@ class Search < ActiveRecord::Base
   end
 
 
-  def process_release
-    result.each do |participant|
-      participant.study_involvements.create(:start_date=>Date.today,:study_id=>study.id) unless participant.do_not_contact
+  def process_release(params)
+    participants = Participant.find(params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact)
+    participants.each do |participant|
+      si = participant.study_involvements.create(:start_date=>params[:start_date],:end_date=>params[:end_date],:warning_date=>params[:warning_date],:study_id=>study.id) unless participant.do_not_contact?
     end
+    self.process_date = Date.today
+    self.save
   end
   def set_request_date
     self.request_date=Date.today

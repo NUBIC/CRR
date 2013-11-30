@@ -7,6 +7,7 @@
 #  participant_id :integer
 #  start_date     :date
 #  end_date       :date
+#  warning_date   :date
 #  notes          :text
 #  created_at     :datetime
 #  updated_at     :datetime
@@ -18,6 +19,10 @@ class StudyInvolvement < ActiveRecord::Base
 
   validates_presence_of :start_date, :participant, :study
   validate :end_date_cannot_be_before_start_date
+
+  scope :active, -> { where("start_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
+
+
 
   private
   def end_date_cannot_be_before_start_date

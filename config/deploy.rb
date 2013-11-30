@@ -7,7 +7,7 @@ set :application, "crr"
 
 # User
 set :use_sudo, false
-set :default_shell, "bash"
+#set :default_shell, "bash"
 ssh_options[:forward_agent] = true
 
 # Version control

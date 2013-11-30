@@ -28,6 +28,10 @@ class Study < ActiveRecord::Base
     state.eql?('active')
   end
 
+  def active_participants
+    study_involvements.active
+  end
+
   def search_display
     "#{id} - #{irb_number} - #{name}"
   end

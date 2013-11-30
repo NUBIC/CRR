@@ -18,6 +18,10 @@ module Aker::CrrUser
     !ActiveRecord::Base::User.find_by_netid(netid).nil?
   end
 
+  def active_participants
+   ActiveRecord::Base::User.find_by_netid(netid).active_participants
+  end
+
   def admin?
    ActiveRecord::Base::User.find_by_netid(netid).admin?
   end

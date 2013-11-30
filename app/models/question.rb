@@ -92,7 +92,7 @@ class Question < ActiveRecord::Base
 
   private
   def default_args
-    self.display_order= self.section.questions.size+1 if self.display_order.blank?
+    self.display_order= self.section.survey.questions.size+1 if self.display_order.blank?
     self.code = "q_#{display_order}" if self.code.blank?
   end
 

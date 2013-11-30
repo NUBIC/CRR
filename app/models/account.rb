@@ -21,6 +21,7 @@
 class Account < ActiveRecord::Base
   acts_as_authentic do |c|
     c.validate_email_field = false
+    c.logged_in_timeout = 10.minutes # default is 10.minutes
   end
 
   has_many :account_participants

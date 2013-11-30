@@ -15,24 +15,40 @@
   %h4 Search Results:
   .offset1
     %h5= "#{@search.result.size} participants returned"
-.row-fluid
-  -if current_user.admin? || current_user.data_manager?
-    %table.table.bordered
-      %thead
-        %tr
-          %th Name
-          %th Current Status
-          %th Last Contact
-      %tbody
-        -@search.result.each do |participant|
+-if current_user.admin? || current_user.data_manager?
+  = form_for @search, :url=>release_data_admin_search_path(@search) do |f|
+    -unless @search.data_released?
+      .row-fluid
+        .span3
+          =text_field_tag "start_date",Date.today,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        .span3
+          =text_field_tag "warning_date",1.week.from_now.to_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        .span3
+          =text_field_tag "end_date",2.weeks.from_now.to_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        .span3
+          =f.button "Release",:class=>"btn btn-small btn-success"
+    -else
+      .row-fluid
+        %h5="Data Released On: #{@search.process_date}"
+    .row-fluid
+      %table.table.bordered
+        %thead
           %tr
-            %td=link_to participant.name, admin_participant_path(participant)
-            %td=participant.on_study? ? "On study" : "Available"
-            %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
-    -if @search.data_requested?
-      =form_for @search,:url=>release_admin_search_path(@search) do |f|
-        =f.button "Release Results",:class=>"btn btn-mini btn-success"
-  -else
+            -unless @search.data_released?
+              %th= check_box_tag "selectall"
+            %th Name
+            %th Current Status
+            %th Last Contact
+        %tbody
+          -@search.result.each do |participant|
+            %tr
+              -unless @search.data_released?
+                %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
+              %td=link_to participant.name, admin_participant_path(participant)
+              %td=participant.on_study? ? "On study" : "Available"
+              %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+-else
+  .row-fluid
     -if @search.new?
       =form_for @search,:url=>request_admin_search_path(@search) do |f|
         =f.button "Request Results",:class=>"btn btn-mini btn-success"

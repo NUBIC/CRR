@@ -41,6 +41,3 @@
                   %li
                     %i.icon-folder-open
                     =link_to  "View Survey", response_set_path(participant.recent_response_set)
-                %li
-                  %i.icon-trash
-                  = link_to "Withdraw", withdraw_participant_path(participant), method: :patch, confirm: "Are you sure you want to withdraw?"

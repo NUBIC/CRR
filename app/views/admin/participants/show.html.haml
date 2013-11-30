@@ -65,6 +65,22 @@
             %tr
               %th.muted  Email
               %td=@participant.email
+    -if @participant.child?
+      .row-fluid
+        %h5 Primary Guardian
+        .span4
+          ="#{@participant.primary_guardian_first_name} #{@participant.primary_guardian_last_name}"
+        .span4
+          =@participant.primary_guardian_email
+        .span4
+          =@participant.primary_guardian_phone
+      .row-fluid
+        %h5 Secondary Guardian
+        .span4
+          ="#{@participant.secondary_guardian_first_name} #{@participant.secondary_guardian_last_name}"
+        .span4
+          =@participant.secondary_guardian_email
+        .span4
     .row-fluid
       %h5="Notes:"
       .offset1
@@ -81,14 +97,15 @@
   #contact_log.tab-pane
     = render :partial => 'partials/admin/participant_contact_logs', :locals => {:participant => @participant}
   #consent.tab-pane
-    .row-fluid
-      !=@participant.consent_signatures.last.consent.content
-    .row-fluid
-      -unless @participant.consent_signatures.last.entered_by.blank?
+    -unless @participant.consent_signatures.last.blank?
+      .row-fluid
+        !=@participant.consent_signatures.last.consent.content
+      .row-fluid
+        -unless @participant.consent_signatures.last.entered_by.blank?
+          .span4
+            ="Entered By: #{@participant.consent_signatures.last.entered_by}"
+        -unless @participant.consent_signatures.last.proxy_name.blank?
+          .span4
+            ="Given By: #{@participant.consent_signatures.last.proxy_name}"
         .span4
-          ="Entered By: #{@participant.consent_signatures.last.entered_by}"
-      -unless @participant.consent_signatures.last.proxy_name.blank?
-        .span4
-          ="Given By: #{@participant.consent_signatures.last.proxy_name}"
-      .span4
-        ="Given On: #{@participant.consent_signatures.last.date}"
+          ="Given On: #{@participant.consent_signatures.last.date}"

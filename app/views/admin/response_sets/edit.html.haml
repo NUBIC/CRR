@@ -7,13 +7,16 @@
     =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set) do |f|
       .row-fluid
         .tabbable.tabs-left
-          %ul.nav.nav-tabs.span2{}
+          %ul.nav.nav-tabs.span2{"data-spy"=>"affix","data-offset-top"=>"200"}
             -if @response_set.survey.sections.size > 1
               - @response_set.survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
             %li=button_tag "Save",:class=>"btn btn-mini btn-block btn-primary"
+            %br
             %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
-            %li=button_tag "Finish",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
+            -unless response_set.complete?
+              %br
+              %li=button_tag "Finish",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
           .tab-content.offset2
             - @response_set.survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}  

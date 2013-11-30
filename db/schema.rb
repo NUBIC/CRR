@@ -201,6 +201,7 @@ ActiveRecord::Schema.define(version: 20131120203306) do
     t.integer  "participant_id"
     t.date     "start_date"
     t.date     "end_date"
+    t.date     "warning_date"
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"

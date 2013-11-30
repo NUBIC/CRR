@@ -72,7 +72,7 @@ class Ability
         end
       else user.researcher?
         can [:show], Participant do |participant|
-          !(participant.studies.active & current_user.studies.active).empty?
+          !(participant.active_studies & current_user.active_studies).empty?
         end
       end
     else

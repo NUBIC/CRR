@@ -8,6 +8,10 @@ $(document).ready(function() {
     $($(this).attr('data-target')).load($(this).attr('href'));
   });
 
+  $('#selectall').on('click', function() {
+    $('.selectalloption').prop('checked', $(this).is(":checked"));
+  });
+
   $(".wyswig").livequery(function(){
     $(this).jqte();
     });

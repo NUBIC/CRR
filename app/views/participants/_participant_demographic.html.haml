@@ -1,4 +1,4 @@
-=form_for @participant, :html => {:class => 'participant_demographic'} do |f|
+=form_for @participant, :html => {:id => 'participant_demographic'} do |f|
   -if @participant.adult_proxy?
     = render :partial => 'participant_adult_proxy', :locals => {:f => f}
   -elsif @participant.child_proxy?
@@ -11,7 +11,7 @@
         .control-group
           =f.label :first_name, "First Name"
           .controls
-            =f.text_field  :first_name, :class => "required"
+            =f.text_field  :first_name, class: "required"
       .span4
         .control-group
           =f.label :midlle_name, "Middle Name"
@@ -21,7 +21,7 @@
         .control-group
           =f.label :last_name, "Last Name"
           .controls
-            =f.text_field  :last_name, :class => "required"
+            =f.text_field  :last_name, class: "required"
     .row-fluid
       %h4="Participant Address:"
     .row-fluid
@@ -50,13 +50,13 @@
         .control-group
           =f.label :zip
           .controls
-            =f.text_field  :zip
+            =f.text_field  :zip, class: "zipcode"
     .row-fluid
       .span4
         .control-group
           =f.label :email, "Email Address"
           .controls
-            =f.text_field  :email
+            =f.text_field  :email, class: "email"
       .span4
         .control-group
           =f.label :primary_phone, "Primary Phone Number"
@@ -66,7 +66,7 @@
         .control-group
           =f.label :secondary_phone, "Secondary Phone Number"
           .controls
-            =f.text_field  :secondary_phone
+            =f.text_field  :secondary_phone, class: "phone"
   -if current_user.active_participants.size > 1
     .relationship
       .row-fluid

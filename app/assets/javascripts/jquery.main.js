@@ -39,33 +39,41 @@ $(document).ready(function() {
          if (xhr.getResponseHeader('x-flash-notice') !== null){
              $(".notifications").notify({
                  message: { text: xhr.getResponseHeader('x-flash-notice') }
-                   }).show(); 
+                   }).show();
          }
          if (xhr.getResponseHeader('x-flash-errors') !== null){
            $(".errors").notify({
                message: { text: xhr.getResponseHeader('x-flash-errors') },
                type: "error"
-                 }).show(); 
+                 }).show();
          }
        }
    } );});
 
   // -------------- datatables --------------
   // index (my studies) datatable
-  $('#participant_list').livequery(function(){$(this).dataTable( { 
+  $('#participant_list').livequery(function(){$(this).dataTable( {
   "bScrollCollapse": true,
   "sPaginationType": "bootstrap",
   "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
   "sWrapper": "dataTables_wrapper form-inline",
-  "bFilter": true, 
+  "bFilter": true,
   "iDisplayLength": 30,
   "bLengthChange": false,
   "oLanguage": {
       "sSearch": "Filter: "
         }});});
+  $.validator.addMethod("phone", function(value, element) {
+    phone_number = value.replace(/\s+/g, "");
+    return this.optional(element) || phone_number.length > 9 &&
+    phone_number.match(/^(\+?1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+  }, "Please enter a valid phone number.");
+
+  $.validator.addMethod("zipcode", function(value, element) {
+    return this.optional(element) || /\d{5}-\d{4}$|^\d{5}$/.test(value);
+  }, "Please enter a valid US Zip Code.");
 
   // TODO: Move to the seperate js and simply
-  $(".participant_demographic").validate();
   $(".relationship").hide();
   $('input[id=participant_last_name]').blur(function() {
     $(".relationship").show();

@@ -20,7 +20,7 @@ class Answer < ActiveRecord::Base
   default_scope {order("display_order ASC")}
 
   validate :proper_question_type
-  validates_presence_of :text,:code
+  validates_presence_of :text,:code,:question
   validates_uniqueness_of :display_order, :scope => :question_id
   validates_uniqueness_of :text, :scope => :question_id
   validates_uniqueness_of :code, :scope => :question_id

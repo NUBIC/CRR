@@ -17,7 +17,6 @@
 class Question < ActiveRecord::Base
 
   belongs_to :section
-  belongs_to :question_group, :dependent => :destroy
   has_many   :answers, :dependent => :destroy
 
   #listed of types supported by data capture none caters to labels 

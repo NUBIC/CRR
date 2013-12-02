@@ -10,6 +10,7 @@ public/uploads/*
 public/results/*
 vendor/bundle/*
 app/stylesheets/.sass-cache/*
+surveys/*
 public/javascripts/cache/*.js
 public/stylesheets/compiled/*.css
 public/assets/*

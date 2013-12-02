@@ -7,7 +7,6 @@
 #  participant_id :integer
 #  effective_date :date
 #  completed_at   :datetime
-#  public         :boolean
 #  created_at     :datetime
 #  updated_at     :datetime
 #

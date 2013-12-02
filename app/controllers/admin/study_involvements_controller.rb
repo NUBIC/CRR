@@ -43,7 +43,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
  end
 
  def si_params
-   params.require(:study_involvement).permit(:participant_id,:study_id,:notes,:start_date,:end_date)
+   params.require(:study_involvement).permit(:participant_id,:study_id,:notes,:start_date,:end_date,:warning_date)
  end
 end
 

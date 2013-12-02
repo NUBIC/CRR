@@ -4,11 +4,15 @@
     .control-group
       =f.label :study_id,"Study"
       .controls
-        =f.select :study_id,Study.all.collect{|s| [s.irb_number,s.id]}
+        =f.select :study_id,Study.all.collect{|s| ["#{s.irb_number} - #{s.name}",s.id]}
     .control-group
       =f.label :start_date
       .controls
         =f.text_field :start_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+    .control-group
+      =f.label :warning_date
+      .controls
+        =f.text_field :warning_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
     .control-group
       =f.label :end_date
       .controls

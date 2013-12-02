@@ -5,21 +5,21 @@
     .control-group
       =f.label :primary_guardian_first_name, "First Name"
       .controls
-        =f.text_field :primary_guardian_first_name, :class => "required"
+        =f.text_field :primary_guardian_first_name, class: "required"
   .span4
     .control-group
       =f.label :primary_guardian_last_name, "Last Name"
       .controls
-        =f.text_field :primary_guardian_last_name, :class => "required"
+        =f.text_field :primary_guardian_last_name, class: "required"
   .span4
     .control-group
       =f.label :primary_guardian_email, "Email Address"
       .controls
-        =f.text_field :primary_guardian_email
+        =f.text_field :primary_guardian_email, class: "email"
     .control-group
       =f.label :primary_guardian_phone, "Phone Number"
       .controls
-        =f.text_field :primary_guardian_phone
+        =f.text_field :primary_guardian_phone, class: "phone"
 .row-fluid
   %h4="Secondary Guardian:"
 .row-fluid
@@ -27,18 +27,18 @@
     .control-group
       =f.label :secondary_guardian_first_name, "First Name"
       .controls
-        =f.text_field :secondary_guardian_first_name, :class => "required"
+        =f.text_field :secondary_guardian_first_name, class: "required"
   .span4
     .control-group
       =f.label :secondary_guardian_last_name, "Last Name"
       .controls
-        =f.text_field :secondary_guardian_last_name, :class => "required"
+        =f.text_field :secondary_guardian_last_name, class: "required"
   .span4
     .control-group
       =f.label :secondary_guardian_email, "Email Address"
       .controls
-        =f.text_field :secondary_guardian_email
+        =f.text_field :secondary_guardian_email, class: "email"
     .control-group
       =f.label :secondary_guardian_phone, "Phone Number"
       .controls
-        =f.text_field :secondary_guardian_phone
+        =f.text_field :secondary_guardian_phone, class: "phone"

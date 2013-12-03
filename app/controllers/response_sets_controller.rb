@@ -4,6 +4,7 @@ class ResponseSetsController < PublicController
   def new
     @participant = Participant.find(params[:participant_id])
     @response_set = @participant.response_sets.new
+    authorize! :new, @response_set
     @surveys = Survey.all.select{|s| s.active?}
     respond_to do |format|
       format.js {render :layout => false}
@@ -13,6 +14,7 @@ class ResponseSetsController < PublicController
   def create
     participant = Participant.find(params[:participant_id])
     @response_set= participant.response_sets.new(response_set_params)
+    authorize! :create, @response_set
     if @response_set.save
       participant.start_survey! if participant.survey?
       redirect_to(edit_response_set_path(@response_set))
@@ -24,17 +26,20 @@ class ResponseSetsController < PublicController
 
   def show
     @response_set= ResponseSet.find(params[:id])
+    authorize! :show, @response_set
     @survey = @response_set.survey
   end
 
   def edit
     @response_set= ResponseSet.find(params[:id]).reload
+    authorize! :edit, @response_set
     @survey = @response_set.survey
     @section = @survey.sections.find_by_id(params[:section_id]).nil? ? @survey.sections.first : @survey.sections.find_by_id(params[:section_id])
   end
 
   def update
     @response_set= ResponseSet.find(params[:id])
+    authorize! :update, @response_set
     @response_set.update_attributes(response_set_params)
     participant = @response_set.participant
     if @response_set.save

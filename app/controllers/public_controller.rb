@@ -1,6 +1,16 @@
 class PublicController < ApplicationController
   layout "layouts/public"
   helper_method :current_user
+
+  rescue_from CanCan::AccessDenied do |exception|
+    flash[:error]="Access Denied"
+    if current_user
+      redirect_to public_logout_url
+    else
+      redirect_to public_login_url
+    end
+  end
+
   private
 
   def current_account_session
@@ -15,7 +25,7 @@ class PublicController < ApplicationController
   def require_account
     if current_user.blank?
       store_location
-      flash[:notice] = "Please login or create a new account"
+      flash[:info] = "Please login or create a new account"
       redirect_to public_login_url
       return false
     end

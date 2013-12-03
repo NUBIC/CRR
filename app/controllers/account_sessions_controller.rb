@@ -18,8 +18,7 @@ class AccountSessionsController < PublicController
 
     respond_to do |format|
       if @account_session.save
-        format.html { redirect_to dashboard_path
-                      flash[:notice] = "Login Successful" }
+        format.html { redirect_to dashboard_path }
       else
         format.html { render :action => "new" }
       end
@@ -31,6 +30,5 @@ class AccountSessionsController < PublicController
     @account_session = AccountSession.find
     @account_session.destroy
     redirect_to :public_login
-    flash[:notice] = "Successfully logged out"
   end
 end

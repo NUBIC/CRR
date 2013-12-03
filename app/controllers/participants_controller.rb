@@ -1,9 +1,8 @@
 class ParticipantsController < PublicController
-  before_filter :require_account
-
-
+  # before_filter :require_account
   def enroll
     @participant = Participant.find(params[:id])
+    authorize! :enroll, @participant
     if @participant.survey?
       create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?
@@ -13,6 +12,7 @@ class ParticipantsController < PublicController
 
   def consent
     @participant = Participant.find(params[:id])
+    authorize! :consent , @participant
   end
 
   def search
@@ -26,6 +26,7 @@ class ParticipantsController < PublicController
     @account = Account.find(params[:account_id])
     @participant = Participant.create!
     account_participant = AccountParticipant.new(:participant => @participant, :account => @account)
+    authorize! :create, @participant
     account_participant.proxy = true if params[:proxy] == "true"
     account_participant.save
     if params[:child] == "true"
@@ -41,18 +42,12 @@ class ParticipantsController < PublicController
 
   def show
     @participant = Participant.find(params[:id])
-  end
-
-  def edit
-    @participant = Participant.find(params[:id])
-    respond_to do |format|
-      format.html
-      format.js {render :layout=>false}
-    end
+    authorize! :show, @participant
   end
 
   def update
     @participant =  Participant.find(params[:id])
+    authorize! :update, @participant
     @participant.update_attributes(participant_params)
     if @participant.save
       if participant_relationship_params[:relationships]
@@ -76,16 +71,11 @@ class ParticipantsController < PublicController
 
   def consent_signature
     @participant = Participant.find(params[:id])
+    authorize! :consent_signature, @participant
     params[:consent_response] == 'accept' ? @participant.sign_consent!(nil,consent_signature_params) : @participant.decline_consent!
     respond_to do |format|
       format.html { redirect_to enroll_participant_path(@participant) }
     end
-  end
-
-  def withdraw
-    @participant = Participant.find(params[:id])
-    @participant.withdraw!
-    redirect_to enroll_participant_path(@participant)
   end
 
   def participant_params

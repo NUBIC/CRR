@@ -5,6 +5,7 @@ class AccountsController < PublicController
 
   def dashboard
     @account = current_user
+    authorize! :dashboard, @account
     respond_to do |format|
       format.html
     end
@@ -19,6 +20,7 @@ class AccountsController < PublicController
 
   def edit
     @account = Account.find(params[:id])
+    authorize! :edit, @account
   end
 
   def create
@@ -35,6 +37,7 @@ class AccountsController < PublicController
 
   def update
     @account = Account.find(params[:id])
+    authorize! :update, @account
     @account.update_attributes(account_params)
     respond_to do |format|
       if @account.save
@@ -49,6 +52,7 @@ class AccountsController < PublicController
 
   def destroy
     @account = Account.find(params[:id])
+    authorize! :destroy, @account
     @account.destroy
     redirect_to accounts_path
   end

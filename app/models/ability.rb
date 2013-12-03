@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
   def initialize(user)
-    if user.is_a?(Aker::User) 
+    if user.is_a?(Aker::User)
       if user.admin?
         #control access for surveys
         can [:preview,:new,:show,:create,:deactivate,:activate], Survey do |survey|
@@ -37,7 +37,7 @@ class Ability
           response_set.survey.active? and !response_set.complete?
         end
         can [:new,:create,:destroy], ResponseSet do |response_set|
-          response_set.survey.active? 
+          response_set.survey.active?
         end
         can [:new,:create,:edit,:update,:destroy,:show,:activate,:deactivate], Study do |study|
           true
@@ -74,6 +74,18 @@ class Ability
         can [:show], Participant do |participant|
           !(participant.study_involvements.active.collect{|si| si.study}.flatten & user.studies.active).empty?
         end
+      end
+    elsif user.is_a?(Account)
+      can [:update, :edit, :dashboard, :destroy], Account do |account|
+        account == user
+      end
+
+      can [:create, :update, :enroll, :consent, :consent_signature, :show], Participant do |participant|
+        participant.try(:account) == user
+      end
+
+      can [:new, :create, :edit, :update, :show], ResponseSet do |response_set|
+        response_set.try(:participant).try(:account) == user
       end
     else
 

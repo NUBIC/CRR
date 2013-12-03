@@ -58,6 +58,5 @@ namespace :deploy do
 
 end
 
-# after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
-after 'deploy:update_code', 'deploy:cleanup'
-#after 'deploy:finalize_update', 'deploy:permissions'
+#after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
+after 'deploy:finalize_update', 'deploy:permissions'

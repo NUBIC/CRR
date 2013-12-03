@@ -2,7 +2,7 @@ class ParticipantsController < PublicController
   # before_filter :require_account
   def enroll
     @participant = Participant.find(params[:id])
-    authorize! :enroll, @participant
+    # authorize! :enroll, @participant
     if @participant.survey?
       create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?
@@ -24,16 +24,15 @@ class ParticipantsController < PublicController
 
   def create
     @account = Account.find(params[:account_id])
-    @participant = Participant.create
-    # account_participant = @participant.account_participant.new(account: @account)
+    @participant = Participant.create!
     account_participant = AccountParticipant.new(:participant => @participant, :account => @account)
-    authorize! :create, @participant
+    # authorize! :create, @participant
     account_participant.proxy = true if params[:proxy] == "true"
     if account_participant.save
-      # if params[:child] == "true"
-      #   @participant.child = true
-      #   @participant.save
-      # end
+      if params[:child] == "true"
+        @participant.child = true
+        @participant.save
+      end
       if @account.other_participants(@participant).size > 0
         @participant.copy_from(@account.other_participants(@participant).last)
         @participant.save

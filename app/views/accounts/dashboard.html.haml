@@ -14,7 +14,7 @@
       =form_tag(participants_path, :method => 'post') do
         = hidden_field_tag "account_id", @account.id
         = hidden_field_tag "proxy", true
-        = hidden_field_tag "participant[child]", true
+        = hidden_field_tag "child", true
         = submit_tag('Child', :class=>"btn")
     .span1
       =form_tag(participants_path, :method => 'post') do

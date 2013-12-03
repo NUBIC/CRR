@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 require 'bundler/capistrano'
-#require 'bcdatabase'
+require 'bcdatabase'
 load 'deploy/assets'
 
-#bcconf = Bcdatabase.load["crr_deploy", :crr] # Using the bcdatabase gem for server config
+bcconf = Bcdatabase.load["crr_deploy", :crr] # Using the bcdatabase gem for server config
 set :application, "crr"
 
 # User
@@ -15,7 +15,7 @@ ssh_options[:forward_agent] = true
 default_run_options[:pty]   = true # to get the passphrase prompt from git
 
 set :scm, "git"
-set :repository, "ssh://code.bioinformatics.northwestern.edu/git/audiology_registry.git" #bcconf["repo"]
+set :repository, bcconf["repo"] #"ssh://code.bioinformatics.northwestern.edu/git/audiology_registry.git"
 set :branch do
   # http://nathanhoad.net/deploy-from-a-git-tag-with-capistrano
   puts "Tags: " + `git tag`.split("\n").join(", ")
@@ -34,7 +34,7 @@ end
 
 desc "Deploy to staging"
 task :staging do
-  set :app_server, "crr-dev.soc.northwestern.edu"#,"clinical-rails-staging2.nubic.northwestern.edu" #bcconf["staging_app_server"]
+  set :app_server, bcconf["staging_app_server"] #"clinical-rails-staging2.nubic.northwestern.edu"
   set :rails_env, "staging"
   set :prefix_env, "/#{application}"
   set_roles

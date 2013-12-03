@@ -34,7 +34,7 @@ end
 
 desc "Deploy to staging"
 task :staging do
-  set :app_server, "clinical-rails-staging2.nubic.northwestern.edu" #bcconf["staging_app_server"]
+  set :app_server, "crr-dev.soc.northwestern.edu"#,"clinical-rails-staging2.nubic.northwestern.edu" #bcconf["staging_app_server"]
   set :rails_env, "staging"
   set :prefix_env, "/#{application}"
   set_roles
@@ -58,5 +58,5 @@ namespace :deploy do
 
 end
 
-after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
-#after 'deploy:finalize_update', 'deploy:permissions'
+#after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
+after 'deploy:finalize_update', 'deploy:permissions'

@@ -38,6 +38,6 @@ AudiologyRegistry::Application.configure do
     static = Aker::Authorities::Static.from_file("#{Rails.root}/spec/test_users.yml")
     crr = Aker::Authorities::Crr.new
     authority static,crr
-    central '/etc/nubic/bcsec-test.yml'
+    # central '/etc/nubic/bcsec-test.yml'
   end
 end

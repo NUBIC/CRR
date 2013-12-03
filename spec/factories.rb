@@ -71,7 +71,7 @@ FactoryGirl.define do
   factory :response_set do |r|
     r.association :participant
   end
-  factory :response do |r| 
+  factory :response do |r|
     r.association :response_set
     r.association :question
     r.association :answer
@@ -81,6 +81,11 @@ FactoryGirl.define do
     a.email "test@test.com"
     a.password "1234"
     a.password_confirmation "1234"
+  end
+
+  factory :account_participant do |ap|
+    ap.association :account, factory: :account
+    ap.association :participant, factory: :participant
   end
 
   factory :consent do |c|

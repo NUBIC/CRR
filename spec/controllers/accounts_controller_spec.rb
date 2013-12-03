@@ -4,14 +4,6 @@ describe AccountsController do
   let(:valid_attributes) { { email: "test@test.com", password: "1234", password_confirmation: "1234" } }
   let(:invalid_attributes) { { email: "test", password: "1234", password_confirmation: "1234" } }
 
-  # describe "GET show" do
-  #   it "assigns the requested account as @account" do
-  #     account = Account.create! valid_attributes
-  #     get :show, {:id => account.to_param}, valid_session
-  #     exepect(assigns(:account)).to eq(account)
-  #   end
-  # end
-
   describe "GET new" do
     it "assigns a new account as @account" do
       get :new, {}, valid_attributes
@@ -59,7 +51,7 @@ describe AccountsController do
   describe "PUT update" do
     let(:account) { FactoryGirl.create(:account) }
     describe "with valid params" do
-      it "updates the requested account" do 
+      it "updates the requested account" do
         put :update, {:id => account.id, :account => valid_attributes}
       end
 

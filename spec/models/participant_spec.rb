@@ -38,8 +38,8 @@ describe Participant do
     participant.should_not be_nil
   end
 
-  it { should validate_presence_of :first_name }
-  it { should validate_presence_of :last_name }
+  it { should validate_presence_of(:first_name).on(:update) }
+  it { should validate_presence_of(:last_name).on(:update) }
   it { should have_many(:origin_relationships) }
   it { should have_many(:destination_relationships) }
   it { should have_many(:study_involvements) }
@@ -53,7 +53,7 @@ describe Participant do
       participant.name.should == "Brian Lee"
     end
   end
-  
+
   describe '#address' do
     [
       ['123 Main St', 'Apt #111', 'Chicago', 'IL', '12345', "prints out correctly with all field", "123 Main St Apt #111 Chicago,IL 12345"],
@@ -165,6 +165,73 @@ describe Participant do
     end
   end
 
+  context 'proxy' do
+    let(:account) { FactoryGirl.create(:account) }
+
+    describe '#proxy?' do
+      it "retruns true if account_participant has proxy" do
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        participant.proxy?.should be_true
+      end
+
+      it "retruns false if account_participant has proxy" do
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        participant.proxy?.should be_false
+      end
+    end
+    describe '#adult_proxy?' do
+      it "retruns true if account_participant has proxy and participant is not child" do
+        participant.child = false
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        participant.adult_proxy?.should be_true
+      end
+
+      it "retruns false if account_participant has proxy and participant is child" do
+        participant.child = true
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        participant.adult_proxy?.should be_false
+      end
+
+      it "retruns false if account_participant has no proxy and participant is child" do
+        participant.child = true
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        participant.adult_proxy?.should be_false
+      end
+
+      it "retruns false if account_participant has no proxy and participant is not child" do
+        participant.child = false
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        participant.adult_proxy?.should be_false
+      end
+    end
+
+    describe '#child_proxy?' do
+      it "retruns true if account_participant has proxy and participant is child" do
+        participant.child = true
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        participant.child_proxy?.should be_true
+      end
+
+      it "retruns false if account_participant has proxy and participant is not child" do
+        participant.child = false
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        participant.child_proxy?.should be_false
+      end
+
+      it "retruns false if account_participant has no proxy and participant is child" do
+        participant.child = true
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        participant.child_proxy?.should be_false
+      end
+
+      it "retruns false if account_participant has no proxy and participant is not child" do
+        participant.child = false
+        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        participant.child_proxy?.should be_false
+      end
+    end
+  end
+
   describe '#on_study?' do
     let(:study) { FactoryGirl.create(:study,:state=>'active') }
 
@@ -187,13 +254,98 @@ describe Participant do
       FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 4.days.ago, end_date: 2.days.ago)
       participant.on_study?.should be_false
     end
+
     it "should return false if association dates are within range but study is inactive" do
       study.state='inactive'
       study.save
       study.reload
       FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
       participant.on_study?.should be_false
+    end
+  end
 
+  describe '#open?' do
+    [:consent, :demographics, :surevey, :survey_started].each do |st|
+      it "should return true if participant has state '#{st.to_s}'" do
+        participant.stage = st
+        participant.open?.should be_true
+      end
+    end
+  end
+
+  describe '#consented?' do
+    [:demographics, :completed, :survey, :survey_started, :verification_needed, :enrolled].each do |st|
+      it "should return true if participant has state '#{st.to_s}' and has consent" do
+        FactoryGirl.create(:consent_signature, consent: FactoryGirl.create(:consent), participant: participant)
+        participant.stage = st
+        participant.consented?.should be_true
+      end
+    end
+
+    [:demographics, :completed, :survey, :survey_started, :verification_needed, :enrolled].each do |st|
+      it "should return false if participant has state '#{st.to_s}' but no consent" do
+        participant.stage = st
+        participant.consented?.should be_false
+      end
+    end
+  end
+
+  describe '#completed?' do
+    [:verification_needed, :enrolled].each do |st|
+      it "should return true if participant has state '#{st.to_s}'" do
+        participant.stage = st
+        participant.completed?.should be_true
+      end
+    end
+  end
+
+  describe '#inactive?' do
+    [:new, :consent, :demographics].each do |st|
+      it "should return true if participant has state '#{st.to_s}'" do
+        participant.stage = st
+        participant.inactive?.should be_true
+      end
+    end
+  end
+
+  describe '#copy_from' do
+    let(:other) { FactoryGirl.create(:participant, address_line1: '123 Main St', address_line2: 'Apt #123', city: 'Chicago',
+      state: 'IL', zip: '12345', email: 'test@test.com', primary_phone: '123-456-7890', secondary_phone: '123-345-6789')}
+
+    before(:each) do
+      participant.copy_from(other)
+    end
+
+    it "copies 'address_line1' from other participant" do
+      participant.address_line1.should == other.address_line1
+    end
+
+    it "copies 'address_line2' from other participant" do
+      participant.address_line2.should == other.address_line2
+    end
+
+    it "copies 'city' from other participant" do
+      participant.city.should == other.city
+    end
+
+    it "copies 'state' from other participant" do
+      participant.state.should == other.state
+    end
+
+    it "copies 'zip' from other participant" do
+      participant.zip.should == other.zip
+    end
+
+    it "copies 'email' from other participant" do
+      participant.email.should == other.email
+    end
+
+    it "copies 'primary_phone' from other participant" do
+      participant.primary_phone.should == other.primary_phone
+    end
+
+    it "copies 'secondary_phone' from other participant" do
+      participant.secondary_phone.should == other.secondary_phone
     end
   end
 end

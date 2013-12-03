@@ -43,15 +43,12 @@ class Participant < ActiveRecord::Base
   has_one :account_participant
   has_one :account, :through => :account_participant
 
-  validates_presence_of :first_name, :last_name, on: :update
   validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
   validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
   validates :zip, :numericality => true, allow_blank: true, :length => { :maximum => 5 }
 
-  after_create :signup!
   aasm_column :stage
-  aasm_state :new, :initial => true
-  aasm_state :consent
+  aasm_state :consent, :initial => true
   aasm_state :consent_denied
   aasm_state :demographics
   aasm_state :survey
@@ -60,16 +57,12 @@ class Participant < ActiveRecord::Base
   aasm_state :enrolled
   aasm_state :withdrawn
 
-  aasm_event :signup do
-    transitions :to => :consent, :from =>:new
-  end
-
   aasm_event :sign_consent do
     transitions :to => :demographics, :from => :consent, :on_transition => :create_consent_signature
   end
 
   aasm_event :take_survey do
-    transitions :to => :survey, :from => :demographics
+    transitions :to => :survey, :from => :demographics, :guard => :demographics_info_completed?
   end
 
   aasm_event :start_survey do
@@ -187,6 +180,10 @@ class Participant < ActiveRecord::Base
 
   def open_public_response_sets
     response_sets.where(:completed_at=>nil,:public=>true)
+  end
+
+  def demographics_info_completed?
+    !(first_name.blank? or last_name.blank?)
   end
 
   def copy_from(participant)

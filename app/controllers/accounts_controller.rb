@@ -1,8 +1,4 @@
 class AccountsController < PublicController
-  def index
-    @accounts = Account.all
-  end
-
   def dashboard
     @account = current_user
     authorize! :dashboard, @account

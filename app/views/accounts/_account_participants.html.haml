@@ -37,6 +37,10 @@
                   %li
                     %i.icon-folder-open
                     =link_to "View Consent", consent_participant_path(participant)
+                - if participant.active?
+                  %li
+                    %i.icon-folder-open
+                    =link_to "View Information", participant_path(participant)
                 - if participant.completed?
                   %li
                     %i.icon-folder-open

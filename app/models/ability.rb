@@ -80,7 +80,7 @@ class Ability
         account == user
       end
 
-      can [:create, :update, :enroll, :consent, :consent_signature, :show], Participant do |participant|
+      can [:update, :enroll, :consent, :show, :create, :consent_signature], Participant do |participant|
         participant.try(:account) == user
       end
 

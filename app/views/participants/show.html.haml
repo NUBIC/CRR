@@ -1,2 +1,82 @@
 .alert.alert-success
   %h4=@participant.name
+.row-fluid
+  .row-fluid
+    .span6
+      %h5 Participant Information
+      %table.table
+        %tbody
+          %tr
+            %th.muted First Name:
+            %td= @participant.first_name
+          %tr
+            %th.muted Middle Name:
+            %td= @participant.middle_name
+          %tr
+            %th.muted Last Name:
+            %td= @participant.last_name
+    .span6
+      %h5 Participant Address
+      %table.table
+        %tbody
+          %tr
+            %th.muted Address
+            %td= @participant.address
+          %tr
+            %th.muted  Primary Phone
+            %td=@participant.primary_phone
+          %tr
+            %th.muted  Secondary Phone
+            %td=@participant.secondary_phone
+          %tr
+            %th.muted  Email
+            %td=@participant.email
+  -if @participant.child?
+    .row-fluid
+      .span6
+        %h5 Primary Guardian
+        %table.table
+          %tbody
+            %tr
+              %th.muted First Name:
+              %td= @participant.primary_guardian_first_name
+            %tr
+              %th.muted Last Name:
+              %td= @participant.primary_guardian_last_name
+            %tr
+              %th.muted Email Address:
+              %td= @participant.primary_guardian_email
+            %tr
+              %th.muted Phone Number:
+              %td= @participant.primary_guardian_phone
+      .span6
+        %h5 Secondary Guardian
+        %table.table
+          %tbody
+            %tr
+              %th.muted First Name:
+              %td= @participant.secondary_guardian_first_name
+            %tr
+              %th.muted Last Name:
+              %td= @participant.secondary_guardian_last_name
+            %tr
+              %th.muted Email Address:
+              %td= @participant.secondary_guardian_email
+            %tr
+              %th.muted Phone Number:
+              %td= @participant.secondary_guardian_phone
+  -if @participant.relationships.size > 0
+    .row-fluid
+      %h5 Realtionships
+    %table.table.bordered
+      %thead
+        %tr
+          %th Name
+          %th Relationship
+      %tbody
+        -@participant.relationships.each do |relationship|
+          %tr
+            %td
+              -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
+              =link_to p.name, participant_path(p)
+            %td=relationship.origin.eql?(@participant) ? relationship.category : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category]

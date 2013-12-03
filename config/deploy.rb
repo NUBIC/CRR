@@ -24,7 +24,9 @@ set :branch do
   ref.empty? ? "master" : ref
 end
 set :deploy_to, bcconf["deploy_to"]
-set :deploy_via, :remote_cache
+# set :deploy_via, :remote_cache
+set :deploy_via, :copy
+set :copy_cache, true
 
 task :set_roles do
   role :app, app_server

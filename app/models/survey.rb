@@ -13,7 +13,7 @@
 #
 
 class Survey < ActiveRecord::Base
-  has_many :response_sets,:dependent=>:destroy
+  has_many :response_sets,:dependent=>:restrict
   #has_many :questions,:dependent=>:destroy
   has_many :sections, :dependent=>:destroy
 

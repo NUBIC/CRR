@@ -14,7 +14,7 @@ ssh_options[:forward_agent] = true
 default_run_options[:pty]   = true # to get the passphrase prompt from git
 
 set :scm, "git"
-set :repository, "ssh://daw286@code.bioinformatics.northwestern.edu/git/audiology_registry.git" #bcconf["repo"]
+set :repository, "ssh://code.bioinformatics.northwestern.edu/git/audiology_registry.git" #bcconf["repo"]
 set :branch do
   # http://nathanhoad.net/deploy-from-a-git-tag-with-capistrano
   puts "Tags: " + `git tag`.split("\n").join(", ")

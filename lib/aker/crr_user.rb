@@ -14,6 +14,10 @@ module Aker::CrrUser
   end
 
 
+  def active_study_involvements
+   ActiveRecord::Base::User.find_by_netid(netid).active_study_involvements
+  end
+
   def has_system_access?
     !ActiveRecord::Base::User.find_by_netid(netid).nil?
   end

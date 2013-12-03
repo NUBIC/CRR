@@ -21,6 +21,7 @@ class StudyInvolvement < ActiveRecord::Base
   validate :end_date_cannot_be_before_start_date
 
   scope :active, -> { where("start_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
+  scope :warning, -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
 
 
 

@@ -44,16 +44,16 @@
     .control-group
       =f.label :zip
       .controls
-        =f.text_field  :zip
+        =f.text_field  :zip, class: "zipcode"
 .row-fluid
   .span4
     .control-group
       =f.label :primary_phone, "Primary Phone Number"
       .controls
-        =f.text_field  :primary_phone
+        =f.text_field  :primary_phone, class: "phone"
   .span4
     .control-group
       =f.label :secondary_phone, "Secondary Phone Number"
       .controls
-        =f.text_field  :secondary_phone
+        =f.text_field  :secondary_phone, class: "phone"
 = render :partial => 'participant_guardian', :locals => {:f => f}

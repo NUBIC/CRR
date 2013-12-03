@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
     studies.active.collect{|s| s.active_participants}.flatten.uniq
   end
 
+  def active_study_involvements
+    studies.active.collect{|s| s.study_involvements.active}.flatten
+  end
+
   private
 
   def check_netid

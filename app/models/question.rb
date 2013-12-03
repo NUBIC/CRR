@@ -3,6 +3,7 @@
 # Table name: questions
 #
 #  id            :integer          not null, primary key
+#  survey_id     :integer
 #  section_id    :integer
 #  text          :text
 #  code          :string(255)

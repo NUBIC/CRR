@@ -6,7 +6,7 @@ class SurveyParser
     survey.save
     raise survey.errors.full_messages.to_sentence unless survey.save
     survey_node.sections.each do |section_node|
-      section = survey.sections.new(title: section_node.title,display_order: section_node.display_order)
+      section = survey.multiple_section? ? survey.sections.new(title: section_node.title,display_order: section_node.display_order) : survey.sections.first
       survey.destroy unless section.save
       raise section.errors.full_messages.to_sentence unless section.save
       section.reload

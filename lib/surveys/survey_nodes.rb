@@ -33,10 +33,10 @@ module SurveyNodes
       question_node.code = question.code
       question_node.display_order = question.display_order
       question_node.response_type = question.response_type
-      qustion_node.is_mandatory = question.is_mandatory
-      qusetion_node.answers = []
+      question_node.is_mandatory = question.is_mandatory
+      question_node.answers = []
       question.answers.each do |answer|
-        question_node.answers << AnswerNode.new(answer)
+        question_node.answers << AnswerNode.from_active_record(answer)
       end
       return question_node
     end
@@ -52,7 +52,7 @@ module SurveyNodes
       section_node.display_order = section.display_order
       section_node.questions=[]
       section.questions.each do |question|
-        section_node..questions << QuestionNode.new(question)
+        section_node.questions << QuestionNode.from_active_record(question)
       end
       return section_node
     end
@@ -73,7 +73,7 @@ module SurveyNodes
       survey_node.multiple_section = survey.multiple_section
       survey_node.sections = []
       survey.sections.each do |section|
-        survey_node.sections << SectionNode.new(section)
+        survey_node.sections << SectionNode.from_active_record(section)
       end
       return survey_node
     end

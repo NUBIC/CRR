@@ -24,7 +24,7 @@ class SurveyParser
     end
   end
   def self.to_xml(survey)
-    survey_node = SurveyNodes::SurveyNode.new(survey)
+    survey_node = SurveyNodes::SurveyNode.from_active_record(survey)
     survey_node.to_xml
   end
 end

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'bundler/capistrano'
-require 'bcdatabase'
+#require 'bcdatabase'
+load 'deploy/assets'
 
 #bcconf = Bcdatabase.load["crr_deploy", :crr] # Using the bcdatabase gem for server config
 set :application, "crr"
@@ -35,6 +36,7 @@ desc "Deploy to staging"
 task :staging do
   set :app_server, "clinical-rails-staging2.nubic.northwestern.edu" #bcconf["staging_app_server"]
   set :rails_env, "staging"
+  set :prefix_env, "/#{application}"
   set_roles
 end
 
@@ -56,4 +58,5 @@ namespace :deploy do
 
 end
 
-after 'deploy:finalize_update', 'deploy:permissions'
+after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
+#after 'deploy:finalize_update', 'deploy:permissions'

@@ -4,9 +4,7 @@ class Ability
     if user.is_a?(Aker::User)
       if user.admin?
         #control access for surveys
-        can [:preview,:new,:show,:create,:deactivate,:activate], Survey do |survey|
-          true
-        end
+        can [:preview,:new,:show,:create,:deactivate,:activate,:index], Survey
 
         can [:edit,:update,:destroy], Survey do |survey|
           survey.inactive?
@@ -39,9 +37,7 @@ class Ability
         can [:new,:create,:destroy], ResponseSet do |response_set|
           response_set.survey.active?
         end
-        can [:new,:create,:show,:activate,:deactivate], Consent do |consent|
-          true
-        end
+        can [:new,:create,:show,:activate,:deactivate,:index], Consent 
         can [:edit,:update,:destroy], Consent do |consent|
           consent.editable?
         end

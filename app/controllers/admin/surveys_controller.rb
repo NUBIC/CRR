@@ -1,5 +1,6 @@
 class Admin::SurveysController < Admin::AdminController
   def index
+   authorize! :index, Survey
     respond_to do |format|
       format.html
       format.js {render :layout => false}

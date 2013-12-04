@@ -7,6 +7,7 @@
 #  participant_id :integer
 #  effective_date :date
 #  completed_at   :datetime
+#  public         :boolean
 #  created_at     :datetime
 #  updated_at     :datetime
 #
@@ -19,7 +20,7 @@ class ResponseSet < ActiveRecord::Base
   belongs_to :survey
 
 
-  scope :completed, :conditions => ['response_sets.completed_at IS NOT NULL']
+  scope :completed, -> { where("response_sets.completed_at IS NOT NULL") }
 
 
   # Validations

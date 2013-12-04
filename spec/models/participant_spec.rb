@@ -38,8 +38,6 @@ describe Participant do
     participant.should_not be_nil
   end
 
-  it { should validate_presence_of(:first_name).on(:update) }
-  it { should validate_presence_of(:last_name).on(:update) }
   it { should have_many(:origin_relationships) }
   it { should have_many(:destination_relationships) }
   it { should have_many(:study_involvements) }

@@ -2,20 +2,22 @@
   %h4=@participant.name
 %ul.nav.nav-tabs
   %li{:class=>'active'}=link_to 'Basics','#basics',"data-toggle"=>'tab'
-  %li=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
-  %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
-  %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
-  %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
-  %li=link_to 'Consent','#consent',"data-toggle"=>'tab'
+  -if current_user.admin? || current_user.data_manager?
+    %li=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
+    %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
+    %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
+    %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
+    %li=link_to 'Consent','#consent',"data-toggle"=>'tab'
 .tab-content
   #basics.tab-pane.active
     .row-fluid
-      -if @participant.verification_needed?
-        =form_for @participant, :url=>verify_admin_participant_path do |f|
+      -if can? :edit, @participant
+        -if @participant.verification_needed?
+          =form_for @participant, :url=>verify_admin_participant_path do |f|
+            =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
+            =f.button "Verify Participant",:class=>"btn btn-mini btn-success"
+        -else
           =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
-          =f.button "Verify Participant",:class=>"btn btn-mini btn-success"
-      -else
-        =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
     .row-fluid
       .span4
         %h5 Identifiers
@@ -85,27 +87,29 @@
       %h5="Notes:"
       .offset1
         =@participant.notes
-    .row-fluid
-      =form_for @participant, :url=>withdraw_admin_participant_path do |f|
-        =f.button "Withdraw Participant",:class=>"btn btn-mini btn-danger"
-  #instruments.tab-pane
-    = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
-  #studies.tab-pane
-    = render :partial => 'partials/admin/participant_studies', :locals => {:participant => @participant}
-  #relationships.tab-pane
-    = render :partial => 'partials/admin/participant_relationships', :locals => {:participant => @participant}
-  #contact_log.tab-pane
-    = render :partial => 'partials/admin/participant_contact_logs', :locals => {:participant => @participant}
-  #consent.tab-pane
-    -unless @participant.consent_signatures.last.blank?
+    -if can? :edit, @participant
       .row-fluid
-        !=@participant.consent_signatures.last.consent.content
-      .row-fluid
-        -unless @participant.consent_signatures.last.entered_by.blank?
+        =form_for @participant, :url=>withdraw_admin_participant_path do |f|
+          =f.button "Withdraw Participant",:class=>"btn btn-mini btn-danger"
+  -if current_user.admin? || current_user.data_manager?
+    #instruments.tab-pane
+      = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
+    #studies.tab-pane
+      = render :partial => 'partials/admin/participant_studies', :locals => {:participant => @participant}
+    #relationships.tab-pane
+      = render :partial => 'partials/admin/participant_relationships', :locals => {:participant => @participant}
+    #contact_log.tab-pane
+      = render :partial => 'partials/admin/participant_contact_logs', :locals => {:participant => @participant}
+    #consent.tab-pane
+      -unless @participant.consent_signatures.last.blank?
+        .row-fluid
+          !=@participant.consent_signatures.last.consent.content
+        .row-fluid
+          -unless @participant.consent_signatures.last.entered_by.blank?
+            .span4
+              ="Entered By: #{@participant.consent_signatures.last.entered_by}"
+          -unless @participant.consent_signatures.last.proxy_name.blank?
+            .span4
+              ="Given By: #{@participant.consent_signatures.last.proxy_name}"
           .span4
-            ="Entered By: #{@participant.consent_signatures.last.entered_by}"
-        -unless @participant.consent_signatures.last.proxy_name.blank?
-          .span4
-            ="Given By: #{@participant.consent_signatures.last.proxy_name}"
-        .span4
-          ="Given On: #{@participant.consent_signatures.last.date}"
+            ="Given On: #{@participant.consent_signatures.last.date}"

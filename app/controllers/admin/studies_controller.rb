@@ -1,6 +1,7 @@
 class Admin::StudiesController < Admin::AdminController
  def index
    @studies = Study.all
+   authorize! :index, Study
  end
 
  def search

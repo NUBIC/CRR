@@ -4,9 +4,7 @@ class Ability
     if user.is_a?(Aker::User)
       if user.admin?
         #control access for surveys
-        can [:preview,:new,:show,:create,:deactivate,:activate], Survey do |survey|
-          true
-        end
+        can [:preview,:new,:show,:create,:deactivate,:activate,:index], Survey
 
         can [:edit,:update,:destroy], Survey do |survey|
           survey.inactive?
@@ -39,40 +37,28 @@ class Ability
         can [:new,:create,:destroy], ResponseSet do |response_set|
           response_set.survey.active?
         end
-        can [:new,:create,:edit,:update,:destroy,:show,:activate,:deactivate], Study do |study|
-          true
-        end
-        can [:new,:create,:show,:activate,:deactivate], Consent do |consent|
-          true
-        end
+        can [:new,:create,:show,:activate,:deactivate,:index], Consent 
         can [:edit,:update,:destroy], Consent do |consent|
           consent.editable?
         end
-        can [:new,:create,:show,:edit,:update,:destroy], User do |user|
-          true
-        end
-        can [:new,:create,:edit,:update,:destroy,:show,:enroll,:consent,:consent_signature], Participant do |participant|
-          true
-        end
-        can [:new,:create,:edit,:update,:destroy,:show], Relationship do |relationship|
-          true
-        end
-        can [:new,:create,:edit,:update,:destroy,:show], ResponseSet do |response_set|
-          true
-        end
+        can :manage, Study
+        can :manage, Search
+        can :manage, User
+        can :manage, Participant
+        can :manage, Participant
+        can :manage, Relationship
+        can :manage, ResponseSet
       elsif user.data_manager?
-        can [:new,:create,:edit,:update,:destroy,:show,:enroll,:consent,:consent_signature], Participant do |participant|
-          true
-        end
-        can [:new,:create,:edit,:update,:destroy,:show], Relationship do |relationship|
-          true
-        end
-        can [:new,:create,:edit,:update,:destroy,:show], ResponseSet do |response_set|
-          true
-        end
+        can :manage, Participant
+        can :manage, Relationship
+        can :manage, ResponseSet
+        can :manage, Search
       else user.researcher?
         can [:show], Participant do |participant|
           !(participant.study_involvements.active.collect{|si| si.study}.flatten & user.studies.active).empty?
+        end
+        can [:show,:request_data], Search do |search|
+          user.studies.active.include?(search.study)
         end
       end
     elsif user.is_a?(Account)

@@ -7,9 +7,10 @@
       %th Release Date
   %tbody
     -@searches.each do |search|
-      %tr
-        %td=search.study.irb_number
-        %td=link_to search.state.titleize,admin_search_path(search)
-        %td=search.request_date
-        %td=search.process_date
+      -if can? :show, search
+        %tr
+          %td=search.study.irb_number
+          %td=link_to search.state.titleize,admin_search_path(search)
+          %td=search.request_date
+          %td=search.process_date
   

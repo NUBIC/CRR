@@ -1,6 +1,7 @@
 class Admin::ConsentsController < Admin::AdminController
   def index
     @consents = Consent.all
+   authorize! :index, Consent
   end
 
   def new

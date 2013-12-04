@@ -262,6 +262,18 @@ describe Participant do
     end
   end
 
+  describe '#recent_response_set' do
+    it "should return last updated_at response_set" do
+      survey = FactoryGirl.create(:survey, :multiple_section=>true)
+      res1 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
+      res2 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
+      res3 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
+      res2.updated_at = Time.now + 10.minutes
+      res2.save
+      participant.recent_response_set.should == res2
+    end
+  end
+
   describe '#open?' do
     [:consent, :demographics, :surevey, :survey_started].each do |st|
       it "should return true if participant has state '#{st.to_s}'" do

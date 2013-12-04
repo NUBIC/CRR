@@ -175,7 +175,7 @@ class Participant < ActiveRecord::Base
   end
 
   def recent_response_set
-    response_sets.first
+    response_sets.order("updated_at DESC").first
   end
 
   def open_public_response_sets

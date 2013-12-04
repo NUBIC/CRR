@@ -1,8 +1,7 @@
 class ParticipantsController < PublicController
-  # before_filter :require_account
   def enroll
     @participant = Participant.find(params[:id])
-    # authorize! :enroll, @participant
+    authorize! :enroll, @participant
     if @participant.survey?
       create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?

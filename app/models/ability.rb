@@ -59,6 +59,9 @@ class Ability
         can [:show], Participant do |participant|
           !(participant.study_involvements.active.collect{|si| si.study}.flatten & user.studies.active).empty?
         end
+        can [:show], Search do |search|
+          user.studies.active.include?(search.study)
+        end
       end
     elsif user.is_a?(Account)
       can [:update, :edit, :dashboard, :destroy], Account do |account|

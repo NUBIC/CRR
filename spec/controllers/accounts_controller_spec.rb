@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe AccountsController do
+  setup :activate_authlogic
   let(:valid_attributes) { { email: "test@test.com", password: "1234", password_confirmation: "1234" } }
   let(:invalid_attributes) { { email: "test", password: "1234", password_confirmation: "1234" } }
 
@@ -75,6 +76,15 @@ describe AccountsController do
       it "re-renders the 'edit' template" do
         put :update, {:id => account.id, :account => invalid_attributes}
         expect(response).to render_template("edit")
+      end
+    end
+
+    describe "unauthorized access" do
+      let(:other_account) { FactoryGirl.create(:account, email: "test1@test.com") }
+      it "redirects to logout page if user is logged in and tried to update other user's account" do
+        AccountSession.create(other_account)
+        put :update, {:id => account.id, :account => valid_attributes}
+        expect(response).to redirect_to public_logout_path
       end
     end
   end

@@ -1,6 +1,7 @@
 class Admin::UsersController < Admin::AdminController
  def index
    @users = User.all
+   authorize! :index, User
  end
 
  def new

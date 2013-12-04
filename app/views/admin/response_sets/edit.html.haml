@@ -14,7 +14,7 @@
             %li=button_tag "Save",:class=>"btn btn-mini btn-block btn-primary"
             %br
             %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
-            -unless response_set.complete?
+            -unless @response_set.complete?
               %br
               %li=button_tag "Finish",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
           .tab-content.offset2

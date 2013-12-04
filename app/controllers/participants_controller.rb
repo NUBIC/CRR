@@ -2,6 +2,9 @@ class ParticipantsController < PublicController
   def enroll
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant
+    @current_user.other_participants(@participant).each do |destination|
+      @participant.origin_relationships.build(destination_id: destination.id)
+    end
     if @participant.survey?
       create_and_redirect_response_set(@participant)
     elsif @participant.survey_started?
@@ -52,13 +55,14 @@ class ParticipantsController < PublicController
     @participant =  Participant.find(params[:id])
     authorize! :update, @participant
     @participant.update_attributes(participant_params)
+    @participant.update_attributes(participant_relationship_params)
     if @participant.save
-      if participant_relationship_params[:relationships]
-        participant_relationship_params[:relationships].each_value do |relationship_params|
-          @participant.origin_relationships.create( :category => relationship_params[:category],
-                                                  :destination_id => relationship_params[:destination_id])
-        end
-      end
+      # if participant_relationship_params[:relationships]
+      #   participant_relationship_params[:relationships].each_value do |relationship_params|
+      #     @participant.origin_relationships.create( :category => relationship_params[:category],
+      #                                             :destination_id => relationship_params[:destination_id])
+      #   end
+      # end
       @participant.take_survey! if @participant.demographics?
       if @participant.survey?
         create_and_redirect_response_set(@participant)
@@ -93,7 +97,7 @@ class ParticipantsController < PublicController
   end
 
   def participant_relationship_params
-    params.require(:participant).permit(relationships: [ :category, :destination_id ])
+    params.require(:participant).permit(origin_relationships_attributes: [:id, :category, :destination_id, :_destroy])
   end
 
   def consent_signature_params

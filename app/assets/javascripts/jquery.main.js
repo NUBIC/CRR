@@ -74,11 +74,15 @@ $(document).ready(function() {
   }, "Please enter a valid US Zip Code.");
 
   // TODO: Move to the seperate js and simply
-  $(".relationship").hide();
-  $('input[id=participant_last_name]').blur(function() {
-    $(".relationship").show();
-    $(".participant_full_name").text($("#participant_first_name").val() + " " + $(this).val());
-  });
+  // $('input[id=participant_first_name]').blur(function() {
+  //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
+  // });
+  // $('input[id=participant_last_name]').blur(function() {
+  //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
+  // });
+  // $(".add_relationship").mouseup(function() {
+  //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
+  // });
   $("#new-consent-sign").validate();
   $("#consent-next").attr("disabled", "disabled");
   $(".proxy-consent-name").hide();

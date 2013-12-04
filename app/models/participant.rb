@@ -42,6 +42,7 @@ class Participant < ActiveRecord::Base
 
   has_one :account_participant
   has_one :account, :through => :account_participant
+  accepts_nested_attributes_for :origin_relationships, :allow_destroy => true
 
   validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
   validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true

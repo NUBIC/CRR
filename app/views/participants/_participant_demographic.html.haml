@@ -68,12 +68,13 @@
           .controls
             =f.text_field  :secondary_phone, class: "phone"
   -if current_user.active_participants.size > 1
-    .relationship
+    .relationships
       .row-fluid
-        %h4="Relationships:"
-      -current_user.other_participants(@participant).each_with_index do |destination_participant, index|
-        = render :partial =>  "participant_relationship", :locals => {:f => f, :index => index,
-          :destination_participant => destination_participant }
+        %h4 Relationships
+      = f.fields_for :origin_relationships do |origin_relationship|
+        = render 'origin_relationship_fields', :f => origin_relationship
+      .links
+        = link_to_add_association 'Add Relationship', f, :origin_relationships, class: 'add_relationship'
   .row-fluid
     .btn-group
       =f.button "Next",:class=>"btn btn-primary"

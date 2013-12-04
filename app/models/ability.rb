@@ -42,6 +42,7 @@ class Ability
           consent.editable?
         end
         can :manage, Study
+        can :manage, Search
         can :manage, User
         can :manage, Participant
         can :manage, Participant
@@ -51,11 +52,12 @@ class Ability
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
+        can :manage, Search
       else user.researcher?
         can [:show], Participant do |participant|
           !(participant.study_involvements.active.collect{|si| si.study}.flatten & user.studies.active).empty?
         end
-        can [:show], Search do |search|
+        can [:show,:request_data], Search do |search|
           user.studies.active.include?(search.study)
         end
       end

@@ -9,8 +9,8 @@
     -@searches.each do |search|
       -if can? :show, search
         %tr
-          %td=search.study.irb_number
+          %td=search.study.name
           %td=link_to search.state.titleize,admin_search_path(search)
           %td=search.request_date
           %td=search.process_date
-  
+

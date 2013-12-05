@@ -109,6 +109,6 @@ class Admin::SurveysController < Admin::AdminController
     end
   end
  def survey_params
-   params.require(:survey).permit(:title,:description,:multiple_sections,:code)
+   params.require(:survey).permit(:title,:description,:multiple_section,:code)
  end
 end

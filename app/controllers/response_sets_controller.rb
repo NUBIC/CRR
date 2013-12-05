@@ -1,16 +1,6 @@
 class ResponseSetsController < PublicController
   before_filter :require_account
 
-  def new
-    @participant = Participant.find(params[:participant_id])
-    @response_set = @participant.response_sets.new
-    authorize! :new, @response_set
-    @surveys = Survey.all.select{|s| s.active?}
-    respond_to do |format|
-      format.js {render :layout => false}
-    end
-  end
-
   def create
     participant = Participant.find(params[:participant_id])
     @response_set= participant.response_sets.new(response_set_params)

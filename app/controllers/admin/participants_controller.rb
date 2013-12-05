@@ -26,7 +26,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def search
     @participants = Participant.search(params[:q])
-    authorize! :search, @participant
+    authorize! :search, Participant
     respond_to do |format|
       format.json {render :json => @participants.to_json(:only=>[:id],:methods=>[:search_display])}
     end

@@ -45,7 +45,6 @@ class Ability
         can :manage, Search
         can :manage, User
         can :manage, Participant
-        can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
       elsif user.data_manager?

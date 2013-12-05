@@ -106,7 +106,7 @@ class Admin::ParticipantsController < Admin::AdminController
   end
 
   def consent_signature_params
-    params.require(:consent_signature).permit(:date,:consent_id,:proxy_name)
+    params.require(:consent_signature).permit(:date, :consent_id, :proxy_name, :proxy_relationship)
   end
 
   private

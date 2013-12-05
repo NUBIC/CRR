@@ -5,6 +5,7 @@ class CreateConsentSignatures < ActiveRecord::Migration
       t.references :participant, index: true
       t.date       :date
       t.string     :proxy_name
+      t.string     :proxy_relationship
       t.string     :entered_by
       t.timestamps
     end

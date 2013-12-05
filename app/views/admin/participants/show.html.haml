@@ -57,13 +57,13 @@
           %tbody
             %tr
               %th.muted Address
-              %td= @participant.address 
+              %td= @participant.address
             %tr
               %th.muted  Primary Phone
               %td=@participant.primary_phone
             %tr
               %th.muted  Secondary Phone
-              %td=@participant.secondary_phone 
+              %td=@participant.secondary_phone
             %tr
               %th.muted  Email
               %td=@participant.email
@@ -106,10 +106,13 @@
           !=@participant.consent_signatures.last.consent.content
         .row-fluid
           -unless @participant.consent_signatures.last.entered_by.blank?
-            .span4
+            .span3
               ="Entered By: #{@participant.consent_signatures.last.entered_by}"
           -unless @participant.consent_signatures.last.proxy_name.blank?
-            .span4
+            .span3
               ="Given By: #{@participant.consent_signatures.last.proxy_name}"
-          .span4
+          -unless @participant.consent_signatures.last.proxy_relationship.blank?
+            .span3
+              ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
+          .span3
             ="Given On: #{@participant.consent_signatures.last.date}"

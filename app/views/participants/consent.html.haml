@@ -1,13 +1,17 @@
--if @participant.consented?
-  %h5="Consent for #{@participant.name}"
+-unless @participant.consent_signatures.last.blank?
   .row-fluid
-    = "#{@participant.most_recent_consent_signature.consent.content}".html_safe
-  %br
-  %em
-    ="This consent was signed on:"
-    %b
-      ="#{@participant.most_recent_consent_signature.created_at.to_date}"
-    -if @participant.proxy?
-      ="by"
+    !=@participant.consent_signatures.last.consent.content
+  .row-fluid
+    -unless @participant.consent_signatures.last.proxy_name.blank?
+      .span4
+        %b
+          ="Signed By: #{@participant.consent_signatures.last.proxy_name}"
+    -unless @participant.consent_signatures.last.proxy_relationship.blank?
+      .span4
+        %b
+          ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
+    .span4
       %b
-        ="#{@participant.most_recent_consent_signature.proxy_name}"
+        ="Signed On: #{@participant.consent_signatures.last.created_at.to_date}"
+
+

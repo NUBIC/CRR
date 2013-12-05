@@ -10,8 +10,11 @@
       = f.label :proxy_name, 'Given By (if other than participant): '
       = f.text_field :proxy_name
     .span4
+      = f.label :proxy_relationship, 'Relationship to participant (if given by other than participant): '
+      = f.text_field :proxy_relationship
+    .span4
       = f.label :date, 'Consent given on:'
-      = f.text_field :date, :class=> "required input-small","data-provide"=> "datepicker" 
+      = f.text_field :date, :class=> "required input-small","data-provide"=> "datepicker"
 
   .row-fluid
     = submit_tag("Next", class: "btn btn-primary")

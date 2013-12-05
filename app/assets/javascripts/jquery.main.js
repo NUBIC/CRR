@@ -83,18 +83,5 @@ $(document).ready(function() {
   // $(".add_relationship").mouseup(function() {
   //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
   // });
-  $("#new-consent-sign").validate();
-  $("#consent-next").attr("disabled", "disabled");
-  $(".proxy-consent-name").hide();
-  $(".consent-agree").click(function(){
-    $(".proxy-consent-name").show();
-    $("#consent_response").val("accept");
-    $("#consent-next").removeAttr("disabled");
-  });
-  $(".consent-disagree").click(function(){
-    $(".proxy-consent-name").hide();
-    $("#consent_response").val("decline");
-    $("#consent-next").removeAttr("disabled");
-  });
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

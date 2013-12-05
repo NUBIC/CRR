@@ -2,14 +2,15 @@
 #
 # Table name: consent_signatures
 #
-#  id             :integer          not null, primary key
-#  consent_id     :integer
-#  participant_id :integer
-#  date           :date
-#  proxy_name     :string(255)
-#  entered_by     :string(255)
-#  created_at     :datetime
-#  updated_at     :datetime
+#  id                 :integer          not null, primary key
+#  consent_id         :integer
+#  participant_id     :integer
+#  date               :date
+#  proxy_name         :string(255)
+#  proxy_relationship :string(255)
+#  entered_by         :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
 #
 
 class ConsentSignature < ActiveRecord::Base

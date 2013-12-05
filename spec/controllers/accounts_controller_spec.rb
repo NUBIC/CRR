@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe AccountsController do
   setup :activate_authlogic
-  let(:valid_attributes) { { email: "test@test.com", password: "1234", password_confirmation: "1234" } }
+  let(:valid_attributes) { { email: "test@test.com", current_password: "1234", password: "1234", password_confirmation: "1234" } }
   let(:invalid_attributes) { { email: "test", password: "1234", password_confirmation: "1234" } }
 
   describe "GET new" do
@@ -71,6 +71,18 @@ describe AccountsController do
       it "assigns the account as @account" do
         put :update, {:id => account.id, :account => invalid_attributes}
         expect(assigns(:account)).to eq(account)
+      end
+
+      it "re-renders the 'edit' template" do
+        put :update, {:id => account.id, :account => invalid_attributes}
+        expect(response).to render_template("edit")
+      end
+    end
+
+    describe "password" do
+      it "with invalid current password generates flash error" do
+        put :update, {:id => account.id, :account => { email: "test@test.com", current_password: "12345" } }
+        flash[:error].should == "Current password doesn't match. Please try again."
       end
 
       it "re-renders the 'edit' template" do

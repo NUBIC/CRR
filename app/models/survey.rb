@@ -67,12 +67,12 @@ class Survey < ActiveRecord::Base
     return activation_errors.flatten.uniq.compact
   end
 
+  private
   def activation_check
     if active?
       errors.add(:survey,soft_errors.to_sentence) unless soft_errors.empty?
     end
   end
-  private
   def create_section
     sections.create(:title=>"questions")
   end

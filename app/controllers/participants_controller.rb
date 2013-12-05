@@ -101,7 +101,7 @@ class ParticipantsController < PublicController
   end
 
   def consent_signature_params
-    params.require(:consent_signature).permit(:date,:consent_id,:proxy_name)
+    params.require(:consent_signature).permit(:date, :consent_id, :proxy_name, :proxy_relationship)
   end
   private
   def create_and_redirect_response_set(participant)

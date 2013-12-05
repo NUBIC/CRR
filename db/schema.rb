@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20131120203306) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
     t.integer  "participant_id"
@@ -57,6 +60,7 @@ ActiveRecord::Schema.define(version: 20131120203306) do
     t.integer  "participant_id"
     t.date     "date"
     t.string   "proxy_name"
+    t.string   "proxy_relationship"
     t.string   "entered_by"
     t.datetime "created_at"
     t.datetime "updated_at"

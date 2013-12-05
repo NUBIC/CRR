@@ -3,9 +3,9 @@
   =label_tag "Enter your current and a new password."
   .row-fluid
     .control-group
-      =label_tag 'Old Password'
+      =label_tag 'Current Password'
       .controls
-        =password_field_tag 'account[old_password]'
+        =password_field_tag 'account[current_password]'
     .control-group
       =label_tag 'New Password'
       .controls
@@ -15,5 +15,5 @@
       .controls
         =password_field_tag 'account[password_confirmation]'
   .row-fluid
-    = submit_tag "Update Password", :class => "btn btn-succes"
+    = submit_tag "Update", :class => "btn btn-success"
     = link_to 'Cancel', dashboard_path, :class => "btn btn-warning"

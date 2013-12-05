@@ -26,7 +26,7 @@ class AccountsController < PublicController
         format.html { redirect_to dashboard_path }
       else
         format.html { redirect_to public_login_path(:anchor => "sign_up")
-        flash[:notice] = "Please try again" }
+        flash[:error] = @account.errors.full_messages.to_sentence }
       end
     end
   end
@@ -34,13 +34,19 @@ class AccountsController < PublicController
   def update
     @account = Account.find(params[:id])
     authorize! :update, @account
-    @account.update_attributes(account_params)
-    respond_to do |format|
-      if @account.save
-        flash[:notice] = "Updated"
-        format.html { redirect_to dashboard_path }
-      else
-        flash[:error] = @account.errors.full_messages.to_sentence
+    if @account.valid_password?(params[:account][:current_password])
+      @account.update_attributes(account_params)
+      respond_to do |format|
+        if @account.save
+          format.html { redirect_to dashboard_path }
+        else
+          flash[:error] = @account.errors.full_messages.to_sentence
+          format.html { render :action => "edit" }
+        end
+      end
+    else
+      respond_to do |format|
+        flash[:error] = "Current password doesn't match. Please try again."
         format.html { render :action => "edit" }
       end
     end
@@ -55,6 +61,10 @@ class AccountsController < PublicController
 
   def account_params
     params.require(:account).permit(:email, :password, :password_confirmation)
+  end
+
+  def current_password_params
+    params.require(:account).permit(:current_password)
   end
 
 end

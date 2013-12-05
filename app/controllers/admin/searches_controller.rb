@@ -7,6 +7,7 @@ class Admin::SearchesController < Admin::AdminController
    @search = Search.new
    @studies = Study.active
  end
+
  def create
    @search = Search.new(search_params)
    if @search.save

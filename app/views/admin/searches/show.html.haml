@@ -45,11 +45,11 @@
               -unless @search.data_released?
                 %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
               %td=link_to participant.name, admin_participant_path(participant)
-              %td=participant.on_study? ? "On study" : "Available"
+              %td=participant.on_study? ? "Released to study" : "Available"
               %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
 -else
   .row-fluid
     -if @search.new?
       =form_for @search,:url=>request_admin_search_path(@search) do |f|
         =f.button "Request Results",:class=>"btn btn-mini btn-success"
-      
+

@@ -5,7 +5,7 @@ class Admin::SearchesController < Admin::AdminController
 
  def new
    @search = Search.new
-   @surveys = Survey.all
+   @studies = Study.active
  end
  def create
    @search = Search.new(search_params)

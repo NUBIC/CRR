@@ -1,4 +1,5 @@
 class ParticipantsController < PublicController
+  # before_filter :require_account
   def enroll
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant
@@ -6,7 +7,7 @@ class ParticipantsController < PublicController
       @participant.copy_from(current_user.copy_from_participant(@participant))
       @participant.save
     end
-    @participant.related_participant.each do |destination|
+    @participant.related_participants.each do |destination|
       @participant.origin_relationships.build(destination_id: destination.id)
     end
     if @participant.survey?

@@ -42,7 +42,8 @@ end
 
 #aker
 gem "aker"
-gem "aker-rails", :github => 'NUBIC/aker-rails', :branch => 'rails4'
+# gem "aker-rails", :github => 'NUBIC/aker-rails', :branch => 'rails4'
+gem "aker-rails", '~> 4.0.0.pre'
 gem "aker-nubic"
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

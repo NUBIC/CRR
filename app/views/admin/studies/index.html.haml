@@ -4,16 +4,16 @@
     %thead
       %tr
         %th ID
-        %th Irb Number
         %th Name
+        %th IRB Number
         %th State
-        %th 
+        %th
     %tbody
       -@studies.each do |study|
         %tr
           %th=study.id
-          %td=study.irb_number
           %td=study.name
+          %td=study.irb_number
           %td=study.state
           %td
             .span12

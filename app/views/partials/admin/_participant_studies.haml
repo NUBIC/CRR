@@ -2,18 +2,18 @@
 %table.table.bordered
   %thead
     %tr
-      %th IRB Number
       %th Name
+      %th IRB Number
       %th Start Date
       %th Warning Date
       %th End Date
       %th Notes
-      %th 
+      %th
   %tbody
     -participant.study_involvements.each do |si|
       %tr
-        %td=si.study.irb_number
         %td=si.study.name
+        %td=si.study.irb_number
         %td=si.start_date
         %td=si.warning_date
         %td=si.end_date

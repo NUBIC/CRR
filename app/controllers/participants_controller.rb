@@ -2,7 +2,11 @@ class ParticipantsController < PublicController
   def enroll
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant
-    @current_user.other_participants(@participant).each do |destination|
+    if current_user.active_participants.size > 0
+      @participant.copy_from(current_user.copy_from_participant(@participant))
+      @participant.save
+    end
+    @participant.related_participant.each do |destination|
       @participant.origin_relationships.build(destination_id: destination.id)
     end
     if @participant.survey?
@@ -35,8 +39,8 @@ class ParticipantsController < PublicController
         @participant.child = true
         @participant.save
       end
-      if @account.other_participants(@participant).size > 0
-        @participant.copy_from(@account.other_participants(@participant).last)
+      if current_user.active_participants.size > 0
+        @participant.copy_from(current_user.copy_from_participant(@participant))
         @participant.save
       end
     else
@@ -57,12 +61,6 @@ class ParticipantsController < PublicController
     @participant.update_attributes(participant_params)
     @participant.update_attributes(participant_relationship_params)
     if @participant.save
-      # if participant_relationship_params[:relationships]
-      #   participant_relationship_params[:relationships].each_value do |relationship_params|
-      #     @participant.origin_relationships.create( :category => relationship_params[:category],
-      #                                             :destination_id => relationship_params[:destination_id])
-      #   end
-      # end
       @participant.take_survey! if @participant.demographics?
       if @participant.survey?
         create_and_redirect_response_set(@participant)

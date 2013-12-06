@@ -67,7 +67,7 @@
           =f.label :secondary_phone, "Secondary Phone Number"
           .controls
             =f.text_field  :secondary_phone, class: "phone"
-  -if current_user.active_participants.size > 1
+  -if @participant.related_participants.size > 0
     .relationships
       .row-fluid
         %h4 Relationships

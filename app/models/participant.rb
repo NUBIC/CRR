@@ -187,6 +187,10 @@ class Participant < ActiveRecord::Base
     !(first_name.blank? or last_name.blank?)
   end
 
+  def related_participants
+    account.other_participants(self)
+  end
+
   def copy_from(participant)
     [ :address_line1, :address_line2, :city, :state, :zip, :email, :primary_phone, :secondary_phone ].each do |fillin_attr|
       self.send("#{fillin_attr}=", participant.send(fillin_attr))

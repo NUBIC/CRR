@@ -67,22 +67,41 @@
             %tr
               %th.muted  Email
               %td=@participant.email
-    -if @participant.child?
-      .row-fluid
-        %h5 Primary Guardian
+    .row-fluid
+      -unless @participant.primary_guardian_first_name.blank? and @participant.primary_guardian_last_name.blank?
         .span4
-          ="#{@participant.primary_guardian_first_name} #{@participant.primary_guardian_last_name}"
+          %h5 Primary Guardian
+          %table.table
+            %tbody
+              %tr
+                %th.muted First Name
+                %td= @participant.primary_guardian_first_name
+              %tr
+                %th.muted Last Name
+                %td= @participant.primary_guardian_last_name
+              %tr
+                %th.muted Email
+                %td= @participant.primary_guardian_email
+              %tr
+                %th.muted Phone
+                %td= @participant.primary_guardian_phone
+      -unless @participant.secondary_guardian_first_name.blank? and @participant.secondary_guardian_last_name.blank?
         .span4
-          =@participant.primary_guardian_email
-        .span4
-          =@participant.primary_guardian_phone
-      .row-fluid
-        %h5 Secondary Guardian
-        .span4
-          ="#{@participant.secondary_guardian_first_name} #{@participant.secondary_guardian_last_name}"
-        .span4
-          =@participant.secondary_guardian_email
-        .span4
+          %h5 Secondary Guardian
+          %table.table
+            %tbody
+              %tr
+                %th.muted First Name
+                %td= @participant.secondary_guardian_first_name
+              %tr
+                %th.muted Last Name
+                %td= @participant.secondary_guardian_last_name
+              %tr
+                %th.muted Email
+                %td= @participant.secondary_guardian_email
+              %tr
+                %th.muted Phone
+                %td= @participant.secondary_guardian_phone
     .row-fluid
       %h5="Notes:"
       .offset1

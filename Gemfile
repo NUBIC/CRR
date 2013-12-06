@@ -25,7 +25,8 @@ gem 'less-rails'
 gem 'uglifier', '>= 1.3.0'
 
 gem 'bcdatabase', '~> 1.0.6'
-gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
+# gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
+gem "activerecord-session_store", "~> 0.1.0"
 gem "cocoon"
 
 group :development, :test do

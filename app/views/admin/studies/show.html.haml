@@ -1,0 +1,77 @@
+%h3="#{@study.id} : #{@study.short_title}"
+#study.accordion
+  .accordion-group
+    .accordion-heading=link_to "Overview","#overview","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
+    #overview.acordion-body.collapse
+      .accordion-inner
+        %table
+          %tbody
+            %tr 
+              %th.muted Name
+              %td=@study.short_title
+            %tr 
+              %th.muted IRB Number
+              %td=@study.irb_number
+            %tr 
+              %th.muted Website
+              %td=@study.website
+            %tr 
+              %th.muted Sites
+              %td=@study.sites
+            %tr 
+              %th.muted PI 
+              %td="#{@study.pi_name} - #{@study.pi_email}"
+            %tr 
+              %th.muted Other Investigators
+              %td=@study.other_investigators
+            %tr 
+              %th.muted Study Contact
+              %td="#{@study.contact_name} - #{@study.contact_email}"
+            %tr 
+              %th.muted Funding Source
+              %td=@study.funding_source
+            %tr 
+              %th.muted Active Dates
+              %td="#{@study.start_date} - #{@study.end_date}"
+            %tr 
+              %th.muted Age Range
+              %td="#{@study.min_age} - #{@study.max_age}"
+            %tr 
+              %th.muted Visits
+              %td=@study.number_of_visits
+            %tr 
+              %th.muted Inclusion Criteria
+              %td!=@study.inclusion_criteria
+            %tr 
+              %th.muted Exclusion Criteria
+              %td!=@study.exclusion_criteria
+            %tr 
+              %th.muted Protocol Goals
+              %td!=@study.protocol_goals
+            %tr 
+              %th.muted Notes
+              %td!=@study.notes
+
+  .accordion-group
+    .accordion-heading=link_to "Participants","#participants","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
+    #participants.acordion-body.collapse
+      .accordion-inner
+
+        %h4 Participants
+        %h5="Current: #{@study.study_involvements.active.count} Total: #{@study.study_involvements.count}"
+        %table.table.table-bordered
+          %thead
+            %tr
+              %th Name
+              %th State
+              %th Currently Released
+              %th Start
+              %th End
+          %tbody
+            -@study.study_involvements.each do |si|
+              %tr
+                %td=link_to si.participant.name,admin_participant_path(si.participant)
+                %td=si.state
+                %td=si.active? ? "Yes" : "No"
+                %td=si.start_date
+                %td=si.end_date

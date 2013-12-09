@@ -37,7 +37,10 @@
             -unless @search.data_released?
               %th= check_box_tag "selectall"
             %th Name
-            %th Current Status
+            %th Released To Study
+            %th Study Name
+            %th Status
+            %th Status Date
             %th Last Contact
         %tbody
           -@search.result.each do |participant|
@@ -45,7 +48,10 @@
               -unless @search.data_released?
                 %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
               %td=link_to participant.name, admin_participant_path(participant)
-              %td=participant.on_study? ? "Released to study" : "Available"
+              %td=participant.on_study? ? "Yes" : "No"
+              %th= ""
+              %th= ""
+              %th= ""
               %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
 -else
   .row-fluid

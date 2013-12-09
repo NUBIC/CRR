@@ -2,11 +2,29 @@
 #
 # Table name: studies
 #
-#  id         :integer          not null, primary key
-#  irb_number :string(255)
-#  name       :string(255)
-#  notes      :text
-#  state      :string(255)
+#  id                  :integer          not null, primary key
+#  irb_number          :string(255)
+#  name                :string(255)
+#  pi_name             :string(255)
+#  pi_email            :string(255)
+#  other_investigators :text
+#  contact_name        :string(255)
+#  contact_email       :string(255)
+#  short_title         :string(255)
+#  sites               :string(255)
+#  funding_source      :string(255)
+#  website             :string(255)
+#  start_date          :date
+#  end_date            :date
+#  min_age             :integer
+#  max_age             :integer
+#  accrual_goal        :integer
+#  number_of_visits    :integer
+#  protocol_goals      :text
+#  inclusion_criteria  :text
+#  exclusion_criteria  :text
+#  notes               :text
+#  state               :string(255)
 #
 
 class Study < ActiveRecord::Base

@@ -3,6 +3,14 @@ class Admin::StudyInvolvementsController < Admin::AdminController
    @participant = Participant.find(params[:participant_id])
  end
 
+ def study
+   @study = Study.find(params[:study_id])
+   @study_involvements = params[:state].eql?('active') ? @study.study_involvements.active : @study.study_involvements
+   respond_to do |format|
+     format.js {render :layout => false}
+   end
+ end
+
  def new
    @participant = Participant.find(params[:participant_id])
    @study_involvement = @participant.study_involvements.new

@@ -8,6 +8,8 @@
 #  start_date     :date
 #  end_date       :date
 #  warning_date   :date
+#  state          :string(255)
+#  state_date     :date
 #  notes          :text
 #  created_at     :datetime
 #  updated_at     :datetime
@@ -24,6 +26,9 @@ class StudyInvolvement < ActiveRecord::Base
   scope :warning, -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
 
 
+  def active?
+    self.start_date <= Date.today and (self.end_date.blank? or self.end_date > Date.today)
+  end
 
   private
   def end_date_cannot_be_before_start_date

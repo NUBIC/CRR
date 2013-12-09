@@ -37,7 +37,11 @@ AudiologyRegistry::Application.routes.draw do
       end
     end
     resources :response_sets
-    resources :study_involvements
+    resources :study_involvements do 
+      collection do 
+        get :study
+      end
+    end
     resources :contact_logs
     resources :relationships
     resources :users

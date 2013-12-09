@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20131120203306) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
     t.integer  "participant_id"
@@ -194,10 +191,28 @@ ActiveRecord::Schema.define(version: 20131120203306) do
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "studies", force: true do |t|
-    t.string "irb_number"
-    t.string "name"
-    t.text   "notes"
-    t.string "state"
+    t.string  "irb_number"
+    t.string  "name"
+    t.string  "pi_name"
+    t.string  "pi_email"
+    t.text    "other_investigators"
+    t.string  "contact_name"
+    t.string  "contact_email"
+    t.string  "short_title"
+    t.string  "sites"
+    t.string  "funding_source"
+    t.string  "website"
+    t.date    "start_date"
+    t.date    "end_date"
+    t.integer "min_age"
+    t.integer "max_age"
+    t.integer "accrual_goal"
+    t.integer "number_of_visits"
+    t.text    "protocol_goals"
+    t.text    "inclusion_criteria"
+    t.text    "exclusion_criteria"
+    t.text    "notes"
+    t.string  "state"
   end
 
   create_table "study_involvements", force: true do |t|
@@ -206,6 +221,8 @@ ActiveRecord::Schema.define(version: 20131120203306) do
     t.date     "start_date"
     t.date     "end_date"
     t.date     "warning_date"
+    t.string   "state"
+    t.date     "state_date"
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"

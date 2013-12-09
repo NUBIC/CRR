@@ -6,6 +6,8 @@ class CreateStudyInvolvements < ActiveRecord::Migration
       t.date    :start_date
       t.date    :end_date
       t.date    :warning_date
+      t.string  :state
+      t.date    :state_date
       t.text    :notes
       t.timestamps
     end

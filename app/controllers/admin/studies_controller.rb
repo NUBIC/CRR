@@ -29,6 +29,10 @@ class Admin::StudiesController < Admin::AdminController
    @study = Study.find(params[:id])
    authorize! :edit, @study
  end
+ def show
+   @study = Study.find(params[:id])
+   authorize! :show, @study
+ end
  def update
    @study = Study.find(params[:id])
    authorize! :update, @study
@@ -70,7 +74,7 @@ class Admin::StudiesController < Admin::AdminController
  end
 
  def study_params
-   params.require(:study).permit(:irb_number,:active_on,:inactive_on,:name)
+   params.require(:study).permit(:irb_number,:active_on,:inactive_on,:name,:short_title,:pi_name,:pi_email,:other_investigators,:contact_name,:contact_email,:short_title,:sites,:funding_source,:website,:start_date,:end_date,:min_age,:max_age,:accrual_goal,:number_of_visits,:protocol_goals,:inclusion_criteria,:exclusion_criteria)
  end
 end
 

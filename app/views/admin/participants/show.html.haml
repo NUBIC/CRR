@@ -20,7 +20,7 @@
           =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
     .row-fluid
       .span4
-        %h5 Identifiers
+        %h5 Participant
         %table.table
           %tbody
             %tr
@@ -32,25 +32,6 @@
             %tr
               %th.muted Last Name:
               %td= @participant.last_name
-      .span4
-        %h5 Participation
-        %table.table
-          %tbody
-            %tr
-              %th.muted Ok to contact:
-              %td= @participant.do_not_contact? ? "No" : "Yes"
-            %tr
-              %th.muted Released to study:
-              %td= @participant.on_study? ? "Yes" : "No"
-            %tr
-              %th.muted Study Count:
-              %td= @participant.study_involvements.count
-            %tr
-              %th.muted Last Contact:
-              %td= @participant.contact_logs.last.date unless @participant.contact_logs.empty?
-            %tr
-              %th.muted Contact Count:
-              %td= @participant.contact_logs.count
       .span4
         %h5 Contact
         %table.table
@@ -67,6 +48,26 @@
             %tr
               %th.muted  Email
               %td=@participant.email
+      .span4
+        %h5 Participation
+        %table.table
+          %tbody
+            %tr
+              %th.muted OK to contact:
+              %td= @participant.do_not_contact? ? "No" : "Yes"
+            %tr
+              %th.muted Released to study:
+              %td= @participant.on_study? ? "Yes" : "No"
+            %tr
+              %th.muted Study Count:
+              %td= @participant.study_involvements.count
+            %tr
+              %th.muted Last Contact:
+              %td= @participant.contact_logs.last.date unless @participant.contact_logs.empty?
+            %tr
+              %th.muted Contact Count:
+              %td= @participant.contact_logs.count
+
     .row-fluid
       -unless @participant.primary_guardian_first_name.blank? and @participant.primary_guardian_last_name.blank?
         .span4

@@ -7,7 +7,7 @@
     .control-group
       =f.label :category,"Relationship"
       .controls
-        =f.select :category, Relationship::CATEGORIES
+        =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel.titleize, rel]}
     .control-group
       =f.label :notes
       .controls

@@ -9,7 +9,7 @@
     -unless @participant.consent_signatures.last.proxy_relationship.blank?
       .span4
         %b
-          ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
+          ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship.titleize}"
     .span4
       %b
         ="Signed On: #{@participant.consent_signatures.last.created_at.to_date}"

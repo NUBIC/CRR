@@ -17,6 +17,7 @@ class Consent < ActiveRecord::Base
 
   TYPES = ['Adult','Child']
   STATES= ['active','inactive']
+  RELATIONSHIPS = ['Parent', 'Spouse', 'Legal Guardian', 'Authorized Agent']
 
   validates_inclusion_of :state, :in => STATES
   validates_uniqueness_of :state, :scope =>:consent_type, :if=>:active?,:message=>"Only one active consent per category allowed"

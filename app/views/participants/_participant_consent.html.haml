@@ -24,7 +24,7 @@
         = f.label :proxy_name, 'Your Name: '
         = f.text_field :proxy_name, class: 'required'
         = f.label :proxy_relationship, 'Your relationship to participant: '
-        = f.text_field :proxy_relationship, class: 'required'
+        = f.select :proxy_relationship, Consent::RELATIONSHIPS, { prompt: 'Select Relationship'}, :class => "required"
     %br
     .row-fluid
       = f.button "Next", class: "btn btn-primary", id: "consent-next"

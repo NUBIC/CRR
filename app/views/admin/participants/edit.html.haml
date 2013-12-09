@@ -1,65 +1,114 @@
 =form_for @participant, :url=>admin_participant_path(@participant) do |f|
-  .row-fluid
-    .span4
-      .control-group
-        =f.label :first_name, "First Name"
-        .controls
-          =f.text_field  :first_name
-      .control-group
-        =f.label :midlle_name, "Middle Name"
-        .controls
-          =f.text_field  :middle_name
-      .control-group
-        =f.label :last_name, "Last Name"
-        .controls
-          =f.text_field  :last_name
-      .control-group
-        =f.label :do_not_contact
-        .controls
-          =f.check_box  :do_not_contact
-
-    .span4
-      .control-group
-        =f.label :address_line1, "Address Line1"
-        .controls
-          =f.text_field  :address_line1
-      .control-group
-        =f.label :address_line2, "Address Line2"
-        .controls
-          =f.text_field  :address_line2
-      .control-group
-        =f.label :city
-        .controls
-          =f.text_field  :city
-      .control-group
-        =f.label :state
-        .controls
-          =f.text_field  :state
-      .control-group
-        =f.label :zip
-        .controls
-          =f.text_field  :zip
-    .span4
-      .control-group
-        =f.label :email, "Email Address"
-        .controls
-          =f.text_field  :email
-      .control-group
-        =f.label :primary_phone, "Primary Phone Number"
-        .controls
-          =f.text_field  :primary_phone
-      .control-group
-        =f.label :secondary_phone, "Secondary Phone Number"
-        .controls
-          =f.text_field  :secondary_phone
   -if @participant.child?
-    = render :partial => 'participant_guardian', :locals => {:f => f}
+    = render :partial => 'participant_child_proxy', :locals => {:f => f}
+  -else
+    .row-fluid
+      %h4="Participant Information:"
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :first_name, "First Name"
+          .controls
+            =f.text_field  :first_name, :class => "required"
+      .span4
+        .control-group
+          =f.label :midlle_name, "Middle Name"
+          .controls
+            =f.text_field  :middle_name
+      .span4
+        .control-group
+          =f.label :last_name, "Last Name"
+          .controls
+            =f.text_field  :last_name, :class => "required"
+    .row-fluid
+      %h4="Participant Address:"
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :address_line1, "Address Line1"
+          .controls
+            =f.text_field  :address_line1
+      .span4
+        .control-group
+          =f.label :address_line2, "Address Line2"
+          .controls
+            =f.text_field  :address_line2
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :city
+          .controls
+            =f.text_field  :city
+      .span4
+        .control-group
+          =f.label :state
+          .controls
+            = f.select :state, us_states, { prompt: 'Select State'}
+      .span4
+        .control-group
+          =f.label :zip
+          .controls
+            =f.text_field  :zip
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :email, "Email Address"
+          .controls
+            =f.text_field :email, class: "email"
+      .span4
+        .control-group
+          =f.label :primary_phone, "Primary Phone Number"
+          .controls
+            =f.text_field :primary_phone, class: "phone"
+      .span4
+        .control-group
+          =f.label :secondary_phone, "Secondary Phone Number"
+          .controls
+            =f.text_field :secondary_phone, class: "phone"
+    .row-fluid
+      %h4="Primary Guardian:"
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :primary_guardian_first_name, "First Name"
+          .controls
+            =f.text_field :primary_guardian_first_name
+      .span4
+        .control-group
+          =f.label :primary_guardian_last_name, "Last Name"
+          .controls
+            =f.text_field :primary_guardian_last_name
+      .span4
+        .control-group
+          =f.label :primary_guardian_email, "Email Address"
+          .controls
+            =f.text_field :primary_guardian_email, class: "email"
+        .control-group
+          =f.label :primary_guardian_phone, "Phone Number"
+          .controls
+            =f.text_field :primary_guardian_phone, class: "phone"
+    .row-fluid
+      %h4="Secondary Guardian:"
+    .row-fluid
+      .span4
+        .control-group
+          =f.label :secondary_guardian_first_name, "First Name"
+          .controls
+            =f.text_field :secondary_guardian_first_name
+      .span4
+        .control-group
+          =f.label :secondary_guardian_last_name, "Last Name"
+          .controls
+            =f.text_field :secondary_guardian_last_name
+      .span4
+        .control-group
+          =f.label :secondary_guardian_email, "Email Address"
+          .controls
+            =f.text_field :secondary_guardian_email, class: "email"
+        .control-group
+          =f.label :secondary_guardian_phone, "Phone Number"
+          .controls
+            =f.text_field :secondary_guardian_phone, class: "phone"
   .row-fluid
-    .control-group
-      =f.label :notes
-      .controls
-        =f.text_area  :notes,:rows=>3,:class=>"input-block-level"
-  .row-fluid
-    .btn-group
-      =f.button "Save",:class=>"btn btn-success"
-      =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"
+    =f.button "Save",:class=>"btn btn-mini btn-success"
+    =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-mini btn-warning"

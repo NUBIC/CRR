@@ -31,12 +31,12 @@ class Account < ActiveRecord::Base
   validates_presence_of :email
   validates_format_of :email, :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i, :message => 'is Invalid'
 
-  def active_participants
+  def all_participants
     participants.reject { |p| p.withdrawn? }
   end
 
-  def has_active_participants?
-    active_participants.size > 0
+  def active_participants
+    participants.reject { |p| p.inactive? }
   end
 
   def other_participants(participant)
@@ -45,5 +45,25 @@ class Account < ActiveRecord::Base
 
   def has_self_participant?
     account_participants.detect {|ap| ap.proxy == false and !ap.participant.withdrawn?}
+  end
+
+  def child_proxy_particpant
+    participants.select { |p| p.active? && p.child == true and p.account_participant.proxy == true }.first
+  end
+
+  def adult_proxy_particpant
+    participants.select { |p| p.active? && p.child == false and p.account_participant.proxy == true }.first
+  end
+
+  def last_updated_participant
+    active_participants.first
+  end
+
+  def copy_from_participant(participant)
+    if participant.child_proxy?
+      child_proxy_particpant ? child_proxy_particpant : last_updated_participant
+    else
+      adult_proxy_particpant ? adult_proxy_particpant : last_updated_participant
+    end
   end
 end

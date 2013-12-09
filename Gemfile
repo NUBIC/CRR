@@ -25,7 +25,8 @@ gem 'less-rails'
 gem 'uglifier', '>= 1.3.0'
 
 gem 'bcdatabase', '~> 1.0.6'
-gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
+# gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
+gem "activerecord-session_store", "~> 0.1.0"
 gem "cocoon"
 
 group :development, :test do
@@ -41,7 +42,8 @@ end
 
 #aker
 gem "aker"
-gem "aker-rails", :github => 'NUBIC/aker-rails', :branch => 'rails4'
+# gem "aker-rails", :github => 'NUBIC/aker-rails', :branch => 'rails4'
+gem "aker-rails", '~> 4.0.0.pre'
 gem "aker-nubic"
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

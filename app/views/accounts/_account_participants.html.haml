@@ -1,4 +1,4 @@
-- if @current_user.has_active_participants?
+- if @current_user.all_participants.size > 0
   .row-fluid
     .well.well-small
       %h4="Participants"
@@ -11,7 +11,7 @@
           %th="Pending surveys"
           %th="Options"
       %tbody
-        - @current_user.active_participants.each do |participant|
+        - @current_user.all_participants.each do |participant|
           %tr
             %td=participant.name
             %td=participant.created_at.to_date

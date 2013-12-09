@@ -9,6 +9,8 @@
         %th Accrual Goal
         %th Total Number Release
         %th Currently Released
+        %th State
+        %th
     %tbody
       -@studies.each do |study|
         %tr
@@ -31,4 +33,3 @@
                   =link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"
                   =f.button "Activate",:class=>"btn btn-mini btn-success"
 
-#study_involvements.modal.hide

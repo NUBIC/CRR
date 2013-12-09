@@ -51,7 +51,7 @@ class Study < ActiveRecord::Base
   end
 
   def search_display
-    "#{id} - #{irb_number} - #{name}"
+    "#{id} - #{name} - #{irb_number}"
   end
 
   private

@@ -1,5 +1,9 @@
-=form_for @relationship, :url=>admin_relationships_path,:html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationships"} do |f|
+=form_for @relationship, :url=>admin_relationship_path(@relationship), :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationships"} do |f|
   .row-fluid
+    .control-group
+      ="Participant"
+      .controls
+        =@relationship.destination.name
     .control-group
       =f.label :category,"Relationship"
       .controls

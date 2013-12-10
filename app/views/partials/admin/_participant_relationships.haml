@@ -7,13 +7,13 @@
         %th Name
         %th Relationship
         %th Notes
-        %th 
+        %th
     %tbody
       -participant.relationships.each do |relationship|
         %tr
           %td
             -p = relationship.origin.eql?(participant) ? relationship.destination : relationship.origin
-            =link_to p.name, admin_participant_path(p) 
-          %td=relationship.origin.eql?(participant) ? relationship.category : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category]
+            =link_to p.name, admin_participant_path(p)
+          %td=relationship.origin.eql?(participant) ? relationship.category.titleize : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category].titleize
           %td=relationship.notes
           %th=link_to "edit",edit_admin_relationship_path(relationship,:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#relationships",:class=>"btn btn-mini btn-primary"

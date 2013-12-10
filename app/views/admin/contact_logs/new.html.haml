@@ -8,7 +8,7 @@
     .control-group
       =f.label :mode,"Method"
       .controls
-        =f.select :mode, ContactLog::MODES
+        =f.select :mode, ContactLog::MODES.collect{|mode| [mode.titleize, mode]}
     .control-group
       =f.label :notes
       .controls

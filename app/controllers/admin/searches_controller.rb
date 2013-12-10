@@ -1,6 +1,6 @@
 class Admin::SearchesController < Admin::AdminController
   def index
-    @searches = params[:state].blank? ? Search.all : Search.send(params[:state].to_sym) 
+    @searches = params[:state].blank? ? Search.all : Search.send(params[:state].to_sym)
   end
 
  def new
@@ -10,6 +10,7 @@ class Admin::SearchesController < Admin::AdminController
 
  def create
    @search = Search.new(search_params)
+   @search.request_date = Time.now
    if @search.save
      redirect_to admin_search_path(@search)
    else

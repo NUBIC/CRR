@@ -4,7 +4,7 @@
     .control-group
       =f.label :study_id,"Study"
       .controls
-        =f.select :study_id,Study.all.collect{|s| ["#{s.irb_number} - #{s.name}",s.id]}
+        =f.select :study_id,Study.all.collect{|s| ["#{s.name} - #{s.irb_number}",s.id]}
     .control-group
       =f.label :start_date
       .controls

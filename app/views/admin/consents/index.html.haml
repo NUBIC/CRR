@@ -6,12 +6,12 @@
         %th Type
         %th State
         %th Created On
-        %th 
+        %th
     %tbody
       -@consents.each do |consent|
         %tr
           %td=consent.consent_type
-          %td=consent.state
+          %td=consent.state.titleize
           %td=consent.created_at.to_date
           %td
             .span12

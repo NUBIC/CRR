@@ -1,4 +1,4 @@
-=form_for @study,:url=>admin_studies_path,:class=>"form-horizontal"  do |f|
+=form_for @study,:url=>admin_study_path(@study),:class=>"form-horizontal"  do |f|
   .row-fluid
     .control-group
       =f.label :irb_number

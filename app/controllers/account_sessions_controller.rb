@@ -1,4 +1,6 @@
 class AccountSessionsController < PublicController
+  before_filter :require_no_user, :only=>[:new]
+  before_filter :require_user, :only=>[:destroy]
   # GET /account_sessions/new
   def new
     @account_session = AccountSession.new

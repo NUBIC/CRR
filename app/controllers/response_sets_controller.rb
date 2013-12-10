@@ -1,5 +1,5 @@
 class ResponseSetsController < PublicController
-  before_filter :require_account
+  before_filter :require_user
 
   def create
     participant = Participant.find(params[:participant_id])

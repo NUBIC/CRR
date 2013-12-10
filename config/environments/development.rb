@@ -26,6 +26,9 @@ AudiologyRegistry::Application.configure do
 
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { :address => "ns.northwestern.edu", :port => 25, :domain => "northwestern.edu" }
+  config.action_mailer.default_url_options = { :host => "http://www.crr.dev" }
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large

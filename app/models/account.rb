@@ -66,4 +66,8 @@ class Account < ActiveRecord::Base
       adult_proxy_particpant ? adult_proxy_particpant : last_updated_participant
     end
   end
+
+  def reset_token
+    reset_perishable_token!
+  end
 end

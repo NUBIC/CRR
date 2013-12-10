@@ -6,7 +6,7 @@ AudiologyRegistry::Application.routes.draw do
       collection do
         get :search
       end
-      member do 
+      member do
         get   :enroll
         patch :verify
         patch :withdraw
@@ -37,8 +37,8 @@ AudiologyRegistry::Application.routes.draw do
       end
     end
     resources :response_sets
-    resources :study_involvements do 
-      collection do 
+    resources :study_involvements do
+      collection do
         get :study
       end
     end
@@ -78,6 +78,7 @@ AudiologyRegistry::Application.routes.draw do
 
   resources :accounts
   resources :account_sessions
+  resources :password_resets, :only => [ :create, :edit, :update ]
   get 'user_login' => 'account_sessions#new', :as => :public_login
   get 'user_logout' => 'account_sessions#destroy', :as => :public_logout
   get 'dashboard' => 'accounts#dashboard', :as => :dashboard

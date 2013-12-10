@@ -1,23 +1,26 @@
 %h3="Welcome to the Communication Research Registry"
 = render :partial => 'account_participants.html.haml'
--if Consent.has_active_consent? and Survey.has_active_survey?
+- if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
   .well.well-small
     %h4="Add a participant"
   %h5="Who are you enrolling?"
   .row-fluid
     -unless current_user.has_self_participant?
+      - if Consent.adult_consent and Survey.adult_survey
+        .span1
+          =form_tag(participants_path, :method => 'post') do
+            = hidden_field_tag "account_id", @account.id
+            = submit_tag('Myself', :class=>"btn")
+    - if Consent.child_consent and Survey.child_survey
       .span1
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
-          = submit_tag('Myself', :class=>"btn")
-    .span1
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = hidden_field_tag "proxy", true
-        = hidden_field_tag "child", true
-        = submit_tag('Child', :class=>"btn")
-    .span1
-      =form_tag(participants_path, :method => 'post') do
-        = hidden_field_tag "account_id", @account.id
-        = hidden_field_tag "proxy", true
-        = submit_tag('Another Adult', :class=>"btn")
+          = hidden_field_tag "proxy", true
+          = hidden_field_tag "child", true
+          = submit_tag('Child', :class=>"btn")
+    - if Consent.adult_consent and Survey.adult_survey
+      .span1
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = submit_tag('Another Adult', :class=>"btn")

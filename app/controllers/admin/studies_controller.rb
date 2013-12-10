@@ -42,7 +42,7 @@ class Admin::StudiesController < Admin::AdminController
    else
      flash[:error] = @study.errors.full_messages.to_sentence
    end
-   redirect_to admin_studies_path
+   redirect_to admin_study_path(@study)
  end
   def activate
     @study = Study.find(params[:id])

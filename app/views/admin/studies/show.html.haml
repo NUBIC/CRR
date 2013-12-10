@@ -4,53 +4,67 @@
     .accordion-heading=link_to "Overview","#overview","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
     #overview.acordion-body.collapse
       .accordion-inner
-        %table
-          %tbody
-            %tr 
-              %th.muted Name
-              %td=@study.short_title
-            %tr 
-              %th.muted IRB Number
-              %td=@study.irb_number
-            %tr 
-              %th.muted Website
-              %td=@study.website
-            %tr 
-              %th.muted Sites
-              %td=@study.sites
-            %tr 
-              %th.muted PI 
-              %td="#{@study.pi_name} - #{@study.pi_email}"
-            %tr 
-              %th.muted Other Investigators
-              %td=@study.other_investigators
-            %tr 
-              %th.muted Study Contact
-              %td="#{@study.contact_name} - #{@study.contact_email}"
-            %tr 
-              %th.muted Funding Source
-              %td=@study.funding_source
-            %tr 
-              %th.muted Active Dates
-              %td="#{@study.start_date} - #{@study.end_date}"
-            %tr 
-              %th.muted Age Range
-              %td="#{@study.min_age} - #{@study.max_age}"
-            %tr 
-              %th.muted Visits
-              %td=@study.number_of_visits
-            %tr 
-              %th.muted Inclusion Criteria
-              %td!=@study.inclusion_criteria
-            %tr 
-              %th.muted Exclusion Criteria
-              %td!=@study.exclusion_criteria
-            %tr 
-              %th.muted Protocol Goals
-              %td!=@study.protocol_goals
-            %tr 
-              %th.muted Notes
-              %td!=@study.notes
+        .row-fluid
+          .span12
+            -if @study.active?
+              =form_for @study ,:url=> deactivate_admin_study_path(@study) do |f|
+                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary"
+                =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
+            -else
+              =form_for @study ,:url=> activate_admin_study_path(@study) do |f|
+                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary"
+                =f.button "Activate",:class=>"btn btn-mini btn-success"
+        .row-fluid
+          %table
+            %tbody
+              %tr 
+                %th.muted Name
+                %td=@study.name
+              %tr 
+                %th.muted Short Title
+                %td=@study.short_title
+              %tr
+                %th.muted IRB Number
+                %td=@study.irb_number
+              %tr 
+                %th.muted Website
+                %td=@study.website
+              %tr 
+                %th.muted Sites
+                %td=@study.sites
+              %tr 
+                %th.muted PI 
+                %td="#{@study.pi_name} - #{@study.pi_email}"
+              %tr 
+                %th.muted Other Investigators
+                %td=@study.other_investigators
+              %tr 
+                %th.muted Study Contact
+                %td="#{@study.contact_name} - #{@study.contact_email}"
+              %tr 
+                %th.muted Funding Source
+                %td=@study.funding_source
+              %tr 
+                %th.muted Active Dates
+                %td="#{@study.start_date} - #{@study.end_date}"
+              %tr 
+                %th.muted Age Range
+                %td="#{@study.min_age} - #{@study.max_age}"
+              %tr 
+                %th.muted Visits
+                %td=@study.number_of_visits
+              %tr 
+                %th.muted Inclusion Criteria
+                %td!=@study.inclusion_criteria
+              %tr 
+                %th.muted Exclusion Criteria
+                %td!=@study.exclusion_criteria
+              %tr 
+                %th.muted Protocol Goals
+                %td!=@study.protocol_goals
+              %tr 
+                %th.muted Notes
+                %td!=@study.notes
 
   .accordion-group
     .accordion-heading=link_to "Participants","#participants","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"

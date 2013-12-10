@@ -15,7 +15,7 @@
           =f.text_field :code,:class=>"input-small"
     .span3
       .control-group
-        =f.label :display_order,:class=>"control-label" 
+        =f.label :display_order,:class=>"control-label"
         .controls
           =f.select :display_order, (1..@question.section.questions.size+1).collect{|display_order| [display_order,display_order]},{},:class=>"input-mini"
   .row-fluid
@@ -26,8 +26,8 @@
           =f.check_box :is_mandatory
   .row-fluid
     .btn-group
-      =f.button "update",:class=>"btn btn-mini btn-success"
-      =link_to 'cancel',admin_section_path(@question.section),"data-async"=>true,"data-target"=>"#section_#{@question.section.id}",:class=>"btn btn-mini btn-warning"
+      =f.button "Update",:class=>"btn btn-mini btn-success"
+      =link_to 'Cancel',admin_section_path(@question.section),"data-async"=>true,"data-target"=>"#section_#{@question.section.id}",:class=>"btn btn-mini btn-warning"
 
 
-  
+

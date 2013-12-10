@@ -14,8 +14,8 @@
           %tr
             %th Participant
             %th Study
-            %th release on
-            %th end date
+            %th Release On
+            %th End Date
         %tbody
           -StudyInvolvement.warning.each do |si|
             %tr
@@ -24,7 +24,7 @@
               %td=si.start_date
               %td=si.end_date
 
-  
+
 -else
   .row-fluid
     %table.table.table-bordered

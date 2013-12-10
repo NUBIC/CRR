@@ -35,7 +35,7 @@ class Study < ActiveRecord::Base
   validates_presence_of :state,:irb_number,:name
   STATES= ['active','inactive']
 
-  scope :active, where(:state=>:active)
+  scope :active, -> {where(state:'active')}
   validates_inclusion_of :state, :in => STATES
   after_initialize :default_args
 

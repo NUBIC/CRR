@@ -23,13 +23,5 @@
           %td=study.state
           %td
             .span12
-              =link_to "View Details",admin_study_path(study)
-              -if study.active?
-                =form_for study ,:url=> deactivate_admin_study_path(study) do |f|
-                  =link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"
-                  =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
-              -else
-                =form_for study ,:url=> activate_admin_study_path(study) do |f|
-                  =link_to "Edit",edit_admin_study_path(study),:class=>"btn btn-mini btn-primary"
-                  =f.button "Activate",:class=>"btn btn-mini btn-success"
+              =link_to "View Details",admin_study_path(study),:class=>"btn btn-mini btn-primary"
 

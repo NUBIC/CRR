@@ -64,6 +64,6 @@
 -else
   .row-fluid
     -if @search.new?
-      =form_for @search,:url=>request_admin_search_path(@search) do |f|
+      =form_for @search,:url=>request_data_admin_search_path(@search) do |f|
         =f.button "Request Results",:class=>"btn btn-mini btn-success"
 

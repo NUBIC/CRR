@@ -29,6 +29,6 @@ class AccountSessionsController < PublicController
   def destroy
     @account_session = AccountSession.find
     @account_session.destroy
-    redirect_to :public_login
+    redirect_to AudiologyRegistry::Application.config.crr_website_url
   end
 end

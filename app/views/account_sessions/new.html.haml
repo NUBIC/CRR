@@ -45,7 +45,7 @@
         .form-inline.proxy-consent
           %br
           =label_tag 'Email'
-          =text_field_tag 'email'
+          =text_field_tag 'email', nil, :placeholder => 'Enter email which is used to create account', :class=>"input-xxlarge"
       .row-fluid
         %br
         = submit_tag("Send Reset Password Email", :class => "btn btn-success")

@@ -71,8 +71,9 @@ AudiologyRegistry::Application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { :address => "ns.northwestern.edu", :port => 25, :domain => "northwestern.edu" }
-  config.action_mailer.default_url_options = { :host => "https://clinical-rails-staging2.nubic.northwestern.edu/crr" } # NUBIC Staging server
-  # config.action_mailer.default_url_options = { :host => "https://crr-dev.soc.northwestern.edu" } # CRR Dev server
+  # TODO - Add configuration option so no need to change everytime we deploy two staging server
+  # config.action_mailer.default_url_options = { :host => "https://clinical-rails-staging2.nubic.northwestern.edu/crr" } # NUBIC Staging server
+  config.action_mailer.default_url_options = { :host => "https://crr-dev.soc.northwestern.edu" } # CRR Dev server
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify

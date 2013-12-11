@@ -5,7 +5,7 @@ class PublicController < ApplicationController
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error]="Access Denied"
     if current_user
-      redirect_to public_logout_url
+      redirect_to dashboard_url
     else
       redirect_to public_login_url
     end

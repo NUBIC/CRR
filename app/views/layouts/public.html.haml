@@ -26,6 +26,6 @@
               = yield
           .row-fluid.no-print
             .alert.alert-info.text-center
-              ="Contact us via email k-mcgroarty-torres@northwestern.edu or telephone (847) 491-2081 with questions or concerns."
+              %p!="Contact us via email #{mail_to "k-mcgroarty-torres@northwestern.edu", "k-mcgroarty-torres@northwestern.edu", subject: "Communication Research Registry"} or telephone (847) 491-2081 with questions or concerns."
           .row-fluid.no-print
             %p!= "Communication Research Registry &mdash; created by #{link_to("NUBIC", "http://www.nucats.northwestern.edu/resources-services/data-and-informatics-services/index.html")} for Northwestern University"

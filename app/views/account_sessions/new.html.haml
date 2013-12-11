@@ -49,3 +49,7 @@
       .row-fluid
         %br
         = submit_tag("Send Reset Password Email", :class => "btn btn-success")
+:javascript
+  $(document).ready(function(){
+    $('a[href="' + window.location.hash + '"]').click()
+  });

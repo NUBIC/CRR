@@ -67,16 +67,18 @@ namespace :deploy do
   task :permissions do
     sudo "chmod -R g+w #{shared_path} #{release_path} #{current_path}"
   end
+
+  desc 'Block access to the application'
+  task :block do
+    run "cd #{current_path} && #{rake} maintenance:block"
+  end
+
+  desc 'Restore access to the application'
+  task :unblock do
+    run "cd #{current_path} && #{rake} maintenance:unblock"
+  end
 end
 
-desc 'Block access to the application'
-task :block do
-  run "cd #{current_path} && #{rake} maintenance:block"
-end
 
-desc 'Restore access to the application'
-task :unblock do
-  run "cd #{current_path} && #{rake} maintenance:unblock"
-end
 #after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
 after 'deploy:finalize_update', 'deploy:permissions'

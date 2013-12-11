@@ -101,10 +101,14 @@ class Participant < ActiveRecord::Base
 
   # condensed form of name
   def name
+    [first_name, last_name].join(' ')
+  end
+
+  def proxy_name
     if first_name.blank? and last_name.blank?
       proxy? ? child_proxy? ? "No Name Child Enrollment" : "No Name Adult Enrollment" : "Self Enrollment"
     else
-      [first_name, last_name].join(' ')
+      name
     end
   end
 

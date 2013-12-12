@@ -4,7 +4,7 @@
       =link_to "#{Participant.verification_needed.size} participants awaiting verification",admin_participants_path(:state=>"verification_needed")
   -unless Search.data_requested.empty?
     .row-fluid
-      =link_to "#{Search.data_requested?.size} Data Requests awaiting processing",admin_searches_path(:state=>"data_requested")
+      =link_to "#{Search.data_requested.size} Data Requests awaiting processing",admin_searches_path(:state=>"data_requested")
   -unless StudyInvolvement.warning.empty?
     .row-fluid
       %h4 Released participants  with approaching deadlines

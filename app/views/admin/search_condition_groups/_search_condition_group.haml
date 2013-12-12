@@ -5,11 +5,11 @@
       .span1
         =form_for search_condition_group, :url=>admin_search_condition_group_path(search_condition_group) do |f|
           =f.hidden_field :operator,:value=>search_condition_group.invert_operator
-          =f.button "invert operator",:class=>"btn btn-mini btn-warning"
+          =f.button "Invert Operator",:class=>"btn btn-mini btn-warning"
       -if search_condition_group.search_id.blank?
         .span1
           =form_for search_condition_group,:method=>"delete", :url=>admin_search_condition_group_path(search_condition_group) do |f|
-            =f.button "delete group",:class=>"btn btn-mini btn-danger"
+            =f.button "Delete Group",:class=>"btn btn-mini btn-danger"
     .row-fluid
       .offset1
         -search_condition_group.search_conditions.each_with_index do |sc,i|
@@ -27,4 +27,4 @@
     .row-fluid{:id=>"#{search_condition_group.id}_new_condition_group"}
       =link_to "Add Group",new_admin_search_condition_group_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition_group",:class=>"btn btn-mini"
     %h4 )
-  
+

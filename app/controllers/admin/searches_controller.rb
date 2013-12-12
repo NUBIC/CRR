@@ -47,12 +47,13 @@ class Admin::SearchesController < Admin::AdminController
  def release_data
    @search = Search.find(params[:id])
    @search.release_data(nil,params)
-   if @search.save
-     flash[:notice] = "Participant Data Released"
-   else
-     flash[:error] = @search.errors.full_messages.to_sentence
-   end
-   redirect_to admin_search_path(@search)
+    if @search.save
+      flash[:notice] = "Participant Data Released"
+      redirect_to admin_searches_path
+    else
+      flash[:error] = @search.errors.full_messages.to_sentence
+      redirect_to admin_search_path(@search)
+    end
  end
  def destroy
    @search = Search.find(params[:id])

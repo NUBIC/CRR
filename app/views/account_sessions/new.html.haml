@@ -1,7 +1,8 @@
 %h5="The Communications Research Registry (CRR) is a joint effort involving several different Departments: The Roxelyn and Richard Pepper Department of Communication Sciences and Disorders, Neurology, the Department of Linguistics, and the Ken and Ruth Davee Department of Neurology."
 %ul.nav.nav-tabs
-  %li{:class=>'active'}=link_to 'First time? ','#sign_up',"data-toggle"=>'tab'
-  %li=link_to 'Already have account?','#login_tab',"data-toggle"=>'tab'
+  %li{:class=>'active'}=link_to 'First time? ', '#sign_up', "data-toggle"=>'tab'
+  %li=link_to 'Already have account?', '#login_tab', "data-toggle"=>'tab'
+  %li=link_to 'Forgot your password?', '#password_reset_tab', "data-toggle"=>'tab'
 .tab-content
   #sign_up.tab-pane.active
     =form_tag(accounts_path, :method => 'post', :html => { :class=> "form-horizontal" }) do
@@ -35,4 +36,20 @@
           =f.password_field :password
       .row-fluid
         .btn-group
-          =f.button "login",:class=>"btn btn-success"
+          =f.button "Login",:class=>"btn btn-success"
+  #password_reset_tab.tab-pane
+    = form_tag password_resets_path do
+      .row-fluid
+        Don't worry. Fill in your email address, and we'll send you a link to reset&nbsp;it.
+      .row-fluid
+        .form-inline.proxy-consent
+          %br
+          =label_tag 'Email'
+          =text_field_tag 'email', nil, :placeholder => 'Enter email which is used to create account', :class=>"input-xxlarge"
+      .row-fluid
+        %br
+        = submit_tag("Send Reset Password Email", :class => "btn btn-success")
+:javascript
+  $(document).ready(function(){
+    $('a[href="' + window.location.hash + '"]').click()
+  });

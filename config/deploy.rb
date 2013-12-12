@@ -65,10 +65,10 @@ namespace :deploy do
 
   desc "Fix permissions"
   task :permissions do
-    sudo "chmod -R g+w #{shared_path} #{current_path} #{release_path}"
+    sudo "chmod -R g+w #{shared_path} #{release_path} #{current_path}"
   end
-
 end
+
 
 #after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
 after 'deploy:finalize_update', 'deploy:permissions'

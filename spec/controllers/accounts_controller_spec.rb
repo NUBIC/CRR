@@ -96,7 +96,7 @@ describe AccountsController do
       it "redirects to logout page if user is logged in and tried to update other user's account" do
         AccountSession.create(other_account)
         put :update, {:id => account.id, :account => valid_attributes}
-        expect(response).to redirect_to public_logout_path
+        expect(response).to redirect_to dashboard_path
       end
     end
   end

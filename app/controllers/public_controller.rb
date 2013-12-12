@@ -5,7 +5,7 @@ class PublicController < ApplicationController
   rescue_from CanCan::AccessDenied do |exception|
     flash[:error]="Access Denied"
     if current_user
-      redirect_to public_logout_url
+      redirect_to dashboard_url
     else
       redirect_to public_login_url
     end
@@ -22,7 +22,8 @@ class PublicController < ApplicationController
     #return @current_user if defined?(@current_user)
     @current_user = current_account_session && current_account_session.record
   end
-  def require_account
+
+  def require_user
     if current_user.blank?
       store_location
       flash[:info] = "Please login or create a new account"
@@ -30,6 +31,14 @@ class PublicController < ApplicationController
       return false
     end
   end
+
+  def require_no_user
+    if current_user
+      flash[:notice]="You are currently logged in"
+      redirect_to dashboard_url
+    end
+  end
+
   def store_location
     session[:return_to] = request.fullpath
   end

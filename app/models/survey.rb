@@ -20,7 +20,7 @@ class Survey < ActiveRecord::Base
 
 
   validates_presence_of :title,:state
-  validates_uniqueness_of :code,:if=>:active?
+  validates_uniqueness_of :code, :allow_blank=> true,:if=>:active?
 
   validate :activation_check
   after_create :create_section, :unless => :multiple_section?

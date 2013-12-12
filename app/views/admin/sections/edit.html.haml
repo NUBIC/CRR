@@ -6,8 +6,8 @@
     =f.select :display_order, (1..@section.survey.sections.size+1).collect{|display_order| [display_order,display_order]},{},:class=>"input-mini"
   .row-fluid
     .btn-group
-      =f.button "update",:class=>"btn btn-mini btn-success"
-      =link_to 'cancel',admin_survey_path(@section.survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
+      =f.button "Update",:class=>"btn btn-mini btn-success"
+      =link_to 'Cancel',admin_survey_path(@section.survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
 
 
 

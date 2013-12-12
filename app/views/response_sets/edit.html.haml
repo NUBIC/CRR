@@ -16,9 +16,13 @@
               - @survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
                 %br
-            %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
+            =button_tag "Save",:value=>"save",:class=>"btn btn-mini btn-block btn-primary"
             %br
-            %li=button_tag "Finish",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
+            =button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
+            %br
+            =button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
+            %br
+            =link_to "Cancel", dashboard_path, :class=>"btn btn-mini btn-block btn-warning"
           .tab-content.offset2
             - @survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}

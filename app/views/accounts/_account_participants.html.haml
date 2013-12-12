@@ -13,7 +13,7 @@
       %tbody
         - @current_user.all_participants.each do |participant|
           %tr
-            %td=participant.name
+            %td=participant.proxy_name
             %td=participant.created_at.to_date
             %td
               %ul.unstyled

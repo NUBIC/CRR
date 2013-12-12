@@ -92,8 +92,8 @@ AudiologyRegistry::Application.configure do
   config.aker do
     Aker.configure do
       crr = Aker::Authorities::Crr.new
-      # authorities :cas,:netid,crr
-      authorities :cas, crr
+      authorities :cas,:netid,crr
+      # authorities :cas, crr
       central '/etc/nubic/aker-staging.yml'
     end
   end

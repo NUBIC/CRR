@@ -63,7 +63,8 @@ class Participant < ActiveRecord::Base
   end
 
   aasm_event :take_survey do
-    transitions :to => :survey, :from => :demographics, :guard => :demographics_info_completed?
+    transitions :to => :survey, :from => :demographics
+    # , :guard => :demographics_info_completed?
   end
 
   aasm_event :start_survey do

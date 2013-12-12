@@ -1,4 +1,4 @@
-=form_for @participant, :url=>admin_participant_path(@participant) do |f|
+=form_for @participant, :url=>admin_participant_path(@participant),:html => {:id => 'admin_participant_edit'} do |f|
   -if @participant.child?
     = render :partial => 'participant_child_proxy', :locals => {:f => f}
   -else
@@ -112,3 +112,7 @@
   .row-fluid
     =f.button "Save",:class=>"btn btn-mini btn-success"
     =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-mini btn-warning"
+:javascript
+  $(document).ready(function(){
+    $('#admin_participant_edit').validate();
+  });

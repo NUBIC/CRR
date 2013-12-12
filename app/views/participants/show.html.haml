@@ -79,4 +79,4 @@
             %td
               -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
               =link_to p.name, participant_path(p)
-            %td=relationship.origin.eql?(@participant) ? relationship.category.collect{|rel| [rel.titleize, rel]} : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category].collect{|rel| [rel.titleize, rel]}
+            %td=relationship.origin.eql?(@participant) ? relationship.category.titleize : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category].titleize

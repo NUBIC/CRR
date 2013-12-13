@@ -21,7 +21,10 @@
           .controls
             =f.text_field  :last_name, :class => "required"
     .row-fluid
-      %h4="Participant Address:"
+      -if @participant.child
+        %h4="Household Information:"
+      -else
+        %h4="Contact Information:"
     .row-fluid
       .span4
         .control-group

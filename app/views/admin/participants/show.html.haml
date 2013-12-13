@@ -33,7 +33,10 @@
               %th.muted Last Name:
               %td= @participant.last_name
       .span4
-        %h5 Contact
+        -if @participant.child
+          %h5 Household Contact
+        -else
+          %h5 Contact
         %table.table
           %tbody
             %tr

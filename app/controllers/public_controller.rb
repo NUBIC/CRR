@@ -11,6 +11,12 @@ class PublicController < ApplicationController
     end
   end
 
+  def handle_unverified_request
+    super
+    cookies.delete 'account_credentials'
+    @current_account_session = @current_user = nil
+  end
+
   private
 
   def current_account_session

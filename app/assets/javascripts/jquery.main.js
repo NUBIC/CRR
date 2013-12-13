@@ -65,9 +65,9 @@ $(document).ready(function() {
         }});});
   $.validator.addMethod("phone", function(value, element) {
     phone_number = value.replace(/\s+/g, "");
-    return this.optional(element) || phone_number.length > 9 &&
-    phone_number.match(/^(\+?1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
-  }, "Please enter a valid phone number.");
+    return this.optional(element) || phone_number.length > 9 && phone_number.match(/^\d{3}-\d{3}-\d{4}$/);
+    // phone_number.match(/^(\+?1-?)?(\([2-9]\d{2}\)|[2-9]\d{2})-?[2-9]\d{2}-?\d{4}$/);
+  }, "Please enter a valid phone number in 'xxx-xxx-xxxx' format.");
 
   $.validator.addMethod("zipcode", function(value, element) {
     return this.optional(element) || /\d{5}-\d{4}$|^\d{5}$/.test(value);

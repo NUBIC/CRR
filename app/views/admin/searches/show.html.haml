@@ -46,9 +46,7 @@
               %th= check_box_tag "selectall"
             %th Name
             %th Released To Study
-            %th Study Name
-            %th Status
-            %th Status Date
+            %th Studies
             %th Last Contact
         %tbody
           -@search.result.each do |participant|
@@ -57,9 +55,9 @@
                 %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
               %td=link_to participant.name, admin_participant_path(participant)
               %td=participant.on_study? ? "Yes" : "No"
-              %th= ""
-              %th= ""
-              %th= ""
+              %th
+                -participant.study_involvements.active.each do |si|
+                  ="#{si.study.name} - #{si.state}: #{si.state_date}"
               %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
 -else
   .row-fluid

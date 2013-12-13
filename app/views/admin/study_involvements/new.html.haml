@@ -6,6 +6,14 @@
       .controls
         =f.select :study_id,Study.all.collect{|s| ["#{s.name} - #{s.irb_number}",s.id]}
     .control-group
+      =f.label :state,"Status"
+      .controls
+        =f.select :state,StudyInvolvement::VALID_STATES.collect{|k|[k.titleize,k]}
+    .control-group
+      =f.label :state_date,"Status Date"
+      .controls
+        =f.text_field :state_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+    .control-group
       =f.label :start_date
       .controls
         =f.text_field :start_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"

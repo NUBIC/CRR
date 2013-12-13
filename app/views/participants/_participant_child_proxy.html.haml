@@ -50,10 +50,10 @@
     .control-group
       =f.label :primary_phone, "Primary Phone Number"
       .controls
-        =f.text_field  :primary_phone, class: "phone"
+        =f.text_field  :primary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
   .span4
     .control-group
       =f.label :secondary_phone, "Secondary Phone Number"
       .controls
-        =f.text_field  :secondary_phone, class: "phone"
+        =f.text_field  :secondary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
 = render :partial => 'participant_guardian', :locals => {:f => f}

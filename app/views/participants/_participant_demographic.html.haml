@@ -61,12 +61,12 @@
         .control-group
           =f.label :primary_phone, "Primary Phone Number"
           .controls
-            =f.text_field  :primary_phone
+            =f.text_field :primary_phone, placeholder: "xxx-xxx-xxxx"
       .span4
         .control-group
           =f.label :secondary_phone, "Secondary Phone Number"
           .controls
-            =f.text_field  :secondary_phone, class: "phone"
+            =f.text_field :secondary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
   -if @participant.related_participants.size > 0
     .relationships
       .row-fluid

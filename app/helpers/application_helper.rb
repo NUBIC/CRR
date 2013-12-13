@@ -56,12 +56,8 @@ module ApplicationHelper
   end
 
   def app_version_helper
-    version_filename = "#{Rails.root}/config/app_version.yml"
-    version  = "0.0.0"
-    if File.exists?(version_filename)
-      app_version = YAML.load_file(version_filename)
-      version = "#{app_version["major"]}.#{app_version["minor"]}.#{app_version["revision"]}"
-    end
-    "Release Version #{version}"
+    version = "0.3"
+
+    "Version #{version}"
   end
 end

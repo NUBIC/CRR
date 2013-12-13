@@ -52,6 +52,15 @@ task :staging do
   set_roles
 end
 
+# Production environment
+desc "Deploy to staging"
+task :production do
+  set :app_server, bcconf["production_app_server"]
+  set :rails_env, "production"
+  set :prefix_env, "/#{application}"
+  set_roles
+end
+
 namespace :deploy do
   desc "Restarting passenger with restart.txt"
   task :restart, :roles => :app, :except => { :no_release => true } do

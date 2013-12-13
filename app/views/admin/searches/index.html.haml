@@ -1,7 +1,7 @@
 %table.table.table-bordered.table-condensed
   %thead
     %tr
-      %th Study
+      %th Study Short Title
       %th State
       %th Request Date
       %th Release Date
@@ -9,7 +9,7 @@
     -@searches.each do |search|
       -if can? :show, search
         %tr
-          %td=search.study.name
+          %td=search.study.display_name
           %td=link_to search.state.titleize,admin_search_path(search)
           %td=search.request_date
           %td=search.process_date

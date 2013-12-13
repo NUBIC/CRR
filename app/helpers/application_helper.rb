@@ -62,6 +62,6 @@ module ApplicationHelper
       app_version = YAML.load_file(version_filename)
       version = "#{app_version["major"]}.#{app_version["minor"]}.#{app_version["revision"]}"
     end
-    "Release Version #{version}"
+    "Version #{version}"
   end
 end

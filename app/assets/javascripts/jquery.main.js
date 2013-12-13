@@ -2,6 +2,9 @@ var timeoutWarningTimer;
 var timeoutExpiredTimer;
 
 $(document).ready(function() {
+
+  //--------------- Change default Bootstrap date----------
+  $.fn.datepicker.defaults.format = "yyyy-mm-dd";
   // -------------- Common UI --------------
   $('a[data-toggle=modal]').livequery('click',function(){
     $($(this).attr('data-target')).html("<h5 class='modal-header text-center'>Loading...</h5>");

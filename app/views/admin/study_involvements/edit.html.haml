@@ -1,10 +1,17 @@
 =form_for @study_involvement,:url=>admin_study_involvement_path(@study_involvement), :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#studies"} do |f|
   .row-fluid
-    =f.hidden_field :participant_id
     .control-group
       =f.label :study_id,"Study"
       .controls
         =f.select :study_id,Study.all.collect{|s| [s.irb_number,s.id]}
+    .control-group
+      =f.label :state,"Status"
+      .controls
+        =f.select :state,StudyInvolvement::VALID_STATES.collect{|k|[k.titleize,k]}
+    .control-group
+      =f.label :state_date,"Status Date"
+      .controls
+        =f.text_field :state_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
     .control-group
       =f.label :start_date
       .controls

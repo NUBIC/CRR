@@ -110,6 +110,11 @@
           .controls
             =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
   .row-fluid
+    .control-group
+      =f.label :notes
+      .controls
+        =f.text_area :notes, :rows=>3, :class=>"input-block-level"
+  .row-fluid
     =f.button "Save",:class=>"btn btn-mini btn-success"
     =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-mini btn-warning"
 :javascript

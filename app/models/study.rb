@@ -54,6 +54,10 @@ class Study < ActiveRecord::Base
     "#{id} - #{name} - #{irb_number}"
   end
 
+  def display_name
+    short_title.blank? ? name : short_title
+  end
+
   private
   def default_args
     self.state ||='inactive'

@@ -1,5 +1,6 @@
 class ParticipantsController < PublicController
-  # before_filter :require_account
+  before_filter :require_user
+
   def enroll
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant

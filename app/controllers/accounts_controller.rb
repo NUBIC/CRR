@@ -1,4 +1,5 @@
 class AccountsController < PublicController
+  before_filter :require_user, :only=>[:dashboard, :update, :edit]
   def dashboard
     @account = current_user
     authorize! :dashboard, @account

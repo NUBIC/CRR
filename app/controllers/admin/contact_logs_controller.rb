@@ -21,9 +21,7 @@ class Admin::ContactLogsController < Admin::AdminController
    else
      flash[:notice]=@contact_log.errors.full_messages.to_sentence
    end
-    respond_to do |format|
-      format.js {render :index,:layout => false}
-    end
+   redirect_to admin_participant_path(@participant,:tab=>'contact')
  end
  def create
    @contact_log = ContactLog.new(cl_params)
@@ -33,9 +31,7 @@ class Admin::ContactLogsController < Admin::AdminController
      flash[:notice]=@contact_log.errors.full_messages.to_sentence
    end
    @participant = @contact_log.participant
-    respond_to do |format|
-      format.js {render :index,:layout => false}
-    end
+   redirect_to admin_participant_path(@participant,:tab=>'contact')
  end
  def destroy
    @contact_log = ContactLog.find(params[:id])

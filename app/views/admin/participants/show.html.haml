@@ -1,15 +1,15 @@
 .alert.alert-success
   %h4=@participant.name
 %ul.nav.nav-tabs
-  %li{:class=>'active'}=link_to 'Basics','#basics',"data-toggle"=>'tab'
+  %li{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }=link_to 'Basics','#basics',"data-toggle"=>'tab'
   -if current_user.admin? || current_user.data_manager?
-    %li=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
-    %li=link_to 'Study History','#studies',"data-toggle"=>'tab'
-    %li=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
-    %li=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
-    %li=link_to 'Consent','#consent',"data-toggle"=>'tab'
+    %li{:class=>"#{'active' if params[:tab].eql?('surveys')}"}=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
+    %li{:class=>"#{'active' if params[:tab].eql?('studies')}"}=link_to 'Study History','#studies',"data-toggle"=>'tab'
+    %li{:class=>"#{'active' if params[:tab].eql?('relationships')}"}=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
+    %li{:class=>"#{'active' if params[:tab].eql?('contact')}"}=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
+    %li{:class=>"#{'active' if params[:tab].eql?('consent')}"}=link_to 'Consent','#consent',"data-toggle"=>'tab'
 .tab-content
-  #basics.tab-pane.active
+  #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
     .row-fluid
       -if can? :edit, @participant
         -if @participant.verification_needed?
@@ -115,15 +115,15 @@
         =form_for @participant, :url=>withdraw_admin_participant_path do |f|
           =f.button "Withdraw Participant",:class=>"btn btn-mini btn-danger"
   -if current_user.admin? || current_user.data_manager?
-    #instruments.tab-pane
+    #instruments.tab-pane{:class=>"#{'active' if params[:tab].eql?('surveys')}"}
       = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
-    #studies.tab-pane
+    #studies.tab-pane{:class=>"#{'active' if params[:tab].eql?('studies')}"}
       = render :partial => 'partials/admin/participant_studies', :locals => {:participant => @participant}
-    #relationships.tab-pane
+    #relationships.tab-pane{:class=>"#{'active' if params[:tab].eql?('relationships')}"}
       = render :partial => 'partials/admin/participant_relationships', :locals => {:participant => @participant}
-    #contact_log.tab-pane
+    #contact_log.tab-pane{:class=>"#{'active' if params[:tab].eql?('contact')}"}
       = render :partial => 'partials/admin/participant_contact_logs', :locals => {:participant => @participant}
-    #consent.tab-pane
+    #consent.tab-pane{:class=>"#{'active' if params[:tab].eql?('consent')}"}
       -unless @participant.consent_signatures.last.blank?
         .row-fluid
           !=@participant.consent_signatures.last.consent.content

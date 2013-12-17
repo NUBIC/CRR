@@ -3,7 +3,7 @@ require 'aker'
 module Aker::Cas::Middleware
   class LogoutResponder
     include Aker::Rack::ConfigurationHelper
-    include ::Rack::Utils 
+    include ::Rack::Utils
 
     ##
     # @param app a Rack app
@@ -33,7 +33,8 @@ module Aker::Cas::Middleware
     def cas_logout_url(env)
       logout_uri = configuration(env).parameters_for(:cas)[:logout_url] || URI.join(cas_url(env), 'logout')
       request =::Rack::Request.new(env)
-      url = "#{request.scheme}://#{request.host}"
+      # url = "#{request.scheme}://#{request.host}"
+      url = AudiologyRegistry::Application.config.crr_website_url
       unless [ ["https", 443], ["http", 80] ].include?([request.scheme, request.port])
                   url << ":#{request.port}"
       end

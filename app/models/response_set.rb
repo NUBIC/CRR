@@ -68,7 +68,7 @@ class ResponseSet < ActiveRecord::Base
         elsif q.response_type.eql?("pick_one")
           return responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy} if args.blank?
           responses.select{|response| response.question_id.eql?(q.id)}.each{|r| r.destroy unless r.answer.id.eql?(args.to_i)}
-          r = responses.detect{|res| res.question_id.eql?(q.id) and res.answer_id.eql?(args.to_i)} || responses.create(question_id: q.id, answer_id: args.to_i) 
+          r = responses.detect{|res| res.question_id.eql?(q.id) and res.answer_id.eql?(args.to_i)} || responses.create(question_id: q.id, answer_id: args.to_i)
         elsif ["number","long_text","short_text","date"].include?(q.response_type)
             if args.blank?
               responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy}
@@ -104,16 +104,17 @@ class ResponseSet < ActiveRecord::Base
     self.completed_at.nil? ? "Started" : "Completed"
   end
 
+  def can_complete?
+    mandatory_questions_complete?
+  end
+
   def complete!
-    if mandatory_questions_complete? 
+    if mandatory_questions_complete?
       self.completed_at = Time.now
       return save!
-    else
-      self.errors.add(:form,"Can't be completed until all the mandatory questions have been answered")
-      return false
     end
   end
- 
+
   private
   def send_alert
     if self.public? and !self.participant.email.blank?

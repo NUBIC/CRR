@@ -52,10 +52,15 @@ class Admin::ResponseSetsController < Admin::AdminController
     @response_set.update_attributes(response_set_params)
     participant = @response_set.participant
     if @response_set.save
-      if params[:button].eql?("finish") 
-        @response_set.complete! 
-        @response_set.participant.enroll! if participant.survey_started?
-        return redirect_to admin_participant_path(@response_set.participant)
+      if params[:button].eql?("finish")
+        if @response_set.can_complete?
+          @response_set.complete!
+          @response_set.participant.enroll! if participant.survey_started?
+          return redirect_to admin_participant_path(@response_set.participant)
+        else
+          flash[:error] = "Required field(s): missing information. Please review all sections of the survey."
+          redirect_to edit_admin_response_set_path(@response_set)
+        end
       elsif params[:button].eql?("exit")
         return redirect_to admin_participant_path(@response_set.participant)
       else

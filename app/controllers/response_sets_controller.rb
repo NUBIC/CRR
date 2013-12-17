@@ -34,9 +34,14 @@ class ResponseSetsController < PublicController
     participant = @response_set.participant
     if @response_set.save
       if params[:button].eql?("finish")
-        @response_set.complete!
-        @response_set.participant.process_enrollment! if participant.survey_started?
-        redirect_to dashboard_path
+        if @response_set.can_complete?
+          @response_set.complete!
+          @response_set.participant.process_enrollment! if participant.survey_started?
+          redirect_to dashboard_path
+        else
+          flash[:error] = "Required field(s): missing information. Please review all sections of the survey."
+          redirect_to edit_response_set_path(@response_set)
+        end
       elsif params[:button].eql?("exit")
         redirect_to dashboard_path
       else

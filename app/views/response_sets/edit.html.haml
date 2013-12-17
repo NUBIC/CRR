@@ -2,29 +2,31 @@
   .span12
     .well.well-small.text-center
       %h4.text-center=@response_set.participant.name
+- if @response_set.errors.any?
+  .row-fluid
+    %h2= "#{pluralize(@response_set.errors.count, "error")} prohibited this relationship from being saved:"
+    %ul
+      - @response_set.errors.full_messages.each do |msg|
+        %li= msg
 .row-fluid
   .span12
-    %h4.text-center= @survey.title
-    %hr
-.row-fluid
-  .span12
-    =simple_form_for @response_set  do |f|
+    =simple_form_for @response_set, :html=>{:id => "edit_response_set_form" } do |f|
       .row-fluid
         .tabbable.tabs-left
           %ul.nav.nav-tabs.span2{"data-spy"=>"affix","data-offset-top"=>"200"}
-            -if @survey.sections.size > 1
-              - @survey.sections.each_with_index do |s,si|
+            -if @response_set.survey.sections.size > 1
+              - @response_set.survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
                 %br
-            =button_tag "Save",:value=>"save",:class=>"btn btn-mini btn-block btn-primary"
+            =button_tag "Save",:value=>"save",:class=>"btn btn-mini btn-block btn-primary cancel"
             %br
-            =button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
+            =button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary cancel"
             %br
-            =button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
+            =button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success", :id => "admin_submit_response_set"
             %br
             =link_to "Cancel", dashboard_path, :class=>"btn btn-mini btn-block btn-warning"
           .tab-content.offset2
-            - @survey.sections.each_with_index do |s,si|
+            - @response_set.survey.sections.each_with_index do |s, si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
                 -s.questions.each_with_index do |q,i|
                   .row-fluid
@@ -38,3 +40,10 @@
                       -else
                         =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small' if q.date?}","data-provide"=>"#{'datepicker' if q.date?}",:rows=>3 }
                       %hr
+:javascript
+  $(document).ready(function(){
+    $('#edit_response_set_form').validate();
+    $('#submit_response_set').click(function() {
+      $('#edit_response_set_form').valid();
+    });
+  });

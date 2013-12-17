@@ -4,19 +4,19 @@
     %hr
 .row-fluid
   .span12
-    =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set) do |f|
+    =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{:id => "admin_edit_response_set_form" } do |f|
       .row-fluid
         .tabbable.tabs-left
           %ul.nav.nav-tabs.span2{"data-spy"=>"affix","data-offset-top"=>"200"}
             -if @response_set.survey.sections.size > 1
               - @response_set.survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
-            %li=button_tag "Save",:class=>"btn btn-mini btn-block btn-primary"
+            %li=button_tag "Save",:class=>"btn btn-mini btn-block btn-primary cancel"
             %br
-            %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary"
+            %li=button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary cancel"
             -unless @response_set.complete?
               %br
-              %li=button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success"
+              %li=button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success", :id => "admin_submit_response_set"
             %br
             =link_to "Cancel", admin_participant_path(@response_set.participant), :class=>"btn btn-mini btn-block btn-warning"
           .tab-content.offset2
@@ -34,3 +34,10 @@
                       -else
                         =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small' if q.date?}","data-provide"=>"#{'datepicker' if q.date?}",:rows=>3 }
                       %hr
+:javascript
+  $(document).ready(function(){
+    $('#admin_edit_response_set_form').validate();
+    $('#admin_submit_response_set').click(function() {
+      $('#admin_edit_response_set_form').valid();
+    });
+  });

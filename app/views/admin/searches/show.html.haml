@@ -42,7 +42,7 @@
       %table.table.bordered
         %thead
           %tr
-            -if @search.data_released? or participant.withdrawn?
+            -if @search.data_released?
               %th
             -else
               %th= check_box_tag "selectall"

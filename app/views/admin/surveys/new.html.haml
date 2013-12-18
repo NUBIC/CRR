@@ -1,8 +1,10 @@
-=form_for @survey ,:url=>admin_surveys_path, :html=>{:class=>"form-horizontal ajax-form","data-target"=>"#forms"} do |f|
+=form_for @survey ,:url=>admin_surveys_path, :html=>{:class=>"form-horizontal ajax-form","data-target"=>"#forms", :id=> "admin_new_survey"} do |f|
   .control-group
     =f.label :title,:class=>"control-label"
     .controls
-      =f.text_field :title,:class=>"input-xxlarge"
+      =f.text_field :title,:class=>"input-xxlarge required"
+      %small
+        %i (Required Field)
   .control-group
     =f.label :description,:class=>"control-label"
     .controls
@@ -21,6 +23,9 @@
     .btn-group
       =f.button "Update",:class=>"btn btn-mini btn-success"
       =link_to 'Cancel',admin_surveys_path,"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
-
+:javascript
+  $(document).ready(function(){
+    $('#admin_new_survey').validate();
+  });
 
 

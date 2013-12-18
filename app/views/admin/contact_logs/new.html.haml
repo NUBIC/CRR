@@ -9,6 +9,8 @@
       =f.label :mode,"Method"
       .controls
         =f.select :mode, ContactLog::MODES.collect{|mode| [mode.titleize, mode]}
+        %small
+          %i (Required Field)
     .control-group
       =f.label :notes
       .controls

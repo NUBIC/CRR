@@ -9,6 +9,8 @@
       =f.label :category,"Relationship"
       .controls
         =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel.titleize, rel]}
+        %small
+          %i (Required Field)
     .control-group
       =f.label :notes
       .controls

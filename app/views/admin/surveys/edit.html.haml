@@ -1,7 +1,9 @@
-=form_for @survey ,:url=>admin_survey_path(@survey), :html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
+=form_for @survey ,:url=>admin_survey_path(@survey), :html=>{:class=>"ajax-form","data-target"=>"#forms",:id=> "admin_edit_survey"} do |f|
   .row-fluid
     =f.label :title
-    =f.text_field :title,:class=>"input-xxlarge"
+    =f.text_field :title,:class=>"input-xxlarge required"
+    %small
+      %i (Required Field)
     =f.label :description
     =f.text_area :description,:rows=>2,:class=>"input-xxlarge"
     =f.label :code
@@ -12,6 +14,9 @@
     .btn-group
       =f.button "Update",:class=>"btn btn-mini btn-success"
       =link_to 'Cancel',admin_survey_path(@survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
-
+:javascript
+  $(document).ready(function(){
+    $('#admin_edit_survey').validate();
+  });
 
 

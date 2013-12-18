@@ -1,13 +1,18 @@
-=form_for @answer, :url=>admin_answer_path(@answer),:html=>{:class=>"ajax-form form-horizontal","data-target"=>"#answer_#{@answer.id}"} do |f|
+=form_for @answer, :url=>admin_answer_path(@answer),:html=>{:class=>"ajax-form form-horizontal","data-target"=>"#answer_#{@answer.id}", :id=> "admin_edit_answer"} do |f|
   .row-fluid
     .span3
-      =f.text_field :text,:class=>"input-large",:placeholder=>"answer text..."
+      =f.text_field :text,:class=>"input-large required",:placeholder=>"answer text"
+      (Required)
     .span2
-      =f.text_field :code,:class=>"input-mini",:placeholder=>"code..."
+      =f.text_field :code,:class=>"input-mini required",:placeholder=>"code"
+      (Required)
     .span2
       .btn-group
         =f.button "Update",:class=>"btn btn-mini btn-success"
         =link_to 'Cancel',admin_answer_path(@answer),"data-async"=>true,"data-target"=>"#answer_#{@answer.id}",:class=>"btn btn-mini btn-warning"
-
+:javascript
+  $(document).ready(function(){
+    $('#admin_edit_answer').validate();
+  });
 
 

@@ -4,6 +4,8 @@
       =f.label :study_id,"Study"
       .controls
         =f.select :study_id,Study.all.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}
+        %small
+          %i (Required Field)
     .control-group
       =f.label :state,"Status"
       .controls
@@ -15,7 +17,9 @@
     .control-group
       =f.label :start_date
       .controls
-        =f.text_field :start_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :start_date,:class=>"input-small date required","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+         %small
+          %i (Required Field)
     .control-group
       =f.label :warning_date
       .controls

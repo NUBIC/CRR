@@ -3,11 +3,15 @@
     .control-group
       =f.label :irb_number
       .controls
-        =f.text_field :irb_number,:class=>"input-small"
+        =f.text_field :irb_number,:class=>"input-small required"
+        %small
+          %i (Required Field)
     .control-group
       =f.label :name
       .controls
-        =f.text_field :name,:class=>"input-xxlarge"
+        =f.text_field :name,:class=>"input-xxlarge required"
+        %small
+          %i (Required Field)
     .control-group
       =f.label :short_title
       .controls

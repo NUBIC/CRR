@@ -11,7 +11,7 @@ class SurveyParser
       raise section.errors.full_messages.to_sentence unless section.save
       section.reload
       section_node.questions.each do |question_node|
-        question = section.questions.new(:text=>question_node.text,:help_text=>question_node.text,:code=>question_node.code,:response_type=>question_node.response_type,:is_mandatory=>question_node.is_mandatory,:display_order=>question_node.display_order)
+        question = section.questions.new(:text=>question_node.text,:help_text=>question_node.help_text,:code=>question_node.code,:response_type=>question_node.response_type,:is_mandatory=>question_node.is_mandatory,:display_order=>question_node.display_order)
         survey.destroy unless question.save
         raise question.full_messages.to_sentence unless question.save
         question.reload

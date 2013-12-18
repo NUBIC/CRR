@@ -5,11 +5,11 @@
 #  id             :integer          not null, primary key
 #  survey_id      :integer
 #  participant_id :integer
-#  effective_date :date
 #  completed_at   :datetime
 #  public         :boolean
 #  created_at     :datetime
 #  updated_at     :datetime
+#  email          :string(255)
 #
 
 class ResponseSet < ActiveRecord::Base
@@ -117,8 +117,8 @@ class ResponseSet < ActiveRecord::Base
 
   private
   def send_alert
-    if self.public? and !self.participant.email.blank?
-      SurveyMailer.new_survey_alert(self).deliver if ['staging','production'].include?(Rails.env)
+    if self.public? and !self.email.blank?
+      SurveyMailer.new_survey_alert(self).deliver!
     end
   end
 

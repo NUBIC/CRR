@@ -4,13 +4,14 @@
     =f.label 'survey_id','Select Form',:class=>"control-label"
     .controls
       =f.select :survey_id,@surveys.map{|s|[s.title,s.id]},{:prompt => 'Select Form'}
-  -if @response_set.participant.email.blank?
-    %h6="*Due to a lack of a valid email address, this form cannot be mailed to the participant"
-  -else
-    .control-group
-      =f.label :public,'Send to Participant:',:class=>"control-label"
-      .controls
-        =f.check_box :public
+  .control-group
+    =f.label :public,'Send to Participant:',:class=>"control-label"
+    .controls
+      =f.check_box :public
+  .control-group
+    =f.label :email,'Please select email to send survey:', :class=>"control-label"
+    .controls
+      =f.select :email, @participant.contact_emails.each {|contact, email| ["#{contact}-#{email}", email]}
   .control-group
     .controls
       .btn-group

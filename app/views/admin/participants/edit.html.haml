@@ -19,7 +19,10 @@
         .control-group
           =f.label :last_name, "Last Name"
           .controls
-            =f.text_field  :last_name, :class => "required"
+            -if @participant.child
+              =f.text_field  :last_name
+            -else
+              =f.text_field  :last_name, :class => "required"
     .row-fluid
       -if @participant.child
         %h4="Household Information:"
@@ -75,12 +78,18 @@
         .control-group
           =f.label :primary_guardian_first_name, "First Name"
           .controls
-            =f.text_field :primary_guardian_first_name
+            -if @participant.child
+              =f.text_field :primary_guardian_first_name, :class => "required"
+            -else
+              =f.text_field :primary_guardian_first_name
       .span4
         .control-group
           =f.label :primary_guardian_last_name, "Last Name"
           .controls
-            =f.text_field :primary_guardian_last_name
+            -if @participant.child
+              =f.text_field :primary_guardian_last_name, :class => "required"
+            -else
+              =f.text_field :primary_guardian_last_name
       .span4
         .control-group
           =f.label :primary_guardian_email, "Email Address"

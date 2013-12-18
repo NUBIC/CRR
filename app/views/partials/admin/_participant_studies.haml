@@ -1,4 +1,5 @@
-=link_to "Add To Study",new_admin_study_involvement_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#studies",:class=>"btn btn-mini btn-primary"
+-unless @participant.withdrawn?
+  =link_to "Add To Study",new_admin_study_involvement_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#studies",:class=>"btn btn-mini btn-primary"
 %table.table.bordered
   %thead
     %tr

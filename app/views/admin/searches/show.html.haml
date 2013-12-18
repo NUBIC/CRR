@@ -42,16 +42,21 @@
       %table.table.bordered
         %thead
           %tr
-            -unless @search.data_released?
+            -if @search.data_released? or participant.withdrawn?
+              %th
+            -else
               %th= check_box_tag "selectall"
             %th Name
             %th Released To Study
             %th Studies
             %th Last Contact
+            %th Registry Status
         %tbody
           -@search.result.each do |participant|
             %tr
-              -unless @search.data_released?
+              -if @search.data_released? or participant.withdrawn?
+                %td
+              -else
                 %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
               %td=link_to participant.name, admin_participant_path(participant)
               %td=participant.on_study? ? "Yes" : "No"
@@ -59,6 +64,7 @@
                 -participant.study_involvements.active.each do |si|
                   ="#{si.study.name} - #{si.state}: #{si.state_date}"
               %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+              %td=participant.stage.titleize
 -else
   .row-fluid
     -if @search.new?

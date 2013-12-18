@@ -66,6 +66,7 @@ $(document).ready(function() {
   "oLanguage": {
       "sSearch": "Filter: "
         }});});
+
   $.validator.addMethod("phone", function(value, element) {
     phone_number = value.replace(/\s+/g, "");
     return this.optional(element) || phone_number.length > 9 && phone_number.match(/^\d{3}-\d{3}-\d{4}$/);
@@ -75,6 +76,10 @@ $(document).ready(function() {
   $.validator.addMethod("zipcode", function(value, element) {
     return this.optional(element) || /\d{5}-\d{4}$|^\d{5}$/.test(value);
   }, "Please enter a valid US Zip Code.");
+
+  $.validator.addMethod("date", function(date, element) {
+    return this.optional(element) || date.match(/^(19|20)\d\d-(0\d|1[012])-(0\d|1\d|2\d|3[01])$/);
+  }, "Please specify a valid date in 'yyyy-mm-dd' format.");
 
   // TODO: Move to the seperate js and simply
   // $('input[id=participant_first_name]').blur(function() {

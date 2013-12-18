@@ -1,10 +1,10 @@
-=form_for @contact_log, :url=>admin_contact_logs_path,:html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#contact_log"} do |f|
+=form_for @contact_log, :url=>admin_contact_logs_path,:html=>{ :class=>"ajax-form form-horizontal", "data-target"=>"#contact_log", :id => "admin_new_contact_log"} do |f|
   .row-fluid
     =f.hidden_field :participant_id
     .control-group
       =f.label :date
       .controls
-        =f.text_field :date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :date,:class=> "input-small date", "data-provide"=>"datepicker", "data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :mode,"Method"
       .controls
@@ -17,3 +17,7 @@
     .btn-group
       =f.button "Create",:class=>"btn btn-mini btn-success"
       =link_to "Cancel",admin_contact_logs_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#contact_log"
+:javascript
+  $(document).ready(function(){
+    $('#admin_new_contact_log').validate();
+  });

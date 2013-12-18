@@ -1,4 +1,4 @@
-=form_for @study,:url=>admin_studies_path,:class=>"form-horizontal"  do |f|
+=form_for @study,:url=>admin_studies_path, :html => {:class=>"form-horizontal", id: "admin_new_study"}   do |f|
   .row-fluid
     .control-group
       =f.label :irb_number
@@ -43,11 +43,11 @@
     .control-group
       =f.label :start_date
       .controls
-        =f.text_field :start_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :start_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :end_date
       .controls
-        =f.text_field :end_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :accrual_goal
       .controls
@@ -88,3 +88,7 @@
     .btn-group
       =f.button "Create",:class=>"btn btn-mini btn-success"
       =link_to "Cancel",admin_studies_path,:class=>"btn btn-mini btn-warning"
+:javascript
+  $(document).ready(function(){
+    $('#admin_new_study').validate();
+  });

@@ -1,4 +1,4 @@
-=form_for @search_condition, :url=>admin_search_condition_path(@search_condition), :html=>{:class=>"form-horizontal"}  do |f|
+=form_for @search_condition, :url=>admin_search_condition_path(@search_condition), :html=>{:class=>"form-horizontal", :id=> "admin_edit_search_condition"}  do |f|
   .row-fluid
     .span2
       =@search_condition.question.search_display
@@ -11,7 +11,7 @@
         .control-group
           .controls
             =f.select :value,@search_condition.question.answers.collect{|a|[ a.text,a.id]}
-    -else 
+    -else
       .span3
         .control-group
           .controls
@@ -19,9 +19,13 @@
       .span2
         .control-group
           .controls
-            =f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small"
+            =f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small #{'date' if @search_condition.question.date?}", :placeholder => "#{'yyyy-mm-dd' if @search_condition.question.date?}"
   .row-fluid
     .span3
       .btn-group
         =f.button "Continue",:class=>"btn btn-mini btn-success"
         =link_to "Cancel",admin_search_path(:id=>@search_condition.search),:class=>"btn btn-mini btn-warning"
+:javascript
+  $(document).ready(function(){
+    $('#admin_edit_search_condition').validate();
+  });

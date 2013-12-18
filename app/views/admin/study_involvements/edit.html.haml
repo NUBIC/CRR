@@ -1,4 +1,4 @@
-=form_for @study_involvement,:url=>admin_study_involvement_path(@study_involvement), :html=>{:class=>"form-horizontal"} do |f|
+=form_for @study_involvement,:url=>admin_study_involvement_path(@study_involvement), :html=>{:class=>"form-horizontal", :id=>"admin_edit_study_involvement"} do |f|
   .row-fluid
     .control-group
       =f.label :study_id,"Study"
@@ -11,19 +11,19 @@
     .control-group
       =f.label :state_date,"Status Date"
       .controls
-        =f.text_field :state_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :state_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :start_date
       .controls
-        =f.text_field :start_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :start_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :warning_date
       .controls
-        =f.text_field :warning_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :warning_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :end_date
       .controls
-        =f.text_field :end_date,:class=>"input-small","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd"
+        =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
       =f.label :notes
       .controls
@@ -32,3 +32,7 @@
     .btn-group
       =f.button "Update",:class=>"btn btn-mini btn-success"
       =link_to "Cancel",admin_study_involvements_path(:participant_id=>@study_involvement.participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#studies"
+:javascript
+  $(document).ready(function(){
+    $('#admin_edit_study_involvement').validate();
+  });

@@ -1,6 +1,6 @@
 .row-fluid
   !=@participant.child? ? Consent.child_consent.content : Consent.adult_consent.content
-= form_for @participant.consent_signatures.new(:consent=>@participant.child? ? Consent.child_consent :  Consent.adult_consent), :url=>consent_signature_admin_participant_path(@participant) do |f|
+= form_for @participant.consent_signatures.new(:consent=>@participant.child? ? Consent.child_consent :  Consent.adult_consent), :url=>consent_signature_admin_participant_path(@participant), :html=>{ :id => "admin_new_consent_sign" } do |f|
   =f.hidden_field :consent_id
   .row-fluid
     .span4
@@ -14,6 +14,10 @@
       = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}
     .span4
       = f.label :date, 'Consent given on:'
-      = f.text_field :date, :class=> "required input-small","data-provide"=> "datepicker"
+      = f.text_field :date, :class=> "required input-small date","data-provide"=> "datepicker", placeholder: "yyyy-mm-dd"
   .row-fluid
     = submit_tag("Next", class: "btn btn-primary")
+:javascript
+  $(document).ready(function(){
+    $('#admin_new_consent_sign').validate();
+  });

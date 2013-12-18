@@ -23,23 +23,23 @@ class Admin::StudyInvolvementsController < Admin::AdminController
  def update
    @study_involvement = StudyInvolvement.find(params[:id])
    @study_involvement.update_attributes(si_params)
-   if @study_involvement.save
-     flash[:notice]="Updated study association"
-   else
-     flash[:notice]=@study_involvement.errors.full_messages.to_sentence
-   end
    @participant = @study_involvement.participant
-   redirect_to admin_participant_path(@participant,:tab=>'studies')
+   if @study_involvement.save
+    redirect_to admin_participant_path(@participant,:tab=>'studies')
+   else
+    flash[:notice]=@study_involvement.errors.full_messages.to_sentence
+    redirect_to edit_admin_study_involvement_path(@study_involvement)
+   end
  end
  def create
    @study_involvement = StudyInvolvement.new(si_params)
-   if @study_involvement.save
-     flash[:notice]="Added new study association"
-   else
-     flash[:notice]=@study_involvement.errors.full_messages.to_sentence
-   end
    @participant = @study_involvement.participant
-   redirect_to admin_participant_path(@participant,:tab=>'studies')
+   if @study_involvement.save
+    redirect_to admin_participant_path(@participant,:tab=>'studies')
+   else
+    flash[:notice]=@study_involvement.errors.full_messages.to_sentence
+    redirect_to new_admin_study_involvement_path(participant_id: @participant.id)
+   end
  end
  def destroy
    @study_involvement = StudyInvolvement.find(params[:id])

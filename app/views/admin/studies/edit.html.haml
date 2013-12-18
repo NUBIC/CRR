@@ -1,7 +1,7 @@
 =form_for @study,:url=>admin_study_path(@study), :html => {:class=>"form-horizontal", id: "admin_edit_study"}  do |f|
   .row-fluid
     .control-group
-      =f.label :irb_number
+      =f.label :irb_number, "IRB Number"
       .controls
         =f.text_field :irb_number,:class=>"input-small required"
         %small
@@ -15,17 +15,19 @@
     .control-group
       =f.label :short_title
       .controls
-        =f.text_field :short_title,:class=>"input-xxlarge"
+        =f.text_field :short_title,:class=>"input-xxlarge required"
+        %small
+          %i (Required Field)
     .control-group
       =f.label :sites
       .controls
         =f.text_field :sites,:class=>"input-xxlarge"
     .control-group
-      =f.label :pi_name
+      =f.label :pi_name, "PI Name"
       .controls
         =f.text_field :pi_name
     .control-group
-      =f.label :pi_email
+      =f.label :pi_email, "PI Email"
       .controls
         =f.text_field :pi_email
     .control-group
@@ -53,7 +55,7 @@
       .controls
         =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
     .control-group
-      =f.label :accrual_goal
+      =f.label :accrual_goal, "Desired Sample Size"
       .controls
         =f.text_field :accrual_goal,:class=>"input-mini"
     .control-group

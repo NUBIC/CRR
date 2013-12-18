@@ -17,52 +17,52 @@
         .row-fluid
           %table
             %tbody
-              %tr 
+              %tr
                 %th.muted Name
                 %td=@study.name
-              %tr 
+              %tr
                 %th.muted Short Title
                 %td=@study.short_title
               %tr
                 %th.muted IRB Number
                 %td=@study.irb_number
-              %tr 
+              %tr
                 %th.muted Website
                 %td=@study.website
-              %tr 
+              %tr
                 %th.muted Sites
                 %td=@study.sites
-              %tr 
-                %th.muted PI 
+              %tr
+                %th.muted PI
                 %td="#{@study.pi_name} - #{@study.pi_email}"
-              %tr 
+              %tr
                 %th.muted Other Investigators
                 %td=@study.other_investigators
-              %tr 
+              %tr
                 %th.muted Study Contact
                 %td="#{@study.contact_name} - #{@study.contact_email}"
-              %tr 
+              %tr
                 %th.muted Funding Source
                 %td=@study.funding_source
-              %tr 
+              %tr
                 %th.muted Active Dates
                 %td="#{@study.start_date} - #{@study.end_date}"
-              %tr 
+              %tr
                 %th.muted Age Range
                 %td="#{@study.min_age} - #{@study.max_age}"
-              %tr 
+              %tr
                 %th.muted Visits
                 %td=@study.number_of_visits
-              %tr 
+              %tr
                 %th.muted Inclusion Criteria
                 %td!=@study.inclusion_criteria
-              %tr 
+              %tr
                 %th.muted Exclusion Criteria
                 %td!=@study.exclusion_criteria
-              %tr 
+              %tr
                 %th.muted Protocol Goals
                 %td!=@study.protocol_goals
-              %tr 
+              %tr
                 %th.muted Notes
                 %td!=@study.notes
 
@@ -85,7 +85,7 @@
             -@study.study_involvements.each do |si|
               %tr
                 %td=link_to si.participant.name,admin_participant_path(si.participant)
-                %td=si.state
+                %td=si.state.titleize
                 %td=si.active? ? "Yes" : "No"
                 %td=si.start_date
                 %td=si.end_date

@@ -6,7 +6,9 @@
         %th ID
         %th Short Title
         %th Principal Investigator
-        %th Accrual Goal
+        %th Study Start Date
+        %th Study End Date
+        %th Desired Sample Size
         %th Total Number Release
         %th Currently Released
         %th State
@@ -16,11 +18,13 @@
         %tr
           %th=study.id
           %td=study.short_title
-          %td=study.pi_name 
+          %td=study.pi_name
+          %td=study.start_date
+          %td=study.end_date
           %td=study.accrual_goal
           %td=study.study_involvements.count
           %td=study.study_involvements.active.count
-          %td=study.state
+          %td=study.state.titleize
           %td
             .span12
               =link_to "View Details",admin_study_path(study),:class=>"btn btn-mini btn-primary"

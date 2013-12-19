@@ -6,8 +6,8 @@
   .span12
     =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{:id => "admin_edit_response_set_form" } do |f|
       .row-fluid
-        .tabbable.tabs-left
-          %ul.nav.nav-tabs.span2{"data-spy"=>"affix","data-offset-top"=>"200"}
+        .tabbable.tabs-left#survey-tabs
+          %ul.nav.nav-tabs.span2
             -if @response_set.survey.sections.size > 1
               - @response_set.survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
@@ -19,7 +19,7 @@
               %li=button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success", :id => "admin_submit_response_set"
             %br
             =link_to "Cancel", admin_participant_path(@response_set.participant), :class=>"btn btn-mini btn-block btn-warning"
-          .tab-content.offset2
+          .tab-content.offset2#survey-tab-content
             - @response_set.survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
                 -s.questions.each_with_index do |q,i|

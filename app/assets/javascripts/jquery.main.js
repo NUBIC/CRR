@@ -81,15 +81,15 @@ $(document).ready(function() {
     return this.optional(element) || date.match(/^(19|20)\d\d-(0\d|1[012])-(0\d|1\d|2\d|3[01])$/);
   }, "Please specify a valid date in 'yyyy-mm-dd' format.");
 
-  // TODO: Move to the seperate js and simply
-  // $('input[id=participant_first_name]').blur(function() {
-  //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
-  // });
-  // $('input[id=participant_last_name]').blur(function() {
-  //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
-  // });
-  // $(".add_relationship").mouseup(function() {
-  //   $(".participant_full_name").text($("#participant_first_name").val() + " " + $("#participant_last_name").val());
-  // });
+  var tab_content_height = $(window).height()-$('#survey-tab-content').offset().top;
+  $('#survey-tab-content').height(tab_content_height).css({
+      overflow: "auto"
+  });
+  $('#survey-tabs li').click( function(){
+    $('#survey-tab-content').height(tab_content_height).css({
+      overflow: "auto"
+    });
+  });
+
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

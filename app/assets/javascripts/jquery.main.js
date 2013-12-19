@@ -89,6 +89,7 @@ $(document).ready(function() {
     $('#survey-tab-content').height(tab_content_height).css({
       overflow: "auto"
     });
+    $('#survey-tab-content').scrollTop(0);
   });
 
 });

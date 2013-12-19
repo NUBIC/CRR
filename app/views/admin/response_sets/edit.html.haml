@@ -6,7 +6,7 @@
   .span12
     =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{:id => "admin_edit_response_set_form" } do |f|
       .row-fluid
-        .tabbable.tabs-left#survey-tabs
+        .tabbable.tabs-left#admin-survey-tabs
           %ul.nav.nav-tabs.span2
             -if @response_set.survey.sections.size > 1
               - @response_set.survey.sections.each_with_index do |s,si|
@@ -19,7 +19,7 @@
               %li=button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success", :id => "admin_submit_response_set"
             %br
             =link_to "Cancel", admin_participant_path(@response_set.participant), :class=>"btn btn-mini btn-block btn-warning"
-          .tab-content.offset2#survey-tab-content
+          .tab-content.offset2#admin-survey-tab-content
             - @response_set.survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
                 -s.questions.each_with_index do |q,i|
@@ -39,5 +39,15 @@
     $('#admin_edit_response_set_form').validate();
     $('#admin_submit_response_set').click(function() {
       $('#admin_edit_response_set_form').valid();
+    });
+    var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top;
+    $('#admin-survey-tab-content').height(tab_content_height).css({
+        overflow: "auto"
+    });
+    $('#admin-survey-tabs li').click( function(){
+      $('#admin-survey-tab-content').height(tab_content_height).css({
+        overflow: "auto"
+      });
+      $('#admin-survey-tab-content').scrollTop(0);
     });
   });

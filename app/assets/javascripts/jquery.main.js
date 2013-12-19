@@ -80,17 +80,5 @@ $(document).ready(function() {
   $.validator.addMethod("date", function(date, element) {
     return this.optional(element) || date.match(/^(19|20)\d\d-(0\d|1[012])-(0\d|1\d|2\d|3[01])$/);
   }, "Please specify a valid date in 'yyyy-mm-dd' format.");
-
-  var tab_content_height = $(window).height()-$('#survey-tab-content').offset().top;
-  $('#survey-tab-content').height(tab_content_height).css({
-      overflow: "auto"
-  });
-  $('#survey-tabs li').click( function(){
-    $('#survey-tab-content').height(tab_content_height).css({
-      overflow: "auto"
-    });
-    $('#survey-tab-content').scrollTop(0);
-  });
-
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

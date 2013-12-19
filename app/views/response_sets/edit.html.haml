@@ -46,4 +46,14 @@
     $('#submit_response_set').click(function() {
       $('#edit_response_set_form').valid();
     });
+    var tab_content_height = $(window).height()-$('#survey-tab-content').offset().top;
+    $('#survey-tab-content').height(tab_content_height).css({
+        overflow: "auto"
+    });
+    $('#survey-tabs li').click( function(){
+      $('#survey-tab-content').height(tab_content_height).css({
+        overflow: "auto"
+      });
+      $('#survey-tab-content').scrollTop(0);
+    });
   });

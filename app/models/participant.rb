@@ -211,9 +211,9 @@ class Participant < ActiveRecord::Base
 
   def contact_emails
     contact_emails = Hash.new
-    contact_emails["Self"] = email unless email.blank?
-    contact_emails["Primary Guardian"] = primary_guardian_email unless primary_guardian_email.blank?
-    contact_emails["Secondary Guardian"] = secondary_guardian_email unless secondary_guardian_email.blank?
+    contact_emails["Self - #{email}"] = email unless email.blank?
+    contact_emails["Primary Guardian - #{primary_guardian_email}"] = primary_guardian_email unless primary_guardian_email.blank?
+    contact_emails["Secondary Guardian - #{secondary_guardian_email}"] = secondary_guardian_email unless secondary_guardian_email.blank?
     contact_emails
   end
 end

@@ -83,5 +83,5 @@ AudiologyRegistry::Application.routes.draw do
   get 'user_logout' => 'account_sessions#destroy', :as => :public_logout
   get 'dashboard' => 'accounts#dashboard', :as => :dashboard
 
-  get '/' =>  "account_sessions#new"
+  get '/' =>  "account_sessions#new", :as => :public_root
 end

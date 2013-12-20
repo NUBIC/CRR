@@ -120,9 +120,7 @@ class ResponseSet < ActiveRecord::Base
       return save!
     else
       error_string = unanswered_mandatory_questions.collect{|q| "#{q.section.title if survey.sections.size > 1}#{' - ' if survey.sections.size > 1} #{q.display_order}"  }
-      unanswered_mandatory_questions.each do |q|
-        self.errors.add(:questions,"#{error_string.join(',')} not answered")
-      end
+      self.errors.add(:questions,"#{error_string.join(',')} not answered")
       return false
     end
   end

@@ -39,7 +39,9 @@ describe ParticipantsController do
 
     it "redirects to the edit_response_set of survey if participant state is 'survey_started'" do
       participant.stage = "survey_started"
+      participant.response_sets << ResponseSet.new(:survey_id => @adult_survey.id)
       participant.save
+
       get :enroll, id: participant.id
       response.should redirect_to edit_response_set_path(participant.recent_response_set)
     end
@@ -50,7 +52,7 @@ describe ParticipantsController do
         get :enroll, id: participant.id
       end
       it "redirect_to to the logout page" do
-        response.should redirect_to public_logout_url
+        response.should redirect_to dashboard_url
       end
       it "displays 'Access Denied' flash message" do
         flash[:error].should == "Access Denied"
@@ -73,7 +75,7 @@ describe ParticipantsController do
         get :enroll, id: participant.id
       end
       it "redirect_to to the logout page" do
-        response.should redirect_to public_logout_url
+        response.should redirect_to dashboard_url
       end
       it "displays 'Access Denied' flash message" do
         flash[:error].should == "Access Denied"

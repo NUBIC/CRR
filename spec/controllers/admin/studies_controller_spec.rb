@@ -72,7 +72,7 @@ describe Admin::StudiesController do
     end
     it "should allow access to update a study by an authorized user" do
       put :update, {:id=>@study.id,:study=>{:name=>'a second study'}}
-      response.should redirect_to(admin_studies_path)
+      response.should redirect_to(admin_study_path(@study))
       @study.reload.name.should == "a second study"
     end
     it "should allow access to activate a study by an authorized user" do

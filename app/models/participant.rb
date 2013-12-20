@@ -153,7 +153,7 @@ class Participant < ActiveRecord::Base
   end
 
   def proxy?
-    account_participant.proxy
+    account_participant.nil? ? false : account_participant.proxy
   end
 
   def open?

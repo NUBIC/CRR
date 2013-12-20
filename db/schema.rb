@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131120203306) do
+ActiveRecord::Schema.define(version: 20131218214718) do
 
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
@@ -142,6 +142,7 @@ ActiveRecord::Schema.define(version: 20131120203306) do
     t.boolean  "public"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "email"
   end
 
   create_table "responses", force: true do |t|

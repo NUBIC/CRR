@@ -50,26 +50,10 @@ class Admin::ResponseSetsController < Admin::AdminController
     @response_set= ResponseSet.find(params[:id])
     authorize! :update, @response_set
     @response_set.update_attributes(response_set_params)
-    participant = @response_set.participant
-    if @response_set.save
-      if params[:button].eql?("finish")
-        if @response_set.can_complete?
-          @response_set.complete!
-          @response_set.participant.enroll! if participant.survey_started?
-          return redirect_to admin_participant_path(@response_set.participant)
-        else
-          flash[:error] = "Required field(s): missing information. Please review all sections of the survey."
-          redirect_to edit_admin_response_set_path(@response_set)
-        end
-      elsif params[:button].eql?("exit")
-        return redirect_to admin_participant_path(@response_set.participant)
-      else
-        redirect_to edit_admin_response_set_path(@response_set, :section_id => params[:button])
-      end
-    else
+    unless @response_set.save and (!params[:button].eql?("finish") || @response_set.complete!)
       flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
-      redirect_to edit_admin_response_set_path(@response_set)
     end
+    redirect_to !@response_set.errors.empty? ? edit_admin_response_set_path(@response_set) : admin_participant_path(@response_set.participant)
   end
 
   def response_set_params

@@ -253,12 +253,13 @@ describe Participant do
       participant.on_study?.should be_false
     end
 
-    it "should return false if association dates are within range but study is inactive" do
+    # By design we allow to participant to be added to the inactive study.
+    it "should return true if association dates are within range and study is inactive" do
       study.state='inactive'
       study.save
       study.reload
       FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
-      participant.on_study?.should be_false
+      participant.on_study?.should be_true
     end
   end
 

@@ -15,6 +15,7 @@ gem 'cancan'
 gem 'rest-client'
 gem "authlogic"
 gem 'paper_trail', '>= 3.0.0.beta1'
+gem 'validates_timeliness'
 
 gem "aasm"
 # Use SCSS for stylesheets

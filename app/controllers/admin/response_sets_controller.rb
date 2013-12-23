@@ -50,10 +50,22 @@ class Admin::ResponseSetsController < Admin::AdminController
     @response_set= ResponseSet.find(params[:id])
     authorize! :update, @response_set
     @response_set.update_attributes(response_set_params)
-    unless @response_set.save and (!params[:button].eql?("finish") || @response_set.complete!)
-      flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
+    # unless @response_set.save and (!params[:button].eql?("finish") || @response_set.complete!)
+    #   flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
+    # end
+    # redirect_to !@response_set.errors.empty? ? edit_response_set_path(@response_set) : admin_participant_path(@response_set.participant)
+    if @response_set.save
+      if params[:button].eql?("finish")
+        @response_set.complete! ? redirect_to(admin_participant_path(@response_set.participant)) : display_error(@response_set)
+      elsif params[:button].eql?("exit")
+        @response_set.check_validation if @response_set.complete?
+        @response_set.errors.empty? ? redirect_to(admin_participant_path(@response_set.participant)) : display_error(@response_set)
+      else
+        @response_set.errors.empty? ? redirect_to(edit_admin_response_set_path(@response_set)) : display_error(@response_set)
+      end
+    else
+      display_error(@response_set)
     end
-    redirect_to !@response_set.errors.empty? ? edit_admin_response_set_path(@response_set) : admin_participant_path(@response_set.participant)
   end
 
   def response_set_params
@@ -62,5 +74,11 @@ class Admin::ResponseSetsController < Admin::AdminController
         whitelist[key] = params[:response_set][key]
       end
     end
+  end
+
+  private
+  def display_error(response_set)
+    flash[:error] = response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
+    redirect_to edit_admin_response_set_path(response_set)
   end
 end

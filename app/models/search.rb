@@ -25,11 +25,11 @@ class Search < ActiveRecord::Base
   validates_presence_of :study
 
 
-  aasm_event :request_data do 
+  aasm_event :request_data do
     transitions :to => :data_requested,:from=>[:new],:on_transition=> Proc.new {|obj, *args| obj.set_request_date }
   end
 
-  aasm_event :release_data do 
+  aasm_event :release_data do
     transitions :to => :data_released, :from=>[:data_requested,:new],:on_transition=>[:process_release]
   end
 
@@ -42,6 +42,7 @@ class Search < ActiveRecord::Base
 
 
   def process_release(params)
+    participants = params[:participant_ids] ? Participant.find(params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact) : []
     participants = Participant.find(params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact)
     participants.each do |participant|
       si = participant.study_involvements.create(:start_date=>params[:start_date],:end_date=>params[:end_date],:warning_date=>params[:warning_date],:study_id=>study.id) unless participant.do_not_contact?
@@ -49,10 +50,12 @@ class Search < ActiveRecord::Base
     self.process_date = Date.today
     self.save
   end
+
   def set_request_date
     self.request_date=Date.today
     save
   end
+
   private
 
     def questions

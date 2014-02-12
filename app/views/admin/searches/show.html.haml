@@ -34,7 +34,7 @@
         .span3
           =text_field_tag "end_date",2.weeks.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
         .span3
-          =f.button "Release",:class=>"btn btn-small btn-success"
+          =f.button "Release",:class=>"btn btn-small btn-success", :id => "release"
     -else
       .row-fluid
         %h5="Data Released On: #{@search.process_date}"
@@ -73,5 +73,11 @@
 :javascript
   $(document).ready(function(){
     $('#admin_searches').validate();
+    var checkboxes = $("input[type='checkbox']");
+    $("#release").attr("disabled", "disabled");
+
+    checkboxes.click(function() {
+        $("#release").attr("disabled", !checkboxes.is(":checked"));
+    });
   });
 

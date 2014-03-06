@@ -2,12 +2,13 @@
   %table.table.table-condensed.table-bordered.table-striped{:id=>'participant_list'}
     %thead
       %tr
-        - %w(Name State Released\ to\ study Last\ Update).each do |header|
+        - %w(First\ Name  Last\ Name State Released\ to\ study Last\ Update).each do |header|
           %th= header
     %tbody
       - @participants.each do |participant|
         %tr
-          %td=link_to participant.name, admin_participant_path(participant)
+          %td=link_to participant.first_name.titleize, admin_participant_path(participant)
+          %td=participant.last_name.titleize
           %td=participant.stage.titleize
           %td=participant.on_study? ? "Yes" : "No"
-          %td=participant.updated_at
+          %td=participant.updated_at.to_date

@@ -3,7 +3,10 @@
     %h5 Please Select Search Criteria
   =form_tag(admin_searches_path) do
     .row-fluid
-      =select_tag("search[study_id]",options_for_select(@studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}),:class=>"input-xlarge")
+      - if current_user.admin?
+        = select_tag("search[study_id]",options_for_select(@studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}),:class=>"input-xlarge")
+      - else
+        = select_tag("search[study_id]",options_for_select(current_user.studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}),:class=>"input-xlarge")
     .row-fluid
       =button_tag("Start",:class=>"btn btn-small btn-success")
       =link_to("Cancel",admin_searches_path, :class=>"btn btn-small btn-warning")

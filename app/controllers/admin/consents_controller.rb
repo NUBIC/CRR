@@ -8,7 +8,7 @@ class Admin::ConsentsController < Admin::AdminController
     @consent = Consent.new
     authorize! :new, @consent
   end
-  
+
   def create
     @consent = Consent.new(consent_params)
     authorize! :create, @consent
@@ -73,6 +73,6 @@ class Admin::ConsentsController < Admin::AdminController
   end
 
   def consent_params
-    params.require(:consent).permit(:content, :state,:accept_text, :decline_text, :consent_type)
+    params.require(:consent).permit(:content, :state,:accept_text, :decline_text, :consent_type, :comment)
   end
 end

@@ -10,6 +10,7 @@
 #  consent_type :string(255)
 #  created_at   :datetime
 #  updated_at   :datetime
+#  comment      :text
 #
 
 class Consent < ActiveRecord::Base

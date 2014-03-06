@@ -1,13 +1,20 @@
 =form_for @consent,:url=>admin_consents_path,:html=>{:class=>"form-horizontal"}  do |f|
   .row-fluid
     .control-group
-      =f.label :content
+      .control-label
+        =f.label :content
       .controls
         =f.text_area :content,:class=>"wyswig",:rows=>40
     .control-group
-      =f.label :consent_type,"Type"
+      .control-label
+        =f.label :consent_type,"Type"
       .controls
         =f.select :consent_type, Consent::TYPES
+    .control-group
+      .control-label
+        =f.label :comment
+      .controls
+        =f.text_area :comment, rows: 5
   .row-fluid
     .btn-group
       =f.button "Create",:class=>"btn btn-success btn-small"

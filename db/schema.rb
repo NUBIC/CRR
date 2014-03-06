@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131218214718) do
+ActiveRecord::Schema.define(version: 20140306175028) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "account_participants", force: true do |t|
     t.integer  "account_id"
@@ -73,6 +76,7 @@ ActiveRecord::Schema.define(version: 20131218214718) do
     t.string   "consent_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "comment"
   end
 
   create_table "contact_logs", force: true do |t|
@@ -137,7 +141,6 @@ ActiveRecord::Schema.define(version: 20131218214718) do
   create_table "response_sets", force: true do |t|
     t.integer  "survey_id"
     t.integer  "participant_id"
-    t.date     "effective_date"
     t.datetime "completed_at"
     t.boolean  "public"
     t.datetime "created_at"

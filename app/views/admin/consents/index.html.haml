@@ -3,33 +3,36 @@
   %table.table.table-bordered.table-striped.table-condensed
     %thead
       %tr
-        %th Type
-        %th State
-        %th Created On
-        %th
+        %th.span1 Type
+        %th.span1 State
+        %th.span1 Created On
+        %th.span5 Comment
+        %th.span4
     %tbody
       -@consents.each do |consent|
         %tr
           %td=consent.consent_type
           %td=consent.state.titleize
           %td=consent.created_at.to_date
+          %td=consent.comment
           %td
             .span12
               -if consent.active?
                 .span6
                   =form_for consent ,:url=> deactivate_admin_consent_path(consent) do |f|
-                    .btn-group
+                    .btn-toolbar
                       =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
                       =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
               -else
                 .span3
                   =form_for consent, :url=> activate_admin_consent_path(consent) do |f|
-                    .btn-group
+                    .btn-toolbar
                       =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
                       =f.button "Activate",:class=>"btn btn-mini btn-success"
               -if consent.editable?
                 .span3
                   =form_for consent, :url=> admin_consent_path(consent),:method=>:delete do |f|
-                    .btn-group
+                    .btn-toolbar
                       =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
                       =f.button "Delete",:class=>"btn btn-mini btn-danger"
+

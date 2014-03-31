@@ -1,6 +1,6 @@
 class Admin::SearchesController < Admin::AdminController
   def index
-    @searches = params[:state].blank? ? Search.all : Search.send(params[:state].to_sym)
+    @searches = params[:state].blank? ? Search.all.order(:request_date) : Search.send(params[:state].to_sym)
   end
 
  def new

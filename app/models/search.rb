@@ -23,7 +23,7 @@ class Search < ActiveRecord::Base
   aasm_state :data_released
 
   validates_presence_of :study
-  default_scope joins(:study).order('request_date DESC, studies.name ASC')
+  default_scope joins(:study).order('request_date DESC, studies.name ASC').readonly(false)
 
   aasm_event :request_data do
     transitions :to => :data_requested,:from=>[:new],:on_transition=> Proc.new {|obj, *args| obj.set_request_date }

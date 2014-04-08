@@ -40,16 +40,16 @@
         %table.table
           %tbody
             %tr
-              %th.muted Address
+              %th.muted Address:
               %td= @participant.address
             %tr
-              %th.muted  Primary Phone
+              %th.muted  Primary Phone:
               %td=@participant.primary_phone
             %tr
-              %th.muted  Secondary Phone
+              %th.muted  Secondary Phone:
               %td=@participant.secondary_phone
             %tr
-              %th.muted  Email
+              %th.muted  Email:
               %td=@participant.email
       .span4
         %h5 Participation
@@ -78,16 +78,16 @@
           %table.table
             %tbody
               %tr
-                %th.muted First Name
+                %th.muted First Name:
                 %td= @participant.primary_guardian_first_name
               %tr
-                %th.muted Last Name
+                %th.muted Last Name:
                 %td= @participant.primary_guardian_last_name
               %tr
-                %th.muted Email
+                %th.muted Email:
                 %td= @participant.primary_guardian_email
               %tr
-                %th.muted Phone
+                %th.muted Phone:
                 %td= @participant.primary_guardian_phone
       -unless @participant.secondary_guardian_first_name.blank? and @participant.secondary_guardian_last_name.blank?
         .span4
@@ -95,16 +95,16 @@
           %table.table
             %tbody
               %tr
-                %th.muted First Name
+                %th.muted First Name:
                 %td= @participant.secondary_guardian_first_name
               %tr
-                %th.muted Last Name
+                %th.muted Last Name:
                 %td= @participant.secondary_guardian_last_name
               %tr
-                %th.muted Email
+                %th.muted Email:
                 %td= @participant.secondary_guardian_email
               %tr
-                %th.muted Phone
+                %th.muted Phone:
                 %td= @participant.secondary_guardian_phone
     .row-fluid
       %h5="Notes:"

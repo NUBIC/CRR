@@ -55,7 +55,7 @@ class Participant < ActiveRecord::Base
   aasm_state :survey
   aasm_state :survey_started
   aasm_state :verification_needed
-  aasm_state :enrolled
+  aasm_state :approved
   aasm_state :withdrawn
 
   aasm_event :sign_consent do
@@ -79,18 +79,18 @@ class Participant < ActiveRecord::Base
    transitions :to => :consent_denied, :from =>:consent
   end
 
-  aasm_event :process_enrollment do
-    transitions :to => :enrolled, :from => :survey_started, :guard => Proc.new {|p| !p.proxy? }
+  aasm_event :process_approvement do
+    transitions :to => :approved, :from => :survey_started, :guard => Proc.new {|p| !p.proxy? }
     transitions :to => :verification_needed, :from => :survey_started, :guard => :proxy?
   end
 
   aasm_event :verify do
-    transitions :to => :enrolled, :from => :verification_needed
+    transitions :to => :approved, :from => :verification_needed
   end
 
-  aasm_event :enroll do
-    transitions :to => :enrolled, :from => :verification_needed
-    transitions :to => :enrolled, :from => :survey_started
+  aasm_event :approve do
+    transitions :to => :approved, :from => :verification_needed
+    transitions :to => :approved, :from => :survey_started
   end
 
   aasm_event :withdraw do
@@ -161,11 +161,11 @@ class Participant < ActiveRecord::Base
   end
 
   def consented?
-    [:demographics, :completed, :survey, :survey_started, :verification_needed, :enrolled].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+    [:demographics, :completed, :survey, :survey_started, :verification_needed, :approved].include?(self.aasm_current_state) and !self.consent_signatures.empty?
   end
 
   def completed?
-    [:verification_needed, :enrolled].include?(self.aasm_current_state)
+    [:verification_needed, :approved].include?(self.aasm_current_state)
   end
 
   def inactive?

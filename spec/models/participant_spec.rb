@@ -285,7 +285,7 @@ describe Participant do
   end
 
   describe '#consented?' do
-    [:demographics, :completed, :survey, :survey_started, :verification_needed, :enrolled].each do |st|
+    [:demographics, :completed, :survey, :survey_started, :pending_approval, :enrolled].each do |st|
       it "should return true if participant has state '#{st.to_s}' and has consent" do
         FactoryGirl.create(:consent_signature, consent: FactoryGirl.create(:consent), participant: participant)
         participant.stage = st
@@ -293,7 +293,7 @@ describe Participant do
       end
     end
 
-    [:demographics, :completed, :survey, :survey_started, :verification_needed, :enrolled].each do |st|
+    [:demographics, :completed, :survey, :survey_started, :pending_approval, :enrolled].each do |st|
       it "should return false if participant has state '#{st.to_s}' but no consent" do
         participant.stage = st
         participant.consented?.should be_false
@@ -302,7 +302,7 @@ describe Participant do
   end
 
   describe '#completed?' do
-    [:verification_needed, :enrolled].each do |st|
+    [:pending_approval, :enrolled].each do |st|
       it "should return true if participant has state '#{st.to_s}'" do
         participant.stage = st
         participant.completed?.should be_true

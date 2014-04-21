@@ -12,10 +12,10 @@
   #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
     .row-fluid
       -if can? :edit, @participant
-        -if @participant.verification_needed?
+        -if @participant.pending_approval?
           =form_for @participant, :url=>verify_admin_participant_path do |f|
             =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
-            =f.button "Verify Participant",:class=>"btn btn-mini btn-success"
+            =f.button "Approve Participant",:class=>"btn btn-mini btn-success"
         -else
           =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
     .row-fluid

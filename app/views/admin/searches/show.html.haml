@@ -1,7 +1,7 @@
 .row-fluid-alert
   -if @search.data_requested?
     .alert.alert-info
-      %h5 Data for this search has been requested and is pending Approval
+      %h5 Data for this search has been requested and is pending release
   -elsif @search.data_released?
     .alert.alert-info
       %h5 Data for this search has been released to research staff
@@ -15,7 +15,7 @@
   %h4 Search Results:
   .offset1
     %h5= "#{@search.result.size} participants returned"
--if current_user.admin? || current_user.data_manager? || @search.data_released?
+-if current_user.admin? || current_user.data_manager?
   = form_for @search, :url=>release_data_admin_search_path(@search), :html => {id: "admin_searches"} do |f|
     -unless @search.data_released?
       .row-fluid
@@ -35,41 +35,78 @@
           =text_field_tag "end_date",2.weeks.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
         .span3
           =f.button "Release",:class=>"btn btn-small btn-success", :id => "release"
+      .row-fluid
+        %table.table.bordered
+          %thead
+            %tr
+              %th= check_box_tag "selectall"
+              %th Last Name
+              %th First Name
+              %th Released To Study
+              %th Studies
+              %th Last Contact
+              %th Registry Status
+          %tbody
+            -@search.result.each do |participant|
+              %tr
+                %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
+                %td=link_to participant.last_name, admin_participant_path(participant)
+                %td=link_to participant.first_name, admin_participant_path(participant)
+                %td=participant.on_study? ? "Yes" : "No"
+                %th
+                  -participant.study_involvements.active.each do |si|
+                    ="#{si.study.name} - #{si.state}: #{si.state_date}"
+                %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+                %td=participant.stage.titleize
     -else
       .row-fluid
-        %h5="Data Released On: #{@search.process_date}"
-    .row-fluid
-      %table.table.bordered
-        %thead
-          %tr
-            -if @search.data_released?
-              %th
-            -else
-              %th= check_box_tag "selectall"
-            %th Name
-            %th Released To Study
-            %th Studies
-            %th Last Contact
-            %th Registry Status
-        %tbody
-          -@search.result.each do |participant|
+        %h5="Data Released on: #{@search.process_date}"
+      .row-fluid
+        %table.table.bordered
+          %thead
             %tr
-              -if @search.data_released? or participant.withdrawn?
-                %td
-              -else
-                %td=check_box_tag "[participant_ids][#{participant.id}]",participant.id,false, class: "selectalloption"
-              %td=link_to participant.name, admin_participant_path(participant)
-              %td=participant.on_study? ? "Yes" : "No"
-              %th
-                -participant.study_involvements.active.each do |si|
-                  ="#{si.study.name} - #{si.state}: #{si.state_date}"
-              %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
-              %td=participant.stage.titleize
+              %th Last Name
+              %th First Name
+              %th Released To Study
+              %th Currently Released
+              %th Studies
+              %th Last Contact
+              %th Registry Status
+          %tbody
+            -@search.search_participants.each do |sp|
+              %tr
+                %td=link_to sp.participant.last_name, admin_participant_path(sp.participant)
+                %td=link_to sp.participant.first_name, admin_participant_path(sp.participant)
+                %td=sp.participant.on_study? ? "Yes" : "No"
+                %td=sp.released? ? "Yes" : "No"
+                %th
+                  -sp.participant.study_involvements.active.each do |si|
+                    ="#{si.study.name} - #{si.state}: #{si.state_date}"
+                %td=sp.participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+                %td=sp.participant.stage.titleize
 -else
   .row-fluid
-    -if @search.new?
+    - if @search.new?
       =form_for @search,:url=>request_data_admin_search_path(@search) do |f|
         =f.button "Request Results",:class=>"btn btn-mini btn-success"
+    -elsif @search.data_released?
+      .row-fluid
+        %table.table.bordered
+          %thead
+            %tr
+              %th Last Name
+              %th First Name
+              %th Studies
+              %th Last Contact
+          %tbody
+            -@search.released_participants.each do |participant|
+              %tr
+                %td=link_to participant.last_name, admin_participant_path(participant)
+                %td=link_to participant.first_name, admin_participant_path(participant)
+                %th
+                  -participant.study_involvements.active.each do |si|
+                    ="#{si.study.name} - #{si.state}: #{si.state_date}"
+                %td=participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
 :javascript
   $(document).ready(function(){
     $('#admin_searches').validate();

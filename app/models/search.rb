@@ -16,6 +16,7 @@ class Search < ActiveRecord::Base
 
   belongs_to :study
   has_one :search_condition_group
+  has_many :search_participants
 
   aasm_column :state
   aasm_state :new, :initial => true
@@ -40,13 +41,18 @@ class Search < ActiveRecord::Base
     return search_condition_group.result
   end
 
+  def released_participants
+    search_participants.release.collect{|sp| sp.participant}.flatten.uniq
+  end
 
   def process_release(params)
     participants = params[:participant_ids] ? Participant.find(params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact) : []
     participants = Participant.find(params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact)
     participants.each do |participant|
+      self.search_participants.create(participant: participant, released: true)
       si = participant.study_involvements.create(:start_date=>params[:start_date],:end_date=>params[:end_date],:warning_date=>params[:warning_date],:study_id=>study.id) unless participant.do_not_contact?
     end
+    (self.result - participants).each { |participant| self.search_participants.create(participant: participant)}
     self.process_date = Date.today
     self.save
   end

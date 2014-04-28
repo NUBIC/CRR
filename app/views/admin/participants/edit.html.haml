@@ -123,6 +123,12 @@
             =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
   .row-fluid
     .control-group
+      =f.label :do_not_contact,'Do not contact:',:class=>"control-label"
+      .controls
+        =f.check_box :do_not_contact
+        %small
+          (Please check if you want to mark participant as do not contact)
+    .control-group
       =f.label :notes
       .controls
         =f.text_area :notes, :rows=>3, :class=>"input-block-level"

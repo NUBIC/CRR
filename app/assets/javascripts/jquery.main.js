@@ -66,6 +66,18 @@ $(document).ready(function() {
   "oLanguage": {
       "sSearch": "Filter: "
         }});});
+  $('#dashboard_list').livequery(function(){$(this).dataTable( {
+  "bScrollCollapse": true,
+  "sPaginationType": "bootstrap",
+  "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+  "sWrapper": "dataTables_wrapper form-inline",
+  "aaSorting": [],
+  "bFilter": true,
+  "iDisplayLength": 30,
+  "bLengthChange": false,
+  "oLanguage": {
+      "sSearch": "Filter: ",
+        }});});
 
   $.validator.addMethod("phone", function(value, element) {
     phone_number = value.replace(/\s+/g, "");

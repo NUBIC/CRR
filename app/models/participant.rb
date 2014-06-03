@@ -34,12 +34,14 @@ class Participant < ActiveRecord::Base
   include AASM
   has_many :response_sets
   has_many :contact_logs
-  has_many :study_involvements
+  has_many :study_involvements, -> {order("end_date DESC")}
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
   has_many :consent_signatures
   has_many :studies, :through=>:study_involvements
-
+  default_scope ->{where("stage = 'pending_approval' OR stage = 'approved'").order('stage DESC, updated_at DESC')}
+  scope :pending_approvals, -> { where(:stage => "pending_approval").order('created_at DESC') }
+  scope :approaching_deadlines, -> { joins(:study_involvements).where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
   has_one :account_participant
   has_one :account, :through => :account_participant
   accepts_nested_attributes_for :origin_relationships, :allow_destroy => true
@@ -100,6 +102,10 @@ class Participant < ActiveRecord::Base
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
+  def self.all_participants
+    Participant.pending_approvals | Participant.approaching_deadlines | Participant.all
+  end
+
   # condensed form of name
   def name
     [first_name, last_name].join(' ')
@@ -115,6 +121,10 @@ class Participant < ActiveRecord::Base
 
   def relationships
     origin_relationships + destination_relationships
+  end
+
+  def has_relationships?
+    relationships.size > 0
   end
 
   # condensed form of address

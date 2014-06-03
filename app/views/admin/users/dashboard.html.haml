@@ -1,32 +1,42 @@
 -if current_user.admin? || current_user.data_manager?
-  -unless Participant.pending_approval.empty?
-    .row-fluid
-      =link_to "#{Participant.pending_approval.size} participants awaiting approval",admin_participants_path(:state=>"pending_approval")
-  -unless Search.data_requested.empty?
-    .row-fluid
-      =link_to "#{Search.data_requested.size} Data Requests awaiting processing",admin_searches_path(:state=>"data_requested")
-  -unless StudyInvolvement.warning.empty?
-    .row-fluid
-      %h4 Released participants with approaching deadlines
-    .row-fluid
-      %table.table.table-bordered.table-condensed
-        %thead
-          %tr
-            %th Last Name
-            %th First Name
-            %th Study
-            %th Release On
-            %th End Date
-        %tbody
-          -StudyInvolvement.warning.each do |si|
-            %tr
-              %td=link_to si.participant.last_name,admin_participant_path(si.participant)
-              %td=link_to si.participant.first_name,admin_participant_path(si.participant)
-              %td=si.study.name
-              %td=si.start_date
-              %td=si.end_date
-
-
+  .row-fluid
+    %h5
+      ="All Participants(#{Participant.all.count})"
+      =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-success"
+  .row-fluid
+    .btn.btn-info
+      ="#{Participant.pending_approvals.size}"
+    = "Need Varification"
+  .row-fluid
+    %table.table.table-bordered.table-striped{:id=>'dashboard_list'}
+      %thead
+        %tr.display
+          %th Last Name
+          %th First Name
+          %th Joined Date
+          %th Studies
+          %th Back into pool
+      %tbody
+        -Participant.all.each do |p|
+          %tr.display{:class=>"#{'success' if p.pending_approval?}"}
+            %td=link_to(p.last_name, admin_participant_path(p))
+            %td
+              =link_to(p.first_name, admin_participant_path(p))
+              .pull-right
+                =image_tag "child.png" if p.child?
+                =image_tag 'siblings.png' if p.has_relationships?
+            %td=p.created_at.to_date
+            %td
+              %ul.unstyled
+                -p.study_involvements.each_with_index do |si,i|
+                  %li{:class=> "#{'more_display' if i > 2}"}
+                    =link_to si.study.display_name, admin_participant_path(p, :tab=>'studies')
+                    = " (#{si.state})"
+                %li.pull-right.btn.btn-link.show_button="See more..." if p.study_involvements.size > 3
+            %td
+              %ul.unstyled
+                -p.study_involvements.each_with_index do |si,i|
+                  %li{:class=> "#{'more_display' if i > 2}"}=si.end_date
 -else
   .row-fluid
     %table.table.table-bordered
@@ -45,5 +55,22 @@
             %td=si.study.name
             %td=si.start_date
             %td=si.warning_date
-  .row-fluid
-
+:javascript
+  $(document).ready(function(){
+    $('table tr ul li.more_display').hide();
+    $('.show_button').click(function() {
+      $end_date_list = $(this).parent().parent().next().children('ul').find('li.more_display');
+      $display_name_list = $(this).siblings('ul li.more_display');
+      $(this).text(function (_, value) {
+        if (value == 'See more...') {
+          $end_date_list.show();
+          $display_name_list.show();
+          return "See less..."
+        } else {
+          $end_date_list.hide();
+          $display_name_list.hide();
+          return "See more..."
+        }
+      });
+    });
+  });

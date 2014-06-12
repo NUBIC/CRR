@@ -1,30 +1,42 @@
 .row-fluid
-  -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
-  !=@consent.content
+  %h3.text-center=Consent
+.row-fluid
+  #consent-content
+    -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
+    !=@consent.content
   %br
-  = form_for @participant.consent_signatures.new(:consent=>@consent), :url=>consent_signature_participant_path(@participant), :html => {:id => 'new-consent-sign'} do |f|
-    = hidden_field_tag "consent_response"
-    =f.hidden_field :consent_id
-    .row-fluid
-      %label.radio.inline
-        = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-        -if @participant.proxy?
-          I agree on behalf of participant
-        -else
-          I agree
-      %label.radio.inline
-        = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-        -if @participant.proxy?
-          I disagree on behalf of participant
-        -else
-          I disagree
-    -if @participant.proxy?
-      .form-inline.proxy-consent
-        %br
-        = f.label :proxy_name, 'Your Name: '
-        = f.text_field :proxy_name, class: 'required'
-        = f.label :proxy_relationship, 'Your relationship to participant: '
-        = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
-    %br
-    .row-fluid
-      = f.button "Next", class: "btn btn-primary", id: "consent-next"
+  #consent-controls
+    = form_for @participant.consent_signatures.new(:consent=>@consent), :url=>consent_signature_participant_path(@participant), :html => {:id => 'new-consent-sign'} do |f|
+      = hidden_field_tag "consent_response"
+      =f.hidden_field :consent_id
+      .row-fluid
+        %label.radio.inline
+          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
+          -if @participant.proxy?
+            I agree on behalf of participant
+          -else
+            I agree
+        %label.radio.inline
+          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
+          -if @participant.proxy?
+            I disagree on behalf of participant
+          -else
+            I disagree
+      -if @participant.proxy?
+        .form-inline.proxy-consent
+          %br
+          = f.label :proxy_name, 'Your Name: '
+          = f.text_field :proxy_name, class: 'required'
+          = f.label :proxy_relationship, 'Your relationship to participant: '
+          = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
+      %br
+      .row-fluid
+        = f.button "Next", class: "btn btn-primary", id: "consent-next"
+:javascript
+  $(document).ready(function(){
+    var consent_content_height = $(window).height() - 2*$('#consent-content').offset().top;
+    $('#consent-content').height(consent_content_height).css({
+        overflow: "auto",
+        border: "2px solid"
+    });
+  });

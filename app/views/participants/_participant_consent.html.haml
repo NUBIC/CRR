@@ -12,22 +12,16 @@
       .row-fluid
         %label.radio.inline
           = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          -if @participant.proxy?
-            I agree on behalf of participant
-          -else
-            I agree
+          = @participant.proxy? ? @participant.child? ? "I agree on behalf of my child" : "I agree on behalf of participant" : "I agree"
         %label.radio.inline
           = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          -if @participant.proxy?
-            I disagree on behalf of participant
-          -else
-            I disagree
+          = @participant.proxy? ? @participant.child? ? "I disagree on behalf of my child" : "I disagree on behalf of participant" : "I disagree"
       -if @participant.proxy?
         .form-inline.proxy-consent
           %br
-          = f.label :proxy_name, 'Your Name: '
+          = f.label :proxy_name, 'Your electronic signature (full name): '
           = f.text_field :proxy_name, class: 'required'
-          = f.label :proxy_relationship, 'Your relationship to participant: '
+          = f.label :proxy_relationship, @participant.child? ? 'Your relationship to child: ' : 'Your relationship to participant: '
           = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
       %br
       .row-fluid

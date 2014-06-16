@@ -112,7 +112,6 @@ class Admin::ParticipantsController < Admin::AdminController
   private
   def create_and_redirect_response_set(participant)
     response_set = participant.create_response_set(participant.child? ? Survey.child_survey : Survey.adult_survey)
-    participant.start_survey!
     redirect_to(edit_admin_response_set_path(response_set))
   end
 end

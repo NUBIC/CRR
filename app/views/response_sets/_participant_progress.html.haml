@@ -1,0 +1,20 @@
+- # THis partial expects a "membership_state" local var
+-step_content = {:consent => "Consent",
+  :demographics =>  "Contact Info",
+  :survey => "Registry Questions",
+  :survey_started => "Registry Questions"}
+%ul.breadcrumb.text-center
+  -participant_steps.each_with_index do |s,i|
+    -sc = step_content[s]
+    -if s == participant_state.to_sym
+      %li
+        =i+1
+        =sc
+        -if i != participant_steps.size-1
+          %span.divider >
+    -else
+      %li.muted
+        =i+1
+        =sc
+        -if i != participant_steps.size-1
+          %span.divider >

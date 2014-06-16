@@ -53,7 +53,6 @@ class Participant < ActiveRecord::Base
   aasm_state :consent_denied
   aasm_state :demographics
   aasm_state :survey
-  aasm_state :survey_started
   aasm_state :pending_approval
   aasm_state :approved
   aasm_state :withdrawn
@@ -67,21 +66,13 @@ class Participant < ActiveRecord::Base
     # , :guard => :demographics_info_completed?
   end
 
-  aasm_event :start_survey do
-    transitions :to => :survey_started, :from => :survey
-  end
-
-  aasm_event :finish_survey do
-    transitions :to => :completed, :from => :survey_started
-  end
-
   aasm_event :decline_consent do
    transitions :to => :consent_denied, :from =>:consent
   end
 
   aasm_event :process_approvement do
-    transitions :to => :approved, :from => :survey_started, :guard => Proc.new {|p| !p.proxy? }
-    transitions :to => :pending_approval, :from => :survey_started, :guard => :proxy?
+    transitions :to => :approved, :from => :survey, :guard => Proc.new {|p| !p.proxy? }
+    transitions :to => :pending_approval, :from => :survey, :guard => :proxy?
   end
 
   aasm_event :verify do
@@ -90,7 +81,7 @@ class Participant < ActiveRecord::Base
 
   aasm_event :approve do
     transitions :to => :approved, :from => :pending_approval
-    transitions :to => :approved, :from => :survey_started
+    transitions :to => :approved, :from => :survey
   end
 
   aasm_event :withdraw do
@@ -99,6 +90,10 @@ class Participant < ActiveRecord::Base
 
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
+
+  def filled_states
+    [:consent, :demographics, :survey]
+  end
 
   # condensed form of name
   def name
@@ -157,11 +152,11 @@ class Participant < ActiveRecord::Base
   end
 
   def open?
-    [:consent, :demographics, :surevey, :survey_started].include?(self.aasm_current_state)
+    [:consent, :demographics, :survey].include?(self.aasm_current_state)
   end
 
   def consented?
-    [:demographics, :completed, :survey, :survey_started, :pending_approval, :approved].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+    [:demographics, :completed, :survey, :pending_approval, :approved].include?(self.aasm_current_state) and !self.consent_signatures.empty?
   end
 
   def completed?

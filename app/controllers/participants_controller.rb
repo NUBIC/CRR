@@ -12,8 +12,7 @@ class ParticipantsController < PublicController
       @participant.origin_relationships.build(destination_id: destination.id)
     end
     if @participant.survey?
-      create_and_redirect_response_set(@participant)
-    elsif @participant.survey_started?
+      create_and_redirect_response_set(@participant) unless @participant.recent_response_set
       redirect_to(edit_response_set_path(@participant.recent_response_set))
     end
   end
@@ -106,7 +105,6 @@ class ParticipantsController < PublicController
   private
   def create_and_redirect_response_set(participant)
     response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
-    participant.start_survey!
     redirect_to(edit_response_set_path(response_set))
   end
 end

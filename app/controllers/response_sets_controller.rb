@@ -6,7 +6,6 @@ class ResponseSetsController < PublicController
     @response_set= participant.response_sets.new(response_set_params)
     authorize! :create, @response_set
     if @response_set.save
-      participant.start_survey! if participant.survey?
       redirect_to(edit_response_set_path(@response_set))
     else
       flash[:notice] = @response_set.errors.full_messages.to_sentence

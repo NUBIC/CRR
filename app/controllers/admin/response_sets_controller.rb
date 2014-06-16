@@ -22,9 +22,7 @@ class Admin::ResponseSetsController < Admin::AdminController
     authorize! :create, @response_set
     @participant = @response_set.participant
     saved = @response_set.save
-    if saved
-      @participant.start_survey! if @participant.survey?
-    else
+    unless saved
       flash[:notice] = @response_set.errors.full_messages.to_sentence
       @surveys = Survey.all.select{|s| s.active?}
     end

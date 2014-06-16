@@ -82,7 +82,7 @@
                 %th
                   -sp.participant.study_involvements.active.each do |si|
                     ="#{si.study.name} - #{si.state}: #{si.state_date}"
-                %td=sp.participant.contact_logs.last.nil? ? "" : participant.contact_logs.last.date
+                %td=sp.participant.contact_logs.last.nil? ? "" : sp.participant.contact_logs.last.date
                 %td=sp.participant.stage.titleize
 -else
   .row-fluid

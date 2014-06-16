@@ -1,6 +1,6 @@
 - if @response_set.participant.open?
   .row-fluid
-    =render(:partial => "participant_progress", :locals => {:participant_state => @response_set.participant.stage, :participant_steps => @response_set.participant.filled_states})
+    =render(:partial => "participants/participant_progress", :locals => {:participant_state => @response_set.participant.stage, :participant_steps => @response_set.participant.filled_states})
 .row-fluid
   .span12
     .well.well-small.text-center

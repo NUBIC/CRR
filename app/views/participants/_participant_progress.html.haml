@@ -6,15 +6,9 @@
 %ul.breadcrumb.text-center
   -participant_steps.each_with_index do |s,i|
     -sc = step_content[s]
-    -if s == participant_state.to_sym
-      %li
-        =i+1
-        =sc
-        -if i != participant_steps.size-1
-          %span.divider >
-    -else
-      %li.muted
-        =i+1
-        =sc
-        -if i != participant_steps.size-1
-          %span.divider >
+    %li{:class=>"#{'muted' if s != participant_state.to_sym}"}
+      =i+1
+      ="."
+      =sc
+      -if i != participant_steps.size-1
+        %span.divider >

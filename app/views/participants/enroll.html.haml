@@ -1,6 +1,6 @@
 .row-fluid
 - if @participant.open?
-  =render(:partial => "participant_progress", :locals => {:participant_state => @participant.stage, :participant_steps => @participant.filled_states})
+  =render(:partial => 'participant_progress', :locals => {:participant_state => @participant.stage, :participant_steps => @participant.filled_states})
 - if @participant.consent?
   = render :partial => 'participant_consent'
 - elsif @participant.demographics?

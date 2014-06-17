@@ -14,7 +14,7 @@
         %li= msg
 .row-fluid
   .span12
-    =simple_form_for @response_set, :html=>{:id => "edit_response_set_form" } do |f|
+    =simple_form_for @response_set, :html=>{:id => "edit_response_set_form", :class=> 'ajax-form'} do |f|
       .row-fluid
         .tabbable.tabs-left#survey-tabs
           -if @survey.sections.size > 1

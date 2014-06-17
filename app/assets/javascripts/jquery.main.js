@@ -68,34 +68,35 @@ $(document).ready(function() {
       "sSearch": "Filter: "
         }});});
 
-
   $(".next-section").livequery('click',function(e){
-    var $tabs = $('.tabs-left li');
-    $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
-    var $form = $("form.ajax-form");
-    var $target = $($form.attr('data-target'));
-    $.ajax({
-      type: "PUT",
-      target: $target,
-      data: $form.serialize(),
-      url: $(this).attr('data-url') + ".js",
-      success: function(data,message,xhr) {
-        $target.html(data);
-        if (xhr.getResponseHeader('x-flash-notice') !== null){
-          $(".notifications").notify({
-            message: { text: xhr.getResponseHeader('x-flash-notice') }
-          }).show();
+    if ($('#edit_response_set_form').valid()) {
+      var $tabs = $('.tabs-left li');
+      $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
+      var $form = $("form.validate-form");
+      var $target = $($form.attr('data-target'));
+      $.ajax({
+        type: "POST",
+        target: $target,
+        data: $form.serialize(),
+        url: $(this).attr('data-url') + ".js",
+        success: function(data,message,xhr) {
+          $target.html(data);
+          if (xhr.getResponseHeader('x-flash-notice') !== null){
+            $(".notifications").notify({
+              message: { text: xhr.getResponseHeader('x-flash-notice') }
+            }).show();
+          }
+        },
+        error: function(xhr,status,error) {
+          if (xhr.getResponseHeader('x-flash-errors') !== null){
+            $(".errors").notify({
+              message: { text: xhr.getResponseHeader('x-flash-errors') },
+              type: "error"
+            }).show();
+          }
         }
-      },
-      error: function(xhr,status,error) {
-        if (xhr.getResponseHeader('x-flash-errors') !== null){
-          $(".errors").notify({
-            message: { text: xhr.getResponseHeader('x-flash-errors') },
-            type: "error"
-          }).show();
-        }
-      }
-    });
+      });
+    }
     return false
   });
 

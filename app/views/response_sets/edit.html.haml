@@ -4,7 +4,8 @@
 .row-fluid
   .span12
     .well.well-small.text-center
-      %h4.text-center=@response_set.participant.name
+      %h4.text-center
+        =@response_set.participant.name<<"'s Survey"
 - if @response_set.errors.any?
   .row-fluid
     %h2= "#{pluralize(@response_set.errors.count, "error")} prohibited this relationship from being saved:"
@@ -16,20 +17,12 @@
     =simple_form_for @response_set, :html=>{:id => "edit_response_set_form" } do |f|
       .row-fluid
         .tabbable.tabs-left#survey-tabs
-          %ul.nav.nav-tabs.span2
-            -if @response_set.survey.sections.size > 1
-              - @response_set.survey.sections.each_with_index do |s,si|
+          -if @survey.sections.size > 1
+            %ul.nav.nav-tabs.span2#section_tab_header
+              - @survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
-                %br
-            =button_tag "Save",:value=>"save",:class=>"btn btn-mini btn-block btn-primary cancel"
-            %br
-            =button_tag "Save & Exit",:value=>"exit",:class=>"btn btn-mini btn-block btn-primary cancel"
-            %br
-            =button_tag "Submit",:value=>"finish",:class=>"btn btn-mini btn-block btn-success", :id => "admin_submit_response_set"
-            %br
-            =link_to "Cancel", dashboard_path, :class=>"btn btn-mini btn-block btn-warning"
           .tab-content.offset2#survey-tab-content
-            - @response_set.survey.sections.each_with_index do |s, si|
+            - @response_set.survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
                 -s.questions.each_with_index do |q,i|
                   .row-fluid
@@ -41,14 +34,23 @@
                       -elsif q.response_type.eql?("none")
                         =q.text.html_safe
                       -else
-                        =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date?}","data-provide"=>"#{'datepicker' if q.date?}",:rows=>3 }, :placeholder => "#{'yyyy-mm-dd' if q.date?}"
+                        =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small' if q.date?}","data-provide"=>"#{'datepicker' if q.date?}",:rows=>3 }
                       %hr
+                .btn-toolbar.row-fluid
+                  .span6
+                    - unless si == 0
+                      = button_tag :class=>"btn btn-link previous-section", :type => 'button' do
+                        %i.icon-backward
+                        Previous
+                  .span6
+                    - if si == (@survey.sections.size - 1)
+                      = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section"
+                    - else
+                      = button_tag "Next", :class=>"btn btn-primary next-section", "data-url" => response_set_url(@response_set) do
+                        Next
+                        %i.icon-forward
 :javascript
   $(document).ready(function(){
-    $('#edit_response_set_form').validate();
-    $('#submit_response_set').click(function() {
-      $('#edit_response_set_form').valid();
-    });
     var tab_content_height = $(window).height()-$('#survey-tab-content').offset().top;
     $('#survey-tab-content').height(tab_content_height).css({
         overflow: "auto"

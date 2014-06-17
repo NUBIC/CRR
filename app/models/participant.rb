@@ -28,6 +28,7 @@
 #  secondary_guardian_phone      :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
+#  hear_about_registry           :string(255)
 #
 
 class Participant < ActiveRecord::Base

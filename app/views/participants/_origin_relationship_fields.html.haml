@@ -1,10 +1,8 @@
-.nested-fields
-  Participant
-  %b
-    %span.participant_full_name
-  %span is the
-  = f.select :category, Relationship::CATEGORIES.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
-  %span of
-  %b
-    = f.select :destination_id, current_user.other_participants(@participant).collect{|p| [p.name,p.id]}, { prompt: 'Select Person'}, :class => "required"
-  = link_to_remove_association 'Remove', f
+Participant
+%b
+  %span.participant_full_name
+%span is the
+= f.select :category, Relationship::CATEGORIES.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
+%span of
+%b
+  = f.select :destination_id, current_user.other_participants(@participant).collect{|p| [p.name,p.id]}, { prompt: 'Select Person'}, :class => "required"

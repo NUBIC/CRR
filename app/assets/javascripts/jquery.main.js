@@ -75,10 +75,10 @@ $(document).ready(function() {
       var $form = $("form.validate-form");
       var $target = $($form.attr('data-target'));
       $.ajax({
-        type: "POST",
+        type: "PUT",
         target: $target,
         data: $form.serialize(),
-        url: $(this).attr('data-url') + ".js",
+        url: $(this).attr('data-url'),
         success: function(data,message,xhr) {
           $target.html(data);
           if (xhr.getResponseHeader('x-flash-notice') !== null){

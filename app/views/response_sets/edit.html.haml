@@ -23,10 +23,9 @@
         .tab-content.offset2#survey-tab-content
           - @response_set.survey.sections.each_with_index do |s,si|
             .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
-              .row-fluid
-                %h3.pull-left
+              .row-fluid.section-title
+                %h3
                   =s.title
-                %br
               -s.questions.each_with_index do |q,i|
                 .row-fluid
                   .span12
@@ -47,7 +46,7 @@
                       Previous
                 .span6
                   - if si == (@survey.sections.size - 1)
-                    = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section"
+                    = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section", "data-url" => response_set_url(@response_set)
                   - else
                     = button_tag "Next", :class=>"btn btn-primary next-section", "data-url" => response_set_url(@response_set) do
                       Next

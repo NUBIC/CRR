@@ -68,8 +68,11 @@ $(document).ready(function() {
       "sSearch": "Filter: "
         }});});
 
-  $(".next-section").livequery('click',function(e){
+  $(".next-section, .finish-section").livequery('click',function(e){
     if ($('#edit_response_set_form').valid()) {
+      $('#custom_error').remove();
+      $('div.error').removeAttr('style');
+      $('.error').removeClass('error');
       var $tabs = $('.tabs-left li');
       $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
       var $form = $("form.validate-form");
@@ -96,6 +99,13 @@ $(document).ready(function() {
           }
         }
       });
+    } else {
+      $('.error').closest('.control-group').addClass("error").css({"background-color": "#f2dede"});
+      if ($('#custom_error').length < 1) {
+        $(this).parent().parent().siblings(".section-title").
+          append($("<div id='custom_error' class='alert alert-error'></div>").
+          text("You have miss something! See below"));
+      }
     }
     return false
   });
@@ -107,6 +117,16 @@ $(document).ready(function() {
   $(".previous-section").livequery('click',function(){
     var $tabs = $('.tabs-left li');
     $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
+  });
+
+  $.validator.setDefaults({
+    errorPlacement: function(error, element) {
+      if( element.attr("type") === "checkbox") {
+        element.closest('.control-group').append(error);
+      } else {
+        error.insertAfter(element);
+      }
+    }
   });
 
   $.validator.addMethod("phone", function(value, element) {

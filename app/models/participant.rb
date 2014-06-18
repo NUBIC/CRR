@@ -184,6 +184,10 @@ class Participant < ActiveRecord::Base
     response_sets.where(:completed_at=>nil,:public=>true)
   end
 
+  def public_response_sets
+    response_sets
+  end
+
   def demographics_info_completed?
     !(first_name.blank? or last_name.blank?)
   end

@@ -20,6 +20,7 @@
           %ul.nav.nav-tabs.span2#section_tab_header
             - @survey.sections.each_with_index do |s,si|
               %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
+        .error-msg.offset2
         .tab-content.offset2#survey-tab-content
           - @response_set.survey.sections.each_with_index do |s,si|
             .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}

@@ -68,11 +68,9 @@ $(document).ready(function() {
       "sSearch": "Filter: "
         }});});
 
-  $(".next-section, .finish-section").livequery('click',function(e){
+  $(".next-section").livequery('click',function(e){
     if ($('#edit_response_set_form').valid()) {
-      $('#custom_error').remove();
-      $('div.error').removeAttr('style');
-      $('.error').removeClass('error');
+      remove_error_message();
       var $tabs = $('.tabs-left li');
       $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
       var $form = $("form.validate-form");
@@ -100,14 +98,17 @@ $(document).ready(function() {
         }
       });
     } else {
-      $('.error').closest('.control-group').addClass("error").css({"background-color": "#f2dede"});
-      if ($('#custom_error').length < 1) {
-        $(this).parent().parent().siblings(".section-title").
-          append($("<div id='custom_error' class='alert alert-error'></div>").
-          text("You have miss something! See below"));
-      }
+      display_error_message();
     }
     return false
+  });
+
+  $(".finish-section").livequery('click',function(e){
+    if ($('#edit_response_set_form').valid()) {
+      remove_error_message();
+    } else {
+      display_error_message();
+    }
   });
 
   $(".phone").mask("999-999-9999");
@@ -115,9 +116,24 @@ $(document).ready(function() {
   $(".zipcode").mask("99999");
 
   $(".previous-section").livequery('click',function(){
+    remove_error_message();
     var $tabs = $('.tabs-left li');
     $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');
   });
+
+  function remove_error_message() {
+    $('#custom_error').remove();
+    $('div.error').removeAttr('style');
+    $('.error').removeClass('error');
+  }
+
+  function display_error_message() {
+    $('.error').closest('.control-group').addClass("error").css({"background-color": "#f2dede"});
+    if ($('#custom_error').length < 1) {
+      $(".error-msg").append($("<div id='custom_error' class='alert alert-error'></div>").
+        text("You have miss something! See below"));
+    }
+  }
 
   $.validator.setDefaults({
     errorPlacement: function(error, element) {

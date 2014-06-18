@@ -100,6 +100,10 @@ $(document).ready(function() {
     return false
   });
 
+  $(".phone").mask("999-999-9999");
+  $(".date").mask("9999-99-99");
+  $(".zipcode").mask("99999");
+
   $(".previous-section").livequery('click',function(){
     var $tabs = $('.tabs-left li');
     $tabs.filter('.active').prev('li').find('a[data-toggle="tab"]').tab('show');

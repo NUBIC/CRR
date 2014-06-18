@@ -88,7 +88,7 @@ class ParticipantsController < PublicController
     params.require(:participant).permit(:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
       :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
-      :secondary_guardian_email, :secondary_guardian_phone)
+      :secondary_guardian_email, :secondary_guardian_phone, :hear_about_registry)
   end
 
   def account_params

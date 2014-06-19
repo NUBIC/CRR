@@ -5,7 +5,6 @@
 #  id             :integer          not null, primary key
 #  survey_id      :integer
 #  participant_id :integer
-#  effective_date :date
 #  completed_at   :datetime
 #  public         :boolean
 #  created_at     :datetime
@@ -87,6 +86,9 @@ class ResponseSet < ActiveRecord::Base
     !completed_at.nil?
   end
 
+  def display_text
+    complete? ? survey.title << " completed on #{completed_at.to_date}" : survey.title
+  end
 
   #TODO
   def mandatory_questions_complete?

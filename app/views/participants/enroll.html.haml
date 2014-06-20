@@ -40,4 +40,9 @@
       $("#consent_response").val("decline");
       $("#consent-next").removeAttr("disabled");
     });
+
+    $.each($('.destination_relationship'), function() {
+      var name_text = $(this).find('option:selected').text();
+      $(this).parent().append($("<span class='destination_relationship_name'></span>").text(name_text));
+    });
   });

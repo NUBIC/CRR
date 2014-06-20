@@ -4,10 +4,14 @@
     =f.label :first_name, "Participant's First Name", :class => "control-label"
     .controls
       =f.text_field  :first_name, :class => "required"
+      %small.text-error
+        %i (Required Field)
   .control-group
     =f.label :last_name, "Participant's Last Name", :class => "control-label"
     .controls
       =f.text_field  :last_name, :class => "required"
+      %small.text-error
+        %i (Required Field)
 .row-fluid
   %h4="Household Information"
   .control-group
@@ -48,10 +52,14 @@
     =f.label :primary_guardian_first_name, "First Name", :class => "control-label"
     .controls
       =f.text_field :primary_guardian_first_name, class: "required"
+      %small.text-error
+        %i (Required Field)
   .control-group
     =f.label :primary_guardian_last_name, "Last Name", :class => "control-label"
     .controls
       =f.text_field :primary_guardian_last_name, class: "required"
+      %small.text-error
+        %i (Required Field)
   .control-group
     =f.label :primary_guardian_email, "Email Address", :class => "control-label"
     .controls

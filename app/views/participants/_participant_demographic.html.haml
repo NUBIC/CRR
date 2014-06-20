@@ -12,10 +12,14 @@
         =f.label :first_name, "First Name", :class => "control-label"
         .controls
           =f.text_field  :first_name, class: "required"
+        %small.text-error
+          %i (Required Field)
       .control-group
         =f.label :last_name, "Last Name", :class => "control-label"
         .controls
           =f.text_field  :last_name, class: "required"
+        %small.text-error
+          %i (Required Field)
       .control-group
         =f.label :address_line1, "Address", :class => "control-label"
         .controls
@@ -51,7 +55,10 @@
   -if @participant.related_participants.size > 0
     .relationships
       .row-fluid
-        %h4 Relationships
+        %h4
+          Relationships
+          %small.text-error
+            %i (Required Field)
       = f.fields_for :origin_relationships do |origin_relationship|
         .row-fluid
           = render 'origin_relationship_fields', :f => origin_relationship

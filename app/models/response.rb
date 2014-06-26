@@ -54,7 +54,12 @@ class Response < ActiveRecord::Base
         errors.add(:question,"#{question.display_order} is not a valid number")
       end
     elsif self.question.response_type.eql?("date")
-      errors.add(:question,"#{question.text} is not a date.") unless /\d\d\d\d-\d\d-\d\d/ =~ self.text
+      begin
+        Date.parse(self.text)
+      rescue
+        errors.add(:question,"#{question.display_order} Is not a date")
+      end
+      # errors.add(:question,"#{question.text} is not a date.") unless /\d\d-\d\d-\d\d\d\d/ =~ self.text
     elsif self.question.multiple_choice?
       errors.add(:answer,"doesn't match question") unless question.answers.include?(answer)
     end

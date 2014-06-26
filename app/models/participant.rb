@@ -165,7 +165,7 @@ class Participant < ActiveRecord::Base
   end
 
   def inactive?
-    [:new, :consent, :demographics].include?(self.aasm_current_state)
+    [:new, :consent, :demographics, :consent_denied].include?(self.aasm_current_state)
   end
 
   def active?

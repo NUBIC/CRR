@@ -1,0 +1,17 @@
+.progressbar, .progressbar-nonactive{
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    font-size: 100%;
+}
+
+.progressbar {
+    background: #520063;
+}
+
+.progressbar-nonactive {
+    background: #996699;
+}

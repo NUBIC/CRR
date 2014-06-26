@@ -32,9 +32,20 @@
         = f.button "Next", class: "btn btn-primary", id: "consent-next"
 :javascript
   $(document).ready(function(){
-    var consent_content_height = $(window).height() - 2*$('#consent-content').offset().top;
+    var consent_content_height = $(window).height() - $('#consent-content').offset().top - $("#consent-controls").height()-$('.footer').height();
     $('#consent-content').height(consent_content_height).css({
         overflow: "auto",
         border: "2px solid"
+    });
+
+    $('.consent-agree').attr('disabled', 'disabled');
+    $('.consent-disagree').attr('disabled', 'disabled');
+
+    $('#consent-content').scroll(function(){
+      var $contentelement =  $(this)[0];
+      if (($contentelement.scrollTop + $contentelement.offsetHeight) >= $contentelement.scrollHeight){
+        $('.consent-agree').removeAttr('disabled')
+        $('.consent-disagree').removeAttr('disabled')
+      }
     });
   });

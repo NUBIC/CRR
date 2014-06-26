@@ -39,6 +39,10 @@ class Account < ActiveRecord::Base
     participants.reject { |p| p.inactive? }
   end
 
+  def inactive_participants
+    participants.reject { |p| p.active? }
+  end
+
   def other_participants(participant)
     active_participants.reject { |p| p == participant or p.inactive?}
   end

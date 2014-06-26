@@ -87,7 +87,7 @@ class ResponseSet < ActiveRecord::Base
   end
 
   def display_text
-    complete? ? survey.title << " completed on #{completed_at.to_date}" : survey.title
+    complete? ? "#{survey.title} completed on #{completed_at.to_date}" : "#{survey.title}"
   end
 
   #TODO

@@ -1,4 +1,4 @@
-- if @current_user.all_participants.size > 0
+- if @current_user.active_participants.size > 0
   .row-fluid
     %h3="My Registry"
     %table.table.table-condensed.table-bordered.table-striped
@@ -8,7 +8,7 @@
           %th="Surveys"
           %th
       %tbody
-        - @current_user.all_participants.each do |participant|
+        - @current_user.active_participants.each do |participant|
           %tr
             %td
               - if participant.active?

@@ -15,6 +15,9 @@ class ParticipantsController < PublicController
       create_and_redirect_response_set(@participant) unless @participant.recent_response_set
       redirect_to(edit_response_set_path(@participant.recent_response_set))
     end
+    if @participant.consent_denied?
+      redirect_to dashboard_path
+    end
   end
 
   def consent

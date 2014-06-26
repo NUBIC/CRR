@@ -4,7 +4,7 @@ var timeoutExpiredTimer;
 $(document).ready(function() {
 
   //--------------- Change default Bootstrap date----------
-  $.fn.datepicker.defaults.format = "yyyy-mm-dd";
+  $.fn.datepicker.defaults.format = "mm-dd-yyyy";
   // -------------- Common UI --------------
   $('a[data-toggle=modal]').livequery('click',function(){
     $($(this).attr('data-target')).html("<h5 class='modal-header text-center'>Loading...</h5>");
@@ -112,7 +112,7 @@ $(document).ready(function() {
   });
 
   $(".phone").mask("999-999-9999");
-  $(".date").mask("9999-99-99");
+  $(".date").mask("99-99-9999");
   $(".zipcode").mask("99999");
 
   $(".previous-section").livequery('click',function(){
@@ -156,7 +156,7 @@ $(document).ready(function() {
   }, "Please enter a valid US Zip Code.");
 
   $.validator.addMethod("date", function(date, element) {
-    return this.optional(element) || date.match(/^(19|20)\d\d-(0\d|1[012])-(0\d|1\d|2\d|3[01])$/);
-  }, "Please specify a valid date in 'yyyy-mm-dd' format.");
+    return this.optional(element) || date.match(/^(0\d|1[012])-(0\d|1\d|2\d|3[01])-(19|20)\d\d$/);
+  }, "Please specify a valid date in 'MM-DD-YYYY' format.");
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

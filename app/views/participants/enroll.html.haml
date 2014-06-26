@@ -7,8 +7,6 @@
   = render :partial => 'participant_demographic'
 - elsif @participant.completed?
   %h5="Thank you for participation! Someone from CRR will contact you if more information is needed."
-- elsif @participant.consent_denied?
-  %h5="Thank you for your currrent interest. If you are interested again in future for participating, you can always come back."
 - elsif @participant.withdrawn?
   %h5="We are sorry to see you leave. If you change your mind in fuiture, you can always come back and sign up again."
 :javascript

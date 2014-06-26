@@ -1,22 +1,16 @@
 -if @account.all_participants.size > 0
   = render :partial => 'account_participants.html.haml'
--else
-  -if @account.login_count > 1
-    %h5
-      ="Welcome Back. It looks like you created account last time, but didn't enroll any participant to the registry. Please click on Add participant button to get started."
-  -else
-    %h5
-      ="Thank you for creating an account with the Registry. Now, you’re ready to sign up participant to the registry! Please click on Add participant button to get started."
-- if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
-  .row-fluid
-    = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary" do
-      - @account.all_participants.size > 0 ? "Add Another Participant" : "Add Participant"
-  %br
+  - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
+    .row-fluid
+      = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary" do
+        - @account.active_participants.size > 0 ? "Add Another Participant" : "Add Participant"
+    %br
 #add_participant.modal.hide
   .modal-header
     %h5
       ="Who would you like to add to the registry"
-      = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+      -if @account.all_participants.size > 0
+        = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
   .row-fluid
     .modal-body
       -unless current_user.has_self_participant?
@@ -35,3 +29,46 @@
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = submit_tag('Another Adult', :class=>"btn btn-primary")
+#add_another_participant.modal.hide
+  .modal-header
+    %h5
+      - if @participant
+        = @participant.proxy? ? "Thank you for adding #{@participant.name} to registry!" : "Thank you for adding yourself to registry!"
+        = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+    %h5
+      ="Would you like to add another participant?"
+  .row-fluid
+    .modal-body
+      -unless current_user.has_self_participant?
+        - if Consent.adult_consent and Survey.adult_survey
+          =form_tag(participants_path, :method => 'post') do
+            = hidden_field_tag "account_id", @account.id
+            = submit_tag('Myself', :class=>"btn btn-primary")
+      - if Consent.child_consent and Survey.child_survey
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = hidden_field_tag "child", true
+          = submit_tag('My Child', :class=>"btn btn-primary")
+      - if Consent.adult_consent and Survey.adult_survey
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = submit_tag('Another Adult', :class=>"btn btn-primary")
+      =link_to "No Thanks, I'm done", dashboard_path
+-if @account.all_participants.size == 0
+  :javascript
+    $(document).ready(function(){
+      $('#add_participant').modal({
+      'backdrop': 'static',
+      'keyboard': false,
+      'show': true
+      });
+    });
+-if @participant
+  :javascript
+    $(document).ready(function(){
+      $('#add_another_participant').modal({
+      'show': true
+      });
+    });

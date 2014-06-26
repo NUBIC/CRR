@@ -3,12 +3,20 @@
   :demographics =>  "Contact Information",
   :survey => "Registry Questions",
   :survey_started => "Registry Questions"}
-%ul.breadcrumb.text-center
+/ %ul.breadcrumb.text-center
+.row-fluid
+  .span3
   -participant_steps.each_with_index do |s,i|
     -sc = step_content[s]
-    %li{:class=>"#{'muted' if s != participant_state.to_sym}"}
-      =i+1
-      ="."
-      =sc
-      -if i != participant_steps.size-1
-        %span.divider >
+    -if s != participant_state.to_sym
+      .span2.muted
+        .progressbar-nonactive.input-append
+          =i+1
+        =sc
+    -else
+      .span2
+        .progressbar.input-append
+          =i+1
+        =sc
+  .span3
+

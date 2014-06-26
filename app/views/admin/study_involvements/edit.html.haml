@@ -13,21 +13,21 @@
     .control-group
       =f.label :state_date,"Status Date"
       .controls
-        =f.text_field :state_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :state_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"mm-dd-yyyy", placeholder: "mm-dd-yyyy"
     .control-group
       =f.label :start_date
       .controls
-        =f.text_field :start_date,:class=>"input-small date required","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :start_date,:class=>"input-small date required","data-provide"=>"datepicker","data-date-format"=>"mm-dd-yyyy", placeholder: "mm-dd-yyyy"
         %small
           %i (Required Field)
     .control-group
       =f.label :warning_date
       .controls
-        =f.text_field :warning_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :warning_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"mm-dd-yyyy", placeholder: "mm-dd-yyyy"
     .control-group
       =f.label :end_date
       .controls
-        =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"mm-dd-yyyy", placeholder: "mm-dd-yyyy"
     .control-group
       =f.label :notes
       .controls

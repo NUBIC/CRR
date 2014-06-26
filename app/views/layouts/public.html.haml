@@ -24,10 +24,9 @@
           .row-fluid
             .span12
               = yield
-          .row-fluid.no-print
+          .row-fluid.no-print.footer
             .alert.alert-info.text-center
               %p!="Contact us via email #{mail_to "commresearchregistry@northwestern.edu", "commresearchregistry@northwestern.edu", subject: "Communication Research Registry"} or toll-free telephone (855) 354-3273 with questions or concerns."
-          .row-fluid.no-print
             %p
               != "Communication Research Registry &mdash; created by #{link_to("NUBIC", "http://www.nucats.northwestern.edu/resources-services/data-and-informatics-services/index.html")} for Northwestern University"
               %small.pull-right

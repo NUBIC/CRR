@@ -1,3 +1,4 @@
+#additonal-data{data: {count: @account.all_participants.size, participant: @participant ? "true" : "false"}}
 -if @account.all_participants.size > 0
   = render :partial => 'account_participants.html.haml'
   - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
@@ -56,19 +57,38 @@
           = hidden_field_tag "proxy", true
           = submit_tag('Another Adult', :class=>"btn btn-primary")
       =link_to "No Thanks, I'm done", dashboard_path
--if @account.all_participants.size == 0
-  :javascript
-    $(document).ready(function(){
-      $('#add_participant').modal({
+:javascript
+  $(document).ready(function(){
+  var count = $('#additonal-data').data("count");
+  if (count == 0) {
+    $('#add_participant').modal({
       'backdrop': 'static',
       'keyboard': false,
       'show': true
       });
-    });
--if @participant
-  :javascript
-    $(document).ready(function(){
-      $('#add_another_participant').modal({
+  }
+
+  var participant = $('#additonal-data').data("participant");
+  if (participant) {
+    $('#add_another_participant').modal({
       'show': true
-      });
     });
+  }
+});
+
+/ -if @account.all_participants.size == 0
+/   :javascript
+/     $(document).ready(function(){
+/       $('#add_participant').modal({
+/       'backdrop': 'static',
+/       'keyboard': false,
+/       'show': true
+/       });
+/     });
+/ -if @participant
+/   :javascript
+/     $(document).ready(function(){
+/       $('#add_another_participant').modal({
+/       'show': true
+/       });
+/     });

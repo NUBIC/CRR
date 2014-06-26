@@ -59,22 +59,22 @@
       =link_to "No Thanks, I'm done", dashboard_path
 :javascript
   $(document).ready(function(){
-  var count = $('#additonal-data').data("count");
-  if (count == 0) {
-    $('#add_participant').modal({
-      'backdrop': 'static',
-      'keyboard': false,
-      'show': true
-      });
-  }
+    var count = $('#additonal-data').data("count");
+    if (count == 0) {
+      $('#add_participant').modal({
+        'backdrop': 'static',
+        'keyboard': false,
+        'show': true
+        });
+    }
 
-  var participant = $('#additonal-data').data("participant");
-  if (participant) {
-    $('#add_another_participant').modal({
-      'show': true
-    });
-  }
-});
+    var participant = $('#additonal-data').data("participant");
+    if (participant) {
+      $('#add_another_participant').modal({
+        'show': true
+      });
+    }
+  });
 
 / -if @account.all_participants.size == 0
 /   :javascript

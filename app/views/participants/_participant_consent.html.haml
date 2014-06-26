@@ -12,10 +12,12 @@
       .row-fluid
         %label.radio.inline
           = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          = @participant.proxy? ? @participant.child? ? "I agree on behalf of my child" : "I agree on behalf of participant" : "I agree"
+          .consent-agree-text
+            = @participant.proxy? ? @participant.child? ? "I agree on behalf of my child" : "I agree on behalf of participant" : "I agree"
         %label.radio.inline
           = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          = @participant.proxy? ? @participant.child? ? "I disagree on behalf of my child" : "I disagree on behalf of participant" : "I disagree"
+          .text-error
+            = @participant.proxy? ? @participant.child? ? "I disagree on behalf of my child" : "I disagree on behalf of participant" : "I disagree"
       -if @participant.proxy?
         .form-inline.proxy-consent
           %br
@@ -39,13 +41,12 @@
     });
 
     $('.consent-agree').attr('disabled', 'disabled');
-    $('.consent-disagree').attr('disabled', 'disabled');
-
+    $('.consent-agree-text').addClass('muted')
     $('#consent-content').scroll(function(){
       var $contentelement =  $(this)[0];
       if (($contentelement.scrollTop + $contentelement.offsetHeight) >= $contentelement.scrollHeight){
-        $('.consent-agree').removeAttr('disabled')
-        $('.consent-disagree').removeAttr('disabled')
+        $('.consent-agree').removeAttr('disabled');
+        $('.consent-agree-text').addClass('text-success');
       }
     });
   });

@@ -1,114 +1,91 @@
-=form_for @participant, :url=>admin_participant_path(@participant), :html => {:id => 'admin_participant_demographic'} do |f|
+=form_for @participant, :url=>admin_participant_path(@participant), :html => {:id => 'admin_participant_demographic', :class => "form-horizontal"} do |f|
   -if @participant.child?
     = render :partial => 'participant_child_proxy', :locals => {:f => f}
   -else
     .row-fluid
-      %h4="Participant Information:"
+      %h4="Participant Information"
+      .control-group
+        =f.label :first_name, "Participant's First Name", :class => "control-label"
+        .controls
+          =f.text_field  :first_name, :class => "required"
+          %small.text-error
+            %i (Required Field)
+      .control-group
+        =f.label :last_name, "Participant's Last Name", :class => "control-label"
+        .controls
+          =f.text_field  :last_name, :class => "required"
+          %small.text-error
+            %i (Required Field)
     .row-fluid
-      .span4
-        .control-group
-          =f.label :first_name, "First Name"
-          .controls
-            =f.text_field  :first_name, :class => "required"
-      .span4
-        .control-group
-          =f.label :midlle_name, "Middle Name"
-          .controls
-            =f.text_field  :middle_name
-      .span4
-        .control-group
-          =f.label :last_name, "Last Name"
-          .controls
-            =f.text_field  :last_name, :class => "required"
+      %h4="Household Information"
+      .control-group
+        =f.label :address_line1, "Address", :class => "control-label"
+        .controls
+          =f.text_field  :address_line1
+      .control-group
+        =f.label :address_line2, "Address Line 2", :class => "control-label"
+        .controls
+          =f.text_field  :address_line2
+      .control-group
+        =f.label :city, :class => "control-label"
+        .controls
+          =f.text_field  :city
+      .control-group
+        =f.label :state, :class => "control-label"
+        .controls
+          =f.select :state, us_states, { prompt: 'Select State'}
+      .control-group
+        =f.label :zip, :class => "control-label"
+        .controls
+          =f.text_field  :zip, class: "zipcode"
+      .control-group
+        =f.label :email, "Email Address", :class => "control-label"
+        .controls
+          =f.text_field  :email, class: "email"
+      .control-group
+        =f.label :primary_phone, "Primary Phone Number", :class => "control-label"
+        .controls
+          =f.text_field  :primary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+      .control-group
+        =f.label :secondary_phone, "Secondary Phone Number", :class => "control-label"
+        .controls
+          =f.text_field  :secondary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
     .row-fluid
-      %h4="Participant Address:"
+      %h4="Primary Guardian"
+      .control-group
+        =f.label :primary_guardian_first_name, "First Name", :class => "control-label"
+        .controls
+          =f.text_field :primary_guardian_first_name
+      .control-group
+        =f.label :primary_guardian_last_name, "Last Name", :class => "control-label"
+        .controls
+          =f.text_field :primary_guardian_last_name
+      .control-group
+        =f.label :primary_guardian_email, "Email Address", :class => "control-label"
+        .controls
+          =f.text_field :primary_guardian_email, class: "email"
+      .control-group
+        =f.label :primary_guardian_phone, "Phone Number", :class => "control-label"
+        .controls
+          =f.text_field :primary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
     .row-fluid
-      .span4
-        .control-group
-          =f.label :address_line1, "Address Line1"
-          .controls
-            =f.text_field  :address_line1
-      .span4
-        .control-group
-          =f.label :address_line2, "Address Line2"
-          .controls
-            =f.text_field  :address_line2
-    .row-fluid
-      .span4
-        .control-group
-          =f.label :city
-          .controls
-            =f.text_field  :city
-      .span4
-        .control-group
-          =f.label :state
-          .controls
-            = f.select :state, us_states, { prompt: 'Select State'}
-      .span4
-        .control-group
-          =f.label :zip
-          .controls
-            =f.text_field  :zip
-    .row-fluid
-      .span4
-        .control-group
-          =f.label :email, "Email Address"
-          .controls
-            =f.text_field :email, class: "email"
-      .span4
-        .control-group
-          =f.label :primary_phone, "Primary Phone Number"
-          .controls
-            =f.text_field :primary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
-      .span4
-        .control-group
-          =f.label :secondary_phone, "Secondary Phone Number"
-          .controls
-            =f.text_field :secondary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
-    .row-fluid
-      %h4="Primary Guardian:"
-    .row-fluid
-      .span4
-        .control-group
-          =f.label :primary_guardian_first_name, "First Name"
-          .controls
-            =f.text_field :primary_guardian_first_name
-      .span4
-        .control-group
-          =f.label :primary_guardian_last_name, "Last Name"
-          .controls
-            =f.text_field :primary_guardian_last_name
-      .span4
-        .control-group
-          =f.label :primary_guardian_email, "Email Address"
-          .controls
-            =f.text_field :primary_guardian_email, class: "email"
-        .control-group
-          =f.label :primary_guardian_phone, "Phone Number"
-          .controls
-            =f.text_field :primary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
-    .row-fluid
-      %h4="Secondary Guardian:"
-    .row-fluid
-      .span4
-        .control-group
-          =f.label :secondary_guardian_first_name, "First Name"
-          .controls
-            =f.text_field :secondary_guardian_first_name
-      .span4
-        .control-group
-          =f.label :secondary_guardian_last_name, "Last Name"
-          .controls
-            =f.text_field :secondary_guardian_last_name
-      .span4
-        .control-group
-          =f.label :secondary_guardian_email, "Email Address"
-          .controls
-            =f.text_field :secondary_guardian_email, class: "email"
-        .control-group
-          =f.label :secondary_guardian_phone, "Phone Number"
-          .controls
-            =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+      %h4="Secondary Guardian"
+      .control-group
+        =f.label :secondary_guardian_first_name, "First Name", :class => "control-label"
+        .controls
+          =f.text_field :secondary_guardian_first_name
+      .control-group
+        =f.label :secondary_guardian_last_name, "Last Name", :class => "control-label"
+        .controls
+          =f.text_field :secondary_guardian_last_name
+      .control-group
+        =f.label :secondary_guardian_email, "Email Address", :class => "control-label"
+        .controls
+          =f.text_field :secondary_guardian_email, class: "email"
+      .control-group
+        =f.label :secondary_guardian_phone, "Phone Number", :class => "control-label"
+        .controls
+          =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
   .row-fluid
     .btn-group
       =f.button "Next",:class=>"btn btn-primary"

@@ -8,9 +8,8 @@ class Admin::ParticipantsController < Admin::AdminController
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant
     if @participant.survey?
-      create_and_redirect_response_set(@participant)
-    elsif @participant.survey_started?
-      redirect_to(edit_admin_response_set_path(@participant.recent_response_set))
+      create_and_redirect_response_set(@participant) unless @participant.recent_response_set
+      redirect_to(edit_response_set_path(@participant.recent_response_set))
     end
   end
 

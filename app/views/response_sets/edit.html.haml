@@ -14,7 +14,7 @@
         %li= msg
 .row-fluid
   .span12
-    =simple_form_for @response_set, :html=>{:id => "edit_response_set_form", :class=> 'validate-form'} do |f|
+    =simple_form_for @response_set, :html=>{:id => "edit_response_set_form", :class=> 'validate-form edit_response_set_form'} do |f|
       .tabbable.tabs-left#survey-tabs
         -if @survey.sections.size > 1
           %ul.nav.nav-tabs.span2#section_tab_header

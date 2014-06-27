@@ -69,7 +69,7 @@ $(document).ready(function() {
         }});});
 
   $(".next-section").livequery('click',function(e){
-    if ($('#edit_response_set_form').valid()) {
+    if ($('.edit_response_set_form').valid()) {
       remove_error_message();
       var $tabs = $('.tabs-left li');
       $tabs.filter('.active').next('li').find('a[data-toggle="tab"]').tab('show');
@@ -104,7 +104,7 @@ $(document).ready(function() {
   });
 
   $(".finish-section").livequery('click',function(e){
-    if ($('#edit_response_set_form').valid()) {
+    if ($('.edit_response_set_form').valid()) {
       remove_error_message();
     } else {
       display_error_message();
@@ -137,7 +137,7 @@ $(document).ready(function() {
 
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
-      if( element.attr("type") === "checkbox") {
+      if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {
         element.closest('.control-group').append(error);
       } else {
         error.insertAfter(element);

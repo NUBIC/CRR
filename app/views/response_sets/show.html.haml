@@ -1,4 +1,6 @@
 .row-fluid
+  =link_to "Return", dashboard_path,:class=>"btn btn-primary"
+.row-fluid
   .span12
     %h4.text-center
       = "#{@response_set.participant.name} - #{@response_set.survey.title}"

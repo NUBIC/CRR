@@ -1,5 +1,5 @@
-.row-fluid
-  %h3.text-center="Contact Information"
+.well.nu-small.nu-well.text-center
+  .nu-header.text-center="Contact Information"
 =form_for @participant, :html => {:id => 'participant_demographic', :class => "form-horizontal"} do |f|
   -if @participant.adult_proxy?
     = render :partial => 'participant_adult_proxy', :locals => {:f => f}
@@ -68,5 +68,5 @@
       =f.label :hear_about_registry, "How did you hear about the Communication Research Registry?"
       =f.text_field :hear_about_registry, :class => "input-xxlarge"
   .row-fluid
-    .btn-group.pull-right
-      =f.button "Next",:class=>"btn btn-primary"
+    .btn-group
+      =f.button "Next",:class=>"btn btn-primary nu-primary"

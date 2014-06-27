@@ -14,7 +14,7 @@
       = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}
     .span2
       = f.label :date, 'Consent given on:'
-      = f.text_field :date, :class=> "required input-small date","data-provide"=> "datepicker", placeholder: "yyyy-mm-dd"
+      = f.text_field :date, :class=> "required input-small date","data-provide"=> "datepicker", placeholder: "mm-dd-yyyy"
   .row-fluid
     = submit_tag("Next", class: "btn btn-primary")
 :javascript

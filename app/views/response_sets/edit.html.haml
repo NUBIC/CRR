@@ -1,11 +1,8 @@
 - if @response_set.participant.open?
   .row-fluid
     =render(:partial => "participants/participant_progress", :locals => {:participant_state => @response_set.participant.stage, :participant_steps => @response_set.participant.filled_states})
-.row-fluid
-  .span12
-    .well.well-small.text-center
-      %h4.text-center
-        =@response_set.participant.name<<"'s Survey"
+.well.nu-small.nu-well.text-center
+  .nu-header.text-center=@response_set.participant.name<<"'s Survey"
 - if @response_set.errors.any?
   .row-fluid
     %h2= "#{pluralize(@response_set.errors.count, "error")} prohibited this relationship from being saved:"
@@ -31,7 +28,11 @@
                 .row-fluid
                   .span12
                     -if q.response_type.eql?("pick_one")
-                      =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
+                      -if q.answers.size > 5
+                        .radio-inline
+                          =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
+                      -else
+                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
                     -elsif q.response_type.eql?("pick_many")
                       =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text
                     -elsif q.response_type.eql?("none")
@@ -49,7 +50,7 @@
                   - if si == (@survey.sections.size - 1)
                     = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section", "data-url" => response_set_url(@response_set)
                   - else
-                    = button_tag "Next", :class=>"btn btn-primary next-section", "data-url" => response_set_url(@response_set) do
+                    = button_tag "Next", :class=>"btn btn-primary nu-primary next-section", "data-url" => response_set_url(@response_set) do
                       Next
                       %i.icon-forward
 :javascript

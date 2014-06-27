@@ -1,5 +1,5 @@
-.row-fluid
-  %h3.text-center=Consent
+.well.nu-small.nu-well.text-center
+  .nu-header.text-center="Consent"
 .row-fluid
   #consent-content
     -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
@@ -31,7 +31,7 @@
             %i (Required Field)
       %br
       .row-fluid
-        = f.button "Next", class: "btn btn-primary", id: "consent-next"
+        = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next"
 :javascript
   $(document).ready(function(){
     var consent_content_height = $(window).height() - $('#consent-content').offset().top - $("#consent-controls").height()-$('.footer').height();

@@ -3,7 +3,7 @@
   = render :partial => 'account_participants.html.haml'
   - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
     .row-fluid
-      = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary" do
+      = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary nu-primary" do
         - @account.active_participants.size > 0 ? "Add Another Participant" : "Add Participant"
     %br
 #add_participant.modal.hide
@@ -18,18 +18,18 @@
         - if Consent.adult_consent and Survey.adult_survey
           =form_tag(participants_path, :method => 'post') do
             = hidden_field_tag "account_id", @account.id
-            = submit_tag('Myself', :class=>"btn btn-primary")
+            = submit_tag('Myself', :class=>"btn btn-primary nu-primary")
       - if Consent.child_consent and Survey.child_survey
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = hidden_field_tag "child", true
-          = submit_tag('My Child', :class=>"btn btn-primary")
+          = submit_tag('My Child', :class=>"btn btn-primary nu-primary")
       - if Consent.adult_consent and Survey.adult_survey
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
-          = submit_tag('Another Adult', :class=>"btn btn-primary")
+          = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
 #add_another_participant.modal.hide
   .modal-header
     %h5
@@ -44,18 +44,18 @@
         - if Consent.adult_consent and Survey.adult_survey
           =form_tag(participants_path, :method => 'post') do
             = hidden_field_tag "account_id", @account.id
-            = submit_tag('Myself', :class=>"btn btn-primary")
+            = submit_tag('Myself', :class=>"btn btn-primary nu-primary")
       - if Consent.child_consent and Survey.child_survey
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = hidden_field_tag "child", true
-          = submit_tag('My Child', :class=>"btn btn-primary")
+          = submit_tag('My Child', :class=>"btn btn-primary nu-primary")
       - if Consent.adult_consent and Survey.adult_survey
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
-          = submit_tag('Another Adult', :class=>"btn btn-primary")
+          = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
       =link_to "No Thanks, I'm done", dashboard_path
 :javascript
   $(document).ready(function(){

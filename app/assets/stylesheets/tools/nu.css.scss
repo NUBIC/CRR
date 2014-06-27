@@ -1,17 +1,46 @@
 .progressbar, .progressbar-nonactive{
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    padding: 8px;
-    color: white;
-    text-align: center;
-    font-size: 100%;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  padding: 8px;
+  color: white;
+  text-align: center;
+  font-size: 100%;
 }
 
-.progressbar {
-    background: #520063;
+.nu-primary{
+  background:  #622160
+  /*#520063;*/
 }
 
+.nu-header {
+  font-size: 200%;
+  font-weight: bold;
+}
 .progressbar-nonactive {
-    background: #996699;
+  background: #dfd9e8;
+  /*#996699;*/
+}
+
+.nu-well, .nu-primary[disabled], .nu-primary:disabled, .progressbar {
+  background: #b1a1c6;
+  color: #27071c
+}
+
+.nu-primary:active, .nu-primary.active, .nu-primary:hover, .nu-primary:focus, .tabbable a:hover{
+  background: #491847;
+}
+
+a{
+  color: #27071c
+}
+
+.tabbable ul.nav-tabs > .active > a, .tabbable ul.nav-tabs > .active > a:hover, .tabbable ul.nav-tabs > .active > a:focus {
+  background: #b1a1c6;
+  color: #27071c
+}
+
+.radio-inline label {
+  display: inline-block;
+  margin-right: 20px;
 }

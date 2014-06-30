@@ -1,7 +1,7 @@
 .well.nu-small.nu-well.text-center
   .nu-header.text-center="Consent"
 .row-fluid
-  #consent-content
+  #consent-content.consent-content
     -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
     !=@consent.content
   %br

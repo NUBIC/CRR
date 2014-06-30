@@ -1,6 +1,6 @@
 .well.nu-small.nu-well.text-center
   .nu-header.text-center="Contact Information"
-=form_for @participant, :html => {:id => 'participant_demographic', :class => "form-horizontal"} do |f|
+=form_for @participant, :html => { :class => "form-horizontal participant_demographic"} do |f|
   -if @participant.adult_proxy?
     = render :partial => 'participant_adult_proxy', :locals => {:f => f}
   -elsif @participant.child_proxy?

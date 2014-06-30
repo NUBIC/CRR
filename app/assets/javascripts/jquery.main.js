@@ -135,6 +135,40 @@ $(document).ready(function() {
     }
   }
 
+  $('.participant_demographic').validate({
+    messages: {
+      "participant[first_name]": "Please enter participant's First Name.",
+      "participant[last_name]": "Please enter participant's Last Name.",
+      "participant[primary_guardian_first_name]": "Please enter primary guardian's First Name.",
+      "participant[primary_guardian_last_name]": "Please enter primary guardian's Last Name."
+    }
+  });
+
+  $("#new-consent-sign").validate({
+    messages: {
+      "consent_signature[proxy_name]": "Please enter your name.",
+      "consent_signature[proxy_relationship]": "Please enter your relatiohsip to participant."
+    }
+  });
+
+  $("#consent-next").attr("disabled", "disabled");
+  $(".proxy-consent").hide();
+  $(".consent-agree").click(function(){
+    $(".proxy-consent").show();
+    $("#consent_response").val("accept");
+    $("#consent-next").removeAttr("disabled");
+  });
+  $(".consent-disagree").click(function(){
+    $(".proxy-consent").hide();
+    $("#consent_response").val("decline");
+    $("#consent-next").removeAttr("disabled");
+  });
+
+  $.each($('.destination_relationship'), function() {
+    var name_text = $(this).find('option:selected').text();
+    $(this).parent().append($("<span class='destination_relationship_name'></span>").text(name_text));
+  });
+
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
       if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {

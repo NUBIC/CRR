@@ -1,4 +1,4 @@
-=form_for @participant, :url=>admin_participant_path(@participant), :html => {:id => 'admin_participant_demographic', :class => "form-horizontal"} do |f|
+=form_for @participant, :url=>admin_participant_path(@participant), :html => { :class => "form-horizontal participant_demographic"} do |f|
   -if @participant.child?
     = render :partial => 'participant_child_proxy', :locals => {:f => f}
   -else

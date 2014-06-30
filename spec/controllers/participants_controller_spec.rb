@@ -37,15 +37,6 @@ describe ParticipantsController do
       participant.recent_response_set.survey.should == @child_survey
     end
 
-    it "redirects to the edit_response_set of survey if participant state is 'survey_started'" do
-      participant.stage = "survey_started"
-      participant.response_sets << ResponseSet.new(:survey_id => @adult_survey.id)
-      participant.save
-
-      get :enroll, id: participant.id
-      response.should redirect_to edit_response_set_path(participant.recent_response_set)
-    end
-
     describe "unauthorized access" do
       before(:each) do
         AccountSession.create(FactoryGirl.create(:account, email: "other@test.con"))

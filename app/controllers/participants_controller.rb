@@ -11,11 +11,11 @@ class ParticipantsController < PublicController
     @participant.related_participants.each do |destination|
       @participant.origin_relationships.build(destination_id: destination.id)
     end
+
     if @participant.survey?
-      create_and_redirect_response_set(@participant) unless @participant.recent_response_set
-      redirect_to(edit_response_set_path(@participant.recent_response_set))
-    end
-    if @participant.consent_denied?
+      @participant.recent_response_set ?
+        redirect_to(edit_response_set_path(@participant.recent_response_set)) : create_and_redirect_response_set(@participant)
+    elsif @participant.consent_denied?
       redirect_to dashboard_path
     end
   end
@@ -50,7 +50,6 @@ class ParticipantsController < PublicController
     else
       flash[:error] = account_participant.errors
     end
-
     redirect_to enroll_participant_path(@participant)
   end
 
@@ -66,15 +65,10 @@ class ParticipantsController < PublicController
     @participant.update_attributes(participant_relationship_params)
     if @participant.save
       @participant.take_survey! if @participant.demographics?
-      if @participant.survey?
-        create_and_redirect_response_set(@participant)
-      else
-        redirect_to enroll_participant_path(@participant)
-      end
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
-      redirect_to enroll_participant_path(@participant)
     end
+    @participant.survey? ? create_and_redirect_response_set(@participant) : redirect_to(enroll_participant_path(@participant))
 
   end
 
@@ -105,6 +99,7 @@ class ParticipantsController < PublicController
   def consent_signature_params
     params.require(:consent_signature).permit(:date, :consent_id, :proxy_name, :proxy_relationship)
   end
+
   private
   def create_and_redirect_response_set(participant)
     response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)

@@ -27,7 +27,7 @@ class Account < ActiveRecord::Base
   has_many :account_participants
   has_many :participants, :through => :account_participants
 
-  validates_uniqueness_of   :email, :case_sensitive => false, :allow_blank => false
+  validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => false
   validates_presence_of :email
   validates_format_of :email, :with => /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i, :message => 'is Invalid'
 
@@ -48,15 +48,15 @@ class Account < ActiveRecord::Base
   end
 
   def has_self_participant?
-    account_participants.detect {|ap| ap.proxy == false and !ap.participant.withdrawn?}
+    account_participants.any? {|ap| ap.proxy == false and !ap.participant.withdrawn?}
   end
 
-  def child_proxy_particpant
-    participants.select { |p| p.active? && p.child == true and p.account_participant.proxy == true }.first
+  def child_proxy_participant
+    participants.select { |p| p.active? && p.child == true and p.account_participant.proxy == true }.last
   end
 
-  def adult_proxy_particpant
-    participants.select { |p| p.active? && p.child == false and p.account_participant.proxy == true }.first
+  def adult_proxy_participant
+    participants.select { |p| p.active? && p.child == false and p.account_participant.proxy == true }.last
   end
 
   def last_updated_participant
@@ -65,9 +65,9 @@ class Account < ActiveRecord::Base
 
   def copy_from_participant(participant)
     if participant.child_proxy?
-      child_proxy_particpant ? child_proxy_particpant : last_updated_participant
+      child_proxy_participant ? child_proxy_participant : last_updated_participant
     else
-      adult_proxy_particpant ? adult_proxy_particpant : last_updated_participant
+      adult_proxy_participant ? adult_proxy_participant : last_updated_participant
     end
   end
 

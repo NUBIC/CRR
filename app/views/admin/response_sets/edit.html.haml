@@ -1,6 +1,6 @@
 .row-fluid
   .span12
-    .well.well-small.text-center
+    .well.well-small.nu-well.text-center
       %h4.text-center
         =@response_set.participant.name<<"'s Survey"
 - if @response_set.errors.any?
@@ -28,7 +28,11 @@
                 .row-fluid
                   .span12
                     -if q.response_type.eql?("pick_one")
-                      =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
+                      -if q.answers.size > 5
+                        .radio-inline
+                          =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
+                      -else
+                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
                     -elsif q.response_type.eql?("pick_many")
                       =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text
                     -elsif q.response_type.eql?("none")
@@ -52,9 +56,6 @@
 :javascript
   $(document).ready(function(){
     $('#admin_edit_response_set_form').validate();
-    console.log($(window).height());
-    console.log($('#admin-survey-tab-content').offset().top);
-    console.log($('.footer').height());
     var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
     $('#admin-survey-tab-content').height(tab_content_height).css({
         overflow: "auto"

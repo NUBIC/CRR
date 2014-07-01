@@ -4,20 +4,20 @@
       =f.label :irb_number, "IRB number"
       .controls
         =f.text_field :irb_number,:class=>"input-small required"
-        %small
-          %i (Required Field)
+        %small.text-error
+          %i Required field
     .control-group
       =f.label :name
       .controls
         =f.text_field :name,:class=>"input-xxlarge required"
-        %small
-          %i (Required Field)
+        %small.text-error
+          %i Required field
     .control-group
       =f.label :short_title
       .controls
         =f.text_field :short_title,:class=>"input-xxlarge required"
-        %small
-          %i (Required Field)
+        %small.text-error
+          %i Required field
     .control-group
       =f.label :sites
       .controls

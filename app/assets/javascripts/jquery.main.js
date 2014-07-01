@@ -170,7 +170,7 @@ $(document).ready(function() {
   });
 
   $(".label-required").livequery(function(){
-    $(this).append($("<small class='text-error'><i>(Required Field)</i></small>"));
+    $(this).append($("<small class='text-error'><i>Required field</i></small>"));
   });
 
   $.validator.setDefaults({

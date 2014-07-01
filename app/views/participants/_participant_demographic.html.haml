@@ -13,13 +13,13 @@
         .controls
           =f.text_field  :first_name, class: "required"
           %small.text-error
-            %i (Required Field)
+            %i Required field
       .control-group
         =f.label :last_name, "Last Name", :class => "control-label"
         .controls
           =f.text_field  :last_name, class: "required"
           %small.text-error
-            %i (Required Field)
+            %i Required field
       .control-group
         =f.label :address_line1, "Address", :class => "control-label"
         .controls
@@ -58,7 +58,7 @@
         %h4
           Relationships
           %small.text-error
-            %i (Required Field)
+            %i Required field
       = f.fields_for :origin_relationships do |origin_relationship|
         .row-fluid
           = render 'origin_relationship_fields', :f => origin_relationship

@@ -24,11 +24,11 @@
           = f.label :proxy_name, 'Your electronic signature (full name): '
           = f.text_field :proxy_name, class: 'required'
           %small.text-error
-            %i (Required Field)
+            %i Required field
           = f.label :proxy_relationship, @participant.child? ? 'Your relationship to child: ' : 'Your relationship to participant: '
           = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
           %small.text-error
-            %i (Required Field)
+            %i Required field
       %br
       .row-fluid
         = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next"

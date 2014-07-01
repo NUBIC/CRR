@@ -2,7 +2,12 @@ class ParticipantsController < PublicController
   before_filter :require_user
 
   def enroll
-    @participant = Participant.find(params[:id])
+    begin
+      @participant = Participant.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to dashboard_path
+      return
+    end
     authorize! :enroll, @participant
     if current_user.active_participants.size > 0
       @participant.copy_from(current_user.copy_from_participant(@participant))

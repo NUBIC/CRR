@@ -24,7 +24,7 @@ class Account < ActiveRecord::Base
     c.logged_in_timeout = 10.minutes
   end
 
-  has_many :account_participants
+  has_many :account_participants, :dependent => :destroy
   has_many :participants, :through => :account_participants
 
   validates_uniqueness_of :email, :case_sensitive => false, :allow_blank => false

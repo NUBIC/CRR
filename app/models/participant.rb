@@ -33,15 +33,15 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  has_many :response_sets
-  has_many :contact_logs
-  has_many :study_involvements
-  has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
-  has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
-  has_many :consent_signatures
+  has_many :response_sets, :dependent => :destroy
+  has_many :contact_logs, :dependent => :destroy
+  has_many :study_involvements, :dependent => :destroy
+  has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id", :dependent => :destroy
+  has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id", :dependent => :destroy
+  has_many :consent_signatures, :dependent => :destroy
   has_many :studies, :through=>:study_involvements
 
-  has_one :account_participant
+  has_one :account_participant,:dependent => :destroy
   has_one :account, :through => :account_participant
   accepts_nested_attributes_for :origin_relationships, :allow_destroy => true
 

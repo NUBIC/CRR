@@ -131,7 +131,7 @@ $(document).ready(function() {
     $('.error').closest('.control-group').addClass("error").css({"background-color": "#f2dede"});
     if ($('#custom_error').length < 1) {
       $(".error-msg").append($("<div id='custom_error' class='alert alert-error'></div>").
-        text("You have miss something! See below"));
+        text("You missed something! See below"));
     }
   }
 

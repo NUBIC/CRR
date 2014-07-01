@@ -94,7 +94,7 @@ class Admin::ParticipantsController < Admin::AdminController
   end
 
   def participant_params
-    params.require(:participant).permit(:child,:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
+    params.require(:participant).permit(:child,:first_name, :last_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
       :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
       :secondary_guardian_email, :secondary_guardian_phone,:notes,:do_not_contact)

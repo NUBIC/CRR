@@ -5,7 +5,6 @@
 #  id                            :integer          not null, primary key
 #  email                         :string(255)
 #  first_name                    :string(255)
-#  middle_name                   :string(255)
 #  last_name                     :string(255)
 #  primary_phone                 :string(255)
 #  secondary_phone               :string(255)
@@ -28,6 +27,7 @@
 #  secondary_guardian_phone      :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
+#  hear_about_registry           :string(255)
 #
 
 require 'spec_helper'

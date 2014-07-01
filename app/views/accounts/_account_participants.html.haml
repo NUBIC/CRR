@@ -11,10 +11,7 @@
         - @current_user.active_participants.each do |participant|
           %tr
             %td
-              - if participant.active?
-                =link_to participant.proxy_name, participant_path(participant)
-              -else
-                =participant.proxy_name
+              =link_to participant.name, participant_path(participant)
             %td
               %ul.unstyled
                 -participant.public_response_sets.each do |response_set|

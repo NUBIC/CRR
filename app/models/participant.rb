@@ -5,7 +5,6 @@
 #  id                            :integer          not null, primary key
 #  email                         :string(255)
 #  first_name                    :string(255)
-#  middle_name                   :string(255)
 #  last_name                     :string(255)
 #  primary_phone                 :string(255)
 #  secondary_phone               :string(255)
@@ -99,14 +98,6 @@ class Participant < ActiveRecord::Base
   # condensed form of name
   def name
     [first_name, last_name].join(' ')
-  end
-
-  def proxy_name
-    if first_name.blank? and last_name.blank?
-      proxy? ? child_proxy? ? "No Name Child Enrollment" : "No Name Adult Enrollment" : "Self Enrollment"
-    else
-      name
-    end
   end
 
   def relationships

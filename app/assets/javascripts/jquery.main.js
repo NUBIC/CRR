@@ -169,6 +169,10 @@ $(document).ready(function() {
     $(this).parent().append($("<span class='destination_relationship_name'></span>").text(name_text));
   });
 
+  $(".label-required").livequery(function(){
+    $(this).append($("<small class='text-error'><i>(Required Field)</i></small>"));
+  });
+
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
       if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {

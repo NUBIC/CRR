@@ -28,17 +28,17 @@
                 .row-fluid
                   .span12
                     -if q.response_type.eql?("pick_one")
-                      -if q.answers.size > 5
+                      -if q.answers.size > 7
                         .radio-inline
-                          =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
+                          =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
                       -else
-                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text
+                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
                     -elsif q.response_type.eql?("pick_many")
-                      =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text
+                      =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
                     -elsif q.response_type.eql?("none")
                       =q.text.html_safe
                     -else
-                      =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date?}", :placeholder=>"#{'MM-DD-YYYY' if q.date?}",:rows=>3 }
+                      =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:required_text => "true",:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date?}", :placeholder=>"#{'MM-DD-YYYY' if q.date?}",:rows=>3 }, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
                     %hr
               .btn-toolbar.row-fluid
                 .span6

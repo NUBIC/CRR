@@ -19,18 +19,19 @@
           .text-error
             = @participant.proxy? ? @participant.child? ? "I decline on behalf of my child" : "I decline on behalf of participant" : "I decline"
       -if @participant.proxy?
-        %br
-        .row-fluid.proxy-consent
-          .span6.form-inline
-            = f.label :proxy_name, 'Your electronic signature (full name): '
-            = f.text_field :proxy_name, class: 'required'
-            %small.text-error
-              %i Required field
-          .span6.form-inline
-            = f.label :proxy_relationship, @participant.child? ? 'Your relationship to child: ' : 'Your relationship to participant: '
-            = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
-            %small.text-error
-              %i Required field
+        .proxy-consent
+          %br
+          .row-fluid
+            .span6.form-inline
+              = f.label :proxy_name, 'Your electronic signature (full name): '
+              = f.text_field :proxy_name, class: 'required'
+              %small.text-error
+                %i Required field
+            .span6.form-inline
+              = f.label :proxy_relationship, @participant.child? ? 'Your relationship to child: ' : 'Your relationship to participant: '
+              = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
+              %small.text-error
+                %i Required field
       %br
       .row-fluid
         = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next"
@@ -40,15 +41,5 @@
     $('#consent-content').height(consent_content_height).css({
         overflow: "auto",
         border: "2px solid"
-    });
-
-    $('.consent-agree').attr('disabled', 'disabled');
-    $('.consent-agree-text').addClass('muted')
-    $('#consent-content').scroll(function(){
-      var $contentelement =  $(this)[0];
-      if (($contentelement.scrollTop + $contentelement.offsetHeight) >= $contentelement.scrollHeight){
-        $('.consent-agree').removeAttr('disabled');
-        $('.consent-agree-text').addClass('text-success');
-      }
     });
   });

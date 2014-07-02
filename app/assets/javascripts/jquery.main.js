@@ -5,6 +5,16 @@ $(document).ready(function() {
 
   //--------------- Change default Bootstrap date----------
   $.fn.datepicker.defaults.format = "mm-dd-yyyy";
+
+  $.validator.setDefaults({
+    errorPlacement: function(error, element) {
+      if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {
+        element.closest('.control-group').append(error);
+      } else {
+        error.insertAfter(element);
+      }
+    }
+  });
   // -------------- Common UI --------------
   $('a[data-toggle=modal]').livequery('click',function(){
     $($(this).attr('data-target')).html("<h5 class='modal-header text-center'>Loading...</h5>");
@@ -135,36 +145,39 @@ $(document).ready(function() {
     }
   }
 
-  $('.participant_demographic').validate({
-    messages: {
-      "participant[first_name]": "Please enter participant's First Name.",
-      "participant[last_name]": "Please enter participant's Last Name.",
-      "participant[primary_guardian_first_name]": "Please enter primary guardian's First Name.",
-      "participant[primary_guardian_last_name]": "Please enter primary guardian's Last Name."
-    }
+  $(".participant_demographic").livequery(function(){
+    $(this).validate({
+      messages: {
+        "participant[first_name]": "Please enter participant's First Name.",
+        "participant[last_name]": "Please enter participant's Last Name.",
+        "participant[primary_guardian_first_name]": "Please enter primary guardian's First Name.",
+        "participant[primary_guardian_last_name]": "Please enter primary guardian's Last Name."
+      }
+    });
   });
 
-  $("#new-consent-sign").validate({
-    messages: {
-      "consent_signature[proxy_name]": "Please enter your name.",
-      "consent_signature[proxy_relationship]": "Please enter your relatiohsip to participant."
-    }
+  $("#new-consent-sign").livequery(function(){
+    $(this).validate({
+      messages: {
+        "consent_signature[proxy_name]": "Please enter your full name.",
+        "consent_signature[proxy_relationship]": "Please enter your relatiohsip to participant."
+      }
+    });
   });
 
-  $("#consent-next").attr("disabled", "disabled");
-  $(".proxy-consent").hide();
-  $(".consent-agree").click(function(){
+  $(".consent-agree").livequery('click',function(e){
     $(".proxy-consent").show();
     $("#consent_response").val("accept");
     $("#consent-next").removeAttr("disabled");
   });
-  $(".consent-disagree").click(function(){
+
+  $(".consent-disagree").livequery('click',function(e){
     $(".proxy-consent").hide();
     $("#consent_response").val("decline");
     $("#consent-next").removeAttr("disabled");
   });
 
-  $.each($('.destination_relationship'), function() {
+  $(".destination_relationship").livequery(function(){
     var name_text = $(this).find('option:selected').text();
     $(this).parent().append($("<span class='destination_relationship_name'></span>").text(name_text));
   });
@@ -173,14 +186,22 @@ $(document).ready(function() {
     $(this).append($("<small class='text-error'><i>Required field</i></small>"));
   });
 
-  $.validator.setDefaults({
-    errorPlacement: function(error, element) {
-      if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {
-        element.closest('.control-group').append(error);
-      } else {
-        error.insertAfter(element);
-      }
+  $('.consent-agree').attr('disabled', 'disabled');
+  $('.consent-agree-text').addClass('muted')
+
+  $("#consent-next").attr("disabled", "disabled");
+  $(".proxy-consent").hide();
+
+  $('#consent-content').scroll(function(){
+    var $contentelement =  $(this)[0];
+    if (($contentelement.scrollTop + $contentelement.offsetHeight) >= $contentelement.scrollHeight){
+      $('.consent-agree').removeAttr('disabled');
+      $('.consent-agree-text').addClass('text-success');
     }
+  });
+
+  $(".edit_response_set_form").livequery(function(){
+    $(this).validate();
   });
 
   $.validator.addMethod("phone", function(value, element) {

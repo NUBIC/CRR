@@ -11,7 +11,7 @@
         %li= msg
 .row-fluid
   .span12
-    =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{:id => "admin_edit_response_set_form", :class => "validate-form edit_response_set_form"} do |f|
+    =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{ :class => "validate-form edit_response_set_form"} do |f|
       .tabbable.tabs-left#admin-survey-tabs
         -if @survey.sections.size > 1
           %ul.nav.nav-tabs.span2#section_tab_header
@@ -55,7 +55,6 @@
                       %i.icon-forward
 :javascript
   $(document).ready(function(){
-    $('#admin_edit_response_set_form').validate();
     var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
     $('#admin-survey-tab-content').height(tab_content_height).css({
         overflow: "auto"

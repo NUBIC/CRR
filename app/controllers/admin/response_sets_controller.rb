@@ -22,9 +22,7 @@ class Admin::ResponseSetsController < Admin::AdminController
     authorize! :create, @response_set
     @participant = @response_set.participant
     saved = @response_set.save
-    if saved
-      @participant.start_survey! if @participant.survey?
-    else
+    unless saved
       flash[:notice] = @response_set.errors.full_messages.to_sentence
       @surveys = Survey.all.select{|s| s.active?}
     end
@@ -53,7 +51,10 @@ class Admin::ResponseSetsController < Admin::AdminController
     unless @response_set.save and (!params[:button].eql?("finish") || @response_set.reload.complete!)
       flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
     end
-    redirect_to (@response_set.errors.empty? and ["exit","finish"].include?(params[:button])) ? admin_participant_path(@response_set.participant) : edit_admin_response_set_path(@response_set.reload)
+    respond_to do |format|
+      format.html{ redirect_to (@response_set.errors.empty? and params[:button].eql?("finish")) ? admin_participant_path(@response_set.participant) : edit_admin_response_set_path(@response_set.reload)}
+      format.js {render ((flash[:error].blank? and params[:button].eql?("finish")) ? admin_participant_path(@response_set.participant) : :edit),:layout=>false}
+    end
   end
 
   def response_set_params

@@ -5,7 +5,6 @@
 #  id             :integer          not null, primary key
 #  survey_id      :integer
 #  participant_id :integer
-#  effective_date :date
 #  completed_at   :datetime
 #  public         :boolean
 #  created_at     :datetime
@@ -87,6 +86,9 @@ class ResponseSet < ActiveRecord::Base
     !completed_at.nil?
   end
 
+  def display_text
+    complete? ? "#{survey.title} completed on #{completed_at.to_date}" : "#{survey.title}"
+  end
 
   #TODO
   def mandatory_questions_complete?
@@ -116,7 +118,7 @@ class ResponseSet < ActiveRecord::Base
   def complete!
     if mandatory_questions_complete?
       self.completed_at = Time.now
-      self.participant.process_approvement! if self.participant.survey_started?
+      self.participant.process_approvement! if self.participant.survey?
       return save!
     else
       error_string = unanswered_mandatory_questions.collect{|q| "#{q.section.title if survey.sections.size > 1}#{' - ' if survey.sections.size > 1} #{q.display_order}"  }

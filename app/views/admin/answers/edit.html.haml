@@ -2,12 +2,12 @@
   .row-fluid
     .span3
       =f.text_field :text,:class=>"input-large required",:placeholder=>"answer text"
-      %small
-        %i (Required Field)
+      %small.text-error
+        %i Required field
     .span2
       =f.text_field :code,:class=>"input-mini required",:placeholder=>"code"
-      %small
-        %i (Required Field)
+      %small.text-error
+        %i Required field
     .span2
       .btn-group
         =f.button "Update",:class=>"btn btn-mini btn-success"

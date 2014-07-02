@@ -12,11 +12,6 @@
             =f.text_field  :first_name, :class => "required"
       .span4
         .control-group
-          =f.label :midlle_name, "Middle Name"
-          .controls
-            =f.text_field  :middle_name
-      .span4
-        .control-group
           =f.label :last_name, "Last Name"
           .controls
             -if @participant.child

@@ -1,5 +1,7 @@
 -if current_user
-  = link_to "Home", dashboard_path, :class => 'brand'
+  = link_to image_tag("crr_logo.png"), dashboard_path, :class => 'brand'
+-else
+  =image_tag("crr_logo.png")
 %ul.nav.pull-right
   -if current_user
     %li.dropdown

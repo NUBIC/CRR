@@ -1,47 +1,28 @@
-- if @current_user.all_participants.size > 0
+- if @current_user.active_participants.size > 0
   .row-fluid
-    .well.well-small
-      %h4="Participants"
-    %table.table.table-condensed.table-striped
+    %h3="My Registry"
+    %table.table.table-condensed.table-bordered.table-striped
       %thead
         %tr
           %th="Name"
-          %th="Join Date"
-          %th="Status"
-          %th="Pending surveys"
-          %th="Options"
+          %th="Surveys"
+          %th
       %tbody
-        - @current_user.all_participants.each do |participant|
+        - @current_user.active_participants.each do |participant|
           %tr
-            %td=participant.proxy_name
-            %td=participant.created_at.to_date
+            %td
+              =link_to participant.name, participant_path(participant)
             %td
               %ul.unstyled
-                -if participant.open?
+                -participant.public_response_sets.each do |response_set|
                   %li
-                    Incomplete
-                  %li
-                    =link_to "Click here to finish", enroll_participant_path(participant)
-                -else
-                  %li
-                    Complete
+                    -if response_set.complete?
+                      =link_to response_set.display_text, response_set_path(response_set)
+                    -else
+                      .text-error
+                        You haven't finished the survey!
+                        =link_to("Click here to finish #{response_set.display_text}", edit_response_set_path(response_set))
             %td
-              -if participant.open_public_response_sets.empty?
-                None
-              -else
-                -participant.open_public_response_sets.each do |response_set|
-                  =link_to response_set.survey.title, edit_response_set_path(response_set)
-            %td
-              %ul.unstyled
-                - if participant.consented?
-                  %li
-                    %i.icon-folder-open
-                    =link_to "View Consent", consent_participant_path(participant)
-                - if participant.active?
-                  %li
-                    %i.icon-folder-open
-                    =link_to "View Information", participant_path(participant)
-                - if participant.completed?
-                  %li
-                    %i.icon-folder-open
-                    =link_to  "View Survey", response_set_path(participant.recent_response_set)
+              - if participant.consented?
+                %i.icon-folder-open
+                =link_to "View Consent", consent_participant_path(participant)

@@ -8,9 +8,8 @@ class Admin::ParticipantsController < Admin::AdminController
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant
     if @participant.survey?
-      create_and_redirect_response_set(@participant)
-    elsif @participant.survey_started?
-      redirect_to(edit_admin_response_set_path(@participant.recent_response_set))
+      create_and_redirect_response_set(@participant) unless @participant.recent_response_set
+      redirect_to(edit_response_set_path(@participant.recent_response_set))
     end
   end
 
@@ -95,7 +94,7 @@ class Admin::ParticipantsController < Admin::AdminController
   end
 
   def participant_params
-    params.require(:participant).permit(:child,:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
+    params.require(:participant).permit(:child,:first_name, :last_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
       :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
       :secondary_guardian_email, :secondary_guardian_phone,:notes,:do_not_contact)
@@ -112,7 +111,6 @@ class Admin::ParticipantsController < Admin::AdminController
   private
   def create_and_redirect_response_set(participant)
     response_set = participant.create_response_set(participant.child? ? Survey.child_survey : Survey.adult_survey)
-    participant.start_survey!
     redirect_to(edit_admin_response_set_path(response_set))
   end
 end

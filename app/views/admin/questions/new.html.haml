@@ -2,8 +2,8 @@
   .row-fluid
     =f.hidden_field :section_id
     =f.text_area :text,:rows=>1,:class=>"input-xxlarge required"
-    %small
-      %i (Required Field)
+    %small.text-error
+      %i Required field
     =f.text_field :help_text,:placeholder=>"Hint text..."
   .row-fluid
     %h6.muted Options
@@ -15,8 +15,8 @@
         =f.label :code,"Code",:class=>"control-label"
         .controls
           =f.text_field :code,:class=>"input-small required"
-          %small
-            %i (Required Field)
+          %small.text-error
+            %i Required field
     .span3
       .control-group
         =f.label :display_order,:class=>"control-label"

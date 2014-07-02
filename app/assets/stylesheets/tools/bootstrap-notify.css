@@ -4,3 +4,5 @@
 .notifications.bottom-right{right:10px;bottom:25px;}
 .notifications>div{position:relative;z-index:9999;margin:5px 0px;}
 .notifications.center{top:48%;left:0;width:100%;z-index:9999}.notifications.center>div{margin:5px auto;width:40%;text-align:center;}
+.form-horizontal .control-label {width: 200px;}
+.form-horizontal .controls {margin-left: 220px;}

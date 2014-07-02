@@ -5,7 +5,6 @@
 #  id             :integer          not null, primary key
 #  survey_id      :integer
 #  participant_id :integer
-#  effective_date :date
 #  completed_at   :datetime
 #  public         :boolean
 #  created_at     :datetime
@@ -104,15 +103,15 @@ describe ResponseSet do
   end
 
   it "should insert value for date" do
-    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"2013-12-12")
+    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"12-12-2013")
     @response_set.reload.responses.size.should == 1
-    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "2013-12-12"
+    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "12-12-2013"
   end
 
   it "should properly erase value for date" do
-    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"2013-12-12")
+    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"12-12-2013")
     @response_set.reload.responses.size.should == 1
-    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "2013-12-12"
+    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "12-12-2013"
     @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"")
     @response_set.reload.responses.size.should == 0
     @response_set.send("q_#{@q_date.id}".to_sym).to_s.should be_blank
@@ -125,12 +124,12 @@ describe ResponseSet do
   end
 
   it "should not overwrite previously inserted value when bad value is entered for date" do
-    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"2013-12-12")
+    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"12-12-2013")
     @response_set.reload.responses.size.should == 1
-    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "2013-12-12"
+    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "12-12-2013"
     @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"54/23/2134")
     @response_set.reload.responses.size.should == 1
-    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "2013-12-12"
+    @response_set.send("q_#{@q_date.id}".to_sym).to_s.should == "12-12-2013"
 
   end
 
@@ -208,7 +207,7 @@ describe ResponseSet do
     @response_set.update_attributes("q_#{@q_number.id}".to_sym=>"3456")
     @response_set.update_attributes("q_#{@q_short_text.id}".to_sym=>"3456")
     @response_set.update_attributes("q_#{@q_long_text.id}".to_sym=>"3456")
-    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"2012-12-12")
+    @response_set.update_attributes("q_#{@q_date.id}".to_sym=>"12-12-2012")
     @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym=>"#{@po_a1.id}")
     @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym=>["#{@pm_a1.id}"])
     @response_set.reload.responses.size.should == 6

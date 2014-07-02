@@ -1,26 +1,94 @@
-%h3="Welcome to the Communication Research Registry"
-= render :partial => 'account_participants.html.haml'
-- if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
-  .well.well-small
-    %h4="Add a participant"
-  %h5="Who are you enrolling?"
+#additonal-data{data: {count: @account.active_participants.size, participant: @participant ? "true" : "false"}}
+-if @account.active_participants.size > 0
+  = render :partial => 'account_participants.html.haml'
+  - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
+    .row-fluid
+      = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary nu-primary" do
+        - @account.active_participants.size > 0 ? "Add Another Participant" : "Add Participant"
+    %br
+#add_participant.modal.hide
+  .modal-header
+    %h5
+      ="Who would you like to add to the registry"
+      -if @account.active_participants.size > 0
+        = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
   .row-fluid
-    -unless current_user.has_self_participant?
-      - if Consent.adult_consent and Survey.adult_survey
-        .span1
+    .modal-body
+      -unless current_user.has_self_participant?
+        - if Consent.adult_consent and Survey.adult_survey
           =form_tag(participants_path, :method => 'post') do
             = hidden_field_tag "account_id", @account.id
-            = submit_tag('Myself', :class=>"btn")
-    - if Consent.child_consent and Survey.child_survey
-      .span1
+            = submit_tag('Myself', :class=>"btn btn-primary nu-primary")
+      - if Consent.child_consent and Survey.child_survey
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = hidden_field_tag "child", true
-          = submit_tag('Child', :class=>"btn")
-    - if Consent.adult_consent and Survey.adult_survey
-      .span1
+          = submit_tag('My Child', :class=>"btn btn-primary nu-primary")
+      - if Consent.adult_consent and Survey.adult_survey
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
-          = submit_tag('Another Adult', :class=>"btn")
+          = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
+#add_another_participant.modal.hide
+  .modal-header
+    %h5
+      - if @participant
+        = @participant.proxy? ? "Thank you for adding #{@participant.name} to the registry!" : "Thank you for adding yourself to the registry!"
+        = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+    %h5
+      ="Would you like to add another participant?"
+  .row-fluid
+    .modal-body
+      -unless current_user.has_self_participant?
+        - if Consent.adult_consent and Survey.adult_survey
+          =form_tag(participants_path, :method => 'post') do
+            = hidden_field_tag "account_id", @account.id
+            = submit_tag('Myself', :class=>"btn btn-primary nu-primary")
+      - if Consent.child_consent and Survey.child_survey
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = hidden_field_tag "child", true
+          = submit_tag('My Child', :class=>"btn btn-primary nu-primary")
+      - if Consent.adult_consent and Survey.adult_survey
+        =form_tag(participants_path, :method => 'post') do
+          = hidden_field_tag "account_id", @account.id
+          = hidden_field_tag "proxy", true
+          = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
+      =link_to "No thanks, I'm done", dashboard_path
+:javascript
+  $(document).ready(function(){
+    var count = $('#additonal-data').data("count");
+    if (count == 0) {
+      $('#add_participant').modal({
+        'backdrop': 'static',
+        'keyboard': false,
+        'show': true
+        });
+    }
+
+    var participant = $('#additonal-data').data("participant");
+    if (participant) {
+      $('#add_another_participant').modal({
+        'show': true
+      });
+    }
+  });
+
+/ -if @account.all_participants.size == 0
+/   :javascript
+/     $(document).ready(function(){
+/       $('#add_participant').modal({
+/       'backdrop': 'static',
+/       'keyboard': false,
+/       'show': true
+/       });
+/     });
+/ -if @participant
+/   :javascript
+/     $(document).ready(function(){
+/       $('#add_another_participant').modal({
+/       'show': true
+/       });
+/     });

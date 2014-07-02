@@ -1,3 +1,6 @@
+.row-fluid
+  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+%br
 -unless @participant.consent_signatures.last.blank?
   .row-fluid
     !=@participant.consent_signatures.last.consent.content
@@ -13,5 +16,7 @@
     .span4
       %b
         ="Signed On: #{@participant.consent_signatures.last.created_at.to_date}"
-
+.row-fluid
+  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+%br
 

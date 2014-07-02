@@ -3,6 +3,8 @@ class AccountsController < PublicController
   def dashboard
     @account = current_user
     authorize! :dashboard, @account
+    @account.inactive_participants.each { |p| p.destroy }
+    @participant = Participant.find(params[:participant_id]) if params[:participant_id]
     respond_to do |format|
       format.html
     end

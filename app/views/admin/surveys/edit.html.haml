@@ -2,8 +2,8 @@
   .row-fluid
     =f.label :title
     =f.text_field :title,:class=>"input-xxlarge required"
-    %small
-      %i (Required Field)
+    %small.text-error
+      %i Required field
     =f.label :description
     =f.text_area :description,:rows=>2,:class=>"input-xxlarge"
     =f.label :code

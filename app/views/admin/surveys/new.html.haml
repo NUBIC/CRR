@@ -3,8 +3,8 @@
     =f.label :title,:class=>"control-label"
     .controls
       =f.text_field :title,:class=>"input-xxlarge required"
-      %small
-        %i (Required Field)
+      %small.text-error
+        %i Required Field
   .control-group
     =f.label :description,:class=>"control-label"
     .controls

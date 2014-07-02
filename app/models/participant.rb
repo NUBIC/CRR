@@ -5,7 +5,6 @@
 #  id                            :integer          not null, primary key
 #  email                         :string(255)
 #  first_name                    :string(255)
-#  middle_name                   :string(255)
 #  last_name                     :string(255)
 #  primary_phone                 :string(255)
 #  secondary_phone               :string(255)
@@ -28,19 +27,20 @@
 #  secondary_guardian_phone      :string(255)
 #  created_at                    :datetime
 #  updated_at                    :datetime
+#  hear_about_registry           :string(255)
 #
 
 class Participant < ActiveRecord::Base
   include AASM
-  has_many :response_sets
-  has_many :contact_logs
-  has_many :study_involvements
-  has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id"
-  has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id"
-  has_many :consent_signatures
+  has_many :response_sets, :dependent => :destroy
+  has_many :contact_logs, :dependent => :destroy
+  has_many :study_involvements, :dependent => :destroy
+  has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id", :dependent => :destroy
+  has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id", :dependent => :destroy
+  has_many :consent_signatures, :dependent => :destroy
   has_many :studies, :through=>:study_involvements
 
-  has_one :account_participant
+  has_one :account_participant,:dependent => :destroy
   has_one :account, :through => :account_participant
   accepts_nested_attributes_for :origin_relationships, :allow_destroy => true
 
@@ -53,7 +53,6 @@ class Participant < ActiveRecord::Base
   aasm_state :consent_denied
   aasm_state :demographics
   aasm_state :survey
-  aasm_state :survey_started
   aasm_state :pending_approval
   aasm_state :approved
   aasm_state :withdrawn
@@ -67,21 +66,13 @@ class Participant < ActiveRecord::Base
     # , :guard => :demographics_info_completed?
   end
 
-  aasm_event :start_survey do
-    transitions :to => :survey_started, :from => :survey
-  end
-
-  aasm_event :finish_survey do
-    transitions :to => :completed, :from => :survey_started
-  end
-
   aasm_event :decline_consent do
    transitions :to => :consent_denied, :from =>:consent
   end
 
   aasm_event :process_approvement do
-    transitions :to => :approved, :from => :survey_started, :guard => Proc.new {|p| !p.proxy? }
-    transitions :to => :pending_approval, :from => :survey_started, :guard => :proxy?
+    transitions :to => :approved, :from => :survey, :guard => Proc.new {|p| !p.proxy? }
+    transitions :to => :pending_approval, :from => :survey, :guard => :proxy?
   end
 
   aasm_event :verify do
@@ -90,7 +81,7 @@ class Participant < ActiveRecord::Base
 
   aasm_event :approve do
     transitions :to => :approved, :from => :pending_approval
-    transitions :to => :approved, :from => :survey_started
+    transitions :to => :approved, :from => :survey
   end
 
   aasm_event :withdraw do
@@ -100,17 +91,13 @@ class Participant < ActiveRecord::Base
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
+  def filled_states
+    [:consent, :demographics, :survey]
+  end
+
   # condensed form of name
   def name
     [first_name, last_name].join(' ')
-  end
-
-  def proxy_name
-    if first_name.blank? and last_name.blank?
-      proxy? ? child_proxy? ? "No Name Child Enrollment" : "No Name Adult Enrollment" : "Self Enrollment"
-    else
-      name
-    end
   end
 
   def relationships
@@ -157,11 +144,11 @@ class Participant < ActiveRecord::Base
   end
 
   def open?
-    [:consent, :demographics, :surevey, :survey_started].include?(self.aasm_current_state)
+    [:consent, :demographics, :survey].include?(self.aasm_current_state)
   end
 
   def consented?
-    [:demographics, :completed, :survey, :survey_started, :pending_approval, :approved].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+    [:demographics, :completed, :survey, :pending_approval, :approved].include?(self.aasm_current_state) and !self.consent_signatures.empty?
   end
 
   def completed?
@@ -169,7 +156,7 @@ class Participant < ActiveRecord::Base
   end
 
   def inactive?
-    [:new, :consent, :demographics].include?(self.aasm_current_state)
+    [:new, :consent, :demographics, :consent_denied].include?(self.aasm_current_state)
   end
 
   def active?
@@ -188,6 +175,10 @@ class Participant < ActiveRecord::Base
     response_sets.where(:completed_at=>nil,:public=>true)
   end
 
+  def public_response_sets
+    response_sets
+  end
+
   def demographics_info_completed?
     !(first_name.blank? or last_name.blank?)
   end
@@ -203,7 +194,7 @@ class Participant < ActiveRecord::Base
 
     if !account.nil? and proxy?
       [ :primary_guardian_first_name, :primary_guardian_last_name, :primary_guardian_email, :primary_guardian_phone,
-        :secondary_guardian_first_name, :secondary_guardian_last_name, :secondary_guardian_email, :secondary_guardian_phone].each do |fillin_attr|
+        :secondary_guardian_first_name, :secondary_guardian_last_name, :secondary_guardian_email, :secondary_guardian_phone, :hear_about_registry].each do |fillin_attr|
         self.send("#{fillin_attr}=", participant.send(fillin_attr))
       end
     end

@@ -3,8 +3,8 @@
     =f.hidden_field :survey_id
     =f.label :title
     =f.text_field :title, :class => "required"
-    %small
-      %i (Required Field)
+    %small.text-error
+      %i Required Field
     =f.label :display_order
     =f.select :display_order, (1..@section.survey.sections.size+1).collect{|display_order| [display_order,display_order]},{},:class=>"input-mini"
   .row-fluid

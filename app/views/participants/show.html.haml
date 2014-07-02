@@ -1,3 +1,6 @@
+.row-fluid
+  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+%br
 .alert.alert-success
   %h4=@participant.name
 .row-fluid
@@ -9,9 +12,6 @@
           %tr
             %th.muted First Name:
             %td= @participant.first_name
-          %tr
-            %th.muted Middle Name:
-            %td= @participant.middle_name
           %tr
             %th.muted Last Name:
             %td= @participant.last_name
@@ -80,3 +80,6 @@
               -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
               =link_to p.name, participant_path(p)
             %td=relationship.origin.eql?(@participant) ? relationship.category.titleize : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category].titleize
+.row-fluid
+  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+%br

@@ -5,17 +5,6 @@ describe AccountsController do
   let(:valid_attributes) { { email: "test@test.com", current_password: "1234", password: "1234", password_confirmation: "1234" } }
   let(:invalid_attributes) { { email: "test", password: "1234", password_confirmation: "1234" } }
 
-  describe "GET new" do
-    it "assigns a new account as @account" do
-      get :new, {}, valid_attributes
-      expect(assigns(:account)).to be_a_new(Account)
-    end
-    it "should use public layout" do
-      get :new, {}, valid_attributes
-      expect(response).to render_template("layouts/public")
-    end
-  end
-
   describe "POST create" do
     describe "with valid params" do
       it "creates a new Account" do

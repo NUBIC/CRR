@@ -2,7 +2,12 @@ class ParticipantsController < PublicController
   before_filter :require_user
 
   def enroll
-    @participant = Participant.find(params[:id])
+    begin
+      @participant = Participant.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to dashboard_path
+      return
+    end
     authorize! :enroll, @participant
     if current_user.active_participants.size > 0
       @participant.copy_from(current_user.copy_from_participant(@participant))
@@ -11,10 +16,12 @@ class ParticipantsController < PublicController
     @participant.related_participants.each do |destination|
       @participant.origin_relationships.build(destination_id: destination.id)
     end
+
     if @participant.survey?
-      create_and_redirect_response_set(@participant)
-    elsif @participant.survey_started?
-      redirect_to(edit_response_set_path(@participant.recent_response_set))
+      @participant.recent_response_set ?
+        redirect_to(edit_response_set_path(@participant.recent_response_set)) : create_and_redirect_response_set(@participant)
+    elsif @participant.consent_denied?
+      redirect_to dashboard_path
     end
   end
 
@@ -48,7 +55,6 @@ class ParticipantsController < PublicController
     else
       flash[:error] = account_participant.errors
     end
-
     redirect_to enroll_participant_path(@participant)
   end
 
@@ -64,15 +70,10 @@ class ParticipantsController < PublicController
     @participant.update_attributes(participant_relationship_params)
     if @participant.save
       @participant.take_survey! if @participant.demographics?
-      if @participant.survey?
-        create_and_redirect_response_set(@participant)
-      else
-        redirect_to enroll_participant_path(@participant)
-      end
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
-      redirect_to enroll_participant_path(@participant)
     end
+    @participant.survey? ? create_and_redirect_response_set(@participant) : redirect_to(enroll_participant_path(@participant))
 
   end
 
@@ -86,10 +87,10 @@ class ParticipantsController < PublicController
   end
 
   def participant_params
-    params.require(:participant).permit(:first_name, :last_name, :middle_name, :address_line1, :address_line2, :city, :state,
+    params.require(:participant).permit(:first_name, :last_name, :address_line1, :address_line2, :city, :state,
       :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
       :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
-      :secondary_guardian_email, :secondary_guardian_phone)
+      :secondary_guardian_email, :secondary_guardian_phone, :hear_about_registry)
   end
 
   def account_params
@@ -103,10 +104,10 @@ class ParticipantsController < PublicController
   def consent_signature_params
     params.require(:consent_signature).permit(:date, :consent_id, :proxy_name, :proxy_relationship)
   end
+
   private
   def create_and_redirect_response_set(participant)
     response_set = participant.create_response_set(participant.child_proxy? ? Survey.child_survey : Survey.adult_survey)
-    participant.start_survey!
     redirect_to(edit_response_set_path(response_set))
   end
 end

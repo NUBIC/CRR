@@ -6,7 +6,6 @@ class ResponseSetsController < PublicController
     @response_set= participant.response_sets.new(response_set_params)
     authorize! :create, @response_set
     if @response_set.save
-      participant.start_survey! if participant.survey?
       redirect_to(edit_response_set_path(@response_set))
     else
       flash[:notice] = @response_set.errors.full_messages.to_sentence
@@ -25,23 +24,32 @@ class ResponseSetsController < PublicController
     authorize! :edit, @response_set
     @survey = @response_set.survey
     @section = @survey.sections.find_by_id(params[:section_id]).nil? ? @survey.sections.first : @survey.sections.find_by_id(params[:section_id])
+    respond_to do |format|
+      format.html
+      format.js {render :layout => false}
+    end
   end
 
   def update
     @response_set= ResponseSet.find(params[:id])
     authorize! :update, @response_set
+    @survey = @response_set.survey
     @response_set.update_attributes(response_set_params)
     unless @response_set.save and (!params[:button].eql?("finish") || @response_set.reload.complete!)
       flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
     end
-    redirect_to (@response_set.errors.empty? and ["exit","finish"].include?(params[:button])) ? dashboard_path : edit_response_set_path(@response_set.reload)
+    respond_to do |format|
+      format.html{ redirect_to (@response_set.errors.empty? and params[:button].eql?("finish")) ? dashboard_path(participant_id: @response_set.participant) : edit_response_set_path(@response_set.reload)}
+      format.js {render ((flash[:error].blank? and params[:button].eql?("finish")) ? dashboard_path(participant_id: @response_set.participant) : :edit),:layout=>false}
+    end
   end
 
   def response_set_params
-    params.require(:response_set).permit(:all).tap do |whitelist|
-      params[:response_set].each do |key,val|
-        whitelist[key] = params[:response_set][key]
-      end
-    end
+    params.fetch(:response_set, {}).permit!
+    # params.require(:response_set).permit(:all).tap do |whitelist|
+    #   params[:response_set].each do |key,val|
+    #     whitelist[key] = params[:response_set][key]
+    #   end
+    # end
   end
 end

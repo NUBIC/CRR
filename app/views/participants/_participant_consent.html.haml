@@ -13,11 +13,11 @@
         %label.radio.inline
           = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
           .consent-agree-text
-            = @participant.proxy? ? @participant.child? ? "I agree on behalf of my child" : "I agree on behalf of participant" : "I agree"
+            = @participant.proxy? ? @participant.child? ? "I accept on behalf of my child" : "I accept on behalf of participant" : "I accept"
         %label.radio.inline
           = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
           .text-error
-            = @participant.proxy? ? @participant.child? ? "I disagree on behalf of my child" : "I disagree on behalf of participant" : "I disagree"
+            = @participant.proxy? ? @participant.child? ? "I decline on behalf of my child" : "I decline on behalf of participant" : "I decline"
       -if @participant.proxy?
         %br
         .row-fluid.proxy-consent

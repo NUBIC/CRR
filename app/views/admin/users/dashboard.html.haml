@@ -17,7 +17,7 @@
           %th Studies
           %th Back into pool
       %tbody
-        -Participant.all.each do |p|
+        -Participant.all_participants.each do |p|
           %tr.display{:class=>"#{'success' if p.pending_approval?}"}
             %td=link_to(p.last_name, admin_participant_path(p))
             %td

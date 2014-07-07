@@ -32,9 +32,9 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  default_scope ->{where("stage = 'pending_approval' OR stage = 'approved'").order('stage DESC, updated_at DESC')}
+  # default_scope ->{where("stage = 'pending_approval' OR stage = 'approved'").order('stage DESC, updated_at DESC')}
   scope :pending_approvals, -> { where(:stage => "pending_approval").order('created_at DESC') }
-  scope :approaching_deadlines, -> { joins(:study_involvements).where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
+  scope :approaching_deadlines, -> { joins(:study_involvements).where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))").order('study_involvements.end_date DESC')}
 
   has_many :response_sets, :dependent => :destroy
   has_many :contact_logs, :dependent => :destroy
@@ -96,7 +96,12 @@ class Participant < ActiveRecord::Base
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
   def self.all_participants
-    Participant.pending_approvals | Participant.approaching_deadlines | Participant.all
+    pending_approvals = Participant.pending_approvals
+    approaching_deadlines = Participant.approaching_deadlines
+    other_participants = Participant.where.not(id: pending_approvals.map(&:id) + approaching_deadlines.map(&:id)).order('created_at DESC')
+    # all_participants = pending_approvals
+    # all_participants << approaching_deadlines << other_participants
+    pending_approvals | approaching_deadlines | other_participants
   end
 
   def filled_states

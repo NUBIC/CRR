@@ -38,7 +38,7 @@
                     -elsif q.response_type.eql?("none")
                       =q.text.html_safe
                     -else
-                      =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:required_text => "true",:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date?}", :placeholder=>"#{'MM-DD-YYYY' if q.date?}",:rows=>3 }, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
+                      =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:required_text => "true",:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date?}", :placeholder=>"#{'mm/dd/yyyy' if q.date?}",:rows=>3 }, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
                     %hr
               .btn-toolbar.row-fluid
                 .span6

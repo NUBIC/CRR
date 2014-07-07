@@ -49,11 +49,11 @@
     .control-group
       =f.label :start_date
       .controls
-        =f.text_field :start_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :start_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
     .control-group
       =f.label :end_date
       .controls
-        =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+        =f.text_field :end_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
     .control-group
       =f.label :accrual_goal, "Desired Sample Size"
       .controls

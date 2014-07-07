@@ -19,7 +19,7 @@
       .span2
         .control-group
           .controls
-            =f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small #{'date' if @search_condition.question.date?}", :placeholder => "#{'yyyy-mm-dd' if @search_condition.question.date?}"
+            =f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small #{'date' if @search_condition.question.date?}", :placeholder => "#{'mm/dd/yyyy' if @search_condition.question.date?}"
   .row-fluid
     .span3
       .btn-group

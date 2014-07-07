@@ -48,7 +48,7 @@ class Account < ActiveRecord::Base
   end
 
   def has_self_participant?
-    account_participants.any? {|ap| ap.proxy == false and !ap.participant.withdrawn?}
+    account_participants.any? {|ap| ap.proxy == false and (ap.participant != nil and !ap.participant.withdrawn?)}
   end
 
   def child_proxy_participant

@@ -28,11 +28,11 @@
         .span3
       .row-fluid
         .span3
-          =text_field_tag "start_date",Date.today,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+          =text_field_tag "start_date",Date.today,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
         .span3
-          =text_field_tag "warning_date",1.week.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+          =text_field_tag "warning_date",1.week.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
         .span3
-          =text_field_tag "end_date",2.weeks.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"yyyy-mm-dd", placeholder: "yyyy-mm-dd"
+          =text_field_tag "end_date",2.weeks.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
         .span3
           =f.button "Release",:class=>"btn btn-small btn-success", :id => "release"
       .row-fluid

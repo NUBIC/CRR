@@ -1,12 +1,9 @@
+#additonal-data{data: {count: Participant.pending_approvals.size}}
 -if current_user.admin? || current_user.data_manager?
   .row-fluid
-    %h5
+    %h4
       ="All Participants(#{Participant.all.count})"
       =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-primary nu-primary"
-  .row-fluid
-    .progressbar.input-append
-      ="#{Participant.pending_approvals.size}"
-    = "Need Varification"
   .row-fluid
     %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
       %thead
@@ -58,9 +55,29 @@
             %td=si.warning_date
 :javascript
   $(document).ready(function(){
-    $('table tr ul li.more_display').hide();
+  $('table tr ul li.more_display').hide();
+    $('body').on('click', 'div.dataTables_paginate ul li', function() {
+      console.log("===here---");
+      $('table tr ul li.more_display').hide();
+      $('.show_button').click(function() {
+        $end_date_list = $(this).closest('td').next().children('ul').find('li.more_display');
+        $display_name_list = $(this).siblings('ul li.more_display');
+        $(this).text(function (_, value) {
+          if (value == 'See more...') {
+            $end_date_list.show();
+            $display_name_list.show();
+            return "See less..."
+          } else {
+            $end_date_list.hide();
+            $display_name_list.hide();
+            return "See more..."
+          }
+        });
+      });
+    });
+    $('.pending-info').append($("<div class='progressbar input-append'>" + $('#additonal-data').data("count") + "</div>")).append($("<span> Pending Approval </span>"));
     $('.show_button').click(function() {
-      $end_date_list = $(this).parent().parent().next().children('ul').find('li.more_display');
+      $end_date_list = $(this).closest('td').next().children('ul').find('li.more_display');
       $display_name_list = $(this).siblings('ul li.more_display');
       $(this).text(function (_, value) {
         if (value == 'See more...') {

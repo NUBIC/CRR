@@ -2,30 +2,30 @@
   .row-fluid
     %h5
       ="All Participants(#{Participant.all.count})"
-      =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-success"
+      =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-primary nu-primary"
   .row-fluid
-    .btn.btn-info
+    .progressbar.input-append
       ="#{Participant.pending_approvals.size}"
     = "Need Varification"
   .row-fluid
-    %table.table.table-bordered.table-striped{:id=>'dashboard_list'}
+    %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
       %thead
         %tr.display
           %th Last Name
           %th First Name
-          %th Joined Date
           %th Studies
           %th Back into pool
+          %th Joined Date
       %tbody
-        -Participant.all_participants.each do |p|
-          %tr.display{:class=>"#{'success' if p.pending_approval?}"}
-            %td=link_to(p.last_name, admin_participant_path(p))
-            %td
+        -Participant.all_active_participants.each do |p|
+          %tr.display
+            %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.last_name, admin_participant_path(p))
+            %td{:class=>"#{'nu' if p.pending_approval?}"}
               =link_to(p.first_name, admin_participant_path(p))
               .pull-right
                 =image_tag "child.png" if p.child?
                 =image_tag 'siblings.png' if p.has_relationships?
-            %td=p.created_at.to_date
+
             %td
               %ul.unstyled
                 -p.study_involvements.each_with_index do |si,i|
@@ -36,7 +36,8 @@
             %td
               %ul.unstyled
                 -p.study_involvements.each_with_index do |si,i|
-                  %li{:class=> "#{'more_display' if i > 2}"}=si.end_date
+                  %li{:class=> "#{'more_display' if i > 2} #{'muted' if si.end_date < Date.today}"}=si.end_date
+            %td=p.created_at.to_date
 -else
   .row-fluid
     %table.table.table-bordered

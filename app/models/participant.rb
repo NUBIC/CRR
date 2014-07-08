@@ -32,13 +32,14 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  # default_scope ->{where("stage = 'pending_approval' OR stage = 'approved'").order('stage DESC, updated_at DESC')}
-  scope :pending_approvals, -> { where(:stage => "pending_approval").order('created_at DESC') }
-  scope :approaching_deadlines, -> { joins(:study_involvements).where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))").order('study_involvements.end_date DESC')}
+  scope :pending_approvals, -> { where(stage: "pending_approval").order('created_at DESC') }
+  scope :approved, -> { where(stage: "approved").order('created_at DESC') }
+  scope :approaching_deadlines, -> { joins(:study_involvements).where(stage: "approved").where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}'
+    or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
 
   has_many :response_sets, :dependent => :destroy
   has_many :contact_logs, :dependent => :destroy
-  has_many :study_involvements, :dependent => :destroy
+  has_many :study_involvements, -> {order("end_date DESC")}, :dependent => :destroy
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id", :dependent => :destroy
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id", :dependent => :destroy
   has_many :consent_signatures, :dependent => :destroy
@@ -95,13 +96,9 @@ class Participant < ActiveRecord::Base
   scope :search , proc {|param|
     where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
-  def self.all_participants
-    pending_approvals = Participant.pending_approvals
+  def self.all_active_participants
     approaching_deadlines = Participant.approaching_deadlines
-    other_participants = Participant.where.not(id: pending_approvals.map(&:id) + approaching_deadlines.map(&:id)).order('created_at DESC')
-    # all_participants = pending_approvals
-    # all_participants << approaching_deadlines << other_participants
-    pending_approvals | approaching_deadlines | other_participants
+    Participant.pending_approvals | approaching_deadlines | Participant.approved.where.not(id: approaching_deadlines.map(&:id)).order('created_at DESC')
   end
 
   def filled_states

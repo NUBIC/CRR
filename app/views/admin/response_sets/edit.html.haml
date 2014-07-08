@@ -54,7 +54,7 @@
                       Next
                       %i.icon-forward
 :javascript
-  $(document).ready(function(){
+  function resizeSurvey() {
     var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
     $('#admin-survey-tab-content').height(tab_content_height).css({
         overflow: "auto"
@@ -65,4 +65,10 @@
       });
       $('#admin-survey-tab-content').scrollTop(0);
     });
+  }
+  $(document).ready(function(){
+    resizeSurvey();
+  });
+  $(window).resize(function() {
+    resizeSurvey();
   });

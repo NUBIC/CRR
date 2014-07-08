@@ -36,10 +36,16 @@
       .row-fluid
         = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next"
 :javascript
-  $(document).ready(function(){
+  function resizeConsent() {
     var consent_content_height = $(window).height() - $('#consent-content').offset().top - $("#consent-controls").height()-1.5*$('.footer').height();
     $('#consent-content').height(consent_content_height).css({
         overflow: "auto",
         border: "2px solid"
     });
+  }
+  $(document).ready(function(){
+    resizeConsent();
+  });
+  $(window).resize(function() {
+    resizeConsent();
   });

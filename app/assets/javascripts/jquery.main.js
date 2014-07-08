@@ -227,7 +227,35 @@ $(document).ready(function() {
   }, "Please enter a valid US Zip Code.");
 
   $.validator.addMethod("date", function(date, element) {
-    return this.optional(element) || date.match(/^(0\d|1[012])\/(0\d|1\d|2\d|3[01])\/(19|20)\d\d$/);
+    return this.optional(element) || isDate(date);
   }, "Please specify a valid date in 'MM/DD/YYYY' format.");
+
+  function isDate(txtDate)
+  {
+    var currVal = txtDate;
+    var rxDatePattern = /^(\d{1,2})(\/)(\d{1,2})(\/)(\d{4})$/;
+    var dtArray = currVal.match(rxDatePattern);
+
+    if (dtArray == null)
+       return false;
+
+    var dtMonth = dtArray[1];
+    var dtDay= dtArray[3];
+    var dtYear = dtArray[5];
+
+    if (dtMonth < 1 || dtMonth > 12)
+      return false;
+    else if (dtDay < 1 || dtDay> 31)
+      return false;
+    else if ((dtMonth== 4 || dtMonth== 6 || dtMonth== 9 || dtMonth== 11) && dtDay == 31)
+      return false;
+    else if (dtMonth == 2)
+    {
+       var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
+       if (dtDay > 29 || (dtDay == 29 && !isleap))
+        return false;
+    }
+    return true;
+  }
 });
 jQuery.ajaxSetup({ 'beforeSend': function(xhr) {xhr.setRequestHeader("Accept", "text/javascript");} });

@@ -9,7 +9,7 @@
 #add_participant.modal.hide
   .modal-header
     %h5
-      ="Who would you like to add to the registry"
+      ="Who would you like to add to the Registry?"
       -if @account.active_participants.size > 0
         = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
   .row-fluid

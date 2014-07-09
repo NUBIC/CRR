@@ -19,8 +19,7 @@
                     -if response_set.complete?
                       =link_to response_set.display_text, response_set_path(response_set)
                     -else
-                      .text-error
-                        You haven't finished the survey!
+                      .nu-incomplete-link
                         =link_to("Click here to finish #{response_set.display_text}", edit_response_set_path(response_set))
             %td
               - if participant.consented?

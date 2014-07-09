@@ -4,6 +4,7 @@
   =image_tag("crr_logo.png")
 %ul.nav.pull-right
   -if current_user
+    %li=link_to "Take me back to the Communication Research Registry website", :public_logout
     %li.dropdown
       =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do
         =current_user.email
@@ -13,6 +14,7 @@
         %li=link_to "Update Password", edit_account_path(current_user)
     %li.divider-vertical
   -else
+    %li=link_to "Take me back to the Communication Research Registry website", AudiologyRegistry::Application.config.crr_website_url
     %li=link_to "Login", :public_login
 
 

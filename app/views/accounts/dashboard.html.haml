@@ -30,6 +30,7 @@
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
+      =link_to "Take me back to the Communication Research Registry website", :public_logout
 #add_another_participant.modal.hide
   .modal-header
     %h5
@@ -57,6 +58,7 @@
           = hidden_field_tag "proxy", true
           = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
       =link_to "No thanks, I'm done", dashboard_path
+      =link_to "No thanks, take me back to the Communication Research Registry website", :public_logout
 :javascript
   $(document).ready(function(){
     var count = $('#additonal-data').data("count");

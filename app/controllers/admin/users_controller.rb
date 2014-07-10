@@ -8,6 +8,7 @@ class Admin::UsersController < Admin::AdminController
    @user = User.new
    authorize! :new, @user
  end
+
  def create
    @user = User.new(user_params)
    authorize! :create, @user
@@ -18,10 +19,12 @@ class Admin::UsersController < Admin::AdminController
    end
    redirect_to admin_users_path
  end
+
  def edit
    @user = User.find(params[:id])
    authorize! :edit, @user
  end
+
  def update
    @user = User.find(params[:id])
    authorize! :update, @user
@@ -33,6 +36,7 @@ class Admin::UsersController < Admin::AdminController
    end
    redirect_to admin_users_path
  end
+
  def destroy
    @user = User.find(params[:id])
    authorize! :destroy, @user
@@ -41,10 +45,12 @@ class Admin::UsersController < Admin::AdminController
  end
 
  def dashboard
+  redirect_to admin_participants_path if current_user.admin? || current_user.data_manager?
  end
 
  def user_params
    params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
  end
+
 end
 

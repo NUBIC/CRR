@@ -79,18 +79,43 @@ $(document).ready(function() {
   "oLanguage": {
       "sSearch": "Filter: "
         }});});
-  $('#dashboard_list').livequery(function(){$(this).dataTable( {
-  "bScrollCollapse": true,
-  "sPaginationType": "bootstrap",
-  "sDom": "<'row-fluid'<'span6 pending-info'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-  "sWrapper": "dataTables_wrapper form-inline",
-  "aaSorting": [],
-  "bFilter": true,
-  "iDisplayLength": 30,
-  "bLengthChange": false,
-  "oLanguage": {
-      "sSearch": "Filter: ",
-        }});});
+
+  $('#dashboard_list').livequery(function(){
+    showHideMore();
+    $(this).dataTable( {
+      "fnInfoCallback ": function() {showHideMore();},
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6 pending-info'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "bFilter": true,
+      "iDisplayLength": 5,
+      "bLengthChange": false,
+      "oLanguage": {
+          "sSearch": "Filter: ",
+      }
+    });
+  });
+
+  function showHideMore() {
+    $('table tr ul li.more_display').hide();
+    $('.show_button').livequery('click',function(e) {
+      $end_date_list = $(this).closest('td').next().children('ul').find('li.more_display');
+      $display_name_list = $(this).siblings('ul li.more_display');
+      $(this).text(function (_, value) {
+        if (value == 'See more...') {
+          $end_date_list.show();
+          $display_name_list.show();
+          return "See less..."
+        } else {
+          $end_date_list.hide();
+          $display_name_list.hide();
+          return "See more..."
+        }
+      });
+    });
+  }
 
   $(".next-section").livequery('click',function(e){
     if ($('.edit_response_set_form').valid()) {
@@ -195,6 +220,10 @@ $(document).ready(function() {
 
   $(".label-required").livequery(function(){
     $(this).append($("<small class='text-error'><i>Required field</i></small>"));
+  });
+
+  $(".pending-info").livequery(function(){
+    $(this).append($("<div class='infosqaure input-append'>" + $('#additonal-data').data("count") + "</div>")).append($("<span> Pending Approval </span>"));
   });
 
   $('.consent-agree').attr('disabled', 'disabled');

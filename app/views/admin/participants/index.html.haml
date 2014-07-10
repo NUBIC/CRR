@@ -1,14 +1,38 @@
+#additonal-data{data: {count: Participant.pending_approvals.size}}
 .row-fluid
-  %table.table.table-condensed.table-bordered.table-striped{:id=>'participant_list'}
+  %h4
+    ="All Participants(#{Participant.all.count})"
+    =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-primary nu-primary"
+.row-fluid
+  %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
     %thead
-      %tr
-        - %w(Last\ Name First\ Name State Released\ to\ study Last\ Update).each do |header|
-          %th= header
+      %tr.display
+        %th Last Name
+        %th First Name
+        %th Studies
+        %th Back into pool
+        %th Joined Date
     %tbody
-      - @participants.each do |participant|
-        %tr
-          %td=link_to participant.last_name.titleize, admin_participant_path(participant)
-          %td=link_to participant.first_name.titleize, admin_participant_path(participant)
-          %td=participant.stage.titleize
-          %td=participant.on_study? ? "Yes" : "No"
-          %td=participant.updated_at.to_date
+      -Participant.all_active_participants.each do |p|
+        %tr.display
+          %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.last_name, admin_participant_path(p))
+          %td{:class=>"#{'nu' if p.pending_approval?}"}
+            =link_to(p.first_name, admin_participant_path(p))
+            .pull-right
+              =image_tag "child.png" if p.child?
+              =image_tag 'siblings.png' if p.has_relationships?
+
+          %td
+            %ul.unstyled
+              -p.study_involvements.each_with_index do |si,i|
+                %li{:class=> "#{'more_display' if i > 2}"}
+                  =link_to si.study.display_name, admin_participant_path(p, :tab=>'studies')
+                  %span.muted
+                    = " (#{si.state})"
+              %li.pull-right.btn.btn-link.show_button="See more..." if p.study_involvements.size > 3
+          %td
+            %ul.unstyled
+              -p.study_involvements.each_with_index do |si,i|
+                %li{:class=> "#{'more_display' if i > 2} #{'muted' if si.end_date < Date.today}"}=si.end_date
+          %td=p.created_at.to_date
+

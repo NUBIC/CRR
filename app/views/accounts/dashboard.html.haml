@@ -1,11 +1,12 @@
 #additonal-data{data: {count: @account.active_participants.size, participant: @participant ? "true" : "false"}}
 -if @account.active_participants.size > 0
   = render :partial => 'account_participants.html.haml'
-  - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
-    .row-fluid
+  .row-fluid
+    - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
       = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary nu-primary" do
         - @account.active_participants.size > 0 ? "Add Another Participant" : "Add Participant"
-    %br
+    =link_to "Take me back to the Communication Research Registry website.", :public_logout
+  %br
 #add_participant.modal.hide
   .modal-header
     %h5
@@ -30,7 +31,7 @@
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
-      =link_to "Take me back to the Communication Research Registry website", :public_logout
+      =link_to "Take me back to the Communication Research Registry website.", :public_logout
 #add_another_participant.modal.hide
   .modal-header
     %h5
@@ -57,8 +58,11 @@
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
           = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
-      =link_to "No thanks, I'm done", dashboard_path
-      =link_to "No thanks, take me back to the Communication Research Registry website", :public_logout
+      .row-fluid
+        =link_to "No thanks, I'm done.", dashboard_path
+      %br
+      .row-fluid
+        =link_to "No thanks, take me back to the Communication Research Registry website.", :public_logout
 :javascript
   $(document).ready(function(){
     var count = $('#additonal-data').data("count");

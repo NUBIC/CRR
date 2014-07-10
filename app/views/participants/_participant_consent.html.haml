@@ -4,7 +4,10 @@
   #consent-content.consent-content
     -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
     !=@consent.content
-  %br
+  .row-fluid
+    %small
+      %i
+        Please scroll to the end of the consent to continue
   #consent-controls
     = form_for @participant.consent_signatures.new(:consent=>@consent), :url=>consent_signature_participant_path(@participant), :html => {:id => 'new-consent-sign'} do |f|
       = hidden_field_tag "consent_response"
@@ -36,10 +39,16 @@
       .row-fluid
         = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next"
 :javascript
-  $(document).ready(function(){
+  function resizeConsent() {
     var consent_content_height = $(window).height() - $('#consent-content').offset().top - $("#consent-controls").height()-1.5*$('.footer').height();
     $('#consent-content').height(consent_content_height).css({
         overflow: "auto",
         border: "2px solid"
     });
+  }
+  $(document).ready(function(){
+    resizeConsent();
+  });
+  $(window).resize(function() {
+    resizeConsent();
   });

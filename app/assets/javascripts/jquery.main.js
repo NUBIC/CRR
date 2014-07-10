@@ -10,6 +10,8 @@ $(document).ready(function() {
     errorPlacement: function(error, element) {
       if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {
         element.closest('.control-group').append(error);
+      } else if (element.is("select")) {
+        element.closest('.select').append(error);
       } else {
         error.insertAfter(element);
       }
@@ -133,10 +135,6 @@ $(document).ready(function() {
     }
   });
 
-  $(".phone").mask("999-999-9999");
-  $(".date").mask("99/99/9999");
-  $(".zipcode").mask("99999");
-
   $(".previous-section").livequery('click',function(){
     remove_error_message();
     var $tabs = $('.tabs-left li');
@@ -159,6 +157,7 @@ $(document).ready(function() {
 
   $(".participant_demographic").livequery(function(){
     $(this).validate({
+      onfocusout: false,
       messages: {
         "participant[first_name]": "Please enter participant's First Name.",
         "participant[last_name]": "Please enter participant's Last Name.",
@@ -229,6 +228,10 @@ $(document).ready(function() {
   $.validator.addMethod("date", function(date, element) {
     return this.optional(element) || isDate(date);
   }, "Please specify a valid date in 'MM/DD/YYYY' format.");
+
+  $(".phone").mask("999-999-9999");
+  $(".date").mask("99/99/9999");
+  $(".zipcode").mask("99999");
 
   function isDate(txtDate)
   {

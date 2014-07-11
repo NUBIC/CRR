@@ -31,4 +31,8 @@ class AccountSessionsController < PublicController
     @account_session.destroy
     redirect_to AudiologyRegistry::Application.config.crr_website_url
   end
+
+  def back_to_website
+    redirect_to current_user ? :public_logout : AudiologyRegistry::Application.config.crr_website_url
+  end
 end

@@ -77,11 +77,16 @@ AudiologyRegistry::Application.routes.draw do
 
 
   resources :accounts
-  resources :account_sessions
+  resources :account_sessions do
+    collection do
+      get :back_to_website
+    end
+  end
+
   resources :password_resets, :only => [ :create, :edit, :update ]
   get 'user_login' => 'account_sessions#new', :as => :public_login
   get 'user_logout' => 'account_sessions#destroy', :as => :public_logout
   get 'dashboard' => 'accounts#dashboard', :as => :dashboard
-
   get '/' =>  "account_sessions#new", :as => :public_root
+  get 'back_to_website' => 'account_sessions#back_to_website', :as => :back_to_website
 end

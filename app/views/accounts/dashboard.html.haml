@@ -5,7 +5,8 @@
     - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
       = button_tag "add_participant", "data-toggle"=>"modal","data-target"=>"#add_participant",:class=>"btn btn-primary nu-primary" do
         - @account.active_participants.size > 0 ? "Add Another Participant" : "Add Participant"
-    =link_to "Take me back to the Communication Research Registry website.", :back_to_website
+
+    .pull-right=link_to "Take me back to the Communication Research Registry website.", :back_to_website
   %br
 #add_participant.modal.hide
   .modal-header

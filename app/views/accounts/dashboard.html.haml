@@ -31,7 +31,9 @@
         =form_tag(participants_path, :method => 'post') do
           = hidden_field_tag "account_id", @account.id
           = hidden_field_tag "proxy", true
-          = submit_tag('Another Adult', :class=>"btn btn-primary nu-primary")
+          = submit_tag('An Adult', :class=>"btn btn-primary nu-primary")
+          %em.muted
+            for whom you act as a legal guardian or authorized agent
       =link_to "Take me back to the Communication Research Registry website.", :back_to_website
 #add_another_participant.modal.hide
   .modal-header

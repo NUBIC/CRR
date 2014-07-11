@@ -33,6 +33,6 @@
           %td
             %ul.unstyled
               -p.study_involvements.each_with_index do |si,i|
-                %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today}"}=si.end_date
+                %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
           %td=p.created_at.to_date
 

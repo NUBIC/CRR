@@ -36,7 +36,7 @@ class Participant < ActiveRecord::Base
   scope :approved, -> { where(stage: "approved").order('created_at DESC') }
   scope :approaching_deadlines, -> { joins(:study_involvements).where(stage: "approved").where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}'
     or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
-
+  scope :all_participants, -> { where(stage: ['approved', 'pending_approval']).order('created_at DESC') }
   has_many :response_sets, :dependent => :destroy
   has_many :contact_logs, :dependent => :destroy
   has_many :study_involvements, -> {order("end_date DESC")}, :dependent => :destroy

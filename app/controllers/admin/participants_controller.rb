@@ -1,7 +1,7 @@
 class Admin::ParticipantsController < Admin::AdminController
 
   def index
-    @participants = params[:state].blank? ? [] : Participant.send(params[:state])
+    @participants = params[:state].blank? ? Participant.all_participants : Participant.send(params[:state])
   end
 
   def enroll

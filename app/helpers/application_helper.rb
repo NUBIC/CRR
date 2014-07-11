@@ -56,7 +56,7 @@ module ApplicationHelper
   end
 
   def app_version_helper
-    version = "1.2.rc5"
+    version = "1.2.rc6"
 
     "Version #{version}"
   end

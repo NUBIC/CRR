@@ -40,12 +40,12 @@ table.table thead .sorting_desc_disabled {
 	*cursor: hand;
 }
 
-table.table thead .sorting { background: url('jquery-datatables/sort_both.jpg') no-repeat center right; }
-table.table thead .sorting_asc { background: url('jquery-datatables/sort_asc.jpg') no-repeat center right; }
-table.table thead .sorting_desc { background: url('jquery-datatables/sort_desc.jpg') no-repeat center right; }
+table.table thead .sorting { background: asset-data-url('jquery-datatables/sort_both.jpg') no-repeat center right; }
+table.table thead .sorting_asc { background: asset-data-url('jquery-datatables/sort_asc.jpg') no-repeat center right; }
+table.table thead .sorting_desc { background: asset-data-url('jquery-datatables/sort_desc.jpg') no-repeat center right; }
 
-table.table thead .sorting_asc_disabled { background: url('jquery-datatables/sort_asc_disabled.jpg') no-repeat center right; }
-table.table thead .sorting_desc_disabled { background: url('jquery-datatables/sort_desc_disabled.jpg') no-repeat center right; }
+table.table thead .sorting_asc_disabled { background: asset-data-url('jquery-datatables/sort_asc.jpg') no-repeat center right; }
+table.table thead .sorting_desc_disabled { background: asset-data-url('jquery-datatables/sort_desc.jpg') no-repeat center right; }
 
 table.dataTable th:active {
 	outline: none;

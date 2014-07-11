@@ -90,7 +90,7 @@ $(document).ready(function() {
       "sWrapper": "dataTables_wrapper form-inline",
       "aaSorting": [],
       "bFilter": true,
-      "iDisplayLength": 5,
+      "iDisplayLength": 30,
       "bLengthChange": false,
       "oLanguage": {
           "sSearch": "Filter: ",

@@ -1,7 +1,7 @@
 #additonal-data{data: {count: Participant.pending_approvals.size}}
 .row-fluid
   %h4
-    ="All Participants(#{Participant.all.count})"
+    ="All Participants (#{Participant.all.count})"
     =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-primary nu-primary"
 .row-fluid
   %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
@@ -33,6 +33,6 @@
           %td
             %ul.unstyled
               -p.study_involvements.each_with_index do |si,i|
-                %li{:class=> "#{'more_display' if i > 2} #{'muted' if si.end_date < Date.today}"}=si.end_date
+                %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today}"}=si.end_date
           %td=p.created_at.to_date
 

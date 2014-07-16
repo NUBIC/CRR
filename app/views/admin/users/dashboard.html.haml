@@ -2,16 +2,16 @@
   %table.table.table-bordered
     %thead
       %tr
-        %th Last Name
         %th First Name
+        %th Last Name
         %th Study
-        %th Release Date
+        %th End of Release
         %th End Date
     %tbody
       -current_user.active_study_involvements.each do |si|
         %tr
-          %td=link_to si.participant.last_name,admin_participant_path(si.participant)
           %td=link_to si.participant.first_name,admin_participant_path(si.participant)
+          %td=link_to si.participant.last_name,admin_participant_path(si.participant)
           %td=si.study.name
           %td=si.start_date
           %td=si.warning_date

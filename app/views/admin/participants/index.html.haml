@@ -3,17 +3,17 @@
   %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
     %thead
       %tr.display
-        %th Last Name
         %th First Name
+        %th Last Name
         %th Studies
-        %th Back into pool
+        %th End of Release
         %th Join Date
     %tbody
       -@participants.each do |p|
         %tr.display
-          %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.last_name, admin_participant_path(p))
+          %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.first_name, admin_participant_path(p))
           %td{:class=>"#{'nu' if p.pending_approval?}"}
-            =link_to(p.first_name, admin_participant_path(p))
+            =link_to(p.last_name, admin_participant_path(p))
             .pull-right
               =image_tag "child.png" if p.child?
               =image_tag 'siblings.png' if p.has_relationships?

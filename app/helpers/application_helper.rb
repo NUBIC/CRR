@@ -60,4 +60,8 @@ module ApplicationHelper
 
     "Version #{version}"
   end
+
+  def display_participant_header(state, count)
+    state.blank? ? "All Participants (#{count})" : state == "approved" ? "Approved Participants (#{count})" : "Participants Pending Approval (#{count})"
+  end
 end

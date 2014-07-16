@@ -1,8 +1,4 @@
-#additonal-data{data: {count: Participant.pending_approvals.size}}
-.row-fluid
-  %h4
-    ="All Participants (#{Participant.all_participants.count})"
-    =link_to "Add a participant", new_admin_participant_path, :class=>"btn btn-primary nu-primary"
+#additonal-data{data: {header: display_participant_header(params[:state], @participants.count), url: new_admin_participant_path}}
 .row-fluid
   %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
     %thead

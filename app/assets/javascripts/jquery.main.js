@@ -86,7 +86,7 @@ $(document).ready(function() {
       "fnInfoCallback ": function() {showHideMore();},
       "bScrollCollapse": true,
       "sPaginationType": "bootstrap",
-      "sDom": "<'row-fluid'<'span6 pending-info'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sDom": "<'row-fluid'<'span6 participant-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
       "sWrapper": "dataTables_wrapper form-inline",
       "aaSorting": [],
       "bFilter": true,
@@ -222,8 +222,8 @@ $(document).ready(function() {
     $(this).append($("<small class='text-error'><i>Required field</i></small>"));
   });
 
-  $(".pending-info").livequery(function(){
-    $(this).append($("<div class='infosqaure input-append'>" + $('#additonal-data').data("count") + "</div>")).append($("<span> Pending Approval </span>"));
+  $(".participant-header").livequery(function(){
+    $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">Add a participant</a>" + "</h4>"));
   });
 
   $('.consent-agree').attr('disabled', 'disabled');

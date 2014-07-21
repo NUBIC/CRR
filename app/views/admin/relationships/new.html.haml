@@ -8,7 +8,7 @@
     .control-group
       =f.label :category,"Relationship"
       .controls
-        =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel.titleize, rel]}
+        =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
         %small.text-error
           %i Required field
     .control-group

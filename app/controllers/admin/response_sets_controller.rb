@@ -47,6 +47,7 @@ class Admin::ResponseSetsController < Admin::AdminController
   def update
     @response_set= ResponseSet.find(params[:id])
     authorize! :update, @response_set
+    @survey = @response_set.survey
     @response_set.update_attributes(response_set_params)
     unless @response_set.save and (!params[:button].eql?("finish") || @response_set.reload.complete!)
       flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence

@@ -23,7 +23,7 @@ class Consent < ActiveRecord::Base
   validates_inclusion_of :state, :in => STATES
   validates_uniqueness_of :state, :scope =>:consent_type, :if=>:active?,:message=>"Only one active consent per category allowed"
   after_initialize :default_args
-  default_scope order('created_at DESC')
+  default_scope order('state ASC, created_at DESC')
 
 
   def self.has_active_consent?

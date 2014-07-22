@@ -11,7 +11,7 @@
       -@consents.each do |consent|
         %tr
           %td=link_to consent.consent_type, admin_consent_path(consent)
-          %td=consent.state.titleize
-          %td=consent.created_at.to_date
+          %td{:class=> "#{'muted' unless consent.active? }"}=consent.state.titleize
+          %td{:class=> "#{'muted' unless consent.active?}"}=consent.created_at.to_date
           %td=consent.comment
 

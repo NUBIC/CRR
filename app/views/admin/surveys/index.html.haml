@@ -1,3 +1,16 @@
-#forms
-  =render :partial => 'partials/admin/surveys'
-
+#additonal-data{data: {header: "Surveys (#{Survey.all.size})", url: new_admin_survey_path, target: "#forms", async: true }}
+#forms.row-fluid
+  %table.display.table.table-striped.table-bordered{:id=>'survey_list'}
+    %thead
+      %tr
+        %th Survey Title
+        %th Description
+        %th State
+        %th Created
+    %tbody
+      -Survey.all.each do |survey|
+        %tr
+          %td=link_to survey.title, admin_survey_path(survey),"data-async"=>true,"data-target"=>"#forms"
+          %td{:class=> "#{'muted' unless survey.active?}"}=survey.description
+          %td{:class=> "#{'muted' unless survey.active?}"}=survey.state.titleize
+          %td{:class=> "#{'muted' unless survey.active?}"}=survey.created_at.to_date

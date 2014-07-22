@@ -1,3 +1,20 @@
+.span12
+  .span1
+    .btn-toolbar
+      =link_to "Exit", admin_surveys_path, :class=>"btn btn-primary btn-block"
+  -if @survey.active?
+    =form_for @survey,:url=>deactivate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
+      .span1
+        .btn-toolbar
+          =f.button "Deactivate", :class => "btn btn-warning btn-block"
+  -else
+    =form_for @survey,:url=>activate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
+      .span1
+        .btn-toolbar
+          =f.button "Activate", :class => "btn btn-success btn-block"
+      .span1
+        .btn-toolbar
+          =link_to "Edit", edit_admin_survey_path(@survey), :class => "btn btn-primary nu-primary btn-block", "data-async" => true, "data-target" => "#forms"
 .row-fluid
   .span12
     %h2="Title: #{@survey.title}"
@@ -6,28 +23,18 @@
   .row-fluid
     .offset1
       %h6=@survey.description
-.row-fluid
-  -if @survey.active?
-    =form_for @survey,:url=>deactivate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
-      .btn-group
-        =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
-  -else
-    =form_for @survey,:url=>activate_admin_survey_path(@survey),:html=>{:class=>"ajax-form","data-target"=>"#forms"} do |f|
-      .btn-group
-        =link_to "Edit",edit_admin_survey_path(@survey),:class=>"btn btn-mini btn-primary","data-async"=>true,"data-target"=>"#forms"
-        =f.button "Activate",:class=>"btn btn-mini btn-success"
   %hr
 .tabbable.tabs-left
   %ul.nav.nav-tabs
     -@survey.sections.each_with_index do |s,si|
       %li{:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id == s.id)}"}=link_to s.title, "#section_#{s.id}","data-toggle"=>"tab"
     -unless @survey.active? || !@survey.multiple_section?
-      =link_to "Add Section",new_admin_section_path(:survey_id=>@survey.id),:class=>"btn btn-mini btn-block btn-primary","data-async"=>true,"data-target"=>".tabbable"
+      =link_to "Add Section",new_admin_section_path(:survey_id=>@survey.id),:class=>"btn btn-mini btn-block btn-primary nu-primary","data-async"=>true,"data-target"=>".tabbable"
     =link_to "Preview",preview_admin_survey_path(@survey),:class=>"btn btn-mini btn-block btn-success","data-async"=>true,"data-target"=>"#forms"
-    =link_to "Exit",admin_surveys_path,:class=>"btn btn-mini btn-block btn-warning","data-async"=>true,"data-target"=>"#forms"
+    =link_to "Exit",admin_surveys_path,:class=>"btn btn-mini btn-block btn-primary","data-async"=>true,"data-target"=>"#forms"
   .tab-content
     -@survey.sections.each_with_index do |s,si|
       .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if (@section.nil? and si==0) || (!@section.nil? and @section.id==s.id)}"}
         =render :partial=>"admin/sections/section",locals: {section: s}
 .row-fluid
-      
+

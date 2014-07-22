@@ -97,6 +97,23 @@ $(document).ready(function() {
     });
   });
 
+  $('#survey_list').livequery(function(){
+    $(this).dataTable( {
+      "fnInfoCallback ": function() {showHideMore();},
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6 survey-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "bFilter": true,
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+      "oLanguage": {
+          "sSearch": "Filter: ",
+      }
+    });
+  });
+
   $('#dashboard_list').livequery(function(){
     showHideMore();
     $(this).dataTable( {
@@ -245,6 +262,10 @@ $(document).ready(function() {
 
   $(".consent-header").livequery(function(){
     $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">Add a consent</a>" + "</h4>"));
+  });
+
+  $(".survey-header").livequery(function(){
+    $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">Add a survey</a>" + "</h4>"));
   });
 
   $('.consent-agree').attr('disabled', 'disabled');

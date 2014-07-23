@@ -1,18 +1,23 @@
-%h3="#{@study.id} : #{@study.short_title}"
+.row-fluid
+  .span1
+    = link_to "Return", admin_studies_path, class: "btn btn-primary btn-block"
+%h3
+  = "#{@study.short_title}"
 #study.accordion
   .accordion-group
-    .accordion-heading=link_to "Overview","#overview","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
+    %h4
+      .accordion-heading=link_to "Overview","#overview","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
     #overview.acordion-body.collapse
       .accordion-inner
         .row-fluid
           .span12
             -if @study.active?
               =form_for @study ,:url=> deactivate_admin_study_path(@study) do |f|
-                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary"
-                =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
+                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary nu-primary"
+                =f.button "Deactivate",:class=>"btn btn-mini btn-warning"
             -else
               =form_for @study ,:url=> activate_admin_study_path(@study) do |f|
-                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary"
+                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary nu-primary"
                 =f.button "Activate",:class=>"btn btn-mini btn-success"
         .row-fluid
           %table
@@ -67,25 +72,37 @@
                 %td!=@study.notes
 
   .accordion-group
-    .accordion-heading=link_to "Participants","#participants","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
+    %h4
+      .accordion-heading=link_to "Participants","#participants","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
     #participants.acordion-body.collapse
       .accordion-inner
-
-        %h4 Participants
-        %h5="Current: #{@study.study_involvements.active.count} Total: #{@study.study_involvements.count}"
-        %table.table.table-bordered
-          %thead
-            %tr
-              %th Name
-              %th State
-              %th Currently Released
-              %th Start
-              %th End
-          %tbody
-            -@study.study_involvements.each do |si|
-              %tr
-                %td=link_to si.participant.name,admin_participant_path(si.participant)
-                %td=si.state.titleize
-                %td=si.active? ? "Yes" : "No"
-                %td=si.start_date
-                %td=si.end_date
+        #additonal-data{data: {header: "#{@study.study_involvements.active.count} currently / #{@study.study_involvements.count} total released", count: @study.study_involvements.active.count}}
+        .row-fluid
+          %table.table.table-bordered.table-hover{:id=>'study_participant_list'}
+            %thead
+              %tr.display
+                %th.span2 First Name
+                %th.span2 Last Name
+                %th.span2 Currently released to this study
+                %th.span2 Status on this study
+                %th.span2 Start Date
+                %th.span2 End Date
+            %tbody
+              -@study.study_involvements.each do |si|
+                %tr.display
+                  %td=link_to(si.participant.first_name, admin_participant_path(si.participant))
+                  %td
+                    =link_to(si.participant.last_name, admin_participant_path(si.participant))
+                    .pull-right
+                      =image_tag "child.png" if si.participant.child?
+                      =image_tag 'siblings.png' if si.participant.has_relationships?
+                  %td
+                    - if si.active?
+                      .user-circle
+                  %td=si.state.titleize
+                  %td=si.start_date
+                  %td=si.end_date
+:javascript
+  $(document).ready(function () {
+    location.hash && $(location.hash + '.collapse').collapse('show');
+  });

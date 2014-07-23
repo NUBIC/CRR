@@ -132,6 +132,40 @@ $(document).ready(function() {
     });
   });
 
+  $('#study_list').livequery(function(){
+    $(this).dataTable( {
+      "fnInfoCallback ": function() {showHideMore();},
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6 study-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "bFilter": true,
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+      "oLanguage": {
+          "sSearch": "Filter: ",
+      }
+    });
+  });
+
+  $('#study_participant_list').livequery(function(){
+    $(this).dataTable( {
+      "fnInfoCallback ": function() {showHideMore();},
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6 study-participant-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "bFilter": true,
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+      "oLanguage": {
+          "sSearch": "Filter: ",
+      }
+    });
+  });
+
   $('#dashboard_list').livequery(function(){
     showHideMore();
     $(this).dataTable( {
@@ -288,6 +322,17 @@ $(document).ready(function() {
 
   $(".user-header").livequery(function(){
     $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">Add a user</a>" + "</h4>"));
+  });
+
+  $(".study-header").livequery(function(){
+    $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">Add a study</a>" + "</h4>"));
+  });
+
+  $(".study-participant-header").livequery(function(){
+    if ($('#additonal-data').data("count") > 0)
+      $(this).append($("<div class='user-circle input-append'></div>")).append($("<span style='margin-left: 15px'>" + $('#additonal-data').data("header") + "</span>"));
+    else
+      $(this).append($("<div class='input-append'></div>")).append($("<span>" + $('#additonal-data').data("header") + "</span>"));
   });
 
   $('.consent-agree').attr('disabled', 'disabled');

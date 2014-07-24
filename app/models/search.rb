@@ -8,6 +8,9 @@
 #  request_date :date
 #  process_date :date
 #  decline_date :date
+#  start_date   :date
+#  warning_date :date
+#  end_date     :date
 #
 
 class Search < ActiveRecord::Base
@@ -54,6 +57,9 @@ class Search < ActiveRecord::Base
     end
     (self.result - participants).each { |participant| self.search_participants.create(participant: participant)}
     self.process_date = Date.today
+    self.start_date = params[:start_date]
+    self.warning_date = params[:warning_date]
+    self.end_date = params[:end_date]
     self.save
   end
 

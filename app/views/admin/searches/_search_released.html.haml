@@ -1,0 +1,69 @@
+.row-fluid
+  .alert.nu-well
+    %h5="Data for this search has been released on #{@search.process_date}"
+.row-fluid
+  %h3="#{@search.study.display_name}"
+.row-fluid
+  %h4 Parameters:
+  .row-fluid
+    =render :partial=>"admin/search_condition_groups/show_search_condition_group",locals: {search_condition_group: @search.search_condition_group}
+.row-fluid
+  .span3
+    %h4 Results:
+.row-fluid
+  .span3
+  .span3
+    %b Start Date:
+    %span="#{@search.start_date}"
+  .span3
+    %b Warning Date:
+    %span="#{@search.warning_date}"
+  .span3
+    %b End Date:
+    %span="#{@search.end_date}"
+-if current_user.admin? || current_user.data_manager?
+  #additonal-data{data: {header: "#{@search.released_participants.size} released / #{@search.result.size} participants returned", count: @search.released_participants.size}}
+  .row-fluid
+    %table.table.table-bordered.table-hover{:id=>'search_result_list'}
+      %thead
+        %tr
+          %th First Name
+          %th Last Name
+          %th Released In this request
+          %th Studies
+          %th Registry Status
+      %tbody
+        -@search.search_participants.each do |sp|
+          %tr
+            %td=link_to sp.participant.first_name, admin_participant_path(sp.participant)
+            %td
+              =link_to sp.participant.last_name, admin_participant_path(sp.participant)
+              .pull-right
+                =image_tag "child.png" if sp.participant.child?
+                =image_tag 'siblings.png' if sp.participant.has_relationships?
+            %td
+              - if sp.released?
+                .user-circle
+            %td
+              %ul.unstyled
+                -sp.participant.study_involvements.active.each_with_index do |si,i|
+                  %li{:class=> "#{'more_display' if i > 1}"}
+                    =link_to si.study.display_name, admin_study_path(si.study)
+                    %span.muted
+                      = " (#{si.state})"
+                %li.pull-right.btn.btn-link.show_button="See more..." if sp.participant.study_involvements.active.size > 2
+            %td=sp.participant.stage.titleize
+-else
+  #additonal-data{data: {header: "#{@search.released_participants.size} released / #{@search.result.size} participants returned", count: 0}}
+  .row-fluid
+    %table.table.table-bordered.table-hover{:id=>'search_result_list'}
+      %thead
+        %tr
+          %th First Name
+          %th Last Name
+      %tbody
+        -@search.released_participants.each do |participant|
+          %tr
+            %td=link_to participant.first_name, admin_participant_path(participant)
+            %td=link_to participant.last_name, admin_participant_path(participant)
+

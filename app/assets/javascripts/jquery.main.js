@@ -166,6 +166,24 @@ $(document).ready(function() {
     });
   });
 
+  $('#search_result_list').livequery(function(){
+    showHideMore();
+    $(this).dataTable( {
+      "fnInfoCallback ": function() {showHideMore();},
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6 search-result-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "bFilter": true,
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+      "oLanguage": {
+          "sSearch": "Filter: ",
+      }
+    });
+  });
+
   $('#dashboard_list').livequery(function(){
     showHideMore();
     $(this).dataTable( {
@@ -329,6 +347,13 @@ $(document).ready(function() {
   });
 
   $(".study-participant-header").livequery(function(){
+    if ($('#additonal-data').data("count") > 0)
+      $(this).append($("<div class='user-circle input-append'></div>")).append($("<span style='margin-left: 15px'>" + $('#additonal-data').data("header") + "</span>"));
+    else
+      $(this).append($("<div class='input-append'></div>")).append($("<span>" + $('#additonal-data').data("header") + "</span>"));
+  });
+
+  $(".search-result-header").livequery(function(){
     if ($('#additonal-data').data("count") > 0)
       $(this).append($("<div class='user-circle input-append'></div>")).append($("<span style='margin-left: 15px'>" + $('#additonal-data').data("header") + "</span>"));
     else

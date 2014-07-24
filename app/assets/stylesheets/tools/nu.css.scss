@@ -84,3 +84,13 @@ a{
 .survey-icon {
   padding-left: 55px;
 }
+
+.nu-offset {
+  padding-left: 2%;
+}
+
+.nu-condition ~ .nu-operator {
+    background:red;
+    display:inline;
+    float: right;
+}

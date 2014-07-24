@@ -25,8 +25,8 @@ class SearchConditionGroup < ActiveRecord::Base
     return [] if search_conditions.empty? and search_condition_groups.empty?
     sc_result = search_conditions.collect{|sc| sc.result}.inject(operator.to_sym)
     return sc_result if search_condition_groups.empty?
-    scg_result = search_condition_groups.collect{|scg| scg.result}.inject(operator.to_sym) 
-    return scg_result if search_conditions.empty? 
+    scg_result = search_condition_groups.collect{|scg| scg.result}.inject(operator.to_sym)
+    return scg_result if search_conditions.empty?
     [sc_result,scg_result].inject(operator.to_sym)
   end
 
@@ -41,6 +41,14 @@ class SearchConditionGroup < ActiveRecord::Base
 
   def pretty_operator
     OPERATOR_TRANSLATIONS[operator]
+  end
+
+  def is_or?
+    operator.eql?("|")
+  end
+
+  def is_and?
+    operator.eql?("&")
   end
 
 end

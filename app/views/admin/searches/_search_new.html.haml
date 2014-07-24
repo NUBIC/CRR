@@ -1,0 +1,15 @@
+.row-fluid
+  %h4 Search Parameters:
+  .row-fluid
+    =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: @search.search_condition_group}
+.row-fluid
+  %h4 Search Results:
+  - unless @search.result.size == 0
+    .offset1
+      %h5= "#{@search.result.size} participants returned"
+-if current_user.admin? || current_user.data_manager?
+  =render :partial=>"admin_search_result"
+-else
+  .row-fluid
+    =form_for @search,:url=>request_data_admin_search_path(@search) do |f|
+      =f.button "Request Results",:class=>"btn btn-mini btn-success"

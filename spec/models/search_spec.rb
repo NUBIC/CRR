@@ -8,6 +8,9 @@
 #  request_date :date
 #  process_date :date
 #  decline_date :date
+#  start_date   :date
+#  warning_date :date
+#  end_date     :date
 #
 
 require 'spec_helper'

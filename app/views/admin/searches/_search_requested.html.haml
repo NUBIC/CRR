@@ -2,6 +2,8 @@
   .alert.nu-well
     %h5 Data for this search has been requested and is pending release.
 .row-fluid
+  %h3="#{@search.study.display_name} : #{@search.name}"
+.row-fluid
   %h4 Search Parameters:
   .row-fluid
     =render :partial=>"admin/search_condition_groups/show_search_condition_group",locals: {search_condition_group: @search.search_condition_group}

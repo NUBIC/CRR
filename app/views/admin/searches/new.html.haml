@@ -1,12 +1,20 @@
 .row-fluid
-  .alert.alert-info
-    %h5 Please Select Search Criteria
-  =form_tag(admin_searches_path) do
-    .row-fluid
-      - if current_user.researcher?
-        = select_tag("search[study_id]",options_for_select(current_user.studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}),:class=>"input-xlarge")
-      - else
-        = select_tag("search[study_id]",options_for_select(@studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}),:class=>"input-xlarge")
-    .row-fluid
-      =button_tag("Start",:class=>"btn btn-small btn-success")
-      =link_to("Cancel",admin_searches_path, :class=>"btn btn-small btn-warning")
+  .well.nu-well Please select request criteria
+.row-fluid
+  =form_for @search,:url=>admin_searches_path, :html=>{:class=>"form-horizontal"}  do |f|
+    .control-group
+      =f.label :Study, :class => "control-label"
+      .controls
+        - if current_user.researcher?
+          =f.select :study_id, current_user.studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}, :prompt => "", :class=>"input-xlarge"
+        - else
+          =f.select :study_id, current_user.studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]},:prompt => "", :class=>"input-xlarge"
+    .control-group
+      =f.label :name, :class => "control-label"
+      .controls
+        =f.text_field :name
+    =f.hidden_field :user_id, :value => current_user.ar_user.id
+    .control-group
+      .controls
+        =f.button "Start",:class=>"btn btn-primary nu-primary"
+        =link_to("Cancel",admin_searches_path, :class=>"btn btn-warning")

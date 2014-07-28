@@ -13,7 +13,6 @@ module Aker::CrrUser
     username
   end
 
-
   def active_study_involvements
    ActiveRecord::Base::User.find_by_netid(netid).active_study_involvements
   end
@@ -29,11 +28,16 @@ module Aker::CrrUser
   def admin?
    ActiveRecord::Base::User.find_by_netid(netid).admin?
   end
+
   def researcher?
    ActiveRecord::Base::User.find_by_netid(netid).researcher?
   end
+
   def data_manager?
    ActiveRecord::Base::User.find_by_netid(netid).data_manager?
   end
 
+  def ar_user
+    ActiveRecord::Base::User.find_by_netid(netid)
+  end
 end

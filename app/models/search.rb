@@ -11,13 +11,14 @@
 #  start_date   :date
 #  warning_date :date
 #  end_date     :date
+#  name         :string(255)
+#  user_id      :integer
 #
 
 class Search < ActiveRecord::Base
-
   include AASM
-
   belongs_to :study
+  belongs_to :user
   has_one :search_condition_group
   has_many :search_participants
 
@@ -38,6 +39,14 @@ class Search < ActiveRecord::Base
   end
 
   after_create :create_condition_group
+  after_initialize :default_args
+
+  scope :requested, -> { where(state: :data_requested)}
+  scope :released, -> { where(state: :data_released)}
+
+  scope :with_user, lambda { |user|
+    Search.joins(study: [:user_studies, :searches]).where('user_studies.user_id' => user.id).distinct
+  }
 
   def result
     return [] if search_condition_group.nil? || search_condition_group.result.nil?
@@ -66,6 +75,22 @@ class Search < ActiveRecord::Base
   def set_request_date
     self.request_date=Date.today
     save
+  end
+
+  def default_args
+    if self.id
+      self.name = "Request_#{self.id}" if self.name.blank?
+    else
+      self.name = "Request_#{Search.all.size+1}" if self.name.blank?
+    end
+  end
+
+  def display_user
+    user.nil? ? "" : user.try(:name)
+  end
+
+  def display_name
+    name.nil? ? "" : name
   end
 
   private

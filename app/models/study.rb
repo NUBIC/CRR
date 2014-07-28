@@ -32,6 +32,7 @@ class Study < ActiveRecord::Base
   has_many :participants,:through=>:study_involvements
   has_many :user_studies
   has_many :users, :through=>:user_studies
+  has_many :searches
   validates_presence_of :state,:irb_number,:name
   STATES= ['active','inactive']
 

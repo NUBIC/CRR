@@ -16,13 +16,17 @@
     =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do
       Searches
       .infosqaure
-        =Search.data_requested.count
+        =current_user.admin? ? Search.requested.count : Search.with_user(current_user.ar_user).requested.count
       %b.caret
     %ul.dropdown-menu
-      -if current_user.admin? || current_user.data_manager?
-        %li=link_to 'Data Requests',admin_searches_path(:state=>"data_requested")
-      %li=link_to 'View All',admin_searches_path
-      %li=link_to "Start New", new_admin_search_path
+      -if current_user.admin?
+        %li=link_to "Data Requests (#{Search.requested.count})",admin_searches_path(:state=>"data_requested")
+        %li=link_to "Data Released (#{Search.released.count})",admin_searches_path(:state=>"data_released")
+        %li=link_to "View All (#{Search.all.count})",admin_searches_path
+      -else
+        %li=link_to "Data Requests (#{Search.with_user(current_user.ar_user).requested.count})",admin_searches_path(:state=>"data_requested")
+        %li=link_to "Data Released (#{Search.with_user(current_user.ar_user).released.count})",admin_searches_path(:state=>"data_released")
+        %li=link_to "View All (#{Search.with_user(current_user.ar_user).count})",admin_searches_path
 %ul.nav.pull-right
   -if current_user.admin?
     %li.dropdown

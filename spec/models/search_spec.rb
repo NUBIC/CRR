@@ -11,6 +11,8 @@
 #  start_date   :date
 #  warning_date :date
 #  end_date     :date
+#  name         :string(255)
+#  user_id      :integer
 #
 
 require 'spec_helper'

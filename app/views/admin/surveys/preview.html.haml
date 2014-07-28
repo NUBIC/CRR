@@ -11,7 +11,7 @@
             -if @survey.sections.size > 1
               - @survey.sections.each_with_index do |s,si|
                 %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
-            =link_to "Return",admin_survey_path(@survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-block btn-success"
+            =link_to "Back to #{@survey.title}",admin_survey_path(@survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-block btn-success"
           .tab-content.offset2
             - @survey.sections.each_with_index do |s,si|
               .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}

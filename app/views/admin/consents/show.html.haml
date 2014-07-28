@@ -1,7 +1,7 @@
 .span12
   .span1
     .btn-toolbar
-      =link_to "Return",admin_consents_path,:class=>"btn btn-primary btn-block"
+      =link_to "Back to consents",admin_consents_path,:class=>"btn btn-primary btn-block"
   -if @consent.active?
     .span1
       =form_for @consent, :url => deactivate_admin_consent_path(@consent) do |f|
@@ -25,5 +25,5 @@
   %hr
 .row-fluid
   .span1
-    =link_to "Return",admin_consents_path,:class=>"btn btn-medium btn-primary btn-block"
+    =link_to "Back to consents",admin_consents_path,:class=>"btn btn-medium btn-primary btn-block"
 

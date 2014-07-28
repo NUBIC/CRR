@@ -1,3 +1,7 @@
+.span12
+  .span1
+    .btn-toolbar
+      =link_to "Back to users", admin_users_path,:class=>"btn btn-primary btn-block"
 =form_for @user,:url=>admin_user_path(@user),:html=>{:class=>"form-horizontal"}  do |f|
   .row-fluid
     .control-group
@@ -25,5 +29,5 @@
         =f.text_field :study_tokens, :class=>"tokeninput input-mini","data-url"=>search_admin_studies_path(:format=>:json),"data-limit"=>100,"data-hint-text"=>"Enter study name or IRB number...","data-pre"=>@user.studies.to_json(:only=>[:id],:methods=>[:search_display])
     .control-group
       .controls
-        =f.button "Create",:class=>"btn btn-primary nu-primary"
+        =f.button "Update",:class=>"btn btn-primary nu-primary"
         =link_to "Cancel",admin_users_path,:class=>"btn btn-warning"

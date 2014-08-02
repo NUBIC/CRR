@@ -1,5 +1,5 @@
-#additonal-data{data: {header: "Surveys (#{Survey.all.size})", url: new_admin_survey_path, target: "#forms", async: true }}
-#forms.row-fluid
+#forms
+  #additonal-data{data: {header: "Surveys (#{Survey.all.size})", url: new_admin_survey_path, target: "#forms", async: true}}
   %table.display.table.table-bordered.table-hover{:id=>'survey_list'}
     %thead
       %tr

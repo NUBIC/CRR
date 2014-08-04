@@ -1,22 +1,29 @@
+.span12
+  .span1
+    .btn-toolbar
+      =link_to "Back to users", admin_users_path,:class=>"btn btn-primary btn-block"
 =form_for @user,:url=>admin_users_path, :html=>{:class=>"form-horizontal"}  do |f|
   .row-fluid
     .control-group
-      =f.label :netid
+      =f.label :netid, :class => "control-label"
       .controls
         =f.text_field :netid,:class=>"input-mini"
     .control-group
-      =f.label :admin
+      =f.label :admin, :class => "control-label"
       .controls
-        =f.check_box :admin
+        .checkbox
+          =f.check_box :admin
     .control-group
-      =f.label :data_manager
+      =f.label :data_manager, :class => "control-label"
       .controls
-        =f.check_box :data_manager
+        .checkbox
+          =f.check_box :data_manager
     .control-group
-      =f.label :researcher
+      =f.label :researcher, :class => "control-label"
       .controls
-        =f.check_box :researcher
-  .row-fluid
-    .btn-group
-      =f.button "Create",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",admin_users_path,:class=>"btn btn-mini btn-warning"
+        .checkbox
+          =f.check_box :researcher
+    .control-group
+      .controls
+        =f.button "Create",:class=>"btn btn-primary nu-primary"
+        =link_to "Cancel",admin_users_path,:class=>"btn btn-warning"

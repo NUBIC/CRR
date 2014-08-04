@@ -17,20 +17,18 @@ class Survey < ActiveRecord::Base
   #has_many :questions,:dependent=>:destroy
   has_many :sections, :dependent=>:destroy
 
-
-
   validates_presence_of :title,:state
   validates_uniqueness_of :code, :allow_blank=> true,:if=>:active?
 
   validate :activation_check
   after_create :create_section, :unless => :multiple_section?
 
+  default_scope order('state ASC, created_at DESC')
   after_initialize :default_args
 
   def questions
     Question.where("section_id in (?)",sections.collect{|s| s.id})
   end
-
 
   def active?
     self.state.eql?("active")
@@ -50,6 +48,10 @@ class Survey < ActiveRecord::Base
 
   def self.has_active_survey?
     child_survey and adult_survey
+  end
+
+  def deletable?
+    !active? and response_sets.empty?
   end
 
 

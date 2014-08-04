@@ -1,16 +1,22 @@
-%table.table.table-bordered.table-condensed
+#additonal-data{data: {header: display_search_header(params[:state]), url: new_admin_search_path}}
+%table.table.table-bordered.table-hover{:id=>'search_list'}
   %thead
     %tr
-      %th Study Short Title
-      %th State
+      %th Study
+      %th Request Name
+      %th Requestor
       %th Request Date
       %th Release Date
+      %th.text-warning Warning Date
+      %th End Date
   %tbody
     -@searches.each do |search|
       -if can? :show, search
         %tr
-          %td=search.study.display_name
-          %td=link_to search.state.titleize,admin_search_path(search)
-          %td=search.request_date
-          %td=search.process_date
-
+          %td=link_to search.study.display_name, admin_study_path(search.study, :anchor => "overview")
+          %td{:class=>"#{'nu' if search.data_requested?}"}=link_to search.display_name, admin_search_path(search)
+          %td{:class=>"#{'nu' if search.data_requested?}"}=search.display_user
+          %td{:class=>"#{'nu' if search.data_requested?}"}=search.request_date
+          %td{:class=> "#{'muted' if (!search.process_date.blank? && search.process_date < Date.today)}"}=search.process_date
+          %td{:class=> "text-warning #{'muted' if (!search.warning_date.blank? && search.warning_date < Date.today)}"}=search.warning_date
+          %td{:class=> "#{'muted' if (!search.end_date.blank? && search.end_date < Date.today)}"}=search.end_date

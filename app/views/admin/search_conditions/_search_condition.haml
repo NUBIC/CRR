@@ -2,9 +2,12 @@
   .span4
     =search_condition.question.search_display
   .span2
-    =SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
+    %small.muted
+      %i
+        =SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
   .span2
-    =search_condition.display_value
+    %b
+      =search_condition.display_value
   .span3
     =form_tag(admin_search_condition_path(search_condition),:method=>"delete") do
       .btn-group

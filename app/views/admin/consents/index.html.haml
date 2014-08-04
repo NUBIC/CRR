@@ -1,38 +1,17 @@
+#additonal-data{data: {header: "Consents (#{Consent.all.size})", url: new_admin_consent_path, target: "#consents", async: true }}
 #consents.row-fluid
-  =link_to "Add Consent", new_admin_consent_path,"data-async"=>true,"data-target"=>"#consents",:class=>"btn btn-primary btn-small"
-  %table.table.table-bordered.table-striped.table-condensed
+  %table.table.table-bordered.table-hover{:id=>'consent_list'}
     %thead
       %tr
         %th.span1 Type
         %th.span1 State
         %th.span1 Created On
-        %th.span5 Comment
-        %th.span4
+        %th.span5 Comments
     %tbody
       -@consents.each do |consent|
         %tr
-          %td=consent.consent_type
-          %td=consent.state.titleize
-          %td=consent.created_at.to_date
+          %td=link_to consent.consent_type, admin_consent_path(consent)
+          %td{:class=> "#{'muted' unless consent.active? }"}=consent.state.titleize
+          %td{:class=> "#{'muted' unless consent.active?}"}=consent.created_at.to_date
           %td=consent.comment
-          %td
-            .span12
-              -if consent.active?
-                .span6
-                  =form_for consent ,:url=> deactivate_admin_consent_path(consent) do |f|
-                    .btn-toolbar
-                      =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
-                      =f.button "Deactivate",:class=>"btn btn-mini btn-danger"
-              -else
-                .span3
-                  =form_for consent, :url=> activate_admin_consent_path(consent) do |f|
-                    .btn-toolbar
-                      =link_to "View",admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
-                      =f.button "Activate",:class=>"btn btn-mini btn-success"
-              -if consent.editable?
-                .span3
-                  =form_for consent, :url=> admin_consent_path(consent),:method=>:delete do |f|
-                    .btn-toolbar
-                      =link_to "Edit", edit_admin_consent_path(consent),:class=>"btn btn-mini btn-primary"
-                      =f.button "Delete",:class=>"btn btn-mini btn-danger"
 

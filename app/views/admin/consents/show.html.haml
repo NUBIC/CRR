@@ -1,4 +1,29 @@
-!=@consent.content
-%hr
-=link_to "Return",admin_consents_path,:class=>"btn btn-medium btn-primary"
+.span12
+  .span1
+    .btn-toolbar
+      =link_to "Back to consents",admin_consents_path,:class=>"btn btn-primary btn-block"
+  -if @consent.active?
+    .span1
+      =form_for @consent, :url => deactivate_admin_consent_path(@consent) do |f|
+        .btn-toolbar
+          =f.button "Deactivate", :class => "btn btn-warning btn-block"
+  -else
+    .span1
+      =form_for @consent, :url => activate_admin_consent_path(@consent) do |f|
+        .btn-toolbar
+          =f.button "Activate", :class => "btn btn-success btn-block"
+  -if @consent.editable?
+    =form_for @consent, :url => admin_consent_path(@consent), :method => :delete do |f|
+      .span1
+        .btn-toolbar
+          =link_to "Edit", edit_admin_consent_path(@consent), :class => "btn btn-primary nu-primary btn-block"
+      .span1
+        .btn-toolbar
+          =f.button "Delete", :class => "btn btn-danger btn-block"
+.row-fluid
+  !=@consent.content
+  %hr
+.row-fluid
+  .span1
+    =link_to "Back to consents",admin_consents_path,:class=>"btn btn-medium btn-primary btn-block"
 

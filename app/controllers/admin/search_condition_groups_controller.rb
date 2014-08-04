@@ -32,7 +32,7 @@ class Admin::SearchConditionGroupsController < Admin::AdminController
 
  def destroy
    @search_condition_group = SearchConditionGroup.find(params[:id])
-   @search = @search_condition_group .search
+   @search = @search_condition_group.search
    @search_condition_group.destroy
    redirect_to admin_search_path(@search)
  end

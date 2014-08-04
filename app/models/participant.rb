@@ -129,6 +129,10 @@ class Participant < ActiveRecord::Base
     study_involvements.active.count > 0
   end
 
+  def has_study?(study)
+    !studies.empty? && studies.include?(study)
+  end
+
   def search_display
     [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
   end

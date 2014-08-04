@@ -27,7 +27,9 @@
     .control-group
       =f.label :end_date
       .controls
-        =f.text_field :end_date,:value => @study_involvement.end_date, :class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"mm/dd/yyyy", placeholder: "mm/dd/yyyy"
+        =f.text_field :end_date,:value => @study_involvement.end_date, :class=>"input-small date required","data-provide"=>"datepicker","data-date-format"=>"mm/dd/yyyy", placeholder: "mm/dd/yyyy"
+        %small.text-error
+          %i Required field
     .control-group
       =f.label :notes
       .controls

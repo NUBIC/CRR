@@ -1,6 +1,6 @@
 class Admin::SearchesController < Admin::AdminController
   def index
-    @searches = params[:state].blank? ? Search.all.order(:request_date) : Search.send(params[:state].to_sym)
+    @searches = params[:state].blank? ? Search.all : Search.send(params[:state].to_sym)
   end
 
  def new
@@ -56,11 +56,14 @@ class Admin::SearchesController < Admin::AdminController
     end
  end
  def destroy
-   @search = Search.find(params[:id])
+    @search = Search.find(params[:id])
+    authorize! :destroy, @search
+    @search.destroy
+    redirect_to admin_searches_path
  end
 
  def search_params
-   params.require(:search).permit(:study_id)
+   params.require(:search).permit(:study_id, :name, :user_id)
  end
 end
 

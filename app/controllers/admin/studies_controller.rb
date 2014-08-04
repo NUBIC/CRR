@@ -1,6 +1,6 @@
 class Admin::StudiesController < Admin::AdminController
  def index
-   @studies = Study.all
+   @studies = Study.all.order(state: :asc)
    authorize! :index, Study
  end
 

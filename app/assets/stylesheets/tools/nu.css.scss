@@ -8,6 +8,13 @@
   font-size: 100%;
 }
 
+.user-circle{
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  background: green;
+}
+
 .infosqaure{
   border-radius: 10%;
   font-size: 100%;
@@ -76,4 +83,14 @@ a{
 
 .survey-icon {
   padding-left: 55px;
+}
+
+.nu-offset {
+  padding-left: 2%;
+}
+
+.nu-condition ~ .nu-operator {
+    background:red;
+    display:inline;
+    float: right;
 }

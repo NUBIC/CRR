@@ -28,17 +28,17 @@
 #
 
 class Study < ActiveRecord::Base
-  has_many :study_involvements,:dependent=>:restrict_with_error
+  has_many :study_involvements,-> {order("end_date DESC, start_date DESC")}, :dependent=>:restrict_with_error
   has_many :participants,:through=>:study_involvements
   has_many :user_studies
   has_many :users, :through=>:user_studies
+  has_many :searches
   validates_presence_of :state,:irb_number,:name
   STATES= ['active','inactive']
 
   scope :active, -> {where(state:'active')}
   validates_inclusion_of :state, :in => STATES
   after_initialize :default_args
-
   scope :search , proc {|param|
     where("irb_number ilike ? or name ilike ? ","%#{param}%","%#{param}%")}
 

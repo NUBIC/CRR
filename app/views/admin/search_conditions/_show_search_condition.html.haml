@@ -1,0 +1,7 @@
+.row-fluid
+  =search_condition.question.search_display
+  %small.muted
+    %i
+      =SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
+  %b
+    =search_condition.display_value

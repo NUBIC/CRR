@@ -22,7 +22,7 @@
     %b End Date:
     %span="#{@search.end_date}"
 -if current_user.admin? || current_user.data_manager?
-  #additonal-data{data: {header: "#{@search.released_participants.size} released / #{@search.result.size} participants returned", count: @search.released_participants.size}}
+  #additonal-data{data: {header: "#{@search.released_participants.size} released / #{@search.search_participants.size} participants returned", count: @search.released_participants.size}}
   .row-fluid
     %table.table.table-bordered.table-hover{:id=>'search_result_list'}
       %thead
@@ -31,7 +31,7 @@
           %th Last Name
           %th Released In this request
           %th Studies
-          %th Registry Status
+          %th End of Release
       %tbody
         -@search.search_participants.each do |sp|
           %tr
@@ -46,24 +46,41 @@
                 .user-circle
             %td
               %ul.unstyled
-                -sp.participant.study_involvements.active.each_with_index do |si,i|
+                -sp.participant.study_involvements.each_with_index do |si,i|
                   %li{:class=> "#{'more_display' if i > 1}"}
                     =link_to si.study.display_name, admin_study_path(si.study)
                     %span.muted
                       = " (#{si.state})"
-                %li.pull-right.btn.btn-link.show_button="See more..." if sp.participant.study_involvements.active.size > 2
-            %td=sp.participant.stage.titleize
+                %li.pull-right.btn.btn-link.show_button="See more..." if sp.participant.study_involvements.size > 2
+            %td
+              %ul.unstyled
+                -sp.participant.study_involvements.each_with_index do |si,i|
+                  %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
 -else
-  #additonal-data{data: {header: "#{@search.released_participants.size} released / #{@search.result.size} participants returned", count: 0}}
+  #additonal-data{data: {header: "#{@search.released_participants.size} released / #{@search.search_participants.size} participants returned", count: 0}}
   .row-fluid
     %table.table.table-bordered.table-hover{:id=>'search_result_list'}
       %thead
         %tr
           %th First Name
           %th Last Name
+          %th Studies
+          %th End of Release
       %tbody
         -@search.released_participants.each do |participant|
           %tr
-            %td=link_to participant.first_name, admin_participant_path(participant)
-            %td=link_to participant.last_name, admin_participant_path(participant)
+            %td= @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
+            %td= @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+            %td
+              %ul.unstyled
+                -participant.study_involvements.each_with_index do |si,i|
+                  %li{:class=> "#{'more_display' if i > 1}"}
+                    =si.study.display_name
+                    %span.muted
+                      = " (#{si.state})"
+                %li.pull-right.btn.btn-link.show_button="See more..." if participant.study_involvements.size > 2
+            %td
+              %ul.unstyled
+                -participant.study_involvements.each_with_index do |si,i|
+                  %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
 

@@ -21,7 +21,8 @@ class StudyInvolvement < ActiveRecord::Base
 
   VALID_STATES=['none','enrolled','declined','no contact','withdrew','excluded','completed']
 
-  validates_presence_of :start_date, :participant, :study
+  validates_presence_of :start_date, :participant, :study, :end_date
+  validates_uniqueness_of :participant_id, :scope => :study
   validate :end_date_cannot_be_before_start_date
   validates_inclusion_of :state, :in => VALID_STATES
 

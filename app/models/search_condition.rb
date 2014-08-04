@@ -24,7 +24,7 @@ class SearchCondition < ActiveRecord::Base
 
   def result
     return [] if question.blank? || operator.blank? || value.blank?
-    Participant.joins(:response_sets=>:responses).where("question_id = ? and #{subject} #{operator} ?",question.id,value) 
+    Participant.joins(:response_sets=>:responses).where("question_id = ? and #{subject} #{operator} ? and stage='approved'",question.id,value)
   end
 
 

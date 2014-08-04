@@ -175,6 +175,7 @@ $(document).ready(function() {
       "sDom": "<'row-fluid'<'span6 search-result-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
       "sWrapper": "dataTables_wrapper form-inline",
       "aaSorting": [],
+      "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 0 ] }],
       "bFilter": true,
       "iDisplayLength": 30,
       "bLengthChange": false,

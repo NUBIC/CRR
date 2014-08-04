@@ -39,7 +39,6 @@ class Study < ActiveRecord::Base
   scope :active, -> {where(state:'active')}
   validates_inclusion_of :state, :in => STATES
   after_initialize :default_args
-  default_scope order('state ASC')
   scope :search , proc {|param|
     where("irb_number ilike ? or name ilike ? ","%#{param}%","%#{param}%")}
 

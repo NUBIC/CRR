@@ -4,9 +4,10 @@
       .muted  (
     .row-fluid
       .span1
-        =form_for search_condition_group, :url=>admin_search_condition_group_path(search_condition_group) do |f|
-          =f.hidden_field :operator,:value=>search_condition_group.invert_operator
-          =f.button "Invert Operator",:class=>"btn btn-mini btn-warning"
+        -if (search_condition_group.search_conditions.size + search_condition_group.search_condition_groups.size) > 1
+          =form_for search_condition_group, :url=>admin_search_condition_group_path(search_condition_group) do |f|
+            =f.hidden_field :operator,:value=>search_condition_group.invert_operator
+            =f.button "Change to #{SearchConditionGroup::OPERATOR_TRANSLATIONS[search_condition_group.invert_operator]}",:class=>"btn btn-mini #{'btn-info' if search_condition_group.is_or?} #{'btn-success' if search_condition_group.is_and?}"
       -if search_condition_group.search_id.blank?
         .span1
           =form_for search_condition_group,:method=>"delete", :url=>admin_search_condition_group_path(search_condition_group) do |f|
@@ -19,12 +20,12 @@
           .row-fluid{:id=>"search_condition_#{sc.id}"}
             =render :partial=>"admin/search_conditions/search_condition",locals: {search_condition: sc}
         .row-fluid{:id=>"#{search_condition_group.id}_new_condition"}
-          =link_to "Add Condition",new_admin_search_condition_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition",:class=>"btn btn-mini"
+          =link_to "Add Condition",new_admin_search_condition_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition",:class=>"btn btn-mini btn-primary nu-primary"
     .row-fluid
       -search_condition_group.search_condition_groups.each do |scg|
         .offset1
           %b{:class=>"nu-operator #{'text-info' if scg.is_or?} #{'text-success' if scg.is_and?}"}= scg.pretty_operator
         =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: scg}
     .row-fluid{:id=>"#{search_condition_group.id}_new_condition_group"}
-      =link_to "Add Group",new_admin_search_condition_group_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition_group",:class=>"btn btn-mini"
+      =link_to "Add Group",new_admin_search_condition_group_path(:search_condition_group_id=>search_condition_group.id),"data-async"=>true,"data-target"=>"##{search_condition_group.id}_new_condition_group",:class=>"btn btn-mini btn-primary nu-primary"
     .muted )

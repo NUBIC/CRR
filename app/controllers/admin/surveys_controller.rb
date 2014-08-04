@@ -56,7 +56,7 @@ class Admin::SurveysController < Admin::AdminController
       @study = @survey.study
     end
     respond_to do |format|
-      format.html {redirect_to surveys_path}
+      format.html {redirect_to admin_surveys_path}
       format.js {render (@survey.save ? :show : :index),:layout => false}
     end
   end
@@ -66,7 +66,7 @@ class Admin::SurveysController < Admin::AdminController
     authorize! :destroy, @survey
     @survey.destroy
     respond_to do |format|
-      format.html {redirect_to admin_studies_path(@study)}
+      format.html {redirect_to admin_surveys_path}
       format.js {render :index,:layout => false}
     end
   end

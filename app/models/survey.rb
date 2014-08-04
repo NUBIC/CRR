@@ -30,7 +30,6 @@ class Survey < ActiveRecord::Base
     Question.where("section_id in (?)",sections.collect{|s| s.id})
   end
 
-
   def active?
     self.state.eql?("active")
   end
@@ -49,6 +48,10 @@ class Survey < ActiveRecord::Base
 
   def self.has_active_survey?
     child_survey and adult_survey
+  end
+
+  def deletable?
+    !active? and response_sets.empty?
   end
 
 

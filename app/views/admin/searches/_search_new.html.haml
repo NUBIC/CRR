@@ -1,11 +1,16 @@
 .row-fluid
-  %h3="#{@search.study.display_name} : #{@search.name}"
+  .span9
+    %h3="#{@search.study.display_name} : #{@search.name}"
+  .span3
+    =form_for @search, :url => admin_search_path(@search), :method => :delete do |f|
+      .btn-toolbar.pull-right
+        =f.button "Delete #{@search.name}", :class => "btn btn-danger", data: { confirm: "Are you sure you want to delete request #{@search.name}?" }
 .row-fluid
-  %h4 Search Parameters:
+  %h4 Parameters:
   .row-fluid
     =render :partial=>"admin/search_condition_groups/search_condition_group",locals: {search_condition_group: @search.search_condition_group}
 .row-fluid
-  %h4 Search Results:
+  %h4 Results:
   - unless @search.result.size == 0
     .offset1
       %h5= "#{@search.result.size} participants returned"

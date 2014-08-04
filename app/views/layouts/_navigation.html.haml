@@ -14,7 +14,7 @@
     %li.divider-vertical
   %li.dropdown
     =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do
-      Searches
+      Requests
       .infosqaure
         =current_user.admin? ? Search.requested.count : Search.with_user(current_user.ar_user).requested.count
       %b.caret

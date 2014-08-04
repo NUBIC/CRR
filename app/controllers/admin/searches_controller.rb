@@ -56,7 +56,10 @@ class Admin::SearchesController < Admin::AdminController
     end
  end
  def destroy
-   @search = Search.find(params[:id])
+    @search = Search.find(params[:id])
+    authorize! :destroy, @search
+    @search.destroy
+    redirect_to admin_searches_path
  end
 
  def search_params

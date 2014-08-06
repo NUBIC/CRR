@@ -1,13 +1,13 @@
 = form_for @search, :url=>release_data_admin_search_path(@search), :html => {id: "admin_searches"} do |f|
   .row-fluid
     .span3
-      %b Start Date:
+      %b Released Date:
       =text_field_tag "start_date",Date.today,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
     .span3
       %b Warning Date:
       =text_field_tag "warning_date",1.week.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
     .span3
-      %b End Date:
+      %b End of release:
       =text_field_tag "end_date",2.weeks.from_now.to_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
     .span3
       =f.button "Release",:class=>"btn btn-small btn-success", :id => "release"

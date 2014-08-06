@@ -37,7 +37,7 @@ class Ability
         can [:new,:create,:destroy], ResponseSet do |response_set|
           response_set.survey.active?
         end
-        can [:new,:create,:show,:activate,:deactivate,:index], Consent 
+        can [:new,:create,:show,:activate,:deactivate,:index], Consent
         can [:edit,:update,:destroy], Consent do |consent|
           consent.editable?
         end
@@ -58,6 +58,9 @@ class Ability
         end
         can [:show,:request_data], Search do |search|
           user.studies.active.include?(search.study)
+        end
+        can :destroy, Search do |search|
+          user.studies.active.include?(search.study) && search.new?
         end
       end
     elsif user.is_a?(Account)

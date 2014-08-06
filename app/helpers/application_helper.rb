@@ -70,7 +70,7 @@ module ApplicationHelper
       current_user.admin? ? "All Requests for Participants (#{Search.all.count})" : "All Requests for Participants (#{Search.with_user(current_user.ar_user).count})"
     elsif state == "data_requested"
       current_user.admin? ? "Data Requests (#{Search.requested.count})" : "Data Requests (#{Search.with_user(current_user.ar_user).requested.count})"
-    elsif state = "data_released"
+    elsif state == "data_released"
       current_user.admin? ? "Data Released (#{Search.released.count})" : "Data Released (#{Search.with_user(current_user.ar_user).released.count})"
     end
   end

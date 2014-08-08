@@ -1,6 +1,6 @@
-#additonal-data{data: {header: "Consents (#{Consent.all.size})", url: new_admin_consent_path, target: "#consents", async: true }}
+#additonal-data{data: {header: "Consents (#{Consent.all.size})", url: new_admin_consent_path, target: "#consents", async: true, text: "Add a consent"}}
 #consents.row-fluid
-  %table.table.table-bordered.table-hover{:id=>'consent_list'}
+  %table.table.table-bordered.table-hover{:id=>'index_list'}
     %thead
       %tr
         %th.span1 Type

@@ -1,4 +1,4 @@
-#additonal-data{data: {count: @account.active_participants.size, participant: @participant ? "true" : "false"}}
+#additonal-data{data: {count: @account.active_participants.size, participant: @participant ? "true" : "false", text: "Add a participant"}}
 -if @account.active_participants.size > 0
   = render :partial => 'account_participants.html.haml'
   .row-fluid

@@ -337,6 +337,10 @@ $(document).ready(function() {
     $(this).validate();
   });
 
+  $(".validate-form").livequery(function(){
+    $(this).validate();
+  });
+
   $.validator.addMethod("phone", function(value, element) {
     phone_number = value.replace(/\s+/g, "");
     return this.optional(element) || phone_number.length > 9 && phone_number.match(/^\d{3}-\d{3}-\d{4}$/);

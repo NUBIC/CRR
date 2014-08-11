@@ -13,7 +13,7 @@
       =f.button "Release",:class=>"btn btn-small btn-success", :id => "release"
   %br
   %br
-  #additonal-data{data: {header: "#{@search.result.size} participants returned", count: @search.released_participants.size}}
+  #additonal-data{data: {header: "#{@search.new? ? @search.result.size : @search.search_participants.size} participants returned", count: @search.released_participants.size}}
   .row-fluid
     %table.table.table-bordered.table-hover{:id=>'search_result_list'}
       %thead
@@ -24,24 +24,9 @@
           %th Studies
           %th End of Release
       %tbody
-        -@search.result.each do |participant|
-          %tr
-            %td=participant.has_study?(@search.study) ? "" : check_box_tag("[participant_ids][#{participant.id}]", participant.id, false, class: "selectalloption")
-            %td=link_to participant.first_name, admin_participant_path(participant)
-            %td
-              =link_to participant.last_name, admin_participant_path(participant)
-              .pull-right
-                =image_tag "child.png" if participant.child?
-                =image_tag 'siblings.png' if participant.has_relationships?
-            %td
-              %ul.unstyled
-                -participant.study_involvements.each_with_index do |si,i|
-                  %li{:class=> "#{'more_display' if i > 1}"}
-                    =link_to si.study.display_name, admin_study_path(si.study)
-                    %span.muted
-                      = " (#{si.state})"
-                %li.pull-right.btn.btn-link.show_button="See more..." if participant.study_involvements.size > 2
-            %td
-              %ul.unstyled
-                -participant.study_involvements.each_with_index do |si,i|
-                  %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
+        -if @search.new?
+          -@search.result.each do |participant|
+            = render :partial => 'participants', :locals => {participant: participant}
+        -else
+          -@search.search_participants.each do |sp|
+            = render :partial => 'participants', :locals => {participant: sp.participant}

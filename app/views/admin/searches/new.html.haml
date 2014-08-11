@@ -5,10 +5,10 @@
     .control-group
       =f.label :Study, :class => "control-label"
       .controls
-        - if current_user.researcher?
-          =f.select :study_id, current_user.studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}, :prompt => "", :class=>"input-xlarge"
+        - if current_user.admin?
+          =f.select :study_id, @studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]},:prompt => "", :class=>"input-xlarge"
         - else
-          =f.select :study_id, current_user.studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]},:prompt => "", :class=>"input-xlarge"
+          =f.select :study_id, current_user.studies.active.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}, :prompt => "", :class=>"input-xlarge"
     .control-group
       =f.label :name, :class => "control-label"
       .controls

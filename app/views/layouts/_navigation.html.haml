@@ -27,6 +27,7 @@
         %li=link_to "Data Requests (#{Search.with_user(current_user.ar_user).requested.count})",admin_searches_path(:state=>"data_requested")
         %li=link_to "Data Released (#{Search.with_user(current_user.ar_user).released.count})",admin_searches_path(:state=>"data_released")
         %li=link_to "View All (#{Search.with_user(current_user.ar_user).count})",admin_searches_path
+      %li=link_to "Build a request", new_admin_search_path
 - unless Rails.env.production?
   %ul.nav.pull-center
     %li

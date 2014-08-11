@@ -3,7 +3,7 @@
     %h4="Add a participant"
   %h5="Who are you enrolling?"
   .row-fluid
-    - if Consent.adult_consent and Survey.child_survey
+    - if Consent.adult_consent and Survey.adult_survey
       .span2
         =form_for @participant, :url=>admin_participants_path do |f|
           = f.hidden_field "child", :value=>false

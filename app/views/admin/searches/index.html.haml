@@ -2,8 +2,8 @@
 %table.table.table-bordered.table-hover{:id=>'index_list'}
   %thead
     %tr
-      %th Study
       %th Request Name
+      %th Study
       %th Requestor
       %th Request Date
       %th Release Date
@@ -13,8 +13,8 @@
     -@searches.each do |search|
       -if can? :show, search
         %tr
-          %td=link_to search.study.display_name, admin_study_path(search.study, :anchor => "overview")
           %td{:class=>"#{'nu' if search.data_requested?}"}=link_to search.display_name, admin_search_path(search)
+          %td=link_to search.study.display_name, admin_study_path(search.study, :anchor => "overview")
           %td{:class=>"#{'nu' if search.data_requested?}"}=search.display_user
           %td{:class=>"#{'nu' if search.data_requested?}"}=search.request_date
           %td{:class=> "#{'muted' if (!search.process_date.blank? && search.process_date < Date.today)}"}=search.process_date

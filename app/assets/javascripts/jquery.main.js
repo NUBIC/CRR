@@ -341,6 +341,17 @@ $(document).ready(function() {
     $(this).validate();
   });
 
+  $('#search-end-of-release-date').livequery(function(){
+    $(this).change(function() {
+      var releaseDate = $("#search-release-date").val();
+      var endOfReleaseDate = new Date();
+      endOfReleaseDate.setDate(new Date(releaseDate).getDate() + 14);
+      if($(this).val() == '' || $(this).val() == releaseDate ) {
+        $(this).datepicker('setDate', endOfReleaseDate).datepicker('update');
+      }
+    });
+  });
+
   $.validator.addMethod("phone", function(value, element) {
     phone_number = value.replace(/\s+/g, "");
     return this.optional(element) || phone_number.length > 9 && phone_number.match(/^\d{3}-\d{3}-\d{4}$/);

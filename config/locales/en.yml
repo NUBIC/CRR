@@ -23,3 +23,7 @@ en:
   date:
     formats:
       default: "%m/%d/%Y"
+  activerecord:
+    attributes:
+      search:
+        end_date: "End of release date"

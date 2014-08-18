@@ -28,6 +28,7 @@ class Search < ActiveRecord::Base
   aasm_state :data_released
 
   validates_presence_of :study
+  validate :end_date_cannot_be_before_start_date
 
   aasm_event :request_data do
     transitions :to => :data_requested,:from=>[:new], :on_transition=>[:process_request]
@@ -111,6 +112,12 @@ class Search < ActiveRecord::Base
   end
 
   private
+
+    def end_date_cannot_be_before_start_date
+      if end_date.present? && end_date <= start_date
+        errors.add(:end_date, "can't be before release date")
+      end
+    end
 
     def questions
       Question.find(parameters.keys.flatten.collect{|v| v.to_i})

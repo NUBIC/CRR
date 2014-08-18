@@ -74,4 +74,28 @@ module ApplicationHelper
       current_user.admin? ? "Data Released (#{Search.released.count})" : "Data Released (#{Search.with_user(current_user.ar_user).released.count})"
     end
   end
+
+  def address_display(participant)
+    addr = [participant.address_line1, participant.address_line2].reject(&:blank?).join(', ').strip
+    addr1 = [participant.city, participant.state, participant.zip].reject(&:blank?).join(' ').strip
+    address = addr1.blank? ? addr.blank? ? '' : addr : addr << "<br />" << addr1
+    address << "<br />" << participant.primary_phone unless participant.primary_phone.blank?
+    address << "<br />" << participant.secondary_phone unless participant.secondary_phone.blank?
+    address << "<br />" << participant.email unless participant.email.blank?
+    address
+  end
+
+  def primary_guardian_display(participant)
+    primary_guardian_info = [participant.primary_guardian_first_name, participant.primary_guardian_last_name].join(' ')
+    primary_guardian_info << "<br />" << participant.primary_guardian_phone unless participant.primary_guardian_phone.blank?
+    primary_guardian_info << "<br />" << participant.primary_guardian_email unless participant.primary_guardian_email.blank?
+    primary_guardian_info
+  end
+
+  def seconday_guardian_display(participant)
+    seconday_guardian_info = [participant.secondary_guardian_first_name, participant.secondary_guardian_last_name].join(' ')
+    seconday_guardian_info << "<br />" << participant.secondary_guardian_phone unless participant.secondary_guardian_phone.blank?
+    seconday_guardian_info << "<br />" << participant.secondary_guardian_email unless participant.secondary_guardian_email.blank?
+    dseconday_guardian_info
+  end
 end

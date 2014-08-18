@@ -173,6 +173,18 @@ $(document).ready(function() {
     });
   });
 
+  $('#study_history_list').livequery(function(){
+    $(this).dataTable( {
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6'l><'span6'>r>t<'row'<'span6'i><'span6'>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+    });
+  });
+
   function showHideMore() {
     $('table tr ul li.more_display').hide();
     $('.show_button').livequery('click',function(e) {

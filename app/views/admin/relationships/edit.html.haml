@@ -1,20 +1,33 @@
-=form_for @relationship, :url=>admin_relationship_path(@relationship), :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationships"} do |f|
-  .row-fluid
-    .control-group
-      ="Participant"
-      .controls
-        =@relationship.destination.name
-    .control-group
-      =f.label :category,"Relationship"
-      .controls
-        =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
-        %small.text-error
-          %i Required field
-    .control-group
-      =f.label :notes
-      .controls
-        =f.text_area :notes
-  .row-fluid
-    .btn-group
-      =f.button "Update",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",admin_relationships_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#relationships"
+=form_for @relationship, :url => admin_relationship_path(@relationship), :html=>{:class=>"form-horizontal"} do |f|
+  .modal-header.well.nu-well
+    .row-fluid
+      %h3
+        ="#{@participant.name}"
+        =image_tag "child.png" if @participant.child
+        =image_tag 'siblings.png' if @participant.has_relationships?
+        =button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+  .modal-body
+    .row-fluid
+      .control-group
+        =f.label :category,"Is", :class => "control-label"
+        .controls
+          =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
+          %small.text-error
+            %i Required field
+    .row-fluid
+      .control-group
+        =f.label :destination_id, "Of", :class => "control-label"
+        .controls
+          =text_field_tag('destination', @relationship.destination.name, readonly: true)
+    .row-fluid
+      .control-group
+        =f.label :notes, :class => "control-label"
+        .controls
+          =f.text_area :notes,:class=>"input-xxlarge"
+    .row-fluid
+      .control-group
+        .controls
+          =f.button "Update",:class=>"btn btn-primary nu-primary"
+          =link_to "Cancel",admin_participant_path(@participant),:class=>"btn btn-warning"
+          =form_for @relationship, :url => admin_relationship_path(@relationship), :method => :delete do |f|
+            =f.button "Delete", :class => "btn btn-danger", data: { confirm: "Are you sure you want to delete this relationship?" }

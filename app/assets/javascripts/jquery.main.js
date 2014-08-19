@@ -6,13 +6,6 @@ $(document).ready(function() {
   //--------------- Change default Bootstrap date----------
   $.fn.datepicker.defaults.format = "mm/dd/yyyy";
 
-  // $.fn.modal.defaults.maxHeight = function(){
-  //   // subtract the height of the modal header and footer
-  //   console.log("====");
-  //   console.log($(window).height());
-  //   return $(window).height() - 300;
-  // }
-
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
       if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {
@@ -204,6 +197,18 @@ $(document).ready(function() {
     });
   });
 
+  $('#participant_survey_list').livequery(function(){
+    $(this).dataTable( {
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "t<'row'<'span6'i><'span6'>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+    });
+  });
+
   function showHideMore() {
     $('table tr ul li.more_display').hide();
     $('.show_button').livequery('click',function(e) {
@@ -369,7 +374,10 @@ $(document).ready(function() {
   });
 
   $(".validate-form").livequery(function(){
-    $(this).validate();
+    $(".phone").mask("999-999-9999");
+    $(".date").mask("99/99/9999");
+    $(".zipcode").mask("99999");
+    $(this).validate({onfocusout: false});
   });
 
   $('#search-end-of-release-date').livequery(function(){

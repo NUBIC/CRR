@@ -1,7 +1,15 @@
 =form_for @study_involvement, :url=>admin_study_involvements_path, :html=>{:class=>"form-horizontal validate-form"} do |f|
-  =render :partial=>"admin/study_involvements/form", locals: {f: f}
-  .row-fluid
-    .control-group
-      .controls
-        =f.button "Create",:class=>"btn btn-success"
-        =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"
+  .modal-header.well.nu-well
+    .row-fluid
+      %h3
+        ="#{@participant.name}"
+        =image_tag "child.png" if @participant.child
+        =image_tag 'siblings.png' if @participant.has_relationships?
+        =button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+  .modal-body
+    =render :partial=>"admin/study_involvements/form", locals: {f: f}
+    .row-fluid
+      .control-group
+        .controls
+          =f.button "Create",:class=>"btn btn-primary nu-primary"
+          =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"

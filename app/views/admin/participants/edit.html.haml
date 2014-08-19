@@ -1,4 +1,4 @@
-=form_for @participant, :url=>admin_participant_path(@participant),:html => {:id => 'admin_participant_edit', :class => "form-horizontal participant_demographic"} do |f|
+=form_for @participant, :url=>admin_participant_path(@participant),:html => {:class => "form-horizontal validate-form"} do |f|
   .modal-header.well.nu-well
     .row-fluid
       %h3
@@ -48,7 +48,7 @@
       .control-group
         =f.label :zip, :class => "control-label"
         .controls
-          =f.text_field  :zip
+          =f.text_field  :zip, class: "zipcode"
     .row-fluid
       -unless @participant.child
         .control-group
@@ -127,7 +127,3 @@
         .controls
           =f.button "Save",:class=>"btn btn-success"
           =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"
-:javascript
-  $(document).ready(function(){
-    $('#admin_participant_edit').validate();
-  });

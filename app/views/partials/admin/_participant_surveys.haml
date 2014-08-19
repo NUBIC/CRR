@@ -1,15 +1,13 @@
-=link_to "Start Survey",new_admin_response_set_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-mini btn-primary"
-%table.table.bordered
+=link_to "Start Survey",new_admin_response_set_path(:participant_id=>participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-primary nu-primary"
+%table.table.table-bordered.table-hover{:id=>'participant_survey_list'}
   %thead
     %tr
       %th Form
       %th Create Date
       %th Entry Completion
-      %th
   %tbody
     -participant.response_sets.each do |response_set|
       %tr
-        %td=response_set.survey.title
+        %td=link_to response_set.survey.title,edit_admin_response_set_path(response_set)
         %td=response_set.created_at
         %td=response_set.complete? ? "Complete" : "Pending"
-        %td=link_to "Edit",edit_admin_response_set_path(response_set),:class=>"btn btn-mini btn-primary"

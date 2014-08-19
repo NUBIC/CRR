@@ -53,8 +53,8 @@ class Admin::ResponseSetsController < Admin::AdminController
       flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
     end
     respond_to do |format|
-      format.html{ redirect_to (@response_set.errors.empty? and params[:button].eql?("finish")) ? admin_participant_path(@response_set.participant) : edit_admin_response_set_path(@response_set.reload)}
-      format.js {render ((flash[:error].blank? and params[:button].eql?("finish")) ? admin_participant_path(@response_set.participant) : :edit),:layout=>false}
+      format.html{ redirect_to (@response_set.errors.empty? and params[:button].eql?("finish")) ? admin_participant_path(@response_set.participant, tab: "surveys") : edit_admin_response_set_path(@response_set.reload)}
+      format.js {render ((flash[:error].blank? and params[:button].eql?("finish")) ? admin_participant_path(@response_set.participant, tab: "surveys") : :edit),:layout=>false}
     end
   end
 

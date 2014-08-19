@@ -14,19 +14,137 @@
   %li{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }=link_to 'Basics','#basics',"data-toggle"=>'tab'
   -if current_user.admin? || current_user.data_manager?
     %li{:class=>"#{'active' if params[:tab].eql?('surveys')}"}=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
-    / %li{:class=>"#{'active' if params[:tab].eql?('studies')}"}=link_to 'Study History','#studies',"data-toggle"=>'tab'
-    / %li{:class=>"#{'active' if params[:tab].eql?('relationships')}"}=link_to 'Relationships','#relationships',"data-toggle"=>'tab'
-    / %li{:class=>"#{'active' if params[:tab].eql?('contact')}"}=link_to 'Contact Log','#contact_log',"data-toggle"=>'tab'
     %li{:class=>"#{'active' if params[:tab].eql?('consent')}"}=link_to 'Consent','#consent',"data-toggle"=>'tab'
 .tab-content
-  #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
-    .row-fluid
-      .span4
+  -if current_user.admin? || current_user.data_manager?
+    #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
+      .row-fluid
+        .span4
+          .contact
+            .row-fluid
+              .span3
+                %b Contact
+              .span6
+                -if @participant.do_not_contact
+                  %b.text-error="DO NOT CONTACT"
+              .span3
+                .pull-right
+                  =link_to "Edit", edit_admin_participant_path(@participant),"data-toggle"=>"modal","data-target"=>"#contact",:class=>"btn btn-primary nu-primary"
+            .row-fluid
+              %address
+                =display_address(@participant)
+            -unless @participant.primary_guardian_first_name.blank? and @participant.primary_guardian_last_name.blank?
+              .row-fluid
+                %b Parent/Guardian
+                %address
+                  =display_primary_guardian(@participant)
+            -unless @participant.secondary_guardian_first_name.blank? and @participant.secondary_guardian_last_name.blank?
+              .row-fluid
+                %b Parent/Guardian
+                %address
+                  =display_secondary_guardian(@participant)
+              .row-fluid
+                %b Notes
+              .row-fluid
+                =display_notes(@participant)
+          -if @participant.relationships.size > 0
+            %br
+            .relationships
+              .row-fluid
+                %b Relationships
+                .pull-right
+                  =link_to "Add", new_admin_relationship_path(:participant_id=>@participant.id),"data-toggle"=>"modal","data-target"=>"#relationship",:class=>"btn btn-primary"
+              %br
+              -@participant.relationships.each do |relationship|
+                .row-fluid
+                  .span4
+                    =relationship.origin.eql?(@participant) ? Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category] : relationship.category
+                  .span8
+                    -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
+                    =link_to p.name, admin_participant_path(p)
+                    .pull-right
+                      =link_to "Edit",edit_admin_relationship_path(relationship,:participant_id=>@participant.id),:class=>"btn btn-mini btn-primary nu-primary","data-toggle"=>"modal","data-target"=>"#relationship"
+        .span8
+          -if current_user.admin? || current_user.data_manager?
+            .study-history
+              .row-fluid
+                %b Study History
+                -unless @participant.withdrawn?
+                  .pull-right
+                    =link_to "Add", new_admin_study_involvement_path(:participant_id=>@participant.id), :class=>"btn btn-primary", "data-toggle"=>"modal","data-target"=>"#study"
+                %table.table.table-bordered.table-hover{id: "study_history_list"}
+                  %thead
+                    %tr
+                      %th{rowspan: 2} Study Name
+                      %th{rowspan: 2} Status
+                      %th{rowspan: 2} Status Date
+                      %th{colspan: 3, style: 'text-align: center'} Release
+                      %th{rowspan: 2} Notes
+                    %tr
+                      %th Start
+                      %th Warning
+                      %th End
+                  %tbody
+                    -@participant.study_involvements.each do |si|
+                      %tr
+                        %td=link_to si.study.display_name, edit_admin_study_involvement_path(si), "data-toggle"=>"modal","data-target"=>"#study"
+                        %td=si.state.titleize
+                        %td=si.state_date
+                        %td=si.start_date
+                        %td=si.warning_date
+                        %td=si.end_date
+                        %td=si.notes
+          %br
+          -if current_user.admin? || current_user.data_manager?
+            .contact-log
+              .row-fluid
+                %b Contact Log
+                .pull-right
+                  =link_to "Add", new_admin_contact_log_path(:participant_id=>@participant.id), "data-toggle"=>"modal", "data-target"=>"#contact-log", :class=>"btn btn-primary"
+                %table.table.table-bordered.table-hover{id: "contact_log_list"}
+                  %thead
+                    %tr
+                      %th Date
+                      %th Method
+                      %th Notes
+                  %tbody
+                    -@participant.contact_logs.each do |cl|
+                      %tr
+                        %td=link_to cl.date, edit_admin_contact_log_path(cl), "data-toggle" => "modal", "data-target" => "#contact-log"
+                        %td=cl.mode.titleize
+                        %td=cl.notes
+          %br
+          -if can? :edit, @participant
+            -unless @participant.withdrawn?
+              .row-fluid
+                =form_for @participant, :url => withdraw_admin_participant_path do |f|
+                  =f.button "Withdraw Participant", :class=>"btn btn-danger", data: { confirm: "Are you sure you want to withdraw this participant?" }
+    -if current_user.admin? || current_user.data_manager?
+      #instruments.tab-pane{:class=>"#{'active' if params[:tab].eql?('surveys')}"}
+        = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
+      #consent.tab-pane{:class=>"#{'active' if params[:tab].eql?('consent')}"}
+        -unless @participant.consent_signatures.last.blank?
+          .row-fluid
+            !=@participant.consent_signatures.last.consent.content
+          .row-fluid
+            -unless @participant.consent_signatures.last.entered_by.blank?
+              .span3
+                ="Entered By: #{@participant.consent_signatures.last.entered_by}"
+            -unless @participant.consent_signatures.last.proxy_name.blank?
+              .span3
+                ="Given By: #{@participant.consent_signatures.last.proxy_name}"
+            -unless @participant.consent_signatures.last.proxy_relationship.blank?
+              .span3
+                ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
+            .span3
+              ="Given On: #{@participant.consent_signatures.last.date}"
+  -else
+    #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
+      .row-fluid
         .contact
           .row-fluid
-            %b Contact
-            .pull-right
-              =link_to "Edit", edit_admin_participant_path(@participant),"data-toggle"=>"modal","data-target"=>"#contact",:class=>"btn btn-primary nu-primary"
+            .span3
+              %b Contact
           .row-fluid
             %address
               =display_address(@participant)
@@ -44,205 +162,7 @@
               %b Notes
             .row-fluid
               =display_notes(@participant)
-        - if @participant.relationships.size > 0
-          %br
-          .relationships
-            .row-fluid
-              %b Relationships
-              .pull-right
-                =link_to "Add", new_admin_relationship_path(:participant_id=>@participant.id),"data-toggle"=>"modal","data-target"=>"#relationship",:class=>"btn btn-primary"
-            %br
-            -@participant.relationships.each do |relationship|
-              .row-fluid
-                .span4
-                  =relationship.origin.eql?(@participant) ? Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category] : relationship.category
-                .span8
-                  -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
-                  =link_to p.name, admin_participant_path(p)
-                  .pull-right
-                    =link_to "Edit",edit_admin_relationship_path(relationship,:participant_id=>@participant.id),:class=>"btn btn-mini btn-primary nu-primary"
-      .span8
-        -if current_user.admin? || current_user.data_manager?
-          .study-history
-            .row-fluid
-              %b Study History
-              -unless @participant.withdrawn?
-                .pull-right
-                  =link_to "Add", new_admin_study_involvement_path(:participant_id=>@participant.id), :class=>"btn btn-primary", "data-toggle"=>"modal","data-target"=>"#study"
-              %table.table.table-bordered.table-hover{id: "study_history_list"}
-                %thead
-                  %tr
-                    %th{rowspan: 2} Study Name
-                    %th{rowspan: 2} Status
-                    %th{rowspan: 2} Status Date
-                    %th{colspan: 3, style: 'text-align: center'} Release
-                    %th{rowspan: 2} Notes
-                  %tr
-                    %th Start
-                    %th Warning
-                    %th End
-                %tbody
-                  -@participant.study_involvements.each do |si|
-                    %tr
-                      %td=link_to si.study.display_name, edit_admin_study_involvement_path(si), "data-toggle"=>"modal","data-target"=>"#study"
-                      %td=si.state
-                      %td=si.state_date
-                      %td=si.start_date
-                      %td=si.warning_date
-                      %td=si.end_date
-                      %td=si.notes
-        %br
-        -if current_user.admin? || current_user.data_manager?
-          .contact-log
-            .row-fluid
-              %b Contact Log
-              .pull-right
-                =link_to "Add", new_admin_contact_log_path(:participant_id=>@participant.id),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-primary"
-              %table.table.table-bordered.table-hover{id: "contact_log_list"}
-                %thead
-                  %tr
-                    %th Date
-                    %th Method
-                    %th Notes
-                %tbody
-                  -@participant.contact_logs.each do |cl|
-                    %tr
-                      %td=link_to cl.date, edit_admin_contact_log_path(cl), "data-async"=>true,"data-target"=>"#basics"
-                      %td=cl.mode
-                      %td=cl.notes
-        %br
-        -if can? :edit, @participant
-          -unless @participant.withdrawn?
-            .row-fluid
-              =form_for @participant, :url => withdraw_admin_participant_path do |f|
-                =f.button "Withdraw Participant", :class=>"btn btn-danger", data: { confirm: "Are you sure you want to withdraw this participant?" }
-    / .row-fluid
-    /   -if can? :edit, @participant
-    /     -if @participant.pending_approval?
-    /       =form_for @participant, :url=>verify_admin_participant_path do |f|
-    /         =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
-    /         =f.button "Approve Participant",:class=>"btn btn-mini btn-success"
-    /     -else
-    /       =link_to "Edit", edit_admin_participant_path(@participant),"data-async"=>true,"data-target"=>"#basics",:class=>"btn btn-mini btn-primary"
-    / .row-fluid
-    /   .span4
-    /     %h5 Participant
-    /     %table.table
-    /       %tbody
-    /         %tr
-    /           %th.muted First Name:
-    /           %td= @participant.first_name
-    /         %tr
-    /           %th.muted Last Name:
-    /           %td= @participant.last_name
-    /   .span4
-    /     -if @participant.child
-    /       %h5 Household Contact
-    /     -else
-    /       %h5 Contact
-    /     %table.table
-    /       %tbody
-    /         %tr
-    /           %th.muted Address:
-    /           %td= @participant.address
-    /         %tr
-    /           %th.muted  Primary Phone:
-    /           %td=@participant.primary_phone
-    /         %tr
-    /           %th.muted  Secondary Phone:
-    /           %td=@participant.secondary_phone
-    /         %tr
-    /           %th.muted  Email:
-    /           %td=@participant.email
-    /   .span4
-    /     %h5 Participation
-    /     %table.table
-    /       %tbody
-    /         %tr
-    /           %th.muted OK to contact:
-    /           %td= @participant.do_not_contact? ? "No" : "Yes"
-    /         %tr
-    /           %th.muted Released to study:
-    /           %td= @participant.on_study? ? "Yes" : "No"
-    /         %tr
-    /           %th.muted Study Count:
-    /           %td= @participant.study_involvements.count
-    /         %tr
-    /           %th.muted Last Contact:
-    /           %td= @participant.contact_logs.last.date unless @participant.contact_logs.empty?
-    /         %tr
-    /           %th.muted Contact Count:
-    /           %td= @participant.contact_logs.count
-
-    / .row-fluid
-    /   -unless @participant.primary_guardian_first_name.blank? and @participant.primary_guardian_last_name.blank?
-    /     .span4
-    /       %h5 Primary Guardian
-    /       %table.table
-    /         %tbody
-    /           %tr
-    /             %th.muted First Name:
-    /             %td= @participant.primary_guardian_first_name
-    /           %tr
-    /             %th.muted Last Name:
-    /             %td= @participant.primary_guardian_last_name
-    /           %tr
-    /             %th.muted Email:
-    /             %td= @participant.primary_guardian_email
-    /           %tr
-    /             %th.muted Phone:
-    /             %td= @participant.primary_guardian_phone
-    /   -unless @participant.secondary_guardian_first_name.blank? and @participant.secondary_guardian_last_name.blank?
-    /     .span4
-    /       %h5 Secondary Guardian
-    /       %table.table
-    /         %tbody
-    /           %tr
-    /             %th.muted First Name:
-    /             %td= @participant.secondary_guardian_first_name
-    /           %tr
-    /             %th.muted Last Name:
-    /             %td= @participant.secondary_guardian_last_name
-    /           %tr
-    /             %th.muted Email:
-    /             %td= @participant.secondary_guardian_email
-    /           %tr
-    /             %th.muted Phone:
-    /             %td= @participant.secondary_guardian_phone
-    / .row-fluid
-    /   %h5="Notes:"
-    /   .offset1
-    /     =@participant.notes
-    / -if can? :edit, @participant
-    /   -unless @participant.withdrawn?
-    /     .row-fluid
-    /       =form_for @participant, :url => withdraw_admin_participant_path do |f|
-    /         =f.button "Withdraw Participant", :class=>"btn btn-mini btn-danger", data: { confirm: "Are you sure you want to withdraw this participant?" }
-  -if current_user.admin? || current_user.data_manager?
-    #instruments.tab-pane{:class=>"#{'active' if params[:tab].eql?('surveys')}"}
-      = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
-    #studies.tab-pane{:class=>"#{'active' if params[:tab].eql?('studies')}"}
-      = render :partial => 'partials/admin/participant_studies', :locals => {:participant => @participant}
-    #relationships.tab-pane{:class=>"#{'active' if params[:tab].eql?('relationships')}"}
-      = render :partial => 'partials/admin/participant_relationships', :locals => {:participant => @participant}
-    #contact_log.tab-pane{:class=>"#{'active' if params[:tab].eql?('contact')}"}
-      = render :partial => 'partials/admin/participant_contact_logs', :locals => {:participant => @participant}
-    #consent.tab-pane{:class=>"#{'active' if params[:tab].eql?('consent')}"}
-      -unless @participant.consent_signatures.last.blank?
-        .row-fluid
-          !=@participant.consent_signatures.last.consent.content
-        .row-fluid
-          -unless @participant.consent_signatures.last.entered_by.blank?
-            .span3
-              ="Entered By: #{@participant.consent_signatures.last.entered_by}"
-          -unless @participant.consent_signatures.last.proxy_name.blank?
-            .span3
-              ="Given By: #{@participant.consent_signatures.last.proxy_name}"
-          -unless @participant.consent_signatures.last.proxy_relationship.blank?
-            .span3
-              ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
-          .span3
-            ="Given On: #{@participant.consent_signatures.last.date}"
 #contact.modal.modal-large.hide
 #relationship.modal.modal-large.hide
 #study.modal.modal-large.hide
+#contact-log.modal.modal-large.hide

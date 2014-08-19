@@ -1,48 +1,32 @@
-/ =form_for @relationship, :url=>admin_relationships_path, :html=>{:class=>"ajax-form form-horizontal", "data-target"=>"#relationships"} do |f|
-/   .row-fluid
-/     =f.hidden_field :origin_id
-/     .control-group
-/       =f.label :destination_id,"Participant"
-/       .controls
-/         =f.text_field :destination_id,:class=>"tokeninput","data-url"=>search_admin_participants_path(:format=>:json),"data-limit"=>1,"data-hint-text"=>"Search participant name"
-/     .control-group
-/       =f.label :category,"Relationship"
-/       .controls
-/         =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
-/         %small.text-error
-/           %i Required field
-/     .control-group
-/       =f.label :notes
-/       .controls
-/         =f.text_area :notes,:class=>"input-block-level"
-/   .row-fluid
-/     .btn-group
-/       =f.button "Create",:class=>"btn btn-mini btn-success"
-/       =link_to "Cancel",admin_relationships_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#relationships"
-
-
-=form_for @relationship, :url=>admin_relationships_path, :html=>{:class=>"ajax-form form-horizontal"} do |f|
-  .row-fluid
-    =f.hidden_field :origin_id
-    %b
-      = @participant.name
-      is
-    .control-group
-      =f.label :category,"Relationship"
-      .controls
-        =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
-        %small.text-error
-          %i Required field
-    %b Of
-    .control-group
-      =f.label :destination_id,"Participant"
-      .controls
-        =f.text_field :destination_id,:class=>"tokeninput","data-url"=>search_admin_participants_path(:format=>:json),"data-limit"=>1,"data-hint-text"=>"Search participant name"
-    .control-group
-      =f.label :notes
-      .controls
-        =f.text_area :notes,:class=>"input-block-level"
-  .row-fluid
-    .btn-group
-      =f.button "Create",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",admin_participants_path(@participant),:class=>"btn btn-mini btn-warning"
+=form_for @relationship, :url=>admin_relationships_path, :html=>{:class=>"form-horizontal"} do |f|
+  .modal-header.well.nu-well
+    .row-fluid
+      %h3
+        ="#{@participant.name}"
+        =image_tag "child.png" if @participant.child
+        =image_tag 'siblings.png' if @participant.has_relationships?
+        =button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+  .modal-body
+    .row-fluid
+      =f.hidden_field :origin_id
+      .control-group
+        =f.label :category,"Is", :class => "control-label"
+        .controls
+          =f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
+          %small.text-error
+            %i Required field
+    .row-fluid
+      .control-group
+        =f.label :destination_id, "Of", :class => "control-label"
+        .controls.token
+          =f.text_field :destination_id,:class=>"tokeninput","data-url"=>search_admin_participants_path(:format=>:json),"data-limit"=>1,"data-hint-text"=>"Search participant name"
+    .row-fluid
+      .control-group
+        =f.label :notes, :class => "control-label"
+        .controls
+          =f.text_area :notes,:class=>"input-block-level"
+    .row-fluid
+      .control-group
+        .controls
+          =f.button "Create",:class=>"btn btn-primary nu-primary"
+          =link_to "Cancel", admin_participant_path(@participant),:class=>"btn btn-warning"

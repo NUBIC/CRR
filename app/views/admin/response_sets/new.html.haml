@@ -14,11 +14,11 @@
     =f.label :email,'Email to send survey:', :class=>"control-label"
     .controls
       =f.select :email, @participant.contact_emails, {prompt: 'Select email'}, :class => "required", :id => "email_select"
-  .control-group
-    .controls
-      .btn-group
-        =f.button "Start",:class=>"btn btn-success btn-mini"
-        =link_to "Cancel", admin_response_sets_path(:participant_id=>@participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-warning btn-mini"
+  .row-fluid
+    .control-group
+      .controls
+        =f.button "Start",:class=>"btn btn-primary nu-primary"
+        =link_to "Cancel", admin_response_sets_path(:participant_id=>@participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-warning"
 :javascript
   $(document).ready(function(){
     $('#admin_new_response_set').validate();

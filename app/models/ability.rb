@@ -47,11 +47,15 @@ class Ability
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
+        can :manage, ContactLog
+        can :manage, StudyInvolvement
       elsif user.data_manager?
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
         can :manage, Search
+        can :manage, ContactLog
+        can :manage, StudyInvolvement
       else user.researcher?
         can [:show], Participant do |participant|
           !(participant.study_involvements.active.collect{|si| si.study}.flatten & user.studies.active).empty?

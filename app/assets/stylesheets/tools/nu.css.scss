@@ -112,3 +112,8 @@ a{
 .contact, .relationship, .study-history, .contact-log {
   padding: 5px 10px;
 }
+
+.controls > ul.token-input-list,  .controls > ul.token-input-list-facebook{
+  float: left;
+  margin-top: -30px;
+}

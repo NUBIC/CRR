@@ -1,0 +1,36 @@
+.row-fluid
+  .control-group
+    =f.hidden_field :participant_id
+    =f.label :study_id,"Study", :class => "control-label"
+    .controls
+      =f.select :study_id,Study.all.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}
+      %small.text-error
+        %i Required field
+  .control-group
+    =f.label :state,"Status", :class => "control-label"
+    .controls
+      =f.select :state,StudyInvolvement::VALID_STATES.collect{|k|[k.titleize,k]}
+  .control-group
+    =f.label :state_date,"Status Date", :class => "control-label"
+    .controls
+      =f.text_field :state_date, :value => @study_involvement.state_date,:class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"mm/dd/yyyy", placeholder: "mm/dd/yyyy"
+  .control-group
+    =f.label :start_date, :class => "control-label"
+    .controls
+      =f.text_field :start_date, :value => @study_involvement.start_date, :class=>"input-small date required","data-provide"=>"datepicker","data-date-format"=>"mm/dd/yyyy", placeholder: "mm/dd/yyyy"
+      %small.text-error
+        %i Required field
+  .control-group
+    =f.label :warning_date, :class => "control-label"
+    .controls
+      =f.text_field :warning_date, :value => @study_involvement.warning_date, :class=>"input-small date","data-provide"=>"datepicker","data-date-format"=>"mm/dd/yyyy", placeholder: "mm/dd/yyyy"
+  .control-group
+    =f.label :end_date, :class => "control-label"
+    .controls
+      =f.text_field :end_date,:value => @study_involvement.end_date, :class=>"input-small date required","data-provide"=>"datepicker","data-date-format"=>"mm/dd/yyyy", placeholder: "mm/dd/yyyy"
+      %small.text-error
+        %i Required field
+  .control-group
+    =f.label :notes, :class => "control-label"
+    .controls
+      =f.text_area :notes,:rows=>3,:class=>"input-block-level"

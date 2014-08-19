@@ -6,6 +6,13 @@ $(document).ready(function() {
   //--------------- Change default Bootstrap date----------
   $.fn.datepicker.defaults.format = "mm/dd/yyyy";
 
+  // $.fn.modal.defaults.maxHeight = function(){
+  //   // subtract the height of the modal header and footer
+  //   console.log("====");
+  //   console.log($(window).height());
+  //   return $(window).height() - 300;
+  // }
+
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
       if( element.attr("type") === "checkbox" || element.attr("type") === "radio") {
@@ -177,7 +184,19 @@ $(document).ready(function() {
     $(this).dataTable( {
       "bScrollCollapse": true,
       "sPaginationType": "bootstrap",
-      "sDom": "<'row-fluid'<'span6'l><'span6'>r>t<'row'<'span6'i><'span6'>>",
+      "sDom": "t<'row'<'span6'i><'span6'>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+    });
+  });
+
+  $('#contact_log_list').livequery(function(){
+    $(this).dataTable( {
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
+      "sDom": "t<'row'<'span6'i><'span6'>>",
       "sWrapper": "dataTables_wrapper form-inline",
       "aaSorting": [],
       "iDisplayLength": 30,

@@ -95,3 +95,20 @@ a{
     display:inline;
     float: right;
 }
+
+.modal-large {
+    width: 80%;
+    margin-left:-40%;
+}
+
+.modal {
+  position: absolute;
+}
+
+.contact, .contact-log {
+  background: #f3eaf7;
+}
+
+.contact, .relationship, .study-history, .contact-log {
+  padding: 5px 10px;
+}

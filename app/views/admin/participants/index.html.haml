@@ -17,7 +17,6 @@
             .pull-right
               =image_tag "child.png" if p.child?
               =image_tag 'siblings.png' if p.has_relationships?
-
           %td
             %ul.unstyled
               -p.study_involvements.each_with_index do |si,i|

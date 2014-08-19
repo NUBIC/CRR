@@ -18,6 +18,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
 
  def edit
    @study_involvement = StudyInvolvement.find(params[:id])
+   @participant = @study_involvement.participant
  end
 
  def update
@@ -25,7 +26,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
    @study_involvement.update_attributes(si_params)
    @participant = @study_involvement.participant
    if @study_involvement.save
-    redirect_to admin_participant_path(@participant,:tab=>'studies')
+    redirect_to admin_participant_path(@participant)
    else
     flash[:notice]=@study_involvement.errors.full_messages.to_sentence
     redirect_to edit_admin_study_involvement_path(@study_involvement)
@@ -35,7 +36,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
    @study_involvement = StudyInvolvement.new(si_params)
    @participant = @study_involvement.participant
    if @study_involvement.save
-    redirect_to admin_participant_path(@participant,:tab=>'studies')
+    redirect_to admin_participant_path(@participant)
    else
     flash[:notice]=@study_involvement.errors.full_messages.to_sentence
     redirect_to new_admin_study_involvement_path(participant_id: @participant.id)

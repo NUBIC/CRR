@@ -1,45 +1,7 @@
-=form_for @study_involvement,:url=>admin_study_involvements_path, :html=>{:class=>"form-horizontal", :id=> "admin_new_study_involvement"} do |f|
+=form_for @study_involvement, :url=>admin_study_involvements_path, :html=>{:class=>"form-horizontal validate-form"} do |f|
+  =render :partial=>"admin/study_involvements/form", locals: {f: f}
   .row-fluid
-    =f.hidden_field :participant_id
     .control-group
-      =f.label :study_id,"Study"
       .controls
-        =f.select :study_id,Study.all.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}
-        %small.text-error
-          %i Required field
-    .control-group
-      =f.label :state,"Status"
-      .controls
-        =f.select :state,StudyInvolvement::VALID_STATES.collect{|k|[k.titleize,k]}
-    .control-group
-      =f.label :state_date,"Status Date"
-      .controls
-        =f.text_field :state_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
-    .control-group
-      =f.label :start_date
-      .controls
-        =f.text_field :start_date,:class=>"input-small date required","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
-        %small.text-error
-          %i Required field
-    .control-group
-      =f.label :warning_date
-      .controls
-        =f.text_field :warning_date,:class=>"input-small date","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
-    .control-group
-      =f.label :end_date
-      .controls
-        =f.text_field :end_date,:class=>"input-small date required","data-provide"=>"datepicker", placeholder: "mm/dd/yyyy"
-        %small.text-error
-          %i Required field
-    .control-group
-      =f.label :notes
-      .controls
-        =f.text_area :notes,:rows=>3,:class=>"input-block-level"
-  .row-fluid
-    .btn-group
-      =f.button "Create",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",admin_study_involvements_path(:participant_id=>@participant.id),:class=>"btn btn-mini btn-warning","data-async"=>true,"data-target"=>"#studies"
-:javascript
-  $(document).ready(function(){
-    $('#admin_new_study_involvement').validate();
-  });
+        =f.button "Create",:class=>"btn btn-success"
+        =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"

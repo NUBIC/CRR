@@ -125,6 +125,30 @@ class Participant < ActiveRecord::Base
     addr1.blank? ? addr.blank? ? nil : addr : addr << "," << addr1
   end
 
+  # def address_display
+  #   addr = [address_line1, address_line2].reject(&:blank?).join(', ').strip
+  #   addr1 = [city, state, zip].reject(&:blank?).join(' ').strip
+  #   display_info = addr1.blank? ? addr.blank? ? nil : addr : addr << "<br />" << addr1
+  #   display_info = display_info << "<br />" << primary_phone unless primary_phone.blank?
+  #   display_info = display_info << "<br />" << secondary_phone unless secondary_phone.blank?
+  #   display_info = display_info << "<br />" << email unless email.blank?
+  #   display_info
+  # end
+
+  # def primary_guardian_display
+  #   display_info = [primary_guardian_first_name, primary_guardian_last_name].join(' ')
+  #   display_info = display_info << "<br />" << primary_guardian_phone unless primary_guardian_phone.blank?
+  #   display_info = display_info << "<br />" << primary_guardian_email unless primary_guardian_email.blank?
+  #   display_info
+  # end
+
+  # def seconday_guardian_display
+  #   display_info = [secondary_guardian_first_name, secondary_guardian_last_name].join(' ')
+  #   display_info = display_info << "<br />" << secondary_guardian_phone unless secondary_guardian_phone.blank?
+  #   display_info = display_info << "<br />" << secondary_guardian_email unless secondary_guardian_email.blank?
+  #   display_info
+  # end
+
   def on_study?
     study_involvements.active.count > 0
   end

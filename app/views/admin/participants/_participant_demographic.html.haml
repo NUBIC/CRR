@@ -1,5 +1,5 @@
 =form_for @participant, :url=>admin_participant_path(@participant), :html => { :class => "form-horizontal participant_demographic"} do |f|
-  -if @participant.child?
+  -if @participant.child_proxy?
     = render :partial => 'participant_child_proxy', :locals => {:f => f}
   -else
     .row-fluid

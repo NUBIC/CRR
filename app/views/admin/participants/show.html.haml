@@ -47,23 +47,22 @@
                 %b Notes
               .row-fluid
                 =display_notes(@participant)
-          -if @participant.relationships.size > 0
+          %br
+          .relationships
+            .row-fluid
+              %b Relationships
+              .pull-right
+                =link_to "Add", new_admin_relationship_path(:participant_id=>@participant.id),"data-toggle"=>"modal","data-target"=>"#relationship",:class=>"btn btn-primary"
             %br
-            .relationships
+            -@participant.relationships.each do |relationship|
               .row-fluid
-                %b Relationships
-                .pull-right
-                  =link_to "Add", new_admin_relationship_path(:participant_id=>@participant.id),"data-toggle"=>"modal","data-target"=>"#relationship",:class=>"btn btn-primary"
-              %br
-              -@participant.relationships.each do |relationship|
-                .row-fluid
-                  .span4
-                    =relationship.origin.eql?(@participant) ? Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category] : relationship.category
-                  .span8
-                    -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
-                    =link_to p.name, admin_participant_path(p)
-                    .pull-right
-                      =link_to "Edit",edit_admin_relationship_path(relationship,:participant_id=>@participant.id),:class=>"btn btn-mini btn-primary nu-primary","data-toggle"=>"modal","data-target"=>"#relationship"
+                .span4
+                  =relationship.origin.eql?(@participant) ? Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category] : relationship.category
+                .span8
+                  -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
+                  =link_to p.name, admin_participant_path(p)
+                  .pull-right
+                    =link_to "Edit",edit_admin_relationship_path(relationship,:participant_id=>@participant.id),:class=>"btn btn-mini btn-primary nu-primary","data-toggle"=>"modal","data-target"=>"#relationship"
         .span8
           -if current_user.admin? || current_user.data_manager?
             .study-history

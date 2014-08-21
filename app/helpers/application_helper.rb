@@ -92,7 +92,7 @@ module ApplicationHelper
     primary_guardian_info.html_safe
   end
 
-  def display_seconday_guardian(participant)
+  def display_secondary_guardian(participant)
     seconday_guardian_info = [participant.secondary_guardian_first_name, participant.secondary_guardian_last_name].join(' ')
     seconday_guardian_info << "<br />" << participant.secondary_guardian_phone unless participant.secondary_guardian_phone.blank?
     seconday_guardian_info << "<br />" << participant.secondary_guardian_email unless participant.secondary_guardian_email.blank?

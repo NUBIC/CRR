@@ -87,5 +87,9 @@
         .controls
           =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
   .row-fluid
+    .form-inline
+      =f.label :hear_about_registry, "How did you hear about the Communication Research Registry?"
+      =f.text_field :hear_about_registry, :class => "input-xxlarge"
+  .row-fluid
     .btn-group
-      =f.button "Next",:class=>"btn btn-primary"
+      =f.button "Next",:class=>"btn btn-primary nu-primary"

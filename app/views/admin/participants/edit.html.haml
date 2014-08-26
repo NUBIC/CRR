@@ -123,7 +123,12 @@
         .controls
           =f.text_area :notes, :rows=>3, :class=>"input-block-level"
     .row-fluid
+      .form-inline
+        =f.label :hear_about_registry, "How did you hear about the Communication Research Registry?"
+        =f.text_field :hear_about_registry, :class => "input-xxlarge"
+
+    .row-fluid
       .control-group
         .controls
-          =f.button "Save",:class=>"btn btn-success"
+          =f.button "Update",:class=>"btn btn-success"
           =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"

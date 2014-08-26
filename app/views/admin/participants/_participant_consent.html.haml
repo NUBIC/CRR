@@ -16,7 +16,7 @@
       = f.label :date, 'Consent given on:'
       = f.text_field :date, :class=> "required input-small date","data-provide"=> "datepicker", placeholder: "mm/dd/yyyy"
   .row-fluid
-    = submit_tag("Next", class: "btn btn-primary")
+    = submit_tag("Next", class: "btn btn-primary nu-primary")
 :javascript
   $(document).ready(function(){
     $('#admin_new_consent_sign').validate();

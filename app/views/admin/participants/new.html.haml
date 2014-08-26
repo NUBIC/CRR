@@ -7,12 +7,12 @@
       .span2
         =form_for @participant, :url=>admin_participants_path do |f|
           = f.hidden_field "child", :value=>false
-          = f.button 'Add Adult', :class=>"btn btn-medium btn-primary"
+          = f.button 'Add Adult', :class=>"btn btn-medium btn-primary nu-primary"
     - if Consent.child_consent and Survey.child_survey
       .span2
         =form_for @participant, :url=>admin_participants_path do |f|
           = f.hidden_field "child", :value=>true
-          = f.button 'Add Child', :class=>"btn btn-medim btn-primary"
+          = f.button 'Add Child', :class=>"btn btn-medim btn-primary nu-primary"
 - else
   %p
     Please make sure you have active consents and surveys in the system. You can't enroll new participant without active consent and survey.

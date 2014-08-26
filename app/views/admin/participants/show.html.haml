@@ -39,10 +39,16 @@
                 %b Parent/Guardian
                 %address
                   =display_secondary_guardian(@participant)
+            - unless @participant.notes.blank?
               .row-fluid
                 %b Notes
               .row-fluid
                 =display_notes(@participant)
+            - unless @participant.hear_about_registry.blank?
+              .row-fluid
+                %b How participant hear about the Communication Research Registry?
+              .row-fluid
+                %i=@participant.hear_about_registry
           %br
           .relationships
             .row-fluid

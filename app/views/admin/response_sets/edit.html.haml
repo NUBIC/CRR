@@ -51,7 +51,7 @@
                   - if si == (@survey.sections.size - 1)
                     = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section", "data-url" => admin_response_set_url(@response_set)
                   - else
-                    = button_tag "Next", :class=>"btn btn-primary next-section", "data-url" => admin_response_set_url(@response_set) do
+                    = button_tag "Next", :class=>"btn btn-primary nu-primary next-section", "data-url" => admin_response_set_url(@response_set) do
                       Next
                       %i.icon-forward
 :javascript
@@ -61,7 +61,7 @@
         overflow: "auto"
     });
     $('#admin-survey-tabs li, .previous-section, .next-section, .finish-section').click( function(){
-      $('#survey-tab-content').height(tab_content_height).css({
+      $('#admin-survey-tab-content').height(tab_content_height).css({
         overflow: "auto"
       });
       $('#admin-survey-tab-content').scrollTop(0);

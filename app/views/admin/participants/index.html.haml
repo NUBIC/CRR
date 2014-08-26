@@ -8,6 +8,7 @@
         %th Studies
         %th End of Release
         %th Join Date
+        %th Account Email
     %tbody
       -@participants.each do |p|
         %tr.display
@@ -30,4 +31,5 @@
               -p.study_involvements.each_with_index do |si,i|
                 %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
           %td=p.created_at.to_date
+          %td= p.account ? p.account.email : ""
 

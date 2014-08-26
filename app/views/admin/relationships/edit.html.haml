@@ -28,6 +28,5 @@
       .control-group
         .controls
           =f.button "Update",:class=>"btn btn-primary nu-primary"
-          =link_to "Cancel",admin_participant_path(@participant),:class=>"btn btn-warning"
-          =form_for @relationship, :url => admin_relationship_path(@relationship), :method => :delete do |f|
-            =f.button "Delete", :class => "btn btn-danger", data: { confirm: "Are you sure you want to delete this relationship?" }
+          =link_to "Cancel", admin_participant_path(@participant),:class=>"btn btn-warning"
+          =link_to "Delete", admin_relationship_path(@relationship), method: :delete, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete this relationship?" }

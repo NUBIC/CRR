@@ -1,20 +1,16 @@
 .row-fluid
   .well.nu-well
-    .span9
-      %b=@participant.name
-      =image_tag "child.png" if @participant.child?
-      =image_tag 'siblings.png' if @participant.has_relationships?
-    .span3
-      .pull-right
-        -if can? :edit, @participant
-          -if @participant.pending_approval?
-            =form_for @participant, :url=>verify_admin_participant_path do |f|
-              =f.button "Approve Participant",:class=>"btn btn-success"
+    %b=@participant.name
+    =image_tag "child.png" if @participant.child?
+    =image_tag 'siblings.png' if @participant.has_relationships?
+    -if can? :edit, @participant
+      -if @participant.pending_approval?
+        =link_to "Approve Participant", verify_admin_participant_path, method: :patch, class: 'btn btn-success'
 %ul.nav.nav-tabs
   %li{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }=link_to 'Basics','#basics',"data-toggle"=>'tab'
   -if current_user.admin? || current_user.data_manager?
     %li{:class=>"#{'active' if params[:tab].eql?('surveys')}"}=link_to 'Surveys','#instruments',"data-toggle"=>'tab'
-    %li{:class=>"#{'active' if params[:tab].eql?('consent')}"}=link_to 'Consent','#consent',"data-toggle"=>'tab'
+  %li{:class=>"#{'active' if params[:tab].eql?('consent')}"}=link_to 'Consent','#consent',"data-toggle"=>'tab'
 .tab-content
   -if current_user.admin? || current_user.data_manager?
     #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
@@ -118,25 +114,8 @@
               .row-fluid
                 =form_for @participant, :url => withdraw_admin_participant_path do |f|
                   =f.button "Withdraw Participant", :class=>"btn btn-danger", data: { confirm: "Are you sure you want to withdraw this participant?" }
-    -if current_user.admin? || current_user.data_manager?
-      #instruments.tab-pane{:class=>"#{'active' if params[:tab].eql?('surveys')}"}
-        = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
-      #consent.tab-pane{:class=>"#{'active' if params[:tab].eql?('consent')}"}
-        -unless @participant.consent_signatures.last.blank?
-          .row-fluid
-            !=@participant.consent_signatures.last.consent.content
-          .row-fluid
-            -unless @participant.consent_signatures.last.entered_by.blank?
-              .span3
-                ="Entered By: #{@participant.consent_signatures.last.entered_by}"
-            -unless @participant.consent_signatures.last.proxy_name.blank?
-              .span3
-                ="Given By: #{@participant.consent_signatures.last.proxy_name}"
-            -unless @participant.consent_signatures.last.proxy_relationship.blank?
-              .span3
-                ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
-            .span3
-              ="Given On: #{@participant.consent_signatures.last.date}"
+    #instruments.tab-pane{:class=>"#{'active' if params[:tab].eql?('surveys')}"}
+      = render :partial => 'partials/admin/participant_surveys', :locals => {:participant => @participant}
   -else
     #basics.tab-pane{:class=>"#{'active' if params[:tab].blank? or params[:tab].eql?('basics')}" }
       .row-fluid
@@ -161,6 +140,22 @@
               %b Notes
             .row-fluid
               =display_notes(@participant)
+  #consent.tab-pane{:class=>"#{'active' if params[:tab].eql?('consent')}"}
+    -unless @participant.consent_signatures.last.blank?
+      .row-fluid
+        !=@participant.consent_signatures.last.consent.content
+      .row-fluid
+        -unless @participant.consent_signatures.last.entered_by.blank?
+          .span3
+            ="Entered By: #{@participant.consent_signatures.last.entered_by}"
+        -unless @participant.consent_signatures.last.proxy_name.blank?
+          .span3
+            ="Given By: #{@participant.consent_signatures.last.proxy_name}"
+        -unless @participant.consent_signatures.last.proxy_relationship.blank?
+          .span3
+            ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship}"
+        .span3
+          ="Given On: #{@participant.consent_signatures.last.date}"
 #contact.modal.modal-large.hide
 #relationship.modal.modal-large.hide
 #study.modal.modal-large.hide

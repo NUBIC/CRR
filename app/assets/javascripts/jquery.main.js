@@ -161,6 +161,24 @@ $(document).ready(function() {
       "fnInfoCallback ": function() {showHideMore();},
       "bScrollCollapse": true,
       "sPaginationType": "bootstrap",
+      "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sWrapper": "dataTables_wrapper form-inline",
+      "aaSorting": [],
+      "bFilter": true,
+      "iDisplayLength": 30,
+      "bLengthChange": false,
+      "oLanguage": {
+          "sSearch": "Filter: ",
+      }
+    });
+  });
+
+  $('#participants_list').livequery(function(){
+    showHideMore();
+    $(this).dataTable( {
+      "fnInfoCallback ": function() {showHideMore();},
+      "bScrollCollapse": true,
+      "sPaginationType": "bootstrap",
       "sDom": "<'row-fluid'<'span6 header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
       "sWrapper": "dataTables_wrapper form-inline",
       "aaSorting": [],

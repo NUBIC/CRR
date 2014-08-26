@@ -47,7 +47,7 @@ class Study < ActiveRecord::Base
   end
 
   def active_participants
-    study_involvements.active
+    study_involvements.active.collect{|s| s.participant}.flatten.uniq
   end
 
   def search_display

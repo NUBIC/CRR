@@ -1,17 +1,31 @@
 .row-fluid
-  %table.table.table-bordered
+  %table.table.table-bordered.table-hover{:id=>'dashboard_list'}
     %thead
-      %tr
+      %tr.display
         %th First Name
         %th Last Name
-        %th Study
+        %th Studies
         %th End of Release
-        %th End Date
+        %th Join Date
     %tbody
-      -current_user.active_study_involvements.each do |si|
-        %tr
-          %td=link_to si.participant.first_name,admin_participant_path(si.participant)
-          %td=link_to si.participant.last_name,admin_participant_path(si.participant)
-          %td=si.study.name
-          %td=si.start_date
-          %td=si.warning_date
+      -current_user.active_participants.each do |p|
+        %tr.display
+          %td=link_to(p.first_name, admin_participant_path(p))
+          %td
+            =link_to(p.last_name, admin_participant_path(p))
+            .pull-right
+              =image_tag "child.png" if p.child?
+              =image_tag 'siblings.png' if p.has_relationships?
+          %td
+            %ul.unstyled
+              -p.study_involvements.each_with_index do |si,i|
+                %li{:class=> "#{'more_display' if i > 2}"}
+                  =si.study.display_name
+                  %span.muted
+                    = " (#{si.state})"
+              %li.pull-right.btn.btn-link.show_button="See more..." if p.study_involvements.size > 3
+          %td
+            %ul.unstyled
+              -p.study_involvements.each_with_index do |si,i|
+                %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
+          %td=p.created_at.to_date

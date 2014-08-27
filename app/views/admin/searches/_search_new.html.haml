@@ -17,5 +17,6 @@
   =render :partial=>"admin_search_result"
 -else
   .row-fluid
-    =form_for @search,:url=>request_data_admin_search_path(@search) do |f|
-      =f.button "Request Results",:class=>"btn btn-mini btn-success"
+    -unless @search.result.size == 0
+      =form_for @search,:url=>request_data_admin_search_path(@search) do |f|
+        =f.button "Request Results",:class=>"btn btn-mini btn-success"

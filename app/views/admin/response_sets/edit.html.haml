@@ -13,9 +13,9 @@
   .span12
     =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{ :class => "validate-form edit_response_set_form"} do |f|
       .tabbable.tabs-left#admin-survey-tabs
-        -if @survey.sections.size > 1
+        -if @response_set.survey.sections.size > 1
           %ul.nav.nav-tabs.span2#section_tab_header
-            - @survey.sections.each_with_index do |s,si|
+            - @response_set.survey.sections.each_with_index do |s,si|
               %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
         .error-msg.offset2
         .tab-content.offset2#admin-survey-tab-content
@@ -48,7 +48,7 @@
                       %i.icon-backward
                       Previous
                 .span6
-                  - if si == (@survey.sections.size - 1)
+                  - if si == (@response_set.survey.sections.size - 1)
                     = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section", "data-url" => admin_response_set_url(@response_set)
                   - else
                     = button_tag "Next", :class=>"btn btn-primary nu-primary next-section", "data-url" => admin_response_set_url(@response_set) do

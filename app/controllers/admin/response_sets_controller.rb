@@ -27,7 +27,7 @@ class Admin::ResponseSetsController < Admin::AdminController
       @surveys = Survey.all.select{|s| s.active?}
     end
     respond_to do |format|
-      format.js {render (saved ? (@response_set.public? ? :index : :edit) : :new), :layout => false}
+      format.js{ render (saved ? (@response_set.public? ? :index : :edit) : :new), :layout => false}
     end
   end
 

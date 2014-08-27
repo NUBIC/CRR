@@ -32,6 +32,7 @@ FactoryGirl.define do
 
   factory :study_involvement do |si|
     si.start_date Date.new(2013, 10, 5)
+    si.end_date Date.new(2013, 10, 10)
     si.association :study, :factory => :study
     si.association :participant, :factory => :participant
   end

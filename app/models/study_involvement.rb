@@ -26,13 +26,13 @@ class StudyInvolvement < ActiveRecord::Base
   validate :end_date_cannot_be_before_start_date
   validates_inclusion_of :state, :in => VALID_STATES
 
-  scope :active, -> { where("start_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
+  scope :active, -> { where("end_date >= '#{Date.today}'") }
   scope :warning, -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
 
   after_initialize :default_args
 
   def active?
-    (self.end_date.blank? or self.start_date <= Date.today) and (self.end_date.blank? or self.end_date > Date.today)
+    self.end_date >= Date.today
   end
 
   private

@@ -73,8 +73,10 @@ class ParticipantsController < PublicController
     else
       flash[:error] = @participant.errors.full_messages.to_sentence
     end
-    @participant.survey? ? create_and_redirect_response_set(@participant) : redirect_to(enroll_participant_path(@participant))
 
+    #ToDo : Remove after testing
+    sleep(10)
+    @participant.survey? ? create_and_redirect_response_set(@participant) : redirect_to(enroll_participant_path(@participant))
   end
 
   def consent_signature

@@ -37,7 +37,7 @@
                 %i Required field
       %br
       .row-fluid
-        = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next"
+        = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next", disable_with: "Please Wait"
 :javascript
   function resizeConsent() {
     var consent_content_height = $(window).height() - $('#consent-content').offset().top - $("#consent-controls").height()-1.5*$('.footer').height();

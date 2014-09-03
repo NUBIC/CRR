@@ -38,6 +38,7 @@ class Participant < ActiveRecord::Base
     or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
   scope :all_participants, -> { where(stage: ['approved', 'pending_approval']).order('created_at DESC') }
   has_many :response_sets, :dependent => :destroy
+  has_many :surveys, :through => :response_sets
   has_many :contact_logs, :dependent => :destroy
   has_many :study_involvements, -> {order("end_date DESC")}, :dependent => :destroy
   has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id", :dependent => :destroy
@@ -116,6 +117,10 @@ class Participant < ActiveRecord::Base
 
   def has_relationships?
     relationships.size > 0
+  end
+
+  def has_followup_survey?
+    surveys.reject{|s| s.code == "adult" or s.code == "child"}.size > 0
   end
 
   # condensed form of address

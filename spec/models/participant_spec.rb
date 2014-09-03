@@ -147,8 +147,8 @@ describe Participant do
       parent = FactoryGirl.create(:participant, first_name: 'Martha')
 
       @rel1 = FactoryGirl.create(:relationship, origin: sib1, destination: sib2)
-      @rel2 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib1)
-      @rel3 = FactoryGirl.create(:relationship, category: 'parent', origin: parent, destination: sib2)
+      @rel2 = FactoryGirl.create(:relationship, category: 'Parent', origin: parent, destination: sib1)
+      @rel3 = FactoryGirl.create(:relationship, category: 'Parent', origin: parent, destination: sib2)
 
       @relationships = sib1.relationships
     end
@@ -233,18 +233,13 @@ describe Participant do
   describe '#on_study?' do
     let(:study) { FactoryGirl.create(:study,:state=>'active') }
 
-    it 'returns true if participant has any study involvement with start date is in past and no end date' do
-      FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago)
-      participant.on_study?.should be_true
-    end
-
     it 'returns true if participant has any study involvement with start date is in past and end date is in future' do
       FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
       participant.on_study?.should be_true
     end
 
     it 'returns false if participant has any study involvement with start date is in future' do
-      si = FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.from_now)
+      si = FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.from_now, end_date: 4.days.from_now)
       participant.on_study?.should be_false
     end
 
@@ -272,6 +267,17 @@ describe Participant do
       res2.updated_at = Time.now + 10.minutes
       res2.save
       participant.recent_response_set.should == res2
+    end
+  end
+
+  describe '#has_followup_survey?' do
+    it "should return false if participant has child survey" do
+      survey = FactoryGirl.create(:survey, :multiple_section=>true, code: "child")
+      FactoryGirl.create(:response_set, participant: participant, survey: survey)
+      # res2.updated_at = Time.now + 10.minutes
+      # res2.save
+      # participant.recent_response_set.should == res2
+      participant.has_followup_survey?.should be_false
     end
   end
 

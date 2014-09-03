@@ -20,7 +20,7 @@ FactoryGirl.define do
   end
 
   factory :relationship do |r|
-    r.category 'sibling'
+    r.category 'Child'
     r.association :origin, :factory => :participant
     r.association :destination, :factory => :participant
   end

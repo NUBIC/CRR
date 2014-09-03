@@ -5,9 +5,15 @@
       %th Form
       %th Create Date
       %th Entry Completion
+      %th Email Sent
+      %th
   %tbody
     -participant.response_sets.each do |response_set|
       %tr
         %td=link_to response_set.survey.title,edit_admin_response_set_path(response_set)
         %td=response_set.created_at
         %td=response_set.complete? ? "Complete" : "Pending"
+        %td
+          - if response_set.public?
+            .user-circle
+        %th=response_set.complete? ? "" : (link_to "Delete", admin_response_set_path(response_set), method: :delete, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete this survey data?" })

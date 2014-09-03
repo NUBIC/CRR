@@ -36,38 +36,45 @@
             for whom you act as a legal guardian or authorized agent
       =link_to "Take me back to the Communication Research Registry website.", :back_to_website
 #add_another_participant.modal.hide
-  .modal-header
-    %h5
-      - if @participant
-        = @participant.proxy? ? "Thank you for adding #{@participant.name} to the registry!" : "Thank you for adding yourself to the registry!"
-        = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
-    %h5
-      ="Would you like to add another participant?"
-  .row-fluid
-    .modal-body
-      -unless current_user.has_self_participant?
+  -if @participant && @participant.has_followup_survey?
+    .row-fluid
+      .modal-body
+        %h5
+          = "Thank you for completing a follow-up survey on behalf of #{@participant.name}"
+          = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+  -else
+    .modal-header
+      %h5
+        - if @participant
+          = @participant.proxy? ? "Thank you for adding #{@participant.name} to the registry!" : "Thank you for adding yourself to the registry!"
+          = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+      %h5
+        ="Would you like to add another participant?"
+    .row-fluid
+      .modal-body
+        -unless current_user.has_self_participant?
+          - if Consent.adult_consent and Survey.adult_survey
+            =form_tag(participants_path, :method => 'post') do
+              = hidden_field_tag "account_id", @account.id
+              = submit_tag('Myself', :class=>"btn btn-primary nu-primary")
+        - if Consent.child_consent and Survey.child_survey
+          =form_tag(participants_path, :method => 'post') do
+            = hidden_field_tag "account_id", @account.id
+            = hidden_field_tag "proxy", true
+            = hidden_field_tag "child", true
+            = submit_tag('My Child', :class=>"btn btn-primary nu-primary")
         - if Consent.adult_consent and Survey.adult_survey
           =form_tag(participants_path, :method => 'post') do
             = hidden_field_tag "account_id", @account.id
-            = submit_tag('Myself', :class=>"btn btn-primary nu-primary")
-      - if Consent.child_consent and Survey.child_survey
-        =form_tag(participants_path, :method => 'post') do
-          = hidden_field_tag "account_id", @account.id
-          = hidden_field_tag "proxy", true
-          = hidden_field_tag "child", true
-          = submit_tag('My Child', :class=>"btn btn-primary nu-primary")
-      - if Consent.adult_consent and Survey.adult_survey
-        =form_tag(participants_path, :method => 'post') do
-          = hidden_field_tag "account_id", @account.id
-          = hidden_field_tag "proxy", true
-          = submit_tag('An Adult', :class=>"btn btn-primary nu-primary")
-          %em.muted
-            for whom you act as a legal guardian or authorized agent
-      .row-fluid
-        =link_to "No thanks, I'm done.", dashboard_path
-      %br
-      .row-fluid
-        =link_to "No thanks, take me back to the Communication Research Registry website.", :back_to_website
+            = hidden_field_tag "proxy", true
+            = submit_tag('An Adult', :class=>"btn btn-primary nu-primary")
+            %em.muted
+              for whom you act as a legal guardian or authorized agent
+        .row-fluid
+          =link_to "No thanks, I'm done.", dashboard_path
+        %br
+        .row-fluid
+          =link_to "No thanks, take me back to the Communication Research Registry website.", :back_to_website
 :javascript
   $(document).ready(function(){
     var count = $('#additonal-data').data("count");

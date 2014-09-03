@@ -1,4 +1,4 @@
-=form_for @response_set,:url=>admin_response_sets_path,:html=>{:class=>"form-horizontal ajax-form","data-target"=>"#instruments", :id=> "admin_new_response_set"} do |f|
+=form_for @response_set,:url=>admin_response_sets_path,:html=>{:class=>"form-horizontal", :id=> "admin_new_response_set"} do |f|
   =f.hidden_field :participant_id
   .control-group
     =f.label 'survey_id','Select Form',:class=>"control-label"

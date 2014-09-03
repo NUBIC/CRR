@@ -27,7 +27,8 @@ class Admin::ResponseSetsController < Admin::AdminController
       @surveys = Survey.all.select{|s| s.active?}
     end
     respond_to do |format|
-      format.js{ render (saved ? (@response_set.public? ? :index : :edit) : :new), :layout => false}
+      # format.js{ render (saved ? (@response_set.public? ? admin_participant_path(@response_set.participant, tab: "surveys") : :edit) : :new), :layout => false}
+      format.html{ saved ? @response_set.public? ? redirect_to(admin_participant_path(@response_set.participant, tab: "surveys")) : redirect_to(edit_admin_response_set_path(@response_set.reload)) : render(:action => "new")}
     end
   end
 
@@ -58,11 +59,15 @@ class Admin::ResponseSetsController < Admin::AdminController
     end
   end
 
+  def destroy
+    @response_set= ResponseSet.find(params[:id])
+    @participant = @response_set.participant
+    authorize! :destroy, @response_set
+    @response_set.destroy
+    redirect_to admin_participant_path(@participant, tab: "surveys")
+  end
+
   def response_set_params
-    params.require(:response_set).permit(:all).tap do |whitelist|
-      params[:response_set].each do |key,val|
-        whitelist[key] = params[:response_set][key]
-      end
-    end
+    params.fetch(:response_set, {}).permit!
   end
 end

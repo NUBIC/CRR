@@ -17,6 +17,7 @@
           %ul.nav.nav-tabs.span2#section_tab_header
             - @response_set.survey.sections.each_with_index do |s,si|
               %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
+            =link_to "Exit", admin_participant_path(@response_set.participant, tab: "surveys"), class: "btn btn-primary nu-primary btn-block"
         .error-msg.offset2
         .tab-content.offset2#admin-survey-tab-content
           - @response_set.survey.sections.each_with_index do |s,si|

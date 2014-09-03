@@ -11,23 +11,19 @@
         %li=link_to "Pending Approval (#{Participant.pending_approval.count})",admin_participants_path(:state=>"pending_approval")
         %li=link_to "Approved (#{Participant.approved.count})",admin_participants_path(:state=>"approved")
         %li=link_to "All (#{Participant.all_participants.count})",admin_participants_path
+  -if current_user.admin? || current_user.researcher?
     %li.divider-vertical
-  %li.dropdown
-    =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do
-      Requests
-      .infosqaure
-        =current_user.admin? ? Search.requested.count : Search.with_user(current_user.ar_user).requested.count
-      %b.caret
-    %ul.dropdown-menu
-      -if current_user.admin?
-        %li=link_to "Data Requests (#{Search.requested.count})",admin_searches_path(:state=>"data_requested")
-        %li=link_to "Data Released (#{Search.released.count})",admin_searches_path(:state=>"data_released")
-        %li=link_to "View All (#{Search.all.count})",admin_searches_path
-      -else
-        %li=link_to "Data Requests (#{Search.with_user(current_user.ar_user).requested.count})",admin_searches_path(:state=>"data_requested")
-        %li=link_to "Data Released (#{Search.with_user(current_user.ar_user).released.count})",admin_searches_path(:state=>"data_released")
-        %li=link_to "View All (#{Search.with_user(current_user.ar_user).count})",admin_searches_path
-      %li=link_to "Build a request", new_admin_search_path
+    %li.dropdown
+      =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do
+        Requests
+        .infosqaure
+          =current_user.admin? ? Search.requested.count : Search.with_user(current_user.ar_user).requested.count
+        %b.caret
+      %ul.dropdown-menu
+        %li=link_to "Data Requests (#{current_user.admin? ? Search.requested.count : Search.with_user(current_user.ar_user).requested.count})",admin_searches_path(:state=>"data_requested")
+        %li=link_to "Data Released (#{current_user.admin? ? Search.released.count : Search.with_user(current_user.ar_user).released.count})",admin_searches_path(:state=>"data_released")
+        %li=link_to "View All (#{current_user.admin? ? Search.all.count : Search.with_user(current_user.ar_user).count })",admin_searches_path
+        %li=link_to "Build a request", new_admin_search_path
 - unless Rails.env.production?
   %ul.nav.pull-center
     %li

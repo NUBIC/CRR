@@ -57,7 +57,7 @@ $(document).ready(function() {
                    }).show();
          }
          if (xhr.getResponseHeader('x-flash-errors') !== null){
-           $(".errors").notify({
+           $(".notifications").notify({
                message: { text: xhr.getResponseHeader('x-flash-errors') },
                type: "error"
                  }).show();

@@ -61,7 +61,7 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :create, @question
     @section = @question.section
     if @question.save
-      flash[:notice] = "Updated"
+      flash[:notice] = "Created"
     else
       flash[:error] = @question.errors.full_messages.to_sentence
     end

@@ -21,10 +21,10 @@ class Question < ActiveRecord::Base
 
   #listed of types supported by data capture none caters to labels
   #VALID_RESPONSE_TYPES=["single_choice","multiple_choice","number","text","date","none"].freeze
-  VALID_RESPONSE_TYPES=["pick_one","pick_many","number","short_text","long_text","date","none"].freeze
-  FORM_RESPONSE_TYPE_TRANSLATION={"pick_one"=>'select',"pick_many"=>"check_box","number"=>"float","short_text"=>"string","long_text"=>"text","date"=>"string","none"=>"none"}.freeze
+  VALID_RESPONSE_TYPES=["pick_one","pick_many","number","short_text","long_text","date","none", "birth_date"].freeze
+  FORM_RESPONSE_TYPE_TRANSLATION={"pick_one"=>'select',"pick_many"=>"check_box","number"=>"float","short_text"=>"string","long_text"=>"text","date"=>"string","none"=>"none", "birth_date"=>"string"}.freeze
 
-  VIEW_RESPONSE_TYPE_TRANSLATION={"pick_one"=>'Multiple Choice - Pick One',"pick_many"=>"Multiple Choice - Pick Many","number"=>"Number","short_text"=>"Short Text","long_text"=>"Long Text","date"=>"Date","none"=>"Instruction (no response)"}.freeze
+  VIEW_RESPONSE_TYPE_TRANSLATION={"pick_one"=>'Multiple Choice - Pick One',"pick_many"=>"Multiple Choice - Pick Many","number"=>"Number","short_text"=>"Short Text","long_text"=>"Long Text","date"=>"Date", "birth_date"=>"Birth Date","none"=>"Instruction (no response)"}.freeze
 
   default_scope {order("display_order ASC")}
 
@@ -70,6 +70,10 @@ class Question < ActiveRecord::Base
 
   def date?
     response_type.eql?('date')
+  end
+
+  def birth_date?
+    response_type.eql?('birth_date')
   end
 
   def long_text?

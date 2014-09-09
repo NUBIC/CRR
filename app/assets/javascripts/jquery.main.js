@@ -423,6 +423,10 @@ $(document).ready(function() {
     return this.optional(element) || isDate(date);
   }, "Please specify a valid date in 'MM/DD/YYYY' format.");
 
+  $.validator.addMethod("birth-date", function(date, element) {
+    return this.optional(element) || isBirthDate(date);
+  }, "Birthdate can't be in future or more than 125 years ago.");
+
   $(".phone").mask("999-999-9999");
   $(".date").mask("99/99/9999");
   $(".zipcode").mask("99999");
@@ -451,6 +455,29 @@ $(document).ready(function() {
        var isleap = (dtYear % 4 == 0 && (dtYear % 100 != 0 || dtYear % 400 == 0));
        if (dtDay > 29 || (dtDay == 29 && !isleap))
         return false;
+    }
+    return true;
+  }
+
+  function isBirthDate(txtDate){
+    var currVal = txtDate;
+    var rxDatePattern = /^(\d{1,2})(\/)(\d{1,2})(\/)(\d{4})$/;
+    var dtArray = currVal.match(rxDatePattern);
+
+    if (dtArray == null)
+       return false;
+
+    var dtMonth = dtArray[1];
+    var dtDay= dtArray[3];
+    var dtYear = dtArray[5];
+    var inputDate = new Date();
+    inputDate.setFullYear(dtYear, dtMonth, dtDay);
+    var now = new Date();
+
+    if(inputDate.getTime() > now.getTime()) {
+      return false;
+    } else if ((now.getYear() - inputDate.getYear()) > 125 ) {
+      return false;
     }
     return true;
   }

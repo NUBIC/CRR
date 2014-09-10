@@ -40,8 +40,11 @@
     .row-fluid
       .modal-body
         %h5
-          = "Thank you for completing a follow-up survey on behalf of #{@participant.name}"
+          = "Thank you for completing a follow-up survey on behalf of #{@participant.name}."
           = button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+        %br
+        .row-fluid
+          =link_to "Take me back to the Communication Research Registry website.", :back_to_website
   -else
     .modal-header
       %h5

@@ -1,5 +1,5 @@
 class SurveyMailer < ActionMailer::Base
-  default :from => "noreply@commresearchregistry.northwestern.edu"
+  default :from => "commresearchregistry@northwestern.edu"
 
   def new_survey_alert(response_set)
     # @recipients =  [response_set.email ,response_set.participant.account.email].flatten.uniq

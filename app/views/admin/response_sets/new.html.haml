@@ -4,16 +4,17 @@
     =f.label 'survey_id','Select Form',:class=>"control-label"
     .controls
       =f.select :survey_id,@surveys.map{|s|[s.title,s.id]},{:prompt => 'Select Form'}, :class => "required"
-  .control-group
-    =f.label :public,'Send to Participant:',:class=>"control-label"
-    .controls
-      =f.check_box :public, :class => "public_survey"
-      %small
-        (Please check if you want to send email notification for new survey to the participant)
-  .control-group#survey_email
-    =f.label :email,'Email to send survey:', :class=>"control-label"
-    .controls
-      =f.select :email, @participant.contact_emails, {prompt: 'Select email'}, :class => "required", :id => "email_select"
+  -if @participant.account
+    .control-group
+      =f.label :public,'Send to Participant:',:class=>"control-label"
+      .controls
+        =f.check_box :public, :class => "public_survey"
+        %small
+          (Please check if you want to send email notification for new survey to the participant)
+    .control-group#survey_email
+      =f.label :email,'Email to send survey:', :class=>"control-label"
+      .controls
+        =f.select :email, @participant.contact_emails, {prompt: 'Select email'}, :class => "required", :id => "email_select"
   .row-fluid
     .control-group
       .controls

@@ -5,6 +5,7 @@ AudiologyRegistry::Application.routes.draw do
     resources :participants do
       collection do
         get :search
+        get :global
       end
       member do
         get   :enroll

@@ -4,6 +4,11 @@ class Admin::ParticipantsController < Admin::AdminController
     @participants = params[:state].blank? ? Participant.all_participants : Participant.send(params[:state])
   end
 
+
+  def global
+    @participants = Participant.all.reject{|par| par.inactive?}
+  end
+
   def enroll
     @participant = Participant.find(params[:id])
     authorize! :enroll, @participant

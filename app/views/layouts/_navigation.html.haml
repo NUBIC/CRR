@@ -39,6 +39,7 @@
         %li=link_to "Manage Users",admin_users_path
         %li=link_to "Manage Surveys",admin_surveys_path
         %li=link_to "Manage Consents",admin_consents_path
+        %li=link_to "Manage Participants",global_admin_participants_path
   %li.dropdown
     =link_to "#",:class=>'dropdown-toggle','data-toggle'=>"dropdown" do
       =current_user.full_name

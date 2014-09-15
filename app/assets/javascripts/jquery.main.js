@@ -467,16 +467,15 @@ $(document).ready(function() {
     if (dtArray == null)
        return false;
 
-    var dtMonth = dtArray[1];
+    var dtMonth = dtArray[1] - 1;
     var dtDay= dtArray[3];
     var dtYear = dtArray[5];
     var inputDate = new Date();
     inputDate.setFullYear(dtYear, dtMonth, dtDay);
     var now = new Date();
-
-    if(inputDate.getTime() > now.getTime()) {
-      return false;
-    } else if ((now.getYear() - inputDate.getYear()) > 125 ) {
+    var pastDate = new Date();
+    pastDate.setFullYear(pastDate.getFullYear() - 125);
+    if((inputDate > now) || (inputDate < pastDate)) {
       return false;
     }
     return true;

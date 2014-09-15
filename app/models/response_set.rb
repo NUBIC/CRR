@@ -69,7 +69,7 @@ class ResponseSet < ActiveRecord::Base
           return responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy} if args.blank?
           responses.select{|response| response.question_id.eql?(q.id)}.each{|r| r.destroy unless r.answer.id.eql?(args.to_i)}
           r = responses.detect{|res| res.question_id.eql?(q.id) and res.answer_id.eql?(args.to_i)} || responses.create(question_id: q.id, answer_id: args.to_i)
-        elsif ["number","long_text","short_text","date"].include?(q.response_type)
+        elsif ["number","long_text","short_text","date", "birth_date"].include?(q.response_type)
             if args.blank?
               responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy}
             else

@@ -80,7 +80,7 @@ AudiologyRegistry::Application.configure do
   config.middleware.use ExceptionNotification::Rack,
     :email => {
       :email_prefix => "[#{Rails.env}] ",
-      :sender_address => %w(CRR[#{Rails.env}]@northwestern.edu),
+      :sender_address => %w(CRR-noreply@northwestern.edu),
       :exception_recipients => %w(d-were@northwestern.edu jalpa-patel@northwestern.edu)
     }
 

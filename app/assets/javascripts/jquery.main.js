@@ -41,6 +41,18 @@ $(document).ready(function() {
     $(this).tokenInput($(this).data("url"),{crossDomain: false,propertyToSearch: 'search_display',minChars: 3,tokenLimit: $(this).data("limit"), theme: $(this).data("theme"),hintText: $(this).data("hint-text")});
     }
   );
+  // $("#add_search_question").attr('disabled', 'disabled');
+  $(".searchtokeninput").livequery(
+    function(){
+    $(this).tokenInput($(this).data("url"),{crossDomain: false,propertyToSearch: 'search_display',minChars: 3,tokenLimit: $(this).data("limit"), theme: $(this).data("theme"),hintText: $(this).data("hint-text"),
+      onAdd: function() {
+        $("#add_search_question").removeAttr('disabled');
+      },
+      onDelete: function() {
+        $("#add_search_question").attr("disabled", "disabled");
+      }});
+    }
+  );
 
    $("form.ajax-form").livequery(function(){
      var $form = $(this);

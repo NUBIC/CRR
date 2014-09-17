@@ -20,7 +20,7 @@ class SearchCondition < ActiveRecord::Base
   OPERATOR_TRANSLATIONS={"="=>"equal to","!="=>"not equal to",">"=>"greater than","<"=>"less than"}.freeze
 
   validates_inclusion_of :operator, :in => ["=","!=",">","<","<=","=>"],:allow_blank=>true
-
+  validates_presence_of :question
 
   def result
     return [] if question.blank? || operator.blank? || value.blank?

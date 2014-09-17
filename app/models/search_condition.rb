@@ -24,7 +24,7 @@ class SearchCondition < ActiveRecord::Base
 
   def result
     return [] if question.blank? || operator.blank? || value.blank?
-    Participant.joins(:response_sets=>:responses).where("question_id = ? and #{subject} #{operator} ? and stage='approved'",question.id,value)
+    Participant.joins(:response_sets=>:responses).where("question_id = ? and #{subject} #{operator} ? and stage='approved'",question.id, convert_value)
   end
 
 
@@ -32,7 +32,12 @@ class SearchCondition < ActiveRecord::Base
     return 'answer_id' if question.multiple_choice?
     return 'text::decimal' if question.number?
     return 'text::date' if question.date? or question.birth_date?
-    return 'text' if question.long_text? or question.short_text?
+    return 'lower(text)' if question.long_text? or question.short_text?
+  end
+
+  # TODO: find better solution if available for case insensitive search for free text input question
+  def convert_value
+    (question.long_text? or question.short_text?) ? value.downcase : value
   end
 
   def search

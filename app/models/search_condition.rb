@@ -31,7 +31,7 @@ class SearchCondition < ActiveRecord::Base
   def subject
     return 'answer_id' if question.multiple_choice?
     return 'text::decimal' if question.number?
-    return 'text::date' if question.date?
+    return 'text::date' if question.date? or question.birth_date?
     return 'text' if question.long_text? or question.short_text?
   end
 

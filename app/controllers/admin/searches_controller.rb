@@ -49,11 +49,14 @@ class Admin::SearchesController < Admin::AdminController
     @search.release_data(nil,params)
       if @search.save
         flash[:notice] = "Participant Data Released"
-        redirect_to admin_searches_path
       else
         flash[:error] = @search.errors.full_messages.to_sentence
-        redirect_to admin_search_path(@search)
       end
+    respond_to do |format|
+      format.html {redirect_to admin_searches_path}
+      format.js { render :js => "window.location.href = '#{admin_searches_path}'" }
+    end
+
   end
 
   def destroy

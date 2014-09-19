@@ -176,7 +176,7 @@ $(document).ready(function() {
       "aaSorting": [],
       "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 0 ] }],
       "bFilter": true,
-      "iDisplayLength": 5,
+      "iDisplayLength": 30,
       "bLengthChange": false,
       "oLanguage": {
           "sSearch": "Filter: ",

@@ -3,6 +3,7 @@
   %table.table.table-bordered.table-hover{:id=>'participants_list'}
     %thead
       %tr.display
+        %th Participant ID
         %th First Name
         %th Last Name
         %th Studies
@@ -12,6 +13,7 @@
     %tbody
       -@participants.each do |p|
         %tr.display
+          %td=p.id
           %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.first_name, admin_participant_path(p))
           %td{:class=>"#{'nu' if p.pending_approval?}"}
             =link_to(p.last_name, admin_participant_path(p))

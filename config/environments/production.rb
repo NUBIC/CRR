@@ -70,7 +70,6 @@ AudiologyRegistry::Application.configure do
   config.i18n.fallbacks = true
 
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = { :address => "ns.northwestern.edu", :port => 25, :domain => "northwestern.edu" }
   config.action_mailer.default_url_options = { :host => "https://crr.soc.northwestern.edu" } # CRR Production Server
 
   # Send deprecation notices to registered listeners.

@@ -1,15 +1,15 @@
-.row-fluid
+.row-fluid{ id: "search_condition_#{search_condition.id}" }
   .span4
     =search_condition.question.search_display
-  .span2
+  .span2.text-right
     %small.muted
       %i
-        =SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
+        = SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
   .span2
     %b
-      =search_condition.display_value
+      = search_condition.display_value
   .span3
-    =form_tag(admin_search_condition_path(search_condition),:method=>"delete") do
+    = form_tag(admin_search_condition_path(search_condition), method: 'delete') do
       .btn-group
-        =link_to "Edit" ,edit_admin_search_condition_path(search_condition),:class=>"btn btn-mini","data-async"=>true,"data-target"=>"#search_condition_#{search_condition.id}"
-        =button_tag('Delete',:class=>"btn btn-mini btn-danger")
+        = link_to 'Edit', edit_admin_search_condition_path(search_condition), class: 'btn btn-mini', 'data-async'=>true, 'data-target'=>"#search_condition_#{search_condition.id}"
+        = button_tag('Delete', class: 'btn btn-mini btn-danger')

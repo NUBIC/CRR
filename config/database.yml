@@ -1,13 +1,1 @@
-# File 'local_postgresql' has beedn created under '/etc/nubic/db/'' with entry 'audiology' for 'Development'
-<%
-  require 'bcdatabase'
-  bcdb = Bcdatabase.load
-%>
-
-<%= bcdb.development :local_postgresql, :audiology %>
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-<%= bcdb.test :local_postgresql, :audiology_test %>
-<%= bcdb.staging :pstage, :crr_staging %>
-<%= bcdb.production :pprod, :crr %>
+/etc/nubic/db/crr.yml

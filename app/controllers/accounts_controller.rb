@@ -1,10 +1,12 @@
 class AccountsController < PublicController
   before_filter :require_user, :only=>[:dashboard, :update, :edit]
+
   def dashboard
     @account = current_user
     authorize! :dashboard, @account
     @account.inactive_participants.each { |p| p.destroy }
     @participant = Participant.find(params[:participant_id]) if params[:participant_id]
+    @active_participants = @account.active_participants
     respond_to do |format|
       format.html
     end

@@ -77,7 +77,7 @@ class Ability
       end
 
       can [:new, :create, :edit, :update, :show], ResponseSet do |response_set|
-        response_set.try(:participant).try(:account) == user
+        response_set.try(:participant).try(:account) == user && !response_set.complete?
       end
     else
 

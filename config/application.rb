@@ -26,5 +26,10 @@ module AudiologyRegistry
     Aker.configure do
       ui_mode :cas
     end
+
+    config.before_configuration do
+      env_file = File.join(Rails.root, 'config', 'config.yml')
+      APP_CONFIG = YAML.load(File.open(env_file))
+    end
   end
 end

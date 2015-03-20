@@ -1,83 +1,65 @@
-# -*- coding: utf-8 -*-
-require 'bundler/capistrano'
-require 'bcdatabase'
-load 'deploy/assets'
+# config valid only for Capistrano 3.1
+lock '3.2.1'
 
-bcconf = Bcdatabase.load["crr_deploy", :crr] # Using the bcdatabase gem for server config
-set :application, "crr"
+APP_CONFIG = YAML.load(File.open('config/config.yml'))
 
-# User
-set :use_sudo, false
-#set :default_shell, "bash"
-ssh_options[:forward_agent] = true
+set :application,  APP_CONFIG['application']
+set :repo_url,     APP_CONFIG['repository']
 
-# Version control
-default_run_options[:pty]   = true # to get the passphrase prompt from git
+# Default branch is :master
+ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
-set :scm, "git"
-set :repository, bcconf["repo"]
-set :branch do
-  # http://nathanhoad.net/deploy-from-a-git-tag-with-capistrano
-  puts "Tags: " + `git tag`.split("\n").join(", ")
-  puts "Remember to push tags first: git push origin --tags"
-  ref = Capistrano::CLI.ui.ask "Tag, branch, or commit to deploy [master]: "
-  ref.empty? ? "master" : ref
-end
-set :deploy_to, bcconf["deploy_to"]
-# set :deploy_via, :remote_cache
-set :deploy_via, :copy
-set :copy_cache, true
+# Default deploy_to directory is /var/www/my_app
+set :deploy_to, "/var/www/apps/#{ fetch(:application) }"
 
-task :set_roles do
-  role :app, app_server
-  role :web, app_server
-  role :db, app_server, :primary => true
-end
+# Default value for :scm is :git
+# set :scm, :git
 
-# Demo environment
-desc "Deploy to demo"
-task :demo do
-  set :app_server, bcconf["demo_app_server"]
-  set :rails_env, "staging"
-  set :prefix_env, "/#{application}"
-  set_roles
-end
+# Default value for :format is :pretty
+# set :format, :pretty
 
-# Staging environment
-desc "Deploy to staging"
-task :staging do
-  set :app_server, bcconf["staging_app_server"]
-  set :rails_env, "staging"
-  set :prefix_env, "/#{application}"
-  set_roles
-end
+# Default value for :log_level is :debug
+# set :log_level, :debug
 
-# Production environment
-desc "Deploy to staging"
-task :production do
-  set :app_server, bcconf["production_app_server"]
-  set :rails_env, "production"
-  set :prefix_env, "/#{application}"
-  set_roles
-end
+# Default value for :pty is false
+set :pty, true
+
+set :conditionally_migrate, true  # Defaults to false
+
+# Default value for :linked_files is []
+# set :linked_files, %w{config/database.yml}
+
+# Default value for linked_dirs is []
+set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+# Default value for default_env is {}
+# set :default_env, { path: "/opt/ruby/bin:$PATH" }
+
+# Default value for keep_releases is 5
+# set :keep_releases, 5
+
+
 
 namespace :deploy do
-  desc "Restarting passenger with restart.txt"
-  task :restart, :roles => :app, :except => { :no_release => true } do
-    run "touch #{current_path}/tmp/restart.txt"
+
+  desc 'Restart application'
+  task :restart do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :mkdir, '-p', release_path.join('tmp')
+      execute :touch, release_path.join('tmp/restart.txt')
+    end
   end
 
-  [:start, :stop].each do |t|
-    desc "#{t} task is a no-op with mod_rails"
-    task t, :roles => :app do ; end
-  end
+  after :publishing, :restart
 
-  desc "Fix permissions"
-  task :permissions do
-    sudo "chmod -R g+w #{shared_path} #{release_path} #{current_path}"
+  after :restart, :clear_cache do
+    on roles(:web), in: :groups, limit: 3, wait: 10 do
+      # Here we can do anything such as:
+      # within release_path do
+      #   execute :rake, 'cache:clear'
+      # end
+    end
   end
 end
 
-
-#after 'deploy:update_code', 'web:static', 'deploy:permissions','deploy:cleanup'
-after 'deploy:finalize_update', 'deploy:permissions'
+after "deploy:updated", "deploy:cleanup"

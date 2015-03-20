@@ -5,7 +5,6 @@ source "https://rubygems.org"
 gem 'rails', '4.0.2'
 gem "pg"
 gem "haml"
-gem 'capistrano', '2.15.5'
 gem 'american_date'
 gem 'exception_notification'
 gem 'jquery-rails'
@@ -29,6 +28,13 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
 gem "activerecord-session_store", "~> 0.1.0"
 gem "cocoon"
+
+# Use Capistrano for deployment
+group :development do
+  gem 'capistrano', '~> 3.2.0'
+  gem 'capistrano-rails'
+  gem 'capistrano-rvm'
+end
 
 group :development, :test do
   gem 'annotate', '~> 2.5.0'

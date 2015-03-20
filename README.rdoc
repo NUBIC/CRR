@@ -20,15 +20,26 @@ Things you may want to cover:
 * Services (job queues, cache servers, search engines, etc.)
 
 * Deployment instructions
+  We use one-userdeployment strategy.
+
+  First-time deployment:
+  - generate id_rsa.pub key if does not exist
+
+  - ssh to application host (staging host in this example):
+  $ ssh clinical-rails-staging2.nubic.northwestern.edu
+
+  - create authorized_keys list in .ssh directory of the deployer user
+  $ sudo su - crr-runner
+  $ mkdir .ssh
+  $ cd .ssh/
+  $ touch authorized_keys
+
+  - copy content of id_rsa.pud key from developer's machine to the authorized_keys file
+  - test by ssh-ing to application host machine under deployer user (it should not ask for password if set up correctly):
+  $ ssh crr-runner@clinical-rails-staging2.nubic.northwestern.edu
+
   cap staging deploy:setup
   cap staging deploy
-
-* audiology_registry_deploy file content
-
-  audiology_registry:
-    repo: project repo
-    deploy_to: "/var/www/apps/audiology_registry"
-    staging_app_server: staging server url
 
 
 Please feel free to use a different markup language if you do not plan to run

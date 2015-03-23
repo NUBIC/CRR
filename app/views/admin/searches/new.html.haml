@@ -1,20 +1,16 @@
 .row-fluid
   .well.nu-well Please select request criteria
 .row-fluid
-  =form_for @search,:url=>admin_searches_path, :html=>{:class=>"form-horizontal"}  do |f|
+  = form_for @search, url: admin_searches_path, html: { class: 'form-horizontal'} do |f|
     .control-group
-      =f.label :Study, :class => "control-label"
+      = f.label :Study, class: 'control-label'
       .controls
-        - if current_user.admin?
-          =f.select :study_id, @studies.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]},:prompt => "", :class=>"input-xlarge"
-        - else
-          =f.select :study_id, current_user.studies.active.collect{|s| ["#{s.display_name} - #{s.irb_number}",s.id]}, :prompt => "", :class=>"input-xlarge"
+        = f.select :study_id, @studies.collect{|s| ["#{s.display_name} - #{s.irb_number}", s.id]}, prompt: '', class: 'input-xlarge'
     .control-group
-      =f.label :name, :class => "control-label"
+      = f.label :name, class: 'control-label'
       .controls
-        =f.text_field :name
-    =f.hidden_field :user_id, :value => current_user.ar_user.id
+        = f.text_field :name
     .control-group
       .controls
-        =f.button "Start",:class=>"btn btn-primary nu-primary"
-        =link_to("Cancel",admin_searches_path, :class=>"btn btn-warning")
+        = f.button 'Start', class: 'btn btn-primary nu-primary'
+        = link_to 'Cancel', admin_searches_path, class: 'btn btn-warning'

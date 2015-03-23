@@ -5,11 +5,17 @@ class Admin::SearchesController < Admin::AdminController
 
   def new
     @search = Search.new
-    @studies = Study.active
+    if current_user.admin?
+      @studies = Study.active
+    else
+      @studies = current_user.studies.active
+    end
   end
 
   def create
     @search = Search.new(search_params)
+    @search.user_id = current_user.ar_user.id
+
     if @search.save
       redirect_to admin_search_path(@search)
     else
@@ -66,7 +72,7 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def search_params
-    params.require(:search).permit(:study_id, :name, :user_id)
+    params.require(:search).permit(:study_id, :name)
   end
 end
 

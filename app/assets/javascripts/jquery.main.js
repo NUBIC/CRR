@@ -392,7 +392,9 @@ $(document).ready(function() {
   });
 
   $(".header").livequery(function(){
-    $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">"+ $('#additonal-data').data("text") + "</a>" + "</h4>"));
+    if ($('#additonal-data').length) {
+      $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">"+ $('#additonal-data').data("text") + "</a>" + "</h4>"));
+    }
   });
 
   $(".survey-header").livequery(function(){

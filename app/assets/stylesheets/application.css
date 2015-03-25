@@ -9,5 +9,14 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
+ *= require bootstrap-notify
+ *= require datatables_bootstrap
+ *= require datatables
+ *= require datepicker
+ *= require jquery-te-1.4.0
+ *= require select2.min
+ *= require token-input-facebook
+ *= require token-input
+ *= require validate
  *= require_tree .
  */

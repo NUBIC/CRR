@@ -13,5 +13,16 @@
 //= require jquery
 //= require jquery_ujs
 //= require twitter/bootstrap
-//= require_tree .
 //= require cocoon
+//= require bootstrap-datepicker
+//= require bootstrap-notify
+//= require jquery-te-1.4.0.min
+//= require jquery.dataTables.min
+//= require jquery.dataTables_bootstrap
+//= require jquery.form
+//= require jquery.livequery.min
+//= require jquery.maskedinput.min
+//= require jquery.tokeninput
+//= require jquery.validate.min
+//= require select2.min
+//= require_tree .

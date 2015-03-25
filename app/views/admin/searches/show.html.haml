@@ -1,8 +1,7 @@
-.row-fluid-alert
-  -if @search.data_requested?
-    =render :partial=>"search_requested"
-  -elsif @search.data_released?
-    =render :partial=>"search_released"
-  -else @search.new?
-    =render :partial=>"search_new"
+- if @search.data_requested?
+  = render partial: 'search_requested'
+- elsif @search.data_released?
+  = render partial: 'search_released'
+- else @search.new?
+  = render partial: 'search_new'
 

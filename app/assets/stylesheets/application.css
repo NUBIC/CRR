@@ -9,6 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
+ *= require bootstrap_and_overrides
  *= require bootstrap-notify
  *= require datatables_bootstrap
  *= require datatables
@@ -18,5 +19,7 @@
  *= require token-input-facebook
  *= require token-input
  *= require validate
- *= require_tree .
+ *= require nu
+ *= require search
+ *= require common
  */

@@ -1,4 +1,6 @@
 class Admin::SearchesController < Admin::AdminController
+  before_filter :set_search, only: [:edit, :show, :update, :request_data, :release_data, :destroy]
+
   def index
     @searches = params[:state] == "data_requested" ? Search.requested : params[:state] == "data_released" ? Search.released : Search.all.default_ordering
   end
@@ -13,7 +15,7 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def create
-    @search = Search.new(search_params)
+    @search         = Search.new(search_params)
     @search.user_id = current_user.ar_user.id
 
     if @search.save
@@ -25,11 +27,15 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def show
-    @search = Search.find(params[:id])
+    @data_requested       = @search.data_requested?
+    @data_released        = @search.data_released?
+    @new_search           = @search.new?
+
+    @participants           = @new_search ? @search.result : @search.search_participants.map(&:participant)
+    @participants_released  = @search.released_participants if @search.data_released?
   end
 
   def update
-    @search = Search.find(params[:id])
     @search.update_attributes(search_params)
     if @search.save
       flash[:notice] = "Updated"
@@ -40,7 +46,6 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def request_data
-    @search = Search.find(params[:id])
     @search.request_data(nil,params)
     if @search.save
       flash[:notice] = "Data Request Submitted"
@@ -51,7 +56,6 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def release_data
-    @search = Search.find(params[:id])
     @search.release_data(nil,params)
     if @search.save
       flash[:notice] = "Participant Data Released"
@@ -65,7 +69,6 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def destroy
-    @search = Search.find(params[:id])
     authorize! :destroy, @search
     @search.destroy
     redirect_to admin_searches_path
@@ -74,5 +77,10 @@ class Admin::SearchesController < Admin::AdminController
   def search_params
     params.require(:search).permit(:study_id, :name)
   end
+
+  private
+    def set_search
+      @search = Search.find(params[:id])
+    end
 end
 

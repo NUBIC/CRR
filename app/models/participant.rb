@@ -45,6 +45,7 @@ class Participant < ActiveRecord::Base
   has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id", :dependent => :destroy
   has_many :consent_signatures, :dependent => :destroy
   has_many :studies, :through=>:study_involvements
+  has_many :search_participants, dependent: :destroy
 
   has_one :account_participant,:dependent => :destroy
   has_one :account, :through => :account_participant
@@ -230,5 +231,9 @@ class Participant < ActiveRecord::Base
     contact_emails["Secondary Guardian - #{secondary_guardian_email}"] = secondary_guardian_email unless secondary_guardian_email.blank?
     contact_emails["Account Email - #{self.account.email}"] = self.account.email if self.account
     contact_emails
+  end
+
+  def released?(search)
+    search_participants.where(search_id: search.id, released: true).any?
   end
 end

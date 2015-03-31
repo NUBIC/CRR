@@ -1,0 +1,25 @@
+.row-fluid
+  .span12
+    .row-group
+      %table.table.table-bordered.table-hover#search_result_list
+        %thead
+          %tr
+            %th First Name
+            %th Last Name
+            %th Released In this request
+            %th Studies
+            %th End of Release
+        %tbody
+          - @participants.each do |participant|
+            %tr.show-hide-container
+              %td
+                = link_to participant.first_name, admin_participant_path(participant)
+              %td
+                = link_to participant.last_name, admin_participant_path(participant)
+                .pull-right
+                  = image_tag 'child.png' if participant.child?
+                  = image_tag 'siblings.png' if participant.has_relationships?
+              %td
+                - if participant.released?(@search)
+                  .user-circle
+              = render partial: 'participant_study_cells', locals: { participant: participant}

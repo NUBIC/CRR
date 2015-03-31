@@ -1,0 +1,41 @@
+- if current_user.admin? || current_user.data_manager?
+  .row-fluid
+    .span12
+      .row-group-header
+        = form_for @search, url: release_data_admin_search_path(@search), html: { class: 'validate-form release-data-ajax-form form-horizontal' } do |f|
+          .row-fluid
+            .span3
+              %b Released Date:
+              = text_field_tag 'start_date', Date.today, class: 'input-small date required', 'data-provide'=>'datepicker', placeholder: 'mm/dd/yyyy', id: 'search-release-date'
+            .span3
+              %b Warning Date:
+              = text_field_tag 'warning_date', 1.week.from_now.to_date, class: 'input-small date', 'data-provide'=>'datepicker', placeholder: 'mm/dd/yyyy'
+            .span3
+              %b End of Release:
+              = text_field_tag 'end_date', 2.week.from_now.to_date, class: 'input-small date required', 'data-provide'=>'datepicker', placeholder: 'mm/dd/yyyy', id: 'search-end-of-release-date'
+            .span3
+              = f.button 'Release', class: 'btn btn-success pull-right', id: 'release'
+  .row-fluid
+    .span12
+      .row-group
+        %table.table.table-bordered.table-hover#search_result_list
+          %thead
+            %tr
+              %th= check_box_tag "selectall"
+              %th First Name
+              %th Last Name
+              %th Studies
+              %th End of Release
+          %tbody
+            - @participants.each do |participant|
+              %tr.show-hide-container
+                %td
+                  = check_box_tag "[participant_ids][#{participant.id}]", participant.id, false, class: 'selectalloption'
+                %td
+                  = link_to participant.first_name, admin_participant_path(participant)
+                %td
+                  = link_to participant.last_name, admin_participant_path(participant)
+                  .pull-right
+                    = image_tag 'child.png' if participant.child?
+                    = image_tag 'siblings.png' if participant.has_relationships?
+                = render partial: 'participant_study_cells', locals: { participant: participant}

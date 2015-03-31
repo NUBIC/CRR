@@ -1,11 +1,11 @@
 #search
   / This will be inserted into table header div
-  .header.hidden
+  .header.hidden.table-header{ data: {'target-table'=>'search_index_table'} }
     %h4
       = display_search_header(params[:state])
       = link_to 'Build a request', new_admin_search_path, class: 'btn btn-primary nu-primary'
 
-  %table.table.table-bordered.table-hover.index
+  %table.table.table-bordered.table-hover#search_index_table
     %thead
       %tr
         %th Request Name

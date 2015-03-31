@@ -1,0 +1,18 @@
+.row-fluid
+  .span12
+    .row-group
+      %table.table.table-bordered.table-hover#search_result_list
+        %thead
+          %tr
+            %th First Name
+            %th Last Name
+            %th Studies
+            %th End of Release
+        %tbody
+          - @participants_released.each do |participant|
+            %tr.show-hide-container
+              %td
+                = @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
+              %td
+                = @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+              = render partial: 'participant_study_cells', locals: { participant: participant}

@@ -1,0 +1,15 @@
+%td
+  %ul.unstyled.show-hide-group
+    - participant.study_involvements.each_with_index do |si,i|
+      %li{ class: "#{'more_display' if i > 1}" }
+        = link_to si.study.display_name, admin_study_path(si.study)
+        %span.muted
+          = " (#{si.state})"
+    - if participant.study_involvements.size > 2
+      %li.pull-right.btn.btn-link
+        %span.show_button
+%td
+  %ul.unstyled.show-hide-group
+    - participant.study_involvements.each_with_index do |si,i|
+      %li{:class=> "#{'more_display' if i > 1} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}
+        = si.end_date

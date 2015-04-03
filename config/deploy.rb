@@ -81,10 +81,9 @@ NameVirtualHost *:443
   ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
 
   SSLEngine On
-  SSLCertificateFile /etc/pki/tls/certs/nubic.northwestern.edu.crt
-  SSLCertificateChainFile /etc/pki/tls/certs/rapidssl_intermediate.crt
-  SSLCertificateKeyFile /etc/pki/tls/private/nubic.northwestern.edu.key
-
+  SSLCertificateFile /etc/pki/tls/certs/crr-prod.cer
+  SSLCertificateChainFile /etc/pki/tls/certs/crr-prod-interim.cer
+  SSLCertificateKeyFile /etc/pki/tls/private/crr.key
 
   DocumentRoot #{ fetch(:deploy_to) }/current/public
   RailsBaseURI /

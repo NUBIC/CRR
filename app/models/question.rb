@@ -47,8 +47,9 @@ class Question < ActiveRecord::Base
   after_initialize :default_args
 
   #validates :code, :format => { :with => /^[a-zA-Z0-9_]*$/, :message => "Only letters numbers and underscores - no spaces" }
-  scope :search , proc {|param|
-    where("text ilike ? ","%#{param}%")}
+  def self.search(param)
+    unscoped.joins(section: :survey).where("text ilike ? ","%#{param}%").where("response_type != 'none'").order('surveys.title, questions.display_order')
+  end
 
   def soft_errors
     if ["pick_one","pick_many"].include?(response_type)

@@ -2,6 +2,8 @@
 application: crr
 repository: ssh://git@stash.nubic.northwestern.edu:7999/crr/crr.git
 deployer: crr-runner
+development:
+  server_name: crr.dev
 staging:
   app_host: vtfsmnubicapps01.fsm.northwestern.edu
   server_name: crr-dev.nubic.northwestern.edu

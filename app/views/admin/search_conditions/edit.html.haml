@@ -1,17 +1,18 @@
+- question = @search_condition.question
 = form_for @search_condition, url: admin_search_condition_path(@search_condition), html: { class: 'form-horizontal', id: 'admin_edit_search_condition'} do |f|
   .row-fluid.search-condition-edit
     .span5
-      = @search_condition.question.search_display
-    - if @search_condition.question.multiple_choice?
+      = question.search_display
+    - if question.multiple_choice?
       .span2
         = f.select :operator, SearchCondition::VALID_ANSWER_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-medium'
       .span3
-        = f.select :value, @search_condition.question.answers.collect{|a|[ a.text,a.id]}
+        = f.select :value, question.answers.collect{|a|[ a.text,a.id]}
     - else
       .span2
         = f.select :operator,SearchCondition::VALID_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-medium'
       .span3
-        = f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small #{'date' if @search_condition.question.date?}", :placeholder => "#{'mm/dd/yyyy' if @search_condition.question.date?}"
+        = f.text_field :value,"data-provide"=>"#{'datepicker' if question.date? || question.birth_date?}", class: "input-small #{'date' if question.date?} #{'birth-date' if question.birth_date?}", placeholder: "#{'mm/dd/yyyy' if question.date? || question.birth_date?}"
 
     .span2.pull-right.text-right
       .btn-group

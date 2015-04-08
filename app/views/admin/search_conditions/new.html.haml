@@ -1,17 +1,58 @@
 = form_for @search_condition, url: admin_search_conditions_path, html: { class: 'ajax-form form-horizontal', 'data-target'=>"##{@search_condition.search_condition_group.id}_new_condition"} do |f|
-  .row-fluid
-    .span12.control-group
+  .row-fluid.search-condition-new
+    .span5
       = f.hidden_field :search_condition_group_id
-      = f.label :question_id, 'Question'
-      .controls
-        = f.text_field :question_id, class: 'searchtokeninput', 'data-url'=>search_admin_questions_path(:format=>:json), 'data-limit'=>1, 'data-hint-text'=>'enter question text...', 'data-theme'=>'facebook'
-  .row-fluid
-    .span12.btn-group
-      = f.button 'Continue', class: 'btn btn-mini btn-success', id: 'add_search_question'
-      = link_to 'Cancel', admin_search_path(id: @search_condition.search), class: 'btn btn-mini btn-warning'
+      .input-append.input-block-level
+        = f.select :question_id, @available_questions.collect{|question| [question.search_display, question.id]}, {include_blank: true}, class: 'question_id_search input-block-level', 'data-placeholder'=>'Select a question'
+        = link_to '#', class: 'btn question_lookup' do
+          %i.icon-search
 
-:javascript
-  $(document).ready(function(){
-    $("#add_search_question").attr("disabled", "disabled");
-  });
+      #question_list.modal.hide.large
+        .modal-header
+          %button.close{ "data-dismiss"=>"modal"}
+            &times;
+          %h5
+            Search survey questions
+        .modal-body
+          .row-fluid
+            .span12
+              %table.table.table-bordered.table-hover.question_list
+                %thead
+                  %tr
+                    %th Survey
+                    %th Active
+                    %th Section
+                    %th Text
+                    %th Answers
+                    %th
+                %tbody
+                  - @available_questions.each do |question|
+                    %tr.show-hide-container
+                      %td
+                        = question.survey_title
+                      %td
+                        - if question.section.survey.state == 'active'
+                          .user-circle.input-append
+                      %td
+                        = question.section.title
+                      %td
+                        = question.text
+                      %td
+                        - if question.answers.empty?
+                          [free text]
+                        - question.answers.each do |answer|
+                          = answer.text
+                          %br
+                      %td
+                        %button.btn.btn-success.btn-small.select_question{ "data-dismiss"=>"modal", "data-value" => question.id}
+                          Select
+
+        .modal-footer
+          %button.btn{ "data-dismiss"=>"modal"}
+            Close
+
+    .span5.pull-right.text-right
+      .btn-group
+        = f.button 'Continue', class: 'btn btn-success btn-small', id: 'add_search_question', disabled: true
+        = link_to 'Cancel', admin_search_path(id: @search_condition.search), class: 'btn btn-warning btn-small'
 

@@ -4,8 +4,10 @@ class Admin::SearchConditionsController < Admin::AdminController
   end
 
  def new
-   @search_condition = SearchCondition.new(:search_condition_group_id=>params[:search_condition_group_id])
+   @search_condition    = SearchCondition.new(search_condition_group_id: params[:search_condition_group_id])
+   @available_questions = Question.unscoped.joins(section: :survey).where("response_type != 'none'").order('surveys.title, questions.display_order')
  end
+
  def create
    @search_condition = SearchCondition.new(search_condition_params)
    unless @search_condition.save

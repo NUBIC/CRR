@@ -1,11 +1,13 @@
-=form_for @search_condition_group, :url=>admin_search_condition_groups_path, :html=>{:class=>"form-horizontal"} do |f|
-  .row-fluid
-    =f.hidden_field :search_condition_group_id
-    .control-group
-      =f.label :operator, "Group Operator" 
-      .controls
-        =f.select :operator,SearchConditionGroup::VALID_OPERATORS.collect{|k|[ SearchConditionGroup::OPERATOR_TRANSLATIONS[k],k]},{}
-  .row-fluid
-    .btn-group
-      =f.button "Continue",:class=>"btn btn-mini btn-success"
-      =link_to "Cancel",admin_search_path(:id=>@search_condition_group.search),:class=>"btn btn-mini btn-warning"
+.row-fluid
+  .span12.search-condition-group-container
+    = form_for @search_condition_group, :url=>admin_search_condition_groups_path, :html=>{:class=>"form-horizontal"} do |f|
+      .row-fluid
+        .span3
+          = f.hidden_field :search_condition_group_id
+          = f.label :operator, 'Operator for grouped conditions'
+        .span3
+          = f.select :operator, SearchConditionGroup::VALID_OPERATORS.collect{|k|[ SearchConditionGroup::OPERATOR_TRANSLATIONS[k],k]},{}
+        .span2.text-right.pull-right
+          .btn-group
+            = f.button 'Continue', class: 'btn btn-success btn-small'
+            = link_to 'Cancel', admin_search_path(:id=>@search_condition_group.search), class: 'btn btn-warning btn-small'

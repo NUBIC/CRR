@@ -1,40 +1,50 @@
+- operator_class = "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"
 .row-fluid{ id: "search_condition_group_#{search_condition_group.id}" }
-  .span11.offset1
+  .span12.search-condition-group-container
     .row-fluid
-      .span12.muted (
+      .span12.search-condition-group-controls
+        .span7.search-condition-operator
+          - if (search_condition_group.search_conditions.size + search_condition_group.search_condition_groups.size) > 1
+            = form_for search_condition_group, url: admin_search_condition_group_path(search_condition_group), html: { class: 'form-inline' } do |f|
+              = f.select :operator, SearchConditionGroup::VALID_OPERATORS.collect{|k|[ SearchConditionGroup::OPERATOR_UI_TRANSLATIONS[k],k]},{}, class: 'input-small search-condition-group-operator'
+              %span.help-inline
+                of the following is true
+        .span5.pull-right.text-right
+          = link_to new_admin_search_condition_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition", class: 'btn btn-small btn-search-condition-add' do
+            %i.icon-plus
+            Add condition
+          - unless search_condition_group.search_condition_group && search_condition_group.search_condition_group.search_condition_group
+            = link_to new_admin_search_condition_group_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition_group", class: 'btn btn-small btn-search-condition-group-add' do
+              %i.icon-plus
+              Add group of conditions
+          - if search_condition_group.search_id.blank?
+            = form_for search_condition_group, method: 'delete', url: admin_search_condition_group_path(search_condition_group), html: { class: 'search-condition-group-delete'} do |f|
+              = f.button 'Delete group', class: 'btn btn-small btn-danger'
+
+    .row-fluid.hide.search-instructions
+      .span12
+        Use buttons on the right to add search conditions
+
     .row-fluid
-      - if (search_condition_group.search_conditions.size + search_condition_group.search_condition_groups.size) > 1
-        .span2
-          = form_for search_condition_group, url: admin_search_condition_group_path(search_condition_group) do |f|
-            - button_class = "btn btn-mini #{'btn-info' if search_condition_group.is_or?} #{'btn-success' if search_condition_group.is_and?}"
-            = f.hidden_field :operator, value: search_condition_group.invert_operator
-            = f.button "Change to #{SearchConditionGroup::OPERATOR_TRANSLATIONS[search_condition_group.invert_operator]}", class: button_class
-      - if search_condition_group.search_id.blank?
-        .span2
-          = form_for search_condition_group, method: 'delete', url: admin_search_condition_group_path(search_condition_group) do |f|
-            = f.button 'Delete Group', class: 'btn btn-mini btn-danger'
-    .row-fluid
-      .span11.offset1
+      .span12.search-conditions
         - search_condition_group.search_conditions.each_with_index do |sc,i|
           - unless i==0
-            - operator_class = "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"
             %b{ class: operator_class }
               = search_condition_group.pretty_operator
           = render partial: 'admin/search_conditions/search_condition', locals: { search_condition: sc }
-
-        .row-fluid
-          .span12{ id: "#{search_condition_group.id}_new_condition" }
-            = link_to 'Add Condition', new_admin_search_condition_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition", class: 'btn btn-mini btn-primary nu-primary'
+        .row-fluid{ id: "#{search_condition_group.id}_new_condition" }
 
     .row-fluid
-      - search_condition_group.search_condition_groups.each do |scg|
-        .span11.offset1
-          %b{:class=>"nu-operator #{'text-info' if scg.is_or?} #{'text-success' if scg.is_and?}"}
-            = scg.pretty_operator
-        .span12
-          = render partial: 'admin/search_condition_groups/search_condition_group' ,locals: {search_condition_group: scg}
+      .span12.search-condition-groups
+        - search_condition_group.search_condition_groups.each do |scg|
+          - if search_condition_group.search_conditions.any? || search_condition_group.search_condition_groups.count > 2
+            .row-fluid
+              .span12.search-condition-group-operator
+                %b{ class: operator_class }
+                  = search_condition_group.pretty_operator
+          .row-fluid
+            .span12
+              = render partial: 'admin/search_condition_groups/search_condition_group', locals: {search_condition_group: scg}
 
-    .row-fluid{ id: "#{search_condition_group.id}_new_condition_group" }
-      = link_to 'Add Group', new_admin_search_condition_group_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition_group", class: 'btn btn-mini btn-primary nu-primary'
-    .row-fluid
-      .span12.muted )
+        .row-fluid{ id: "#{search_condition_group.id}_new_condition_group" }
+

@@ -1,21 +1,23 @@
 = form_for @search_condition, url: admin_search_condition_path(@search_condition), html: { class: 'form-horizontal', id: 'admin_edit_search_condition'} do |f|
-  .row-fluid
+  .row-fluid.search-condition-edit
     .span5
       = @search_condition.question.search_display
     - if @search_condition.question.multiple_choice?
-      .span3
+      .span2
         = f.select :operator, SearchCondition::VALID_ANSWER_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-medium'
       .span3
         = f.select :value, @search_condition.question.answers.collect{|a|[ a.text,a.id]}
     - else
-      .span3
+      .span2
         = f.select :operator,SearchCondition::VALID_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-medium'
       .span3
         = f.text_field :value,"data-provide"=>"#{'datepicker' if @search_condition.question.date?}",:class=>"input-small #{'date' if @search_condition.question.date?}", :placeholder => "#{'mm/dd/yyyy' if @search_condition.question.date?}"
-  .row-fluid
-    .span3.btn-group
-      = f.button 'Continue', class: 'btn btn-mini btn-success'
-      = link_to 'Cancel', admin_search_path(id: @search_condition.search), class: 'btn btn-mini btn-warning'
+
+    .span2.pull-right.text-right
+      .btn-group
+        = f.button 'Continue', class: 'btn btn-success btn-small'
+        = link_to 'Cancel', admin_search_path(id: @search_condition.search), class: 'btn btn-warning btn-small'
+
 :javascript
   $(document).ready(function(){
     $('#admin_edit_search_condition').validate();

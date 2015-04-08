@@ -20,6 +20,7 @@ class SearchConditionGroup < ActiveRecord::Base
   validates_inclusion_of :operator, :in => ["&","|"],:allow_blank=>false
   VALID_OPERATORS=["|","&"].freeze
   OPERATOR_TRANSLATIONS={"|"=>"OR","&"=>"AND"}.freeze
+  OPERATOR_UI_TRANSLATIONS={"|"=>"Any","&"=>"All"}.freeze
 
   def result
     return [] if search_conditions.empty? and search_condition_groups.empty?
@@ -51,4 +52,7 @@ class SearchConditionGroup < ActiveRecord::Base
     operator.eql?("&")
   end
 
+  def has_conditions?
+    search_conditions.any? || search_condition_groups.joins(:search_conditions).all.any?
+  end
 end

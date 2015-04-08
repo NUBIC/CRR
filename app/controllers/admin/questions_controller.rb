@@ -9,7 +9,7 @@ class Admin::QuestionsController < Admin::AdminController
   def search
     @questions = Question.search(params[:q])
     respond_to do |format|
-      format.json {render :json => @questions.to_json(:only=>[:id],:methods=>[:search_display])}
+      format.json { render json: @questions.to_json( only: [:id, :text], methods: [:search_display, :survey_title])}
     end
   end
 

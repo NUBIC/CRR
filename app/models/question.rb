@@ -97,6 +97,10 @@ class Question < ActiveRecord::Base
     "#{section.survey.title} - #{text}"
   end
 
+  def survey_title
+    section.survey.title
+  end
+
   private
   def default_args
     self.display_order= self.section.questions.size+1 if self.display_order.blank?

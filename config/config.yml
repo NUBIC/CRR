@@ -10,6 +10,6 @@ staging:
   server_alias: crr-dev.nubic.northwestern.edu
 production:
   app_host: vfsmnubicapps01.fsm.northwestern.edu
-  server_name: crr-prod.nubic.northwestern.edu
-  server_alias: crr-prod.nubic.northwestern.edu
+  server_name: crr.nubic.northwestern.edu
+  server_alias: crr.nubic.northwestern.edu
 

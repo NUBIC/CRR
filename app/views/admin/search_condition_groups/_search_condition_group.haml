@@ -1,8 +1,8 @@
 - operator_class = "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"
 .row-fluid{ id: "search_condition_group_#{search_condition_group.id}" }
   .span12.search-condition-group-container
-    .row-fluid
-      .span12.search-condition-group-controls
+    .row-fluid.search-condition-group-controls
+      .span12
         .span7.search-condition-operator
           - if (search_condition_group.search_conditions.size + search_condition_group.search_condition_groups.size) > 1
             = form_for search_condition_group, url: admin_search_condition_group_path(search_condition_group), html: { class: 'form-inline' } do |f|

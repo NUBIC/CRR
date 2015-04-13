@@ -1,6 +1,6 @@
 = form_for @search_condition, url: admin_search_conditions_path, html: { class: 'ajax-form form-horizontal', 'data-target'=>"##{@search_condition.search_condition_group.id}_new_condition"} do |f|
   .row-fluid.search-condition-new
-    .span5
+    .span4
       = f.hidden_field :search_condition_group_id
       .input-append.input-block-level
         = f.select :question_id, @available_questions.collect{|question| [question.search_display, question.id]}, {include_blank: true}, class: 'question_id_search input-block-level', 'data-placeholder'=>'Select a question'
@@ -51,7 +51,7 @@
           %button.btn{ "data-dismiss"=>"modal"}
             Close
 
-    .span5.pull-right.text-right
+    .span6.pull-right.text-right
       .btn-group
         = f.button 'Continue', class: 'btn btn-success btn-small', id: 'add_search_question', disabled: true
         = link_to 'Cancel', admin_search_path(id: @search_condition.search), class: 'btn btn-warning btn-small'

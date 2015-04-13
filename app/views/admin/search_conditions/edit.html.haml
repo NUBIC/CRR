@@ -5,14 +5,34 @@
       = question.search_display
     - if question.multiple_choice?
       .span2
-        = f.select :operator, SearchCondition::VALID_ANSWER_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-medium'
+        = f.select :operator, SearchCondition::VALID_ANSWER_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-block-level'
       .span3
-        = f.select :value, question.answers.collect{|a|[ a.text,a.id]}
+        = f.select :value, question.answers.collect{|a|[ a.text,a.id]}, {}, class: 'input-block-level'
     - else
       .span2
-        = f.select :operator,SearchCondition::VALID_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-medium'
+        = f.select :operator, SearchCondition::OPERATOR_TRANSLATIONS.map{|k,v| [v,k]}, {}, class: 'input-block-level'
       .span3
-        = f.text_field :value,"data-provide"=>"#{'datepicker' if question.date? || question.birth_date?}", class: "input-small #{'date' if question.date?} #{'birth-date' if question.birth_date?}", placeholder: "#{'mm/dd/yyyy' if question.date? || question.birth_date?}"
+        - if question.true_date?
+          - display_computed_date = @search_condition.value.blank? || @search_condition.is_calculated_date
+
+          .search-condition-answer{ class: "#{'hidden' if display_computed_date }"}
+            = f.text_field :value, 'data-provide' => 'datepicker', class: "input-small #{'date' if question.date?} #{'birth-date' if question.birth_date?}", placeholder: 'mm/dd/yyyy'
+            %br
+            = link_to '#', class: 'date-format-link' do
+              %i.icon-refresh
+              %span
+                Use calculated date format
+
+          .search-condition-answer{ class: "#{'hidden' unless display_computed_date}"}
+            = f.text_field :calculated_date_number, placeholder: 'number', class: "input-mini number", 'data-date-value' => @search_condition.search_value
+            = f.select :calculated_date_units, SearchCondition::COMPUTED_DATE_UNITS.values.map{|o| [o,o]}, {}, class: 'input-medium'
+            %br
+            = link_to '#', class: 'date-format-link' do
+              %i.icon-refresh
+              %span
+                Use date format
+        - else
+          = f.text_field :value, class: 'input-block-level'
 
     .span2.pull-right.text-right
       .btn-group

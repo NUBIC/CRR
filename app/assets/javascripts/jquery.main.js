@@ -419,6 +419,10 @@ $(document).ready(function() {
     return this.optional(element) || isBirthDate(date);
   }, "Birthdate can't be in future or more than 125 years ago.");
 
+  $.validator.addMethod("number", function(value, element) {
+    return this.optional(element) || value.match(/^\d+$/);
+  }, "Please specify a valid number");
+
   $(".phone").mask("999-999-9999");
   $(".date").mask("99/99/9999");
   $(".zipcode").mask("99999");

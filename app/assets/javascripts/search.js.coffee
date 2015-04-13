@@ -126,3 +126,11 @@ $(document).ready ->
   $('.search-condition-group-operator').livequery ->
     $(this).on 'change', () ->
       $(this).closest('form').submit()
+
+  $('.date-format-link').livequery ->
+    $(this).on 'click', () ->
+      $container = $(this).closest('.search-condition-answer')
+      $container.find('input[type="text"]').val('')
+      $container.addClass('hidden')
+      $container.siblings().removeClass('hidden')
+      $container.siblings().find('input[type="text"]').val('')

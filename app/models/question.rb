@@ -77,6 +77,10 @@ class Question < ActiveRecord::Base
     response_type.eql?('birth_date')
   end
 
+  def true_date?
+    date? || birth_date?
+  end
+
   def long_text?
     response_type.eql?('long_text')
   end

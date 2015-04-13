@@ -1,11 +1,11 @@
 .row-fluid.search-condition{ id: "search_condition_#{search_condition.id}" }
-  .span4
+  .span5
     = search_condition.question.search_display
   .span2.text-right
     %small.muted
       %i
         = SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
-  .span4
+  .span3
     %b
       = search_condition.display_value
   .span2.text-right

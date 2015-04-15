@@ -89,10 +89,17 @@ NameVirtualHost *:443
   RailsBaseURI /
   PassengerDebugLogFile /var/log/httpd/#{ fetch(:application) }_passenger.log
 
+<<<<<<< HEAD
   <Location "/admin" >
     Order deny,allow
     Deny from all
     Allow from 165.124.161.0/21
+=======
+  <Location /admin >
+    Order deny,allow
+    Deny from all
+    Allow from 129.105.0.0/16 165.124.0.0/16
+>>>>>>> master
   </Location>
 
   <Directory #{ fetch(:deploy_to) }/current/public >

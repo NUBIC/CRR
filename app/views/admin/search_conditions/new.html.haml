@@ -38,7 +38,9 @@
                       %td
                         = question.text
                       %td
-                        - if question.answers.empty?
+                        - if question.true_date?
+                          [date]
+                        - elsif question.answers.empty?
                           [free text]
                         - question.answers.each do |answer|
                           = answer.text

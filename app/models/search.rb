@@ -128,7 +128,7 @@ class Search < ActiveRecord::Base
     end
 
     def create_condition_group
-      SearchConditionGroup.create(:search_id=>self.id,:operator=>"|")
+      SearchConditionGroup.create(search_id: self.id, operator: SearchConditionGroup::DEFAULT_GROUP_OPERATOR)
     end
 
 end

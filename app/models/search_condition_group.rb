@@ -18,9 +18,11 @@ class SearchConditionGroup < ActiveRecord::Base
   validates_presence_of :search, :if=>"search_condition_group.nil?"
   validates_presence_of :search_condition_group, :if=>"search.nil?"
   validates_inclusion_of :operator, :in => ["&","|"],:allow_blank=>false
+
   VALID_OPERATORS=["|","&"].freeze
   OPERATOR_TRANSLATIONS={"|"=>"OR","&"=>"AND"}.freeze
   OPERATOR_UI_TRANSLATIONS={"|"=>"Any","&"=>"All"}.freeze
+  DEFAULT_GROUP_OPERATOR = '|'.freeze
 
   def result
     return [] if search_conditions.empty? and search_condition_groups.empty?

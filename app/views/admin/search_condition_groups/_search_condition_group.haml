@@ -14,7 +14,7 @@
             %i.icon-plus
             Add condition
           - unless search_condition_group.search_condition_group && search_condition_group.search_condition_group.search_condition_group
-            = link_to new_admin_search_condition_group_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition_group", class: 'btn btn-small btn-search-condition-group-add' do
+            = link_to admin_search_condition_groups_path(search_condition_group_id: search_condition_group.id), method: :post, class: 'btn btn-small btn-search-condition-group-add' do
               %i.icon-plus
               Add group of conditions
           - if search_condition_group.search_id.blank?

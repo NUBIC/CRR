@@ -56,5 +56,5 @@
     .span6.pull-right.text-right
       .btn-group
         = f.button 'Continue', class: 'btn btn-success btn-small', id: 'add_search_question', disabled: true
-        = link_to 'Cancel', admin_search_path(id: @search_condition.search), class: 'btn btn-warning btn-small'
+        = link_to 'Cancel', admin_search_path(id: @search_condition.get_search), class: 'btn btn-warning btn-small'
 

@@ -67,8 +67,8 @@ class SearchCondition < ActiveRecord::Base
     Participant.joins(:response_sets=>:responses).where("question_id = ? and #{search_subject} #{operator} ? and stage='approved'",question.id, search_value)
   end
 
-  def search
-    search_condition_group.search
+  def get_search
+    search_condition_group.get_search
   end
 
   def display_value

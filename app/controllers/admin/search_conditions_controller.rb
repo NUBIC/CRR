@@ -34,12 +34,12 @@ class Admin::SearchConditionsController < Admin::AdminController
     else
       flash[:error] = @search_condition.errors.full_messages.to_sentence
     end
-    redirect_to admin_search_path(@search_condition.search)
+    redirect_to admin_search_path(@search_condition.get_search)
   end
 
   def destroy
     @search_condition = SearchCondition.find(params[:id])
-    @search = @search_condition.search
+    @search = @search_condition.get_search
     @search_condition.destroy
     redirect_to admin_search_path(@search)
   end

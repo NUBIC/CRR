@@ -17,11 +17,12 @@
 
 class Search < ActiveRecord::Base
   include AASM
+
   belongs_to :study
   belongs_to :user
-  has_one :search_condition_group
-  has_many :search_participants, :dependent => :destroy
 
+  has_one  :search_condition_group, dependent: :destroy
+  has_many :search_participants,    dependent: :destroy
   aasm_column :state
   aasm_state :new, :initial => true
   aasm_state :data_requested
@@ -40,18 +41,24 @@ class Search < ActiveRecord::Base
 
   after_create :create_condition_group
   after_initialize :default_args
+  # Scopes
+  def self.requested
+    where(state: :data_requested).joins(:study).order('request_date DESC, studies.name ASC').readonly(false)
+  end
 
-  scope :requested, -> { where(state: :data_requested).joins(:study).order('request_date DESC, studies.name ASC').readonly(false)}
-  scope :released, -> { where(state: :data_released).joins(:study).order('process_date DESC, studies.name ASC').readonly(false)}
+  def self.released
+    where(state: :data_released).joins(:study).order('process_date DESC, studies.name ASC').readonly(false)
+  end
 
-  scope :default_ordering, -> {
+  def self.default_ordering
     joins(:study).order('created_at DESC, studies.name ASC').readonly(false)
-  }
+  end
 
-  scope :with_user, lambda { |user|
-    Search.joins(study: [:user_studies, :searches]).where('user_studies.user_id' => user.id).distinct
-  }
+  def self.with_user(user)
+    Search.joins(study: [:user_studies, :searches]).where( user_studies: { user_id: user.id }).distinct
+  end
 
+  # Functions
   def result
     return [] if search_condition_group.nil? || search_condition_group.result.nil?
     return search_condition_group.result.reject {|p| p.has_study?(study) | p.do_not_contact? }
@@ -112,7 +119,6 @@ class Search < ActiveRecord::Base
   end
 
   private
-
     def end_date_cannot_be_before_start_date
       if end_date.present? && end_date <= start_date
         errors.add(:end_date, "can't be before release date")

@@ -1,10 +1,8 @@
 # config valid only for Capistrano 3.1
 lock '3.2.1'
 
-APP_CONFIG = YAML.load(File.open('config/config.yml'))
-
-set :application,  APP_CONFIG['application']
-set :repo_url,     APP_CONFIG['repository']
+set :application,  Rails.configuration.custom.app_config['application']
+set :repo_url,     Rails.configuration.custom.app_config['repository']
 
 set :rvm_type, :system
 set :rvm_ruby_version, '2.1.2'
@@ -68,9 +66,9 @@ NameVirtualHost *:80
 NameVirtualHost *:443
 
 <VirtualHost *:80>
-  ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
-  ServerAlias #{ APP_CONFIG[ fetch(:stage).to_s ]['server_alias'] }
-  Redirect permanent / https://#{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }/
+  ServerName #{ Rails.configuration.custom.app_config[ fetch(:stage).to_s ]['server_name'] }
+  ServerAlias #{ Rails.configuration.custom.app_config[ fetch(:stage).to_s ]['server_alias'] }
+  Redirect permanent / https://#{ Rails.configuration.custom.app_config[ fetch(:stage).to_s ]['server_name'] }/
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -78,7 +76,7 @@ NameVirtualHost *:443
   PassengerAppEnv #{ fetch(:stage) }
   PassengerRuby /usr/local/rvm/wrappers/ruby-#{ fetch(:rvm_ruby_version) }/ruby
 
-  ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
+  ServerName #{ Rails.configuration.custom.app_config[ fetch(:stage).to_s ]['server_name'] }
 
   SSLEngine On
   SSLCertificateFile /etc/pki/tls/certs/crr-prod.cer

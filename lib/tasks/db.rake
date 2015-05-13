@@ -3,13 +3,11 @@ require 'erb'
 require 'yaml'
 require 'highline/import'
 
-APP_CONFIG = YAML.load(File.open('config/config.yml'))
-
 namespace :db do
   task :pg_setup => :environment do
     ar_config      = HashWithIndifferentAccess.new(ActiveRecord::Base.connection.instance_variable_get("@config"))
     fail 'This only works for postgres' unless ar_config[:adapter] == "postgresql"
-    @app_name      = APP_CONFIG['application']
+    @app_name      = Rails.configuration.custom.app_config['application']
     @backup_folder = %w(production staging).include?(Rails.env) ? "/var/www/apps/#{@app_name}/shared/db_backups" : File.join(Rails.root,"tmp","db_backups")
     @password      = ar_config[:password]
     @pg_options    = "-U #{ar_config[:username]} -h #{ar_config[:host] || 'localhost'} -p #{ar_config[:port] || 5432} #{ar_config[:database]}"

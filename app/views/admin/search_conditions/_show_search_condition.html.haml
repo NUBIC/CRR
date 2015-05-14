@@ -2,6 +2,7 @@
   =search_condition.question.search_display
   %small.muted
     %i
-      =SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
+      = search_condition.pretty_operator
+  end
   %b
-    =search_condition.display_value
+    = search_condition.display_value

@@ -4,7 +4,7 @@
   .span2.text-right
     %small.muted
       %i
-        = SearchCondition::OPERATOR_TRANSLATIONS[search_condition.operator]
+        = search_condition.pretty_operator
   .span3
     %b
       = search_condition.display_value

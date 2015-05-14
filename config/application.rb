@@ -20,9 +20,13 @@ module AudiologyRegistry
     config.before_configuration do
       env_file = File.join(Rails.root, 'config', 'config.yml')
       APP_CONFIG = YAML.load(File.open(env_file))
+
+      operators_config = File.join(Rails.root, 'config', 'operators.yml')
+      OPERATORS = YAML.load(File.open(operators_config))
     end
     config.custom = ActiveSupport::OrderedOptions.new
-    config.custom.app_config = APP_CONFIG
+    config.custom.app_config        = APP_CONFIG
+    config.custom.search_operators  = OPERATORS
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]

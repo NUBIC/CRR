@@ -6,7 +6,7 @@
         .span7.search-condition-operator
           - if (search_condition_group.search_conditions.size + search_condition_group.search_condition_groups.size) > 1
             = form_for search_condition_group, url: admin_search_condition_group_path(search_condition_group), html: { class: 'form-inline' } do |f|
-              = f.select :operator, SearchConditionGroup::VALID_OPERATORS.collect{|k|[ SearchConditionGroup::OPERATOR_UI_TRANSLATIONS[k],k]},{}, class: 'input-small search-condition-group-operator'
+              = f.select :operator, search_condition_group_operator_options, {}, class: 'input-small search-condition-group-operator'
               %span.help-inline
                 of the following is true
         .span5.pull-right.text-right

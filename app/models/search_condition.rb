@@ -10,14 +10,15 @@
 #
 
 class SearchCondition < ActiveRecord::Base
+  include SearchOperator
+
   belongs_to :search_condition_group
   belongs_to :question
 
   VALID_ANSWER_OPERATORS  = ['=','!='].freeze
-  OPERATOR_TRANSLATIONS   = {'=' => 'equal to','!=' => 'not equal to','>' => 'greater than','<' => 'less than', '<=' => 'less or equal than', '>=' => 'greater or equal than'}.freeze
   COMPUTED_DATE_UNITS     = { years_ago: 'years ago', months_ago: 'months ago', days_ago: 'days ago' }.freeze
 
-  validates_inclusion_of :operator, in: OPERATOR_TRANSLATIONS.keys, allow_blank: true
+  # validates_inclusion_of :operator, in: comparison_operators.map{|o| o[:symbol]}
   validates_presence_of  :question
 
   attr_accessor :search_value, :calculated_date_units, :calculated_date_number, :search_subject, :is_calculated_date
@@ -31,6 +32,7 @@ class SearchCondition < ActiveRecord::Base
   end
 
   def set_search_attributes
+    return unless question
     if question.multiple_choice?
       @search_subject = 'answer_id'
     elsif question.number?
@@ -64,7 +66,7 @@ class SearchCondition < ActiveRecord::Base
 
   def result
     return [] if question.blank? || operator.blank? || value.blank?
-    Participant.joins(:response_sets=>:responses).where("question_id = ? and #{search_subject} #{operator} ? and stage='approved'",question.id, search_value)
+    Participant.joins(response_sets: :responses).where(responses: {question_id: question.id}, stage: 'approved').where("#{search_subject} #{operator} ?", search_value)
   end
 
   def get_search

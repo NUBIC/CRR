@@ -1,0 +1,51 @@
+---
+- :symbol:  '='
+  :text:    'equal to'
+  :unique_identifier: is_equal_to
+  :operator_type: comparison
+
+- :symbol: '!='
+  :text: 'not equal to'
+  :unique_identifier: is_not_equal_to
+  :operator_type: comparison
+
+- :symbol: '>'
+  :text: 'greater than'
+  :unique_identifier: is_greater_than
+  :operator_type: comparison
+
+- :symbol: '<'
+  :text: 'less than'
+  :unique_identifier: is_less_than
+  :operator_type: comparison
+
+- :symbol: '>='
+  :text: 'greater than or equal to'
+  :unique_identifier: is_greater_than_or_equal_to
+  :operator_type: comparison
+
+- :symbol: '<='
+  :text: 'less than or equal to'
+  :unique_identifier: is_less_than_or_equal_to
+  :operator_type: comparison
+
+- :symbol: '|'
+  :text: 'OR'
+  :unique_identifier: or
+  :operator_type: group
+
+- :symbol: '&'
+  :text: 'And'
+  :unique_identifier: and
+  :operator_type: group
+
+- :symbol: 'in'
+  :text: 'is one of'
+  :unique_identifier: is_one_of
+  :operator_type: list
+
+- :symbol: 'not in'
+  :text: 'is not one of'
+  :unique_identifier: is_not_one_of
+  :operator_type: list
+

@@ -9,18 +9,18 @@
 #
 
 class SearchConditionGroup < ActiveRecord::Base
+  include SearchOperator
 
   belongs_to  :search_condition_group
   belongs_to  :search
   has_many    :search_conditions
   has_many    :search_condition_groups
 
-  validates_inclusion_of :operator, :in => ["&","|"],:allow_blank=>false
+  validates_inclusion_of :operator, in: group_operators.map{|o| o[:symbol]}
   validate :presence_of_search_or_search_condition_groups
 
-  VALID_OPERATORS=["|","&"].freeze
-  OPERATOR_TRANSLATIONS={"|"=>"OR","&"=>"AND"}.freeze
-  OPERATOR_UI_TRANSLATIONS={"|"=>"Any","&"=>"All"}.freeze
+  before_validation :validate_presence_of_operator
+
   DEFAULT_GROUP_OPERATOR = '|'.freeze
 
   def presence_of_search_or_search_condition_groups
@@ -36,10 +36,6 @@ class SearchConditionGroup < ActiveRecord::Base
     [sc_result,scg_result].inject(operator.to_sym)
   end
 
-  # def search
-  #   super.nil? ? self.search_condition_group.search : super
-  # end
-
   def get_search
     self.search.nil? ? self.search_condition_group.get_search : self.search
   end
@@ -47,10 +43,6 @@ class SearchConditionGroup < ActiveRecord::Base
   def invert_operator
     return "&" if operator.eql?("|")
     return "|" if operator.eql?("&")
-  end
-
-  def pretty_operator
-    OPERATOR_TRANSLATIONS[operator]
   end
 
   def is_or?
@@ -63,5 +55,9 @@ class SearchConditionGroup < ActiveRecord::Base
 
   def has_conditions?
     search_conditions.any? || search_condition_groups.joins(:search_conditions).all.any?
+  end
+
+  def validate_presence_of_operator
+    self.operator = DEFAULT_GROUP_OPERATOR if self.operator.blank?
   end
 end

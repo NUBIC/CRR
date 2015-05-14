@@ -13,6 +13,8 @@
 #  end_date     :date
 #  name         :string(255)
 #  user_id      :integer
+#  created_at   :datetime
+#  updated_at   :datetime
 #
 
 class Search < ActiveRecord::Base
@@ -23,13 +25,21 @@ class Search < ActiveRecord::Base
 
   has_one  :search_condition_group, dependent: :destroy
   has_many :search_participants,    dependent: :destroy
+
+  accepts_nested_attributes_for :search_condition_group, allow_destroy: true
+
+  validates_presence_of :study
+  validates_presence_of :search_condition_group
+  validate :end_date_cannot_be_before_start_date
+
+  before_validation :create_condition_group
+  after_initialize :default_args
+
+  # AASM events and transitions
   aasm_column :state
   aasm_state :new, :initial => true
   aasm_state :data_requested
   aasm_state :data_released
-
-  validates_presence_of :study
-  validate :end_date_cannot_be_before_start_date
 
   aasm_event :request_data do
     transitions :to => :data_requested,:from=>[:new], :on_transition=>[:process_request]
@@ -39,8 +49,6 @@ class Search < ActiveRecord::Base
     transitions :to => :data_released, :from=>[:data_requested,:new],:on_transition=>[:process_release]
   end
 
-  after_create :create_condition_group
-  after_initialize :default_args
   # Scopes
   def self.requested
     where(state: :data_requested).joins(:study).order('request_date DESC, studies.name ASC').readonly(false)
@@ -134,7 +142,6 @@ class Search < ActiveRecord::Base
     end
 
     def create_condition_group
-      SearchConditionGroup.create(search_id: self.id, operator: SearchConditionGroup::DEFAULT_GROUP_OPERATOR)
+      self.build_search_condition_group()
     end
-
 end

@@ -3,14 +3,12 @@
   .row-fluid.search-condition-edit
     .span5
       = question.search_display
+    .span2
+      = f.select :operator, search_condition_operator_options(@search_condition),{}, class: 'input-block-level'
     - if question.multiple_choice?
-      .span2
-        = f.select :operator, SearchCondition::VALID_ANSWER_OPERATORS.collect{|k|[ SearchCondition::OPERATOR_TRANSLATIONS[k],k]},{}, class: 'input-block-level'
       .span3
         = f.select :value, question.answers.collect{|a|[ a.text,a.id]}, {}, class: 'input-block-level'
     - else
-      .span2
-        = f.select :operator, SearchCondition::OPERATOR_TRANSLATIONS.map{|k,v| [v,k]}, {}, class: 'input-block-level'
       .span3
         - if question.true_date?
           - display_computed_date = @search_condition.value.blank? || @search_condition.is_calculated_date

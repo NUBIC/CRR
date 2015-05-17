@@ -80,14 +80,46 @@ $(document).ready ->
       $('.search-instructions').hide()
       $('.search-condition-groups').show()
 
+  # use ajax to deliver edit/new forms, force reload page on success
+  $("form.ajax-edit-form").livequery ->
+    $form   = $(this)
+    $target = $($form.attr('data-target'))
+
+    validateSearchCondition($form)
+
+    $form.ajaxForm
+      target: $target
+      dataType: 'html'
+      success: (data,message,xhr) ->
+        if xhr.getResponseHeader('x-flash-errors') != null
+          $target.html(data)
+          validateSearchCondition($form)
+        else
+          location.reload()
+
   $('.question_id_search').livequery ->
     $(this).select2()
+    $searchConditionForm = $(this).closest('form')
+    $valuesContainer     = $searchConditionForm.find('.search-condition-values')
+    $submitButton        = $searchConditionForm.find('button[type="submit"]')
 
     $(this).on 'change', () ->
-      if $(this).find('option:selected').val() != ''
-        $("#add_search_question").removeAttr('disabled')
+      $selectedQuestion = $(this).find('option:selected')
+      if $selectedQuestion.length
+        $.ajax({
+          type: "GET"
+          url: $valuesContainer.attr('data-source')
+          data:
+            question_id: $selectedQuestion.attr('value')
+          dataType: 'html'
+        }).done (data) ->
+          $valuesContainer.html(data)
+          $submitButton.enable()
+          validateSearchCondition($searchConditionForm)
       else
-        $("#add_search_question").attr("disabled", "disabled")
+        $valuesContainer.html('')
+        $submitButton.disable
+
 
   $('.question_list').livequery ->
     $tableElement = $(this)
@@ -134,3 +166,12 @@ $(document).ready ->
       $container.addClass('hidden')
       $container.siblings().removeClass('hidden')
       $container.siblings().find('input[type="text"]').val('')
+      validateSearchCondition($(this).closest('form'))
+
+  validateSearchCondition = (form) ->
+    $(form).validate({
+      errorPlacement: (error, element) ->
+        error.appendTo( element.parent("div"))
+    })
+    $('#form').submit($(form).valid())
+

@@ -1,0 +1,17 @@
+.row-fluid{ id: "search_condition_group_#{search_condition_group.id}" }
+  .nu-offset
+    .row-fluid
+      .muted (
+    .row-fluid
+      .nu-offset
+        - search_condition_group.search_conditions.each_with_index do |sc,i|
+          - unless i==0
+            %b{:class=>"nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"}= search_condition_group.pretty_operator
+          = render partial: 'admin/search_conditions/show', locals: { search_condition: sc }
+    .row-fluid
+      - search_condition_group.search_condition_groups.each do |scg|
+        .nu-offset
+          %b{class: "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"}
+            = search_condition_group.pretty_operator
+        = render partial: "show", locals: { search_condition_group: scg }
+    .muted )

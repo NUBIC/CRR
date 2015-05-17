@@ -35,7 +35,7 @@
   :operator_type: group
 
 - :symbol: '&'
-  :text: 'And'
+  :text: 'AND'
   :unique_identifier: and
   :operator_type: group
 

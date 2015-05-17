@@ -19,13 +19,13 @@ class SearchCondition < ActiveRecord::Base
   COMPUTED_DATE_UNITS     = { years_ago: 'years ago', months_ago: 'months ago', days_ago: 'days ago' }.freeze
 
   # validates_inclusion_of :operator, in: comparison_operators.map{|o| o[:symbol]}
-  validates_presence_of  :question
+  validates_presence_of  :question, :value
 
   attr_accessor :search_value, :calculated_date_units, :calculated_date_number, :search_subject, :is_calculated_date
 
   after_initialize  :set_search_attributes, unless: Proc.new { |record| record.new_record? }
   after_save        :set_search_attributes
-  before_save       :set_date_value
+  before_validation :set_date_value
 
   def set_date_value
     self.value = calculated_date_number.to_s + ' ' + calculated_date_units.to_s unless calculated_date_number.blank? || calculated_date_units.blank?

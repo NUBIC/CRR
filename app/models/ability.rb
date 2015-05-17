@@ -42,7 +42,10 @@ class Ability
           consent.editable?
         end
         can :manage, Study
-        can :manage, Search
+        can [:new, :create, :show, :index], Search
+        can [:edit, :update, :destroy], Search do |search|
+          !search.data_released?
+        end
         can :manage, User
         can :manage, Participant
         can :manage, Relationship
@@ -53,7 +56,10 @@ class Ability
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
-        can :manage, Search
+        can [:new, :create, :show, :update, :destroy, :index, :request_data], Search
+        an [:edit, :update, :destroy], Search do |search|
+          !search.data_released?
+        end
         can :manage, ContactLog
         can :manage, StudyInvolvement
       else user.researcher?
@@ -63,7 +69,7 @@ class Ability
         can [:show,:request_data], Search do |search|
           user.studies.active.include?(search.study)
         end
-        can :destroy, Search do |search|
+        can [:edit, :update, :destroy], Search do |search|
           user.studies.active.include?(search.study) && search.new?
         end
       end

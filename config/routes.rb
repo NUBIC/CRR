@@ -53,7 +53,11 @@ AudiologyRegistry::Application.routes.draw do
       end
     end
     resources :search_condition_groups, except: :new
-    resources :search_conditions
+    resources :search_conditions do
+      collection do
+        get :search_condition_values
+      end
+    end
     resources :consents do
       member do
         patch :activate

@@ -107,11 +107,15 @@ module ApplicationHelper
     SearchConditionGroup.group_operators.map{|o|[ SearchConditionGroup.operator_text(o[:symbol]),o[:symbol]]}
   end
 
-  def search_condition_operator_options(search_condition)
-    if search_condition.question.multiple_choice?
+  def question_operator_options(question)
+    if question.multiple_choice?
       SearchCondition::VALID_ANSWER_OPERATORS.map{|s| [SearchCondition.operator_text(s),s]}
     else
       SearchCondition.comparison_operators.map{|o|[ SearchCondition.operator_text(o[:symbol]),o[:symbol]]}
     end
+  end
+
+  def search_condition_group_operator_class(search_condition_group)
+    "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"
   end
 end

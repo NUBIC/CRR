@@ -1,0 +1,33 @@
+- search_condition    ||= @search_condition
+- available_questions ||= @available_questions
+- path = search_condition.persisted? ? admin_search_condition_path(search_condition) : admin_search_conditions_path
+- if search_condition.persisted?
+  - data_target = "#search_condition_#{search_condition.id}"
+  - search_condition_css_class = 'edit_search_condition'
+- else
+  - data_target = "##{search_condition.search_condition_group.id}_new_condition"
+  - search_condition_css_class = 'new_search_condition'
+
+= form_for search_condition, url: path, html: { class: "form-horizontal ajax-edit-form #{search_condition_css_class}", 'data-async'=>true, 'data-target'=> data_target } do |f|
+  - if search_condition.errors.any?
+    .alert.alert-error.text-center
+      = search_condition.errors.full_messages.to_sentence
+  - if search_condition.search_condition_group.search_conditions.any? && !search_condition.persisted?
+    %b{ class: search_condition_group_operator_class(search_condition.search_condition_group) }
+      = search_condition.search_condition_group.pretty_operator
+  .row-fluid.search-condition-form
+    .span4.search-condition-question
+      = f.hidden_field :search_condition_group_id
+      .input-append.input-block-level
+        = f.select :question_id, available_questions.collect{|question| [question.search_display, question.id]}, {include_blank: true}, class: 'question_id_search input-block-level', 'data-placeholder'=>'Select a question'
+        = link_to '#', class: 'btn question_lookup' do
+          %i.icon-search
+
+      = render partial: 'question_modal_list', locals: { available_questions: available_questions }
+    .span5.offset1.search-condition-values{ 'data-source' => search_condition_values_admin_search_conditions_path(search_condition_id: search_condition.id) }
+      = render partial: 'search_condition_values_form', locals: { question: search_condition.question }
+
+    .span2.pull-right.text-right
+      .btn-group
+        = f.button 'Continue', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?
+        = link_to 'Cancel', admin_search_path(id: search_condition.get_search), class: 'btn btn-warning btn-small'

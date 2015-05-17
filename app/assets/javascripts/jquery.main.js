@@ -423,6 +423,11 @@ $(document).ready(function() {
     return this.optional(element) || value.match(/^\d+$/);
   }, "Please specify a valid number");
 
+  $.validator.addMethod("search_condition_value", function(value, element) {
+    return value.match(/^\S+$/);
+  }, "Please specify search value");
+
+
   $(".phone").mask("999-999-9999");
   $(".date").mask("99/99/9999");
   $(".zipcode").mask("99999");
@@ -456,6 +461,7 @@ $(document).ready(function() {
   }
 
   function isBirthDate(txtDate){
+    console.log(txtDate);
     var currVal = txtDate;
     var rxDatePattern = /^(\d{1,2})(\/)(\d{1,2})(\/)(\d{4})$/;
     var dtArray = currVal.match(rxDatePattern);

@@ -1,11 +1,13 @@
+- search_condition_group = @search.search_condition_group
 #search
   = render partial: 'header'
   .row-fluid
     .span12.search-container
-      - if @search.data_released? || (@search.data_requested? && !(current_user.admin? || current_user.data_manager?))
-        %h5 Participants filtered by folowing conditions
-        = render partial: 'admin/search_condition_groups/show_search_condition_group', locals: { search_condition_group: @search.search_condition_group }
-      - else
+      - if can? :edit, @search
         %h5 Filter participants by folowing conditions
-        = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: @search.search_condition_group }
-  = render partial: 'results' if @search.search_condition_group.has_conditions?
+        = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: search_condition_group }
+      - else
+        %h5 Participants filtered by folowing conditions
+        = render partial: 'admin/search_condition_groups/show', locals: { search_condition_group: search_condition_group }
+
+  = render partial: 'results' if search_condition_group.has_conditions?

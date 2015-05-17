@@ -142,6 +142,6 @@ class Search < ActiveRecord::Base
     end
 
     def create_condition_group
-      self.build_search_condition_group()
+      self.build_search_condition_group() unless self.search_condition_group
     end
 end

@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     return unless request.xhr?
     # add flash notices to reesponse header
     response.headers['x-flash-notice'] = flash[:notice]  unless flash[:notice].blank?
-    response.headers['x-flash-errors'] = flash[:error]  unless flash[:error].blank?
+    response.headers['x-flash-errors'] = flash[:error]   unless flash[:error].blank?
     # Stops the flash appearing when you next refresh the page
     flash.discard
   end

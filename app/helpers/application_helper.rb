@@ -104,15 +104,12 @@ module ApplicationHelper
   end
 
   def search_condition_group_operator_options
-    SearchConditionGroup.group_operators.map{|o|[ SearchConditionGroup.operator_text(o[:symbol]),o[:symbol]]}
+    SearchConditionGroup.group_operators.map{|o|[ SearchConditionGroup.operator_text(o[:symbol], SearchConditionGroup::GROUP_OPERATOR_TYPE),o[:symbol]]}
   end
 
   def question_operator_options(question)
-    if question.multiple_choice?
-      SearchCondition::VALID_ANSWER_OPERATORS.map{|s| [SearchCondition.operator_text(s),s]}
-    else
-      SearchCondition.comparison_operators.map{|o|[ SearchCondition.operator_text(o[:symbol]),o[:symbol]]}
-    end
+    operator_type = SearchCondition.operator_type_for_question(question)
+    SearchCondition.operators_by_type(operator_type).map{|o|[ SearchCondition.operator_text(o[:symbol], operator_type),o[:symbol], class: "#{o[:cardinality] ? 'operator-cardinality-' + o[:cardinality].to_s : ''}"]}
   end
 
   def search_condition_group_operator_class(search_condition_group)

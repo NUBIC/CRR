@@ -27,7 +27,7 @@
 
     .row-fluid
       .span12.search-conditions
-        - search_condition_group.search_conditions.each_with_index do |sc,i|
+        - search_condition_group.search_conditions.order(:id).each_with_index do |sc,i|
           - unless i==0
             %b{ class: operator_class }
               = search_condition_group.pretty_operator

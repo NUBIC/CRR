@@ -32,11 +32,14 @@
                 %td
                   - if question.true_date?
                     [date]
-                  - elsif question.answers.empty?
+                  - elsif question.short_text? || question.long_text?
                     [free text]
-                  - question.answers.each do |answer|
-                    = answer.text
-                    %br
+                  - elsif question.number?
+                    [number]
+                  - elsif question.multiple_choice?
+                    - question.answers.each do |answer|
+                      = answer.text
+                      %br
                 %td
                   %button.btn.btn-success.btn-small.select_question{ "data-dismiss"=>"modal", "data-value" => question.id}
                     Select

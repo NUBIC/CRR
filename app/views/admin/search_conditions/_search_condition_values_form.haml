@@ -1,10 +1,12 @@
 - question ||= @question
 - search_condition ||= @search_condition
-- if search_condition && search_condition.question == question
+- display_existing_values = search_condition && search_condition.question == question
+- if display_existing_values
   - search_condition_operator = search_condition.operator
-  - search_condition_value    = search_condition.value
-  - calculated_date_number    = search_condition.calculated_date_number
-  - calculated_date_units     = search_condition.calculated_date_units
+  - search_condition_values   = search_condition.values
+  - search_condition_value    = search_condition_values.first
+  - calculated_date_number    = search_condition.calculated_date_numbers.first if search_condition.calculated_date_numbers
+  - calculated_date_unit     = search_condition.calculated_date_units.first if search_condition.calculated_date_units
 
 .row-fluid.search-condition-answers-form
   - unless question.blank?
@@ -13,26 +15,30 @@
 
     .span7
       - if question.multiple_choice?
-        = select_tag 'search_condition[value]', options_for_select(question.answers.collect{|a|[ a.text,a.id]}, search_condition_value), class: 'input-block-level'
+        - question.answers.each do |answer|
+        - checked = true if display_existing_values && search_condition_values.include?(answer.id.to_s)
+          = label_tag 'search_condition[values][]', class: 'checkbox' do
+            = check_box_tag 'search_condition[values][]', answer.id, checked, { id: "search_condition[values]_#{answer.id}"}
+            = answer.text
       - else
         - if question.true_date?
-          - display_computed_date = search_condition.blank? || search_condition.value.blank? || search_condition.is_calculated_date
+          - display_calculated_date = !display_existing_values || search_condition.blank? || search_condition.values.empty? || search_condition.is_calculated_date
 
-          .search-condition-answer{ class: "#{'hidden' if display_computed_date }"}
-            = text_field_tag 'search_condition[value]', search_condition_value, 'data-provide' => 'datepicker', class: "input-small search_condition_value #{'date' if question.true_date?}", placeholder: 'mm/dd/yyyy'
+          .search-condition-answer{ class: "#{'hidden' if display_calculated_date }"}
+            = text_field_tag 'search_condition[values][]', search_condition_value, 'data-provide' => 'datepicker', class: "input-small search_condition_value #{'date' if question.true_date?}", placeholder: 'mm/dd/yyyy'
             %br
             = link_to '#', class: 'date-format-link' do
               %i.icon-refresh
               %span
                 Use calculated date format
 
-          .search-condition-answer{ class: "#{'hidden' unless display_computed_date}"}
-            = text_field_tag 'search_condition[calculated_date_number]', calculated_date_number, placeholder: 'number', class: "input-mini number search_condition_value", 'data-date-value' => "#{search_condition.search_value if search_condition}"
-            = select_tag 'search_condition[calculated_date_units]', options_for_select(SearchCondition::COMPUTED_DATE_UNITS.values.map{|o| [o,o]}, calculated_date_units), class: 'input-medium'
+          .search-condition-answer{ class: "#{'hidden' unless display_calculated_date}"}
+            = text_field_tag 'search_condition[calculated_date_numbers][]', calculated_date_number, placeholder: 'number', class: "input-mini number search_condition_value", 'data-date-value' => "#{search_condition.search_values.first if search_condition}"
+            = select_tag 'search_condition[calculated_date_units][]', options_for_select(SearchCondition::CALCULATED_DATE_UNITS.values.map{|o| [o,o]}, calculated_date_unit), class: 'input-medium'
             %br
             = link_to '#', class: 'date-format-link' do
               %i.icon-refresh
               %span
                 Use date format
         - else
-          = text_field_tag 'search_condition[value]', search_condition_value, class: 'input-block-level search_condition_value'
+          = text_field_tag 'search_condition[values][]', search_condition_value, class: "input-block-level search_condition_value #{'number' if question.number?}"

@@ -1,15 +1,20 @@
 - search_condition ||= @search_condition
 - show_controls    ||= false
 .row-fluid.search-condition{ id: "search_condition_#{search_condition.id}" }
-  .span5
-    = search_condition.question.search_display
-  .span2.text-right
-    %small.muted
-      %i
-        = search_condition.pretty_operator
-  .span3
-    %b
-      = search_condition.display_value
+  - if search_condition.question
+    .span5
+      = search_condition.question.search_display
+    .span2.text-right
+      %small.muted
+        %i
+          = search_condition.pretty_operator
+    .span3
+      %b
+        = search_condition.display_values
+  - else
+    .span10
+      %p.text-error
+        Search condition question is not selected
   - if show_controls
     .span2.text-right
       = form_for search_condition, method: 'delete', url: admin_search_condition_path(search_condition), html: { class: 'search-condition-delete'} do |f|

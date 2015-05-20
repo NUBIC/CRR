@@ -60,4 +60,8 @@ class SearchConditionGroup < ActiveRecord::Base
   def validate_presence_of_operator
     self.operator = DEFAULT_GROUP_OPERATOR if self.operator.blank?
   end
+
+  def pretty_operator
+    pretty_operator_by_type(GROUP_OPERATOR_TYPE)
+  end
 end

@@ -81,19 +81,19 @@ $(document).ready ->
       $('.search-condition-groups').show()
 
   # use ajax to deliver edit/new forms, force reload page on success
-  $("form.ajax-edit-form").livequery ->
+  $(".search-conditions form.ajax-edit-form").livequery ->
     $form   = $(this)
     $target = $($form.attr('data-target'))
-
-    validateSearchCondition($form)
 
     $form.ajaxForm
       target: $target
       dataType: 'html'
+      beforeSubmit: (arr, $form, options) ->
+        validateSearchCondition($form)
+        $form.valid()
       success: (data,message,xhr) ->
         if xhr.getResponseHeader('x-flash-errors') != null
           $target.html(data)
-          validateSearchCondition($form)
         else
           location.reload()
 
@@ -115,7 +115,6 @@ $(document).ready ->
         }).done (data) ->
           $valuesContainer.html(data)
           $submitButton.enable()
-          validateSearchCondition($searchConditionForm)
       else
         $valuesContainer.html('')
         $submitButton.disable
@@ -166,12 +165,25 @@ $(document).ready ->
       $container.addClass('hidden')
       $container.siblings().removeClass('hidden')
       $container.siblings().find('input[type="text"]').val('')
-      validateSearchCondition($(this).closest('form'))
+
+      $searchConditionForm = $(this).closest('form')
+      showHideSecondaryAnswer($searchConditionForm)
 
   validateSearchCondition = (form) ->
     $(form).validate({
       errorPlacement: (error, element) ->
         error.appendTo( element.parent("div"))
     })
-    $('#form').submit($(form).valid())
+    false
 
+  showHideSecondaryAnswer = ($searchConditionForm) ->
+    $selectedOperator = $searchConditionForm.find('.search_condition_operator option:selected')
+    if $selectedOperator.length && $selectedOperator.hasClass('operator-cardinality-2')
+      $searchConditionForm.find('.secondary-answer-value').removeClass('hidden')
+    else
+      $searchConditionForm.find('.secondary-answer-value').addClass('hidden')
+
+  $('.search_condition_operator').livequery ->
+    $(this).on 'change', () ->
+      $searchConditionForm = $(this).closest('form')
+      showHideSecondaryAnswer($searchConditionForm)

@@ -23,6 +23,6 @@
 //= require jquery.livequery.min
 //= require jquery.maskedinput.min
 //= require jquery.tokeninput
-//= require jquery.validate.min
+//= require jquery.validate.custom
 //= require select2.min
 //= require_tree .

@@ -4,41 +4,52 @@
 - if display_existing_values
   - search_condition_operator = search_condition.operator
   - search_condition_values   = search_condition.values
-  - search_condition_value    = search_condition_values.first
-  - calculated_date_number    = search_condition.calculated_date_numbers.first if search_condition.calculated_date_numbers
-  - calculated_date_unit     = search_condition.calculated_date_units.first if search_condition.calculated_date_units
+  - calculated_date_numbers   = search_condition.calculated_date_numbers
+  - calculated_date_units     = search_condition.calculated_date_units
 
 .row-fluid.search-condition-answers-form
   - unless question.blank?
     .span5
-      = select_tag 'search_condition[operator]', options_for_select(question_operator_options(question), search_condition_operator), class: 'input-block-level'
+      = select_tag 'search_condition[operator]', options_for_select(question_operator_options(question), search_condition_operator), class: 'input-block-level search_condition_operator'
 
     .span7
       - if question.multiple_choice?
         - question.answers.each do |answer|
         - checked = true if display_existing_values && search_condition_values.include?(answer.id.to_s)
           = label_tag 'search_condition[values][]', class: 'checkbox' do
-            = check_box_tag 'search_condition[values][]', answer.id, checked, { id: "search_condition[values]_#{answer.id}"}
+            = check_box_tag 'search_condition[values][]', answer.id, checked, { id: "search_condition_values_#{answer.id}"}
             = answer.text
       - else
         - if question.true_date?
           - display_calculated_date = !display_existing_values || search_condition.blank? || search_condition.values.empty? || search_condition.is_calculated_date
 
           .search-condition-answer{ class: "#{'hidden' if display_calculated_date }"}
-            = text_field_tag 'search_condition[values][]', search_condition_value, 'data-provide' => 'datepicker', class: "input-small search_condition_value #{'date' if question.true_date?}", placeholder: 'mm/dd/yyyy'
-            %br
+            - (0..1).each do |i|
+              - search_condition_value = search_condition_values[i] if search_condition_values
+              - css_clas = i == 0 ? 'primary-answer-value' : 'secondary-answer-value'
+              %div{ class: "#{css_clas} #{'hidden' if search_condition_value.blank? && i > 0}"}
+                = text_field_tag 'search_condition[values][]', search_condition_value, 'data-provide' => 'datepicker', class: "input-small search_condition_value #{'date' if question.true_date?}", placeholder: 'mm/dd/yyyy', id: "search_condition_values_#{i}"
             = link_to '#', class: 'date-format-link' do
               %i.icon-refresh
               %span
                 Use calculated date format
 
           .search-condition-answer{ class: "#{'hidden' unless display_calculated_date}"}
-            = text_field_tag 'search_condition[calculated_date_numbers][]', calculated_date_number, placeholder: 'number', class: "input-mini number search_condition_value", 'data-date-value' => "#{search_condition.search_values.first if search_condition}"
-            = select_tag 'search_condition[calculated_date_units][]', options_for_select(SearchCondition::CALCULATED_DATE_UNITS.values.map{|o| [o,o]}, calculated_date_unit), class: 'input-medium'
-            %br
+            - (0..1).each do |i|
+              - calculated_date_number = calculated_date_numbers[i] if calculated_date_numbers
+              - calculated_date_unit   = calculated_date_units[i] if calculated_date_units
+              - css_clas = i == 0 ? 'primary-answer-value' : 'secondary-answer-value'
+              %div{ class: "#{css_clas} #{'hidden' if calculated_date_number.blank? && i > 0}"}
+                = text_field_tag 'search_condition[calculated_date_numbers][]', calculated_date_number, placeholder: 'number', class: "input-mini number search_condition_value", 'data-date-value' => "#{search_condition.search_values.first if search_condition}", id: "search_condition_calculated_date_numbers_#{i}"
+                = select_tag 'search_condition[calculated_date_units][]', options_for_select(SearchCondition::CALCULATED_DATE_UNITS.values.map{|o| [o,o]}, calculated_date_unit), class: 'input-medium', id: "search_condition_calculated_date_units_#{i}"
             = link_to '#', class: 'date-format-link' do
               %i.icon-refresh
               %span
                 Use date format
         - else
-          = text_field_tag 'search_condition[values][]', search_condition_value, class: "input-block-level search_condition_value #{'number' if question.number?}"
+          - (0..1).each do |i|
+            - search_condition_value = search_condition_values[i] if search_condition_values
+            - css_clas = i == 0 ? 'primary-answer-value' : 'secondary-answer-value'
+            %div{ class: "#{css_clas} #{'hidden' if search_condition_value.blank? && i > 0}"}
+              = text_field_tag 'search_condition[values][]', search_condition_value, class: "input-block-level search_condition_value #{'number' if question.number?}", id: "search_condition_values_#{i}"
+

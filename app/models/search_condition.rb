@@ -26,7 +26,7 @@ class SearchCondition < ActiveRecord::Base
 
   after_initialize  :set_search_attributes, unless: Proc.new { |record| record.new_record? }
   after_save        :set_search_attributes
-  before_validation :set_date_values
+  before_validation :set_date_values, :cleanup_values
 
   def set_date_values
     if question.true_date? && !calculated_date_units.reject(&:blank?).empty? && !calculated_date_numbers.reject(&:blank?).empty?
@@ -37,6 +37,12 @@ class SearchCondition < ActiveRecord::Base
         self.values << value
       end
     end
+  end
+
+  def cleanup_values
+    operator_type = self.class.operator_type_for_question(question)
+    operator_hash = self.class.operators_by_type(operator_type).find{|o| o[:symbol] == operator}
+    self.values = [self.values.first] unless (operator_type == LIST_OPERATOR_TYPE) || (operator_hash[:cardinality] && operator_hash[:cardinality] > 1)
   end
 
   def set_search_attributes
@@ -74,7 +80,7 @@ class SearchCondition < ActiveRecord::Base
         # TODO: find better solution if available for case insensitive search for free text input question
         @search_values = values.map{|value| value.downcase}
       end
-      @search_values = values if @search_values.empty?
+      @search_values = values.reject(&:blank?) if @search_values.empty?
     end
   end
 
@@ -85,8 +91,12 @@ class SearchCondition < ActiveRecord::Base
     participants = Participant.joins(response_sets: :responses).where(responses: {question_id: question.id}, stage: 'approved')
     if operator_type == LIST_OPERATOR_TYPE
       participants = participants.where("#{search_subject} #{operator} (?)", search_values)
+    elsif operator == 'between'
+      Rails.logger.info *search_values.inspect
+      participants
+      participants = participants.where("#{search_subject} #{operator} ? AND ?", *search_values)
     else
-      participants = participants.where("#{search_subject} #{operator} ?", search_values)
+      participants = participants.where("#{search_subject} #{operator} ?", search_values.first)
     end
   end
 
@@ -102,7 +112,7 @@ class SearchCondition < ActiveRecord::Base
     else
       display_values = values
     end
-    display_values.join('<br/>').html_safe
+    display_values.join(',<br/>').html_safe
   end
 
   def self.operator_type_for_question(question)

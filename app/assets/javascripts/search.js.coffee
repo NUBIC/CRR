@@ -65,11 +65,6 @@ $(document).ready ->
       setReleaseButton()
 
   # edit page -- search UI
-  if $('.search-container .search-condition-group-container .search-condition').length == 0 && $('.search-container .search-condition-groups .search-condition-group-controls').length == 0
-    $('.search-instructions').show()
-    $('.search-conditions').hide()
-    $('.search-condition-groups').hide()
-
   $('.btn-search-condition-add').livequery ->
     $(this).on 'click', () ->
       $('.search-instructions').hide()

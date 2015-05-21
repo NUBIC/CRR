@@ -10,20 +10,9 @@
               %span.help-inline
                 of the following is true
         .span5.pull-right.text-right
-          = link_to new_admin_search_condition_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition", class: 'btn btn-small btn-search-condition-add' do
-            %i.icon-plus
-            Add condition
-          - unless search_condition_group.search_condition_group && search_condition_group.search_condition_group.search_condition_group
-            = link_to admin_search_condition_groups_path(search_condition_group_id: search_condition_group.id), method: :post, class: 'btn btn-small btn-search-condition-group-add' do
-              %i.icon-plus
-              Add group of conditions
           - if search_condition_group.search_id.blank?
             = form_for search_condition_group, method: 'delete', url: admin_search_condition_group_path(search_condition_group), html: { class: 'search-condition-group-delete'} do |f|
               = f.button 'Delete group', class: 'btn btn-small btn-danger'
-
-    .row-fluid.hide.search-instructions
-      .span12
-        Use buttons on the right to add search conditions
 
     .row-fluid
       .span12.search-conditions
@@ -33,6 +22,9 @@
               = search_condition_group.pretty_operator
           = render partial: 'admin/search_conditions/show', locals: { search_condition: sc, show_controls: true }
         .row-fluid.search_condition_group_new_condition{ id: "#{search_condition_group.id}_new_condition" }
+        = link_to new_admin_search_condition_path(search_condition_group_id: search_condition_group.id), 'data-async'=>true, 'data-target'=>"##{search_condition_group.id}_new_condition", class: 'btn btn-small btn-search-condition-add' do
+          %i.icon-plus
+          Add condition
 
     .row-fluid
       .span12.search-condition-groups
@@ -45,5 +37,9 @@
           .row-fluid
             .span12
               = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: scg }
+        - unless search_condition_group.search_condition_group && search_condition_group.search_condition_group.search_condition_group
+          = link_to admin_search_condition_groups_path(search_condition_group_id: search_condition_group.id), method: :post, class: 'btn btn-small btn-search-condition-group-add' do
+            %i.icon-plus
+            Add group of conditions
         .row-fluid.search_condition_group_new_condition_group{ id: "#{search_condition_group.id}_new_condition_group" }
 

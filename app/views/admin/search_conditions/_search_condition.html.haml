@@ -19,7 +19,7 @@
     .span4.search-condition-question
       = f.hidden_field :search_condition_group_id
       .input-append.input-block-level
-        = f.select :question_id, available_questions.collect{|question| [question.search_display, question.id]}, {include_blank: true}, class: 'question_id_search input-block-level', 'data-placeholder'=>'Select a question'
+        = f.select :question_id, available_questions.collect{|question| [question.search_display, question.id, class: question.section.survey.state]}, {include_blank: true}, class: 'question_id_search input-block-level', 'data-placeholder'=>'Select a question'
         = link_to '#', class: 'btn question_lookup' do
           %i.icon-search
 

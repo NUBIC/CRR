@@ -97,8 +97,15 @@ $(document).ready ->
         else
           location.reload()
 
+  formatQuestion = (question) ->
+
+    if $(question.element).hasClass('active')
+      return $('<span class="user-circle"></span><span>' + question.text + '</span>'
+      );
+    question.text
+
   $('.question_id_search').livequery ->
-    $(this).select2()
+    $(this).select2({templateResult: formatQuestion})
     $searchConditionForm = $(this).closest('form')
     $valuesContainer     = $searchConditionForm.find('.search-condition-values')
     $submitButton        = $searchConditionForm.find('button[type="submit"]')

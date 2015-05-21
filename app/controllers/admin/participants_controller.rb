@@ -2,6 +2,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def index
     @participants = params[:state].blank? ? Participant.all_participants : Participant.send(params[:state])
+    authorize! :index, Participant
   end
 
 

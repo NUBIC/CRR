@@ -45,7 +45,7 @@ class Admin::UsersController < Admin::AdminController
  end
 
  def dashboard
-  redirect_to admin_participants_path if current_user.admin? || current_user.data_manager?
+  redirect_to admin_participants_path if can? :index, Participant
  end
 
  def user_params

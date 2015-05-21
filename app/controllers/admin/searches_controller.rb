@@ -14,11 +14,15 @@ class Admin::SearchesController < Admin::AdminController
     end
   end
 
+  def edit
+  end
+
   def create
     @search         = Search.new(search_params)
     @search.user_id = current_user.ar_user.id
 
     if @search.save
+      flash[:notice] = "Saved"
       redirect_to admin_search_path(@search)
     else
       flash[:error] = @search.errors.full_messages.to_sentence
@@ -42,7 +46,7 @@ class Admin::SearchesController < Admin::AdminController
     else
       flash[:error] = @search.errors.full_messages.to_sentence
     end
-    render :show
+    redirect_to admin_search_path(@search)
   end
 
   def request_data

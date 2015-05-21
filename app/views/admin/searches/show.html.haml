@@ -1,6 +1,27 @@
 - search_condition_group = @search.search_condition_group
 #search
-  = render partial: 'header'
+  - if @data_released
+    .row-fluid
+      .alert.nu-well
+        %h5
+          Data for this search has been released on #{@search.process_date}
+  - elsif @data_requested
+    .row-fluid
+      .alert.nu-well
+        %h5
+          Data for this search has been requested and is pending release.
+  .row-fluid
+    #search_name.span9
+      %h3
+        #{@search.study.display_name} : #{@search.name}
+
+    - if @new_search || @data_requested && current_user.admin?
+      .span3
+        = form_for @search, url: admin_search_path(@search), method: :delete do |f|
+          .btn-toolbar.pull-right.btn-group
+            = link_to edit_admin_search_path(@search), 'data-async'=>true, 'data-target'=>"#search_name", class: 'btn' do
+              Rename
+            = f.button "Delete", class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete request #{@search.name}?" }
   .row-fluid
     .span12.search-container
       - if can? :edit, @search

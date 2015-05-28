@@ -25,10 +25,10 @@
   .row-fluid
     .span12.search-container
       - if can? :edit, @search
-        %h5 Filter participants by folowing conditions
+        %h5 Filter participants by the following conditions
         = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: search_condition_group }
       - else
-        %h5 Participants filtered by folowing conditions
+        %h5 Participants filtered by the folowing conditions
         = render partial: 'admin/search_condition_groups/show', locals: { search_condition_group: search_condition_group }
 
   = render partial: 'results' if search_condition_group.has_conditions?

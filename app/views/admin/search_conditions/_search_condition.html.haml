@@ -8,7 +8,7 @@
   - data_target = "##{search_condition.search_condition_group.id}_new_condition"
   - search_condition_css_class = 'new_search_condition'
 
-= form_for search_condition, url: path, html: { class: "form-horizontal ajax-edit-form #{search_condition_css_class}", 'data-async'=>true, 'data-target'=> data_target } do |f|
+= form_for search_condition, url: path, html: { class: "form-horizontal ajax-edit-form #{search_condition_css_class}", data: { async: true, target: data_target }} do |f|
   - if search_condition.errors.any?
     .alert.alert-error.text-center
       = search_condition.errors.full_messages.to_sentence
@@ -19,15 +19,15 @@
     .span4.search-condition-question
       = f.hidden_field :search_condition_group_id
       .input-append.input-block-level
-        = f.select :question_id, available_questions.collect{|question| [question.search_display, question.id, class: question.section.survey.state]}, {include_blank: true}, class: 'question_id_search input-block-level', 'data-placeholder'=>'Select a question'
+        = f.select :question_id, available_questions.collect{|question| [question.search_display, question.id, class: question.section.survey.state]}, {include_blank: true}, class: 'question_id_search input-block-level', data: { placeholder: 'Select a question'}
         = link_to '#', class: 'btn question_lookup' do
           %i.icon-search
 
       = render partial: 'question_modal_list', locals: { available_questions: available_questions }
-    .span5.offset1.search-condition-values{ 'data-source' => search_condition_values_admin_search_conditions_path(search_condition_id: search_condition.id) }
+    .span5.offset1.search-condition-values{ data: { source: search_condition_values_admin_search_conditions_path(search_condition_id: search_condition.id) }}
       = render partial: 'search_condition_values_form', locals: { question: search_condition.question }
 
     .span2.pull-right.text-right
       .btn-group
-        = f.button 'Save', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?
+        = f.button 'Save', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?, data: { disable_with: 'Saving...'}
         = link_to 'Cancel', admin_search_path(id: search_condition.get_search), class: 'btn btn-warning btn-small'

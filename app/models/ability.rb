@@ -57,7 +57,7 @@ class Ability
         can :manage, Relationship
         can :manage, ResponseSet
         can [:new, :create, :show, :update, :destroy, :index, :request_data], Search
-        an [:edit, :update, :destroy], Search do |search|
+        can [:edit, :update, :destroy], Search do |search|
           !search.data_released?
         end
         can :manage, ContactLog

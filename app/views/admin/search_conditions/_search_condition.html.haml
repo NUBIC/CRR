@@ -29,5 +29,5 @@
 
     .span2.pull-right.text-right
       .btn-group
-        = f.button 'Continue', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?
+        = f.button 'Save', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?
         = link_to 'Cancel', admin_search_path(id: search_condition.get_search), class: 'btn btn-warning btn-small'

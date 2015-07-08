@@ -92,7 +92,6 @@ class SearchCondition < ActiveRecord::Base
     if operator_type == LIST_OPERATOR_TYPE
       participants = participants.where("#{search_subject} #{operator} (?)", search_values)
     elsif operator == 'between'
-      Rails.logger.info *search_values.inspect
       participants
       participants = participants.where("#{search_subject} #{operator} ? AND ?", *search_values)
     else

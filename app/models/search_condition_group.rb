@@ -17,14 +17,14 @@ class SearchConditionGroup < ActiveRecord::Base
   has_many    :search_condition_groups
 
   validates_inclusion_of :operator, in: group_operators.map{|o| o[:symbol]}
-  validate :presence_of_search_or_search_condition_groups
+  validate :presence_of_search_or_search_condition_group
 
   before_validation :validate_presence_of_operator
 
   DEFAULT_GROUP_OPERATOR = '|'.freeze
 
-  def presence_of_search_or_search_condition_groups
-    return false if self.search.blank? && self.search_condition_groups.empty?
+  def presence_of_search_or_search_condition_group
+    return false if self.search.blank? && self.search_condition_group.blank?
   end
 
   def result

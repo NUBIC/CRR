@@ -1,7 +1,7 @@
 class Admin::ParticipantsController < Admin::AdminController
 
   def index
-    @participants = params[:state].blank? ? Participant.all_participants : Participant.send(params[:state])
+    @participants = params[:state].blank? ? Participant.all_participants.eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study) : Participant.send(params[:state]).eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study)
     authorize! :index, Participant
   end
 

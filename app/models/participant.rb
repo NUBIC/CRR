@@ -32,24 +32,25 @@
 
 class Participant < ActiveRecord::Base
   include AASM
-  scope :pending_approvals, -> { where(stage: "pending_approval").order('created_at DESC') }
-  scope :approved, -> { where(stage: "approved").order('created_at DESC') }
-  scope :approaching_deadlines, -> { joins(:study_involvements).where(stage: "approved").where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}'
+  scope :pending_approvals,     -> { where(stage: 'pending_approval').order("#{self.table_name}.created_at DESC") }
+  scope :approved,              -> { where(stage: 'approved').order("#{self.table_name}.created_at DESC") }
+  scope :approaching_deadlines, -> { joins(:study_involvements).where(stage: 'approved').where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}'
     or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
-  scope :all_participants, -> { where(stage: ['approved', 'pending_approval']).order('created_at DESC') }
-  has_many :response_sets, :dependent => :destroy
-  has_many :surveys, :through => :response_sets
-  has_many :contact_logs, :dependent => :destroy
-  has_many :study_involvements, -> {order("end_date DESC")}, :dependent => :destroy
-  has_many :origin_relationships,:class_name=>"Relationship",:foreign_key=>"origin_id", :dependent => :destroy
-  has_many :destination_relationships,:class_name=>"Relationship",:foreign_key=>"destination_id", :dependent => :destroy
-  has_many :consent_signatures, :dependent => :destroy
-  has_many :studies, :through=>:study_involvements
-  has_many :search_participants, dependent: :destroy
+  scope :all_participants,      -> { where(stage: ['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
 
-  has_one :account_participant,:dependent => :destroy
-  has_one :account, :through => :account_participant
-  accepts_nested_attributes_for :origin_relationships, :allow_destroy => true
+  has_many :response_sets,              dependent: :destroy
+  has_many :surveys,                    through: :response_sets
+  has_many :contact_logs,               dependent: :destroy
+  has_many :study_involvements,         -> {order('end_date DESC')}, dependent: :destroy
+  has_many :origin_relationships,       class_name: 'Relationship', foreign_key: 'origin_id', dependent: :destroy
+  has_many :destination_relationships,  class_name: 'Relationship', foreign_key: 'destination_id', dependent: :destroy
+  has_many :consent_signatures,         dependent: :destroy
+  has_many :studies,                    through: :study_involvements
+  has_many :search_participants,        dependent: :destroy
+  has_one :account_participant,         dependent: :destroy
+  has_one :account,                     through: :account_participant
+
+  accepts_nested_attributes_for :origin_relationships, allow_destroy: true
 
   validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
   validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true

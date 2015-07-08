@@ -1,6 +1,6 @@
-#additonal-data{data: {header: display_participant_header(params[:state], @participants.count), url: new_admin_participant_path, text: "Add a participant"}}
+#additonal-data{data: { header: display_participant_header(params[:state], @participants.length), url: new_admin_participant_path, text: "Add a participant"}}
 .row-fluid
-  %table.table.table-bordered.table-hover{:id=>'participants_list'}
+  %table.table.table-bordered.table-hover#participants_list
     %thead
       %tr.display
         %th Participant ID
@@ -11,27 +11,33 @@
         %th Join Date
         %th Account Email
     %tbody
-      -@participants.each do |p|
+      - @participants.each do |p|
         %tr.display
-          %td=p.id
-          %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.first_name, admin_participant_path(p))
-          %td{:class=>"#{'nu' if p.pending_approval?}"}
-            =link_to(p.last_name, admin_participant_path(p))
+          %td
+            =p.id
+          %td{ class: "#{'nu' if p.pending_approval?}" }
+            = link_to p.first_name, admin_participant_path(p)
+          %td{ class: "#{'nu' if p.pending_approval?}" }
+            = link_to p.last_name, admin_participant_path(p)
             .pull-right
-              =image_tag "child.png" if p.child?
-              =image_tag 'siblings.png' if p.has_relationships?
+              = image_tag 'child.png' if p.child?
+              = image_tag 'siblings.png' if p.has_relationships?
           %td
             %ul.unstyled
-              -p.study_involvements.each_with_index do |si,i|
-                %li{:class=> "#{'more_display' if i > 2}"}
-                  =link_to si.study.display_name, admin_participant_path(p, :tab=>'studies')
+              - p.study_involvements.each_with_index do |si,i|
+                %li{ class: "#{'more_display' if i > 2}" }
+                  = link_to si.study.display_name, admin_participant_path(p, tab: 'studies')
                   %span.muted
                     = " (#{si.state})"
-              %li.pull-right.btn.btn-link.show_button="See more..." if p.study_involvements.size > 3
+              %li.pull-right.btn.btn-link.show_button
+                = 'See more...' if p.study_involvements.size > 3
           %td
             %ul.unstyled
-              -p.study_involvements.each_with_index do |si,i|
-                %li{:class=> "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}=si.end_date
-          %td=p.created_at.to_date
-          %td= p.account ? p.account.email : ""
+              - p.study_involvements.each_with_index do |si,i|
+                %li{ class: "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}" }
+                  = si.end_date
+          %td
+            = p.created_at.to_date
+          %td
+            = p.account ? p.account.email : ""
 

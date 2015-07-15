@@ -1,0 +1,19 @@
+%h4
+  #{@email_notification.email_type} email notification. Last updated on #{@email_notification.updated_at.to_date} (#{@email_notification.state})
+
+.row-fluid
+  .span12
+    !=@email_notification.content
+.row-fluid
+  .span12
+.row-fluid
+  .span2
+    - if @email_notification.active?
+      = form_for @email_notification, url: deactivate_admin_email_notification_path(@email_notification) do |f|
+        = f.button 'Deactivate', class: 'btn btn-warning btn-block'
+    - else
+      = form_for @email_notification, url: activate_admin_email_notification_path(@email_notification) do |f|
+        = f.button 'Activate', class:  'btn btn-success btn-block'
+  .span2
+    - if @email_notification.editable?
+      = link_to "Edit", edit_admin_email_notification_path(@email_notification), class: 'btn btn-primary nu-primary btn-block'

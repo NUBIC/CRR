@@ -23,3 +23,8 @@
       else
         $displayList.hide()
         $element.text(moreLabel)
+
+@setTableHeader = (element_id, target) ->
+  header = $('#' + element_id + ' .table-header[data-target-table="' + $(target).attr('id') + '"]')
+  $('#' + $(target).attr('id') + '_wrapper .data-table-info-header').html(header.html())
+  header.hide()

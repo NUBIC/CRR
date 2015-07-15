@@ -1,0 +1,38 @@
+#email_notification.row-fluid
+  .span12
+    / This will be inserted into table header div
+    .header.hidden.table-header{ data: {'target-table'=>'email_notification_index_table'} }
+      %h4
+        = "Email notifications (#{EmailNotification.all.size})"
+
+    %table.table.table-bordered.table-hover#email_notification_index_table
+      %thead
+        %tr
+          %th.span1 Type
+          %th.span1 State
+          %th.span1 Created On
+          %th.span1 Updated On
+          %th
+      %tbody
+        - @email_notifications.each do |email_notification|
+          %tr
+            %td
+              = link_to email_notification.email_type, admin_email_notification_path(email_notification)
+            %td{:class=> "#{'muted' unless email_notification.active? }"}
+              = email_notification.state.titleize
+            %td{:class=> "#{'muted' unless email_notification.active?}"}
+              = email_notification.created_at.to_date
+            %td{:class=> "#{'muted' unless email_notification.active?}"}
+              = email_notification.updated_at.to_date
+            %td
+              .row-fluid
+                .span6
+                  - if email_notification.active?
+                    = form_for email_notification, url: deactivate_admin_email_notification_path(email_notification) do |f|
+                      = f.button 'Deactivate', class: 'btn btn-warning btn-block'
+                  - else
+                    = form_for email_notification, url: activate_admin_email_notification_path(email_notification) do |f|
+                      = f.button 'Activate', class:  'btn btn-success btn-block'
+                .span6
+                  - if email_notification.editable?
+                    = link_to "Edit", edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block'

@@ -64,6 +64,12 @@ AudiologyRegistry::Application.routes.draw do
         patch :deactivate
       end
     end
+    resources :email_notifications do
+      member do
+        patch :activate
+        patch :deactivate
+      end
+    end
   end
 
   resources :response_sets

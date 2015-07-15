@@ -21,5 +21,6 @@
  *= require validate
  *= require nu
  *= require search
+ *= require email_notification
  *= require common
  */

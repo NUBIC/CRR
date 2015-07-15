@@ -79,7 +79,13 @@ class ParticipantsController < PublicController
   def consent_signature
     @participant = Participant.find(params[:id])
     authorize! :consent_signature, @participant
-    params[:consent_response] == 'accept' ? @participant.sign_consent!(nil,consent_signature_params) : @participant.decline_consent!
+    if params[:consent_response] == 'accept'
+      @participant.sign_consent!(nil,consent_signature_params)
+      welcome_email = EmailNotification.active.find_by(email_type: 'Welcome')
+      EmailNotificationsMailer.generic_email(@participant.account.email, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email && @participant.account && @participant.account.email
+    else
+      @participant.decline_consent!
+    end
     respond_to do |format|
       format.html { redirect_to enroll_participant_path(@participant) }
     end

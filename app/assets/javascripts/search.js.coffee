@@ -1,9 +1,4 @@
 $(document).ready ->
-  setTableHeader = (target) ->
-    header = $('#search .table-header[data-target-table="' + $(target).attr('id') + '"]')
-    $('#' + $(target).attr('id') + '_wrapper .data-table-info-header').html(header.html())
-    header.hide()
-
   # ---------------- index page ----------------
   $('#search table#search_index_table').livequery ->
     table_element = $(this)
@@ -18,8 +13,7 @@ $(document).ready ->
       bLengthChange: false
       oLanguage: { sSearch: "Filter:&nbsp;" }
       fnInitComplete: (oSettings, json)  ->
-        setTableHeader(table_element)
-
+        setTableHeader('search', table_element)
 
   # ---------------- show/edit page ----------------
   # display results
@@ -38,7 +32,7 @@ $(document).ready ->
       bLengthChange: false
       oLanguage: { sSearch: "Filter:&nbsp;" }
       fnInitComplete: (oSettings, json)  ->
-        setTableHeader($tableElement)
+        setTableHeader('search', $tableElement)
 
     showHideMore(table.fnGetNodes(), true)
 

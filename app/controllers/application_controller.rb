@@ -26,8 +26,8 @@ class ApplicationController < ActionController::Base
 
   def check_maintenance_mode
     if Rails.configuration.custom.maintenance_mode
-      unless current_user && current_user.admin? || current_user.blank? && controller_name == 'users'
-        redirect_to '/maintenance.html'
+      unless current_user && current_user.is_a?(Aker::User) && current_user.admin? || current_user.blank? && controller_name == 'users'
+        render '/public/maintenance.html', layout: false
       end
     end
   end

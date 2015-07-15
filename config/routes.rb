@@ -1,7 +1,8 @@
 AudiologyRegistry::Application.routes.draw do
   namespace :admin do
-
     get '/' => "users#dashboard", :as=>:default
+    patch :set_maintenance_mode, to: 'admin#set_maintenance_mode'
+
     resources :participants do
       collection do
         get :search

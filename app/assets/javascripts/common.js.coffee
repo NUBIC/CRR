@@ -28,3 +28,7 @@
   header = $('#' + element_id + ' .table-header[data-target-table="' + $(target).attr('id') + '"]')
   $('#' + $(target).attr('id') + '_wrapper .data-table-info-header').html(header.html())
   header.hide()
+
+$('a.maintenance_mode_link').livequery ->
+  $(this).on 'ajax:success', () ->
+    location.reload()

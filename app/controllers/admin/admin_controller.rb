@@ -5,7 +5,7 @@ class Admin::AdminController < ApplicationController
   rescue_from CanCan::AccessDenied do |exception|
     flash[:notice]="Access Denied"
     redirect_to admin_default_path
-  end 
+  end
 
   def require_user
     unless current_user.has_system_access?
@@ -13,6 +13,11 @@ class Admin::AdminController < ApplicationController
       redirect_to '/logout'
       return false
     end
+  end
+
+  def set_maintenance_mode
+    Rails.configuration.custom.maintenance_mode = params[:maintenance_mode] == 'true' ? true : false
+    render nothing: true
   end
 end
 

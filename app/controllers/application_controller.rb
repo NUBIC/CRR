@@ -3,8 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
   protect_from_forgery with: :null_session
-  after_filter :flash_headers
+  after_filter  :flash_headers
   before_filter :set_no_cache
+  before_filter :check_maintenance_mode
 
   def flash_headers
     # This will discontinue execution if Rails detects that the request is not
@@ -23,4 +24,11 @@ class ApplicationController < ActionController::Base
     response.headers["Expires"] = "0"
   end
 
+  def check_maintenance_mode
+    if Rails.configuration.custom.maintenance_mode
+      unless current_user && current_user.admin? || current_user.blank? && controller_name == 'users'
+        redirect_to '/maintenance.html'
+      end
+    end
+  end
 end

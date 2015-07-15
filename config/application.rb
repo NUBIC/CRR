@@ -27,6 +27,7 @@ module AudiologyRegistry
     config.custom = ActiveSupport::OrderedOptions.new
     config.custom.app_config        = APP_CONFIG
     config.custom.search_operators  = OPERATORS
+    config.custom.maintenance_mode  = false
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]

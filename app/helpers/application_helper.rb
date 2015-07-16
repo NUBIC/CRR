@@ -104,7 +104,13 @@ module ApplicationHelper
   end
 
   def search_condition_group_operator_options
-    SearchConditionGroup.group_operators.map{|o|[ SearchConditionGroup.operator_text(o[:symbol], SearchConditionGroup::GROUP_OPERATOR_TYPE),o[:symbol]]}
+    options = []
+    SearchConditionGroup.group_operators.each do |operator|
+      operator_text = SearchConditionGroup.operator_text(operator[:symbol], SearchConditionGroup::GROUP_OPERATOR_TYPE)
+      operator_display = operator_text == 'AND' ? 'All' : operator_text == 'OR' ? 'Any' : operator_text
+      options << [operator_display, operator[:symbol]]
+    end
+    options
   end
 
   def question_operator_options(question)

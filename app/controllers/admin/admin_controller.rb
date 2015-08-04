@@ -1,14 +1,16 @@
 class Admin::AdminController < ApplicationController
-  include Aker::Rails::SecuredController
+  before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :authenticate_user!
   before_filter :require_user
-  #can can redirect for unauthorized error
+
+  # can can redirect for unauthorized error
   rescue_from CanCan::AccessDenied do |exception|
     flash[:notice]="Access Denied"
     redirect_to admin_default_path
   end
 
   def require_user
-    unless current_user.has_system_access?
+    unless user_signed_in? && current_user.has_system_access?
       flash[:notice] = "Access Denied"
       redirect_to '/logout'
       return false
@@ -19,5 +21,10 @@ class Admin::AdminController < ApplicationController
     Rails.configuration.custom.maintenance_mode = params[:maintenance_mode] == 'true' ? true : false
     render nothing: true
   end
+
+  protected
+    def configure_permitted_parameters
+      devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:netid) }
+    end
 end
 

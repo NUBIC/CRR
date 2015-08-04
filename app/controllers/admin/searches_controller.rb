@@ -19,7 +19,7 @@ class Admin::SearchesController < Admin::AdminController
 
   def create
     @search         = Search.new(search_params)
-    @search.user_id = current_user.ar_user.id
+    @search.user_id = current_user.id
 
     if @search.save
       flash[:notice] = "Saved"

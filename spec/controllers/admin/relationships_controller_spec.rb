@@ -5,9 +5,8 @@ describe Admin::RelationshipsController do
     @participant1 = FactoryGirl.create(:participant)
     @participant2 = FactoryGirl.create(:participant)
     @relationship = Relationship.create(:origin_id=>@participant1.id,:destination_id=>@participant2.id,:category=>"sibling")
-    login_as("brian")
+    login_user
     controller.current_user.stub(:has_system_access?).and_return(true)
-    controller.current_user.should == Aker.authority.find_user("brian")
   end
 
   # describe "unauthorized access" do

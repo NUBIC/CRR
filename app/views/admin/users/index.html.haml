@@ -1,6 +1,6 @@
 #additonal-data{data: {header: "Users (#{User.all.size})", url: new_admin_user_path, target: "#users", async: true, text: "Add an user"}}
 #users.row-fluid
-  %table.table.table-bordered.table-hover{:id=>'user_list'}
+  %table.table.table-bordered.table-hover#user_list
     %thead
       %tr
         %th Name
@@ -10,10 +10,12 @@
         %th Researcher
         %th Studies
     %tbody
-      -@users.each do |user|
+      - @users.each do |user|
         %tr
-          %td=link_to user.name, edit_admin_user_path(user), "data-async"=>true, "data-target"=>"#users"
-          %td=user.netid
+          %td
+            = link_to user.full_name, edit_admin_user_path(user), data: { async: true, target: '#users' }
+          %td
+            = user.netid
           %td
             - if user.admin?
               .user-circle
@@ -25,7 +27,7 @@
               .user-circle
           %td
             %ul.unstyled
-              -user.studies.each_with_index do |study,i|
-                %li{:class=> "#{'more_display' if i > 1}"}
-                  =link_to study.display_name, admin_study_path(study)
+              - user.studies.each_with_index do |study,i|
+                %li{class: "#{'more_display' if i > 1}"}
+                  = link_to study.display_name, admin_study_path(study)
               %li.pull-right.btn.btn-link.show_button="See more..." if user.studies.size > 2

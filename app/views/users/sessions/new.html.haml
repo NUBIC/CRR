@@ -1,0 +1,17 @@
+%h4
+  Log in
+
+= form_tag(session_path(resource_name), method: 'post', class: 'form-horizontal') do
+  .row-fluid
+    .span12
+      .control-group
+        %label.control-label{ for: "#{resource_name}[netid]" } NetID
+        .controls
+          = text_field_tag("#{resource_name}[netid]")
+      .control-group
+        %label.control-label{ for: "#{resource_name}[password]" } Password
+        .controls
+          = password_field_tag("#{resource_name}[password]")
+      .control-group
+        .controls
+          = submit_tag 'Log in', class: 'btn btn-success nu-primary'

@@ -4,6 +4,7 @@ FactoryGirl.define do
   sequence :irb_number do |n|
     "STU008888#{"%03d" % n}"
   end
+
   sequence :netid do |n|
     "tes#{"%03d" % n}"
   end

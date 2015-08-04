@@ -1,5 +1,7 @@
 AudiologyRegistry::Application.routes.draw do
+  devise_for :users, path_names: { sign_in: 'login', sign_out: 'logout' }
   namespace :admin do
+    root to: 'users#dashboard'
     get '/' => "users#dashboard", :as=>:default
     patch :set_maintenance_mode, to: 'admin#set_maintenance_mode'
 

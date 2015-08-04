@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+  rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
+    render :text => exception, :status => 500
+  end
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   # protect_from_forgery with: :exception
@@ -26,7 +29,7 @@ class ApplicationController < ActionController::Base
 
   def check_maintenance_mode
     if Rails.configuration.custom.maintenance_mode
-      unless current_user && current_user.is_a?(Aker::User) && current_user.admin? || current_user.blank? && controller_name == 'users'
+      unless current_user && current_user.is_a?(User) && current_user.admin? || current_user.blank? && controller_name == 'users'
         render '/public/maintenance.html', layout: false
       end
     end

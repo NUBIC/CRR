@@ -83,11 +83,4 @@ AudiologyRegistry::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
-  config.aker do
-    Aker.configure do
-      crr = Aker::Authorities::Crr.new
-      authorities :cas,:netid,crr
-      central '/etc/nubic/aker-production.yml'
-    end
-  end
 end

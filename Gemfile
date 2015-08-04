@@ -1,4 +1,3 @@
-source "http://download.bioinformatics.northwestern.edu/gems/"
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -50,11 +49,8 @@ group :development, :test do
   gem "webrat"
 end
 
-#aker
-gem "aker"
-# gem "aker-rails", :github => 'NUBIC/aker-rails', :branch => 'rails4'
-gem "aker-rails", '~> 4.0.0.pre'
-gem "aker-nubic"
+gem 'devise'
+gem 'devise_ldap_authenticatable'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby

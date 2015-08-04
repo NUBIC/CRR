@@ -15,6 +15,15 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
 
+module TestLogins
+  def login_user
+    @request.env["devise.mapping"] = Devise.mappings[:user]
+    user = User.find_by_netid('test_user')
+    user ||= FactoryGirl.create(:user, netid: 'test_user')
+    sign_in user
+  end
+end
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -26,7 +35,8 @@ RSpec.configure do |config|
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
-  config.include Aker::Rails::Test::Helpers
+  config.include Devise::TestHelpers, :type => :controller
+  config.include Devise::TestHelpers, :type => :view
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -66,4 +76,5 @@ RSpec.configure do |config|
   end
 
   config.include FactoryGirl::Syntax::Methods
+  config.include TestLogins
 end

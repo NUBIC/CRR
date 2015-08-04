@@ -33,11 +33,4 @@ AudiologyRegistry::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
-  config.aker do
-    ui_mode :form
-    static = Aker::Authorities::Static.from_file("#{Rails.root}/spec/test_users.yml")
-    crr = Aker::Authorities::Crr.new
-    authority static,crr
-    # central '/etc/nubic/bcsec-test.yml'
-  end
 end

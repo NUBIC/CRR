@@ -35,9 +35,5 @@ module AudiologyRegistry
     config.action_mailer.smtp_settings = { :address => "smtprelay.northwestern.edu", :port => 25, :domain => "northwestern.edu" }
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.default_url_options = { :host => "http#{'s' unless Rails.env == 'development'}://#{config.custom.app_config[Rails.env]['server_name']}" }
-
-    Aker.configure do
-      ui_mode :cas
-    end
   end
 end

@@ -22,6 +22,7 @@
           %thead
             %tr
               %th= check_box_tag "selectall"
+              %th ID
               %th First Name
               %th Last Name
               %th Studies
@@ -31,6 +32,8 @@
               %tr.show-hide-container
                 %td
                   = check_box_tag "[participant_ids][#{participant.id}]", participant.id, false, class: 'selectalloption'
+                %td
+                  = link_to participant.id, admin_participant_path(participant)
                 %td
                   = link_to participant.first_name, admin_participant_path(participant)
                 %td

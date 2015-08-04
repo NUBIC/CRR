@@ -1,22 +1,29 @@
-#additonal-data{data: {header: display_participant_header(params[:state], @participants.count), url: new_admin_participant_path, text: "Add a participant"}}
+#additonal-data{ data: { header: display_participant_header(params[:state], @participants.count), url: new_admin_participant_path, text: 'Add a participant'}}
 .row-fluid
-  %table.table.table-bordered.table-hover{:id=>'index_list'}
+  %table.table.table-bordered.table-hover#index_list
     %thead
       %tr.display
+        %th ID
         %th First Name
         %th Last Name
         %th Registry Status
         %th Join Date
         %th Account Email
     %tbody
-      -@participants.each do |p|
-        %tr.display
-          %td{:class=>"#{'nu' if p.pending_approval?}"}=link_to(p.first_name, admin_participant_path(p))
-          %td{:class=>"#{'nu' if p.pending_approval?}"}
-            =link_to(p.last_name, admin_participant_path(p))
+      - @participants.each do |p|
+        %tr.display{:class=>"#{'nu' if p.pending_approval?}"}
+          %td
+            = link_to p.id, admin_participant_path(p)
+          %td
+            = link_to p.first_name, admin_participant_path(p)
+          %td
+            = link_to p.last_name, admin_participant_path(p)
             .pull-right
-              =image_tag "child.png" if p.child?
-              =image_tag 'siblings.png' if p.has_relationships?
-          %td=p.stage.camelize
-          %td=p.created_at.to_date
-          %td= p.account ? p.account.email : ""
+              = image_tag 'child.png' if p.child?
+              = image_tag 'siblings.png' if p.has_relationships?
+          %td
+            = p.stage.camelize
+          %td
+            = p.created_at.to_date
+          %td
+            = p.account ? p.account.email : ''

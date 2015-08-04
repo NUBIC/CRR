@@ -4,6 +4,7 @@
       %table.table.table-bordered.table-hover#search_result_list
         %thead
           %tr
+            %th ID
             %th First Name
             %th Last Name
             %th Released In this request
@@ -12,6 +13,8 @@
         %tbody
           - @participants.each do |participant|
             %tr.show-hide-container
+              %td
+                = link_to participant.id, admin_participant_path(participant)
               %td
                 = link_to participant.first_name, admin_participant_path(participant)
               %td

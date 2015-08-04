@@ -72,7 +72,7 @@ class Ability
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
-        can [:new, :create, :show, :update, :destroy, :index, :request_data], Search
+        can [:new, :create, :show, :index, :request_data], Search
         can [:edit, :update, :destroy], Search do |search|
           !search.data_released?
         end

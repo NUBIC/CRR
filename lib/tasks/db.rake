@@ -31,6 +31,12 @@ namespace :db do
     pgpassword_wrapper(@password){`cat #{backup_files[selected_index.to_i-1]} | gunzip | psql #{@pg_options}`}
   end
 
+  desc 'clear expired sessions'
+  task :clear_expired_sessions => :environment do
+    sql = "DELETE FROM sessions WHERE updated_at < '#{Date.today - 1.day}'"
+    ActiveRecord::Base.connection.execute(sql)
+  end
+
   private
   def pgpassword_wrapper(password)
     # Unlike mysqldump, you don't enter in the password on the command line, you set an environment variable

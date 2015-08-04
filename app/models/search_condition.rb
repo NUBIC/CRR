@@ -105,13 +105,12 @@ class SearchCondition < ActiveRecord::Base
 
   def display_values
     if question.multiple_choice? and !values.blank?
-      display_values = question.answers.where(id: values).map(&:text)
+      display_values = question.answers.where(id: values).map(&:text).join('&nbsp;<small class="muted"><i>or</i></small><br/>').html_safe
     elsif @is_calculated_date
-      display_values = values.map.with_index{|value, i| "#{value} (#{search_values[i]})"}
+      display_values = values.map.with_index{|value, i| "#{value} (#{search_values[i]})"}.join(',<br/>').html_safe
     else
-      display_values = values
+      display_values = values.join(',<br/>').html_safe
     end
-    display_values.join(',<br/>').html_safe
   end
 
   def self.operator_type_for_question(question)

@@ -46,12 +46,12 @@
   :operator_type: group
 
 - :symbol: 'in'
-  :text: 'is one of'
+  :text: 'is'
   :unique_identifier: is_one_of
   :operator_type: list
 
 - :symbol: 'not in'
-  :text: 'is not one of'
+  :text: 'is not'
   :unique_identifier: is_not_one_of
   :operator_type: list
 

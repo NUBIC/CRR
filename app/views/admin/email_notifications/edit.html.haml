@@ -5,6 +5,13 @@
     .span12
       = f.text_area :content, class: 'wyswig'
   .row-fluid
+    .span12
+      = label_tag 'email_notification[state]', class: 'checkbox error' do
+        = check_box_tag 'email_notification[state]', @email_notification.class::ACTIVE_STATE, true
+        %b
+          Activate email notification
+
+  .row-fluid
     .span2
       = f.button 'Update', class: 'btn btn-success btn-block'
     .span2

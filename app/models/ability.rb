@@ -53,10 +53,7 @@ class Ability
         can [:edit,:update,:destroy], Consent do |consent|
           consent.editable?
         end
-        can [:new,:create,:show,:activate,:deactivate,:index], EmailNotification
-        can [:edit,:update,:destroy], EmailNotification do |email_notification|
-          email_notification.editable?
-        end
+        can [:new,:create,:show,:activate,:deactivate,:index, :edit,:update,:destroy], EmailNotification
         can :manage, Study
         can [:new, :create, :show, :index], Search
         can [:edit, :update, :destroy], Search do |search|

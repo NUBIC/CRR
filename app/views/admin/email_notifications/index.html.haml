@@ -27,12 +27,13 @@
             %td
               .row-fluid
                 .span6
+                  - confirmation_message = 'Are you sure you want to deactivate and edit this email?' if email_notification.active?
+                  = link_to "Edit", edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block', data: { confirm: confirmation_message}
+                .span6
                   - if email_notification.active?
                     = form_for email_notification, url: deactivate_admin_email_notification_path(email_notification) do |f|
                       = f.button 'Deactivate', class: 'btn btn-warning btn-block'
                   - else
                     = form_for email_notification, url: activate_admin_email_notification_path(email_notification) do |f|
                       = f.button 'Activate', class:  'btn btn-success btn-block'
-                .span6
-                  - if email_notification.editable?
-                    = link_to "Edit", edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block'
+

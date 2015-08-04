@@ -12,6 +12,8 @@ class Admin::EmailNotificationsController < Admin::AdminController
 
   def edit
     authorize! :edit, @email_notification
+    @email_notification.deactivate
+    @email_notification.save
   end
 
   def update

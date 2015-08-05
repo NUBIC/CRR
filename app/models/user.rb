@@ -20,7 +20,7 @@
 
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
-  devise :ldap_authenticatable, :trackable
+  devise :ldap_authenticatable, :trackable, :timeoutable
 
   has_many :user_studies
   has_many :studies, through: :user_studies

@@ -98,4 +98,10 @@ FactoryGirl.define do
     cs.association :consent, :factory => :consent
     cs.association :participant, :factory => :participant
   end
+
+  factory :email_notification do |a|
+    a.state "active"
+    a.content "Welcome!"
+    a.email_type 'Welcome'
+  end
 end

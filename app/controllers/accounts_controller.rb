@@ -12,13 +12,6 @@ class AccountsController < PublicController
     end
   end
 
-  def new
-    @account = Account.new
-    respond_to do |format|
-      format.html { render :layout=> "public"}
-    end
-  end
-
   def edit
     @account = Account.find(params[:id])
     authorize! :edit, @account
@@ -29,8 +22,10 @@ class AccountsController < PublicController
     respond_to do |format|
       if @account.save
         format.html { redirect_to dashboard_path }
+        welcome_email = EmailNotification.active.find_by(email_type: 'Welcome')
+        EmailNotificationsMailer.generic_email(@account.email, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email
       else
-        format.html { redirect_to public_login_path(:anchor => "sign_up")
+        format.html { redirect_to public_login_path(anchor: 'sign_up')
         flash[:error] = @account.errors.full_messages.to_sentence }
       end
     end
@@ -46,30 +41,18 @@ class AccountsController < PublicController
           format.html { redirect_to dashboard_path }
         else
           flash[:error] = @account.errors.full_messages.to_sentence
-          format.html { render :action => "edit" }
+          format.html { render action: 'edit' }
         end
       end
     else
       respond_to do |format|
-        flash[:error] = "Current password doesn't match. Please try again."
-        format.html { render :action => "edit" }
+        flash[:error] = 'Current password doesn\'t match. Please try again.'
+        format.html { render action: 'edit' }
       end
     end
-  end
-
-  def destroy
-    @account = Account.find(params[:id])
-    authorize! :destroy, @account
-    @account.destroy
-    redirect_to accounts_path
   end
 
   def account_params
     params.require(:account).permit(:email, :password, :password_confirmation)
   end
-
-  def current_password_params
-    params.require(:account).permit(:current_password)
-  end
-
 end

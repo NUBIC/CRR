@@ -63,14 +63,7 @@ class Admin::ParticipantsController < Admin::AdminController
     authorize! :update, @participant
     @participant.update_attributes(participant_params)
     if @participant.save
-      if @participant.demographics?
-        @participant.take_survey!
-        welcome_email = EmailNotification.active.find_by(email_type: 'Welcome')
-        email_address = @participant.account.email if @participant.account
-        email_address = @participant.primary_guardian_email if email_address.blank?
-
-        EmailNotificationsMailer.generic_email(email_address, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email && !email_address.blank?
-      end
+      @participant.take_survey! if @participant.demographics?
       if @participant.survey?
         create_and_redirect_response_set(@participant)
       else

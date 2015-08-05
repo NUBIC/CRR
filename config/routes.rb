@@ -90,8 +90,7 @@ AudiologyRegistry::Application.routes.draw do
     end
   end
 
-
-  resources :accounts
+  resources :accounts, except: [:new, :index]
   resources :account_sessions do
     collection do
       get :back_to_website

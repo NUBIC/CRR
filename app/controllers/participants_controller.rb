@@ -81,8 +81,6 @@ class ParticipantsController < PublicController
     authorize! :consent_signature, @participant
     if params[:consent_response] == 'accept'
       @participant.sign_consent!(nil,consent_signature_params)
-      welcome_email = EmailNotification.active.find_by(email_type: 'Welcome')
-      EmailNotificationsMailer.generic_email(@participant.account.email, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email && @participant.account && !@participant.account.email.blank?
     else
       @participant.decline_consent!
     end

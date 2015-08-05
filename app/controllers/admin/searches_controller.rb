@@ -1,5 +1,6 @@
 class Admin::SearchesController < Admin::AdminController
   before_filter :set_search, only: [:edit, :show, :update, :request_data, :release_data, :destroy]
+  before_filter :set_studies, only: [:new, :edit]
 
   def index
     @searches = params[:state] == "data_requested" ? Search.requested : params[:state] == "data_released" ? Search.released : Search.all.default_ordering
@@ -7,18 +8,17 @@ class Admin::SearchesController < Admin::AdminController
 
   def new
     @search = Search.new
-    if current_user.admin?
-      @studies = Study.active
-    else
-      @studies = current_user.studies.active
-    end
+    authorize! :new, @search
   end
 
   def edit
+    authorize! :edit, @search
   end
 
   def create
     @search         = Search.new(search_params)
+    authorize! :create, @search
+
     @search.user_id = current_user.id
 
     if @search.save
@@ -31,6 +31,7 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def show
+    authorize! :show, @search
     @data_requested       = @search.data_requested?
     @data_released        = @search.data_released?
     @new_search           = @search.new?
@@ -40,6 +41,7 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def update
+    authorize! :update, @search
     @search.update_attributes(search_params)
     if @search.save
       flash[:notice] = "Updated"
@@ -50,6 +52,8 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def request_data
+    authorize! :request_data, @search
+
     @search.request_data(nil,params)
     if @search.save
       flash[:notice] = "Data Request Submitted"
@@ -60,6 +64,8 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def release_data
+    authorize! :release_data, @search
+
     @search.release_data(nil,params)
     if @search.save
       flash[:notice] = "Participant Data Released"
@@ -78,13 +84,42 @@ class Admin::SearchesController < Admin::AdminController
     redirect_to admin_searches_path
   end
 
-  def search_params
-    params.require(:search).permit(:study_id, :name)
+  def copy
+    @search = Search.new
+    authorize! :create, @search
+
+    @search.user_id = current_user.id
+
+    @source_search = Search.find(params[:id])
+    authorize! :show, @source_search
+
+    @search.copy(@source_search)
+    authorize! :update, @search
+
+    if @search.save
+      flash[:notice] = "Saved"
+      redirect_to admin_search_path(@search)
+    else
+      flash[:error] = @search.errors.full_messages.to_sentence
+      redirect_to new_admin_search_path
+    end
   end
 
   private
     def set_search
       @search = Search.find(params[:id])
+    end
+
+    def set_studies
+      if current_user.admin?
+        @studies = Study.active
+      else
+        @studies = current_user.studies.active
+      end
+    end
+
+    def search_params
+      params.require(:search).permit(:study_id, :name)
     end
 end
 

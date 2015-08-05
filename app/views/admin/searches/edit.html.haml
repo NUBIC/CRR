@@ -1,9 +1,21 @@
 = form_for @search, url: admin_search_path(@search) do |f|
   .row-fluid
     .span12
-      %h3
-        #{@search.study.display_name}:
-        = f.text_field :name
-        .btn-group
-          = f.submit 'Continue', class: 'btn btn-success btn-small'
-          = link_to 'Cancel', admin_search_path(@search), class: 'btn btn-warning btn-small'
+      - if params[:change_name]
+        %h3
+          Name:
+          = f.text_field :name
+          .btn-group
+            = f.submit 'Continue', class: 'btn btn-success btn-small'
+            = link_to 'Cancel', admin_search_path(@search), class: 'btn btn-warning btn-small'
+        %h4
+          Study: #{@search.study.display_name}
+      - elsif params[:change_study]
+        %h3
+          Name: #{@search.name}
+        %h4
+          Study:
+          = f.select :study_id, @studies.collect{|s| ["#{s.display_name} - #{s.irb_number}", s.id]}
+          .btn-group
+            = f.submit 'Continue', class: 'btn btn-success btn-small'
+            = link_to 'Cancel', admin_search_path(@search), class: 'btn btn-warning btn-small'

@@ -126,6 +126,14 @@ class Search < ActiveRecord::Base
     name.nil? ? "" : name
   end
 
+  def copy(source_record)
+    return unless source_record.is_a?(self.class)
+    self.study_id = source_record.study_id
+    self.name     = "#{source_record.name}_copy - #{Date.today}"
+    self.build_search_condition_group
+    self.search_condition_group.copy(source_record.search_condition_group)
+  end
+
   private
     def end_date_cannot_be_before_start_date
       if end_date.present? && end_date <= start_date
@@ -142,6 +150,6 @@ class Search < ActiveRecord::Base
     end
 
     def create_condition_group
-      self.build_search_condition_group() unless self.search_condition_group
+      self.build_search_condition_group unless self.search_condition_group
     end
 end

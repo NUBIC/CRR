@@ -29,7 +29,7 @@ class SearchCondition < ActiveRecord::Base
   before_validation :set_date_values, :cleanup_values
 
   def set_date_values
-    if question.true_date? && !calculated_date_units.reject(&:blank?).empty? && !calculated_date_numbers.reject(&:blank?).empty?
+    if question && calculated_date_units && question.true_date? && !calculated_date_units.reject(&:blank?).empty? && !calculated_date_numbers.reject(&:blank?).empty?
       self.values = []
       calculated_date_units.each_with_index do |calculated_date_unit, i|
         calculated_date_number = calculated_date_numbers[i]
@@ -133,5 +133,12 @@ class SearchCondition < ActiveRecord::Base
 
   def incomplete?
     question.blank? || operator.blank?
+  end
+
+  def copy(source_record)
+    return unless source_record.is_a?(self.class)
+    self.operator     = source_record.operator
+    self.question_id  = source_record.question_id
+    self.values       = source_record.values
   end
 end

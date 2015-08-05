@@ -13,15 +13,23 @@
   .row-fluid
     #search_name.span9
       %h3
-        #{@search.study.display_name} : #{@search.name}
+        Name: #{@search.name}
+      %h4
+        Study: #{@search.study.display_name}
 
-    - if @new_search || @data_requested && current_user.admin?
-      .span3
-        = form_for @search, url: admin_search_path(@search), method: :delete do |f|
-          .btn-toolbar.pull-right.btn-group
-            = link_to edit_admin_search_path(@search), 'data-async'=>true, 'data-target'=>"#search_name", class: 'btn' do
-              Rename
-            = f.button "Delete", class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete request #{@search.name}?" }
+    .span3
+      .pull-right.btn-group
+        - if search_condition_group.has_conditions?
+          = link_to copy_admin_search_path(@search), method: :post, class: 'btn btn-small' do
+            Copy to a new request
+        - if @new_search || @data_requested && current_user.admin?
+          = link_to edit_admin_search_path(@search, change_name: true), data: { async: true, target: '#search_name'}, class: 'btn btn-small' do
+            Rename
+          = link_to edit_admin_search_path(@search, change_study: true), data: { async: true, target: '#search_name'}, class: 'btn btn-small' do
+            Change study
+          = link_to admin_search_path(@search), method: :delete, data: { confirm: "Are you sure you want to delete request #{@search.name}?" }, class: 'btn btn-danger btn-small' do
+            Delete
+
   .row-fluid
     .span12.search-container
       - if can? :edit, @search

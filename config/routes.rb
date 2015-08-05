@@ -53,6 +53,7 @@ AudiologyRegistry::Application.routes.draw do
       member do
         patch :request_data
         patch :release_data
+        post :copy
       end
     end
     resources :search_condition_groups, except: :new

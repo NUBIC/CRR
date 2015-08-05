@@ -16,6 +16,9 @@ class SearchConditionGroup < ActiveRecord::Base
   has_many    :search_conditions
   has_many    :search_condition_groups
 
+  accepts_nested_attributes_for :search_conditions, allow_destroy: true
+  accepts_nested_attributes_for :search_condition_groups, allow_destroy: true
+
   validates_inclusion_of :operator, in: group_operators.map{|o| o[:symbol]}
   validate :presence_of_search_or_search_condition_group
 
@@ -63,5 +66,19 @@ class SearchConditionGroup < ActiveRecord::Base
 
   def pretty_operator
     pretty_operator_by_type(GROUP_OPERATOR_TYPE)
+  end
+
+  def copy(source_record)
+    return unless source_record.is_a?(self.class)
+    self.operator = source_record.operator
+    source_record.search_conditions.each do |source_search_condition|
+      search_condition = self.search_conditions.build
+      search_condition.copy(source_search_condition)
+    end
+
+    source_record.search_condition_groups.each do |source_search_condition_group|
+      search_condition_group = self.search_condition_groups.build
+      search_condition_group.copy(source_search_condition_group)
+    end
   end
 end

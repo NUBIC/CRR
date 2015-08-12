@@ -55,8 +55,8 @@ class Ability
         end
         can [:new,:create,:show,:activate,:deactivate,:index, :edit,:update,:destroy], EmailNotification
         can :manage, Study
-        can [:new, :create, :show, :index], Search
-        can [:edit, :update, :destroy], Search do |search|
+        can [:new, :create, :show, :index, :request_data ], Search
+        can [:edit, :update, :destroy, :release_data], Search do |search|
           !search.data_released?
         end
         can :manage, User
@@ -69,8 +69,8 @@ class Ability
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
-        can [:new, :create, :show, :index, :request_data], Search
-        can [:edit, :update, :destroy], Search do |search|
+        can [:new, :create, :show, :index, :request_data ], Search
+        can [:edit, :update, :destroy, :release_data], Search do |search|
           !search.data_released?
         end
         can :manage, ContactLog

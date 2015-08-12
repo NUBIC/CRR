@@ -13,7 +13,7 @@
 #
 
 class Survey < ActiveRecord::Base
-  has_many :response_sets,:dependent=>:restrict
+  has_many :response_sets, :dependent=>:restrict_with_exception
   #has_many :questions,:dependent=>:destroy
   has_many :sections, :dependent=>:destroy
 
@@ -23,7 +23,7 @@ class Survey < ActiveRecord::Base
   validate :activation_check
   after_create :create_section, :unless => :multiple_section?
 
-  default_scope order('state ASC, created_at DESC')
+  default_scope {order('state ASC, created_at DESC')}
   after_initialize :default_args
 
   def questions

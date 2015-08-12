@@ -36,7 +36,6 @@ describe ResponseSet do
     @po_a4 = @q_pick_one.answers.create(:text=>"orange")
   end
 
-
   it "should create getter setters that correspond to questions in survey" do
     @response_set.should respond_to("q_#{@q_pick_many.id}".to_sym)
     @response_set.should respond_to("q_#{@q_pick_many.id}=".to_sym)

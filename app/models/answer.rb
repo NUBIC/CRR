@@ -17,7 +17,7 @@ class Answer < ActiveRecord::Base
   has_many :responses
 
   # Scopes
-  default_scope {order("display_order ASC")}
+  default_scope { order("display_order ASC") }
 
   validate :proper_question_type
   validates_presence_of :text,:code,:question
@@ -35,7 +35,7 @@ class Answer < ActiveRecord::Base
     self.code ||= "a_#{display_order}"
   end
   def check_display_order
-    if self.display_order_changed? and question.answers.where(:display_order=>self.display_order).exists? 
+    if self.display_order_changed? and question.answers.where(:display_order=>self.display_order).exists?
         a = question.answers.find_by_display_order(self.display_order)
         a.display_order=self.display_order+1
         a.save

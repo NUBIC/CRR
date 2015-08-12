@@ -19,7 +19,7 @@ class SearchCondition < ActiveRecord::Base
 
   CALCULATED_DATE_UNITS   = { years_ago: 'years ago', months_ago: 'months ago', days_ago: 'days ago' }.freeze
 
-  validates_presence_of  :question, :values
+  validates_presence_of  :question, :values, :operator
   validates_inclusion_of :operator, in: ->(record) { operators_by_type(operator_type_for_question(record.question)).map{|o| o[:symbol]}}
 
   attr_accessor :search_values, :calculated_date_units, :calculated_date_numbers, :search_subject, :is_calculated_date
@@ -40,6 +40,7 @@ class SearchCondition < ActiveRecord::Base
   end
 
   def cleanup_values
+    return unless question
     operator_type = self.class.operator_type_for_question(question)
     operator_hash = self.class.operators_by_type(operator_type).find{|o| o[:symbol] == operator}
     self.values = [self.values.first] unless (operator_type == LIST_OPERATOR_TYPE) || (operator_hash[:cardinality] && operator_hash[:cardinality] > 1)
@@ -114,6 +115,7 @@ class SearchCondition < ActiveRecord::Base
   end
 
   def self.operator_type_for_question(question)
+    return unless question
     if question.multiple_choice?
       LIST_OPERATOR_TYPE
     elsif question.number? || question.true_date?

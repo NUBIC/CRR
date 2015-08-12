@@ -62,5 +62,4 @@ class Study < ActiveRecord::Base
   def default_args
     self.state ||='inactive'
   end
-
 end

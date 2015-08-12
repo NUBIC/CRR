@@ -47,6 +47,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'shoulda'
   gem "webrat"
+  gem 'simplecov', require: false
 end
 
 gem 'devise'

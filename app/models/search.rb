@@ -119,7 +119,7 @@ class Search < ActiveRecord::Base
   end
 
   def display_user
-    user.nil? ? "" : user.try(:name)
+    user.nil? ? "" : user.full_name
   end
 
   def display_name

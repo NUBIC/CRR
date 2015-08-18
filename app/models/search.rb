@@ -128,8 +128,8 @@ class Search < ActiveRecord::Base
 
   def copy(source_record)
     return unless source_record.is_a?(self.class)
-    self.study_id = source_record.study_id
-    self.name     = "#{source_record.name}_copy - #{Date.today}"
+    self.study_id = source_record.study_id unless self.study_id
+    self.name     = "#{source_record.name}_copy - #{Date.today}" unless self.name
     self.build_search_condition_group
     self.search_condition_group.copy(source_record.search_condition_group)
   end

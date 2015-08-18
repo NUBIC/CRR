@@ -1,6 +1,6 @@
 class Admin::SearchesController < Admin::AdminController
   before_filter :set_search, only: [:edit, :show, :update, :request_data, :release_data, :destroy]
-  before_filter :set_studies, only: [:new, :edit]
+  before_filter :set_studies, only: [:new, :edit, :show]
 
   def index
     @searches = params[:state] == "data_requested" ? Search.requested : params[:state] == "data_released" ? Search.released : Search.all.default_ordering
@@ -20,6 +20,14 @@ class Admin::SearchesController < Admin::AdminController
     authorize! :create, @search
 
     @search.user_id = current_user.id
+
+    if params[:source_search]
+      @source_search = Search.find(params[:source_search])
+      authorize! :show, @source_search
+
+      @search.copy(@source_search)
+      authorize! :update, @search
+    end
 
     if @search.save
       flash[:notice] = "Saved"
@@ -82,27 +90,6 @@ class Admin::SearchesController < Admin::AdminController
     authorize! :destroy, @search
     @search.destroy
     redirect_to admin_searches_path
-  end
-
-  def copy
-    @search = Search.new
-    authorize! :create, @search
-
-    @search.user_id = current_user.id
-
-    @source_search = Search.find(params[:id])
-    authorize! :show, @source_search
-
-    @search.copy(@source_search)
-    authorize! :update, @search
-
-    if @search.save
-      flash[:notice] = "Saved"
-      redirect_to admin_search_path(@search)
-    else
-      flash[:error] = @search.errors.full_messages.to_sentence
-      redirect_to new_admin_search_path
-    end
   end
 
   private

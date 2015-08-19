@@ -26,8 +26,11 @@ $(document).ready ->
   # --------------- edit page -------------------
   $('a.btn-form-submit-with-data').on 'click', () ->
     $form = $(this).closest('form')
-    $.each $(this).data(), (i, v) ->
-      $input = $("<input>").attr("type", "hidden").attr("name", i).val(v)
+    prefix = $(this).data()['prefix']
+    values = $(this).data()['values']
+
+    $.each values, (i, v) ->
+      $input = $("<input>").attr("type", "hidden").attr("name", prefix + '[' + i + ']').val(v)
       $form.append($input)
     $form.submit()
 

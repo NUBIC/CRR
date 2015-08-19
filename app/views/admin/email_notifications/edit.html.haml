@@ -8,7 +8,7 @@
   .row-fluid
     .span2
       .btn-group
-        = link_to 'Update and activate', '#', class: 'btn btn-success btn-form-submit-with-data', data: { 'email_notification[state]' => 'active'}
+        = link_to 'Update and activate', '#', class: 'btn btn-success btn-form-submit-with-data', data: { prefix: 'email_notification', values: { state: 'active'} }
         = link_to '#', class: 'btn btn-success dropdown-toggle', data: { toggle: 'dropdown' } do
           %span.caret
         %ul.dropdown-menu

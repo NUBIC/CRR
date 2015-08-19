@@ -4,15 +4,21 @@
   .row-fluid
     .span12
       = f.text_area :content, class: 'wyswig'
-  .row-fluid
-    .span12
-      = label_tag 'email_notification[state]', class: 'checkbox error' do
-        = check_box_tag 'email_notification[state]', @email_notification.class::ACTIVE_STATE, true
-        %b
-          Activate email notification
 
   .row-fluid
     .span2
-      = f.button 'Update', class: 'btn btn-success btn-block'
+      .btn-group
+        = link_to 'Update and activate', '#', class: 'btn btn-success btn-form-submit-with-data', data: { 'email_notification[state]' => 'active'}
+        = link_to '#', class: 'btn btn-success dropdown-toggle', data: { toggle: 'dropdown' } do
+          %span.caret
+        %ul.dropdown-menu
+          %li
+            = link_to 'Update without activation', '#', class: 'btn-form-submit'
     .span2
-      = link_to 'Cancel', admin_email_notifications_path, class: 'btn btn-warning btn-block'
+      .btn-group
+        = link_to 'Cancel and activate', activate_admin_email_notification_path(@email_notification), method: :patch, class: 'btn btn-warning'
+        = link_to '#', class: 'btn btn-warning dropdown-toggle', data: { toggle: 'dropdown' } do
+          %span.caret
+        %ul.dropdown-menu
+          %li
+            = link_to 'Cancel without activation', admin_email_notifications_path

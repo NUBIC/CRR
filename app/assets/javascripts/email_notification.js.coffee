@@ -22,3 +22,16 @@ $(document).ready ->
       aoColumnDefs: [{ 'bSortable': false, 'aTargets': [ -1 ] }]
       fnInitComplete: (oSettings, json)  ->
         setTableHeader('email_notification', table_element)
+
+  # --------------- edit page -------------------
+  $('a.btn-form-submit-with-data').on 'click', () ->
+    $form = $(this).closest('form')
+    $.each $(this).data(), (i, v) ->
+      $input = $("<input>").attr("type", "hidden").attr("name", i).val(v)
+      $form.append($input)
+    $form.submit()
+
+  $('a.btn-form-submit').on 'click', () ->
+    $form = $(this).closest('form')
+    $form.submit()
+

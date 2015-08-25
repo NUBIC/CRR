@@ -37,6 +37,16 @@ namespace :db do
     ActiveRecord::Base.connection.execute(sql)
   end
 
+  desc "remove accounts, example: rake db:remove_accounts['test1@email.com test2@email.com test3@email.com'] "
+  task :remove_accounts, [:emails] => :environment do |task, args|
+    emails = args[:emails].split(' ')
+
+    Account.where(email: emails).each do |account|
+      account.participants.destroy_all
+      account.delete
+    end
+  end
+
   private
   def pgpassword_wrapper(password)
     # Unlike mysqldump, you don't enter in the password on the command line, you set an environment variable

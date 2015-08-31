@@ -82,5 +82,3 @@ end
 # gem 'debugger', group: [:development, :test]
 gem "simple_form"
 gem "roxml"
-gem 'roadie'
-gem 'roadie-rails'

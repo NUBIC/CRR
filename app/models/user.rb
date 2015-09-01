@@ -68,7 +68,6 @@ class User < ActiveRecord::Base
   def update_from_ldap
     # if Rails.env.staging? || Rails.env.production?
       ldap_user = Devise::LDAP::Adapter.get_ldap_entry(netid)
-      Rails.logger.info ldap_user.inspect
       self.update_attributes(first_name: ldap_user.givenname.first, last_name: ldap_user.sn.first)
     # end
   end

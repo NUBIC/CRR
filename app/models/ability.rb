@@ -55,7 +55,7 @@ class Ability
         end
         can [:new,:create,:show,:activate,:deactivate,:index, :edit,:update,:destroy], EmailNotification
         can :manage, Study
-        can [:new, :create, :show, :index, :request_data ], Search
+        can [:new, :create, :show, :request_data ], Search
         can [:edit, :update, :destroy, :release_data], Search do |search|
           !search.data_released?
         end
@@ -69,7 +69,7 @@ class Ability
         can :manage, Participant
         can :manage, Relationship
         can :manage, ResponseSet
-        can [:new, :create, :show, :index, :request_data ], Search
+        can [:new, :create, :show, :request_data ], Search
         can [:edit, :update, :destroy, :release_data], Search do |search|
           !search.data_released?
         end
@@ -79,6 +79,7 @@ class Ability
         can [:show], Participant do |participant|
           !(participant.study_involvements.active.collect{|si| si.study}.flatten & user.studies.active).empty?
         end
+        can [:new, :create], Search
         can [:show,:request_data], Search do |search|
           user.studies.active.include?(search.study)
         end

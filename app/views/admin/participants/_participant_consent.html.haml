@@ -5,7 +5,7 @@
   .row-fluid
     .span3
       = f.label :enetered_by, 'Entered By: '
-      = f.text_field :proxy_name, :value=>current_user.name,:class=> 'required',:readonly=>true
+      = f.text_field :proxy_name, :value=>current_user.full_name,:class=> 'required',:readonly=>true
     .span3
       = f.label :proxy_name, 'Given By (if other than participant): '
       = f.text_field :proxy_name

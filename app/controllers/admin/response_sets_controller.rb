@@ -78,26 +78,28 @@ class Admin::ResponseSetsController < Admin::AdminController
     errors          = []
     responses       = @response_set.responses
     if uploaded_io.blank?
-        errors << 'File in not provided'
+      errors << 'File in not provided'
     else
       begin
         CSV.new(uploaded_io.read, { headers: true }).each do |row|
-          if row[pin_header] != @response_set.participant.id.to_s
-              errors << "Patien PIN does not match"
-          else
-            section = sections.select{|s| s.title == row[section_header]}.first
-            if section.blank?
-              errors << "section '#{row[section_header]}' could not be found"
+          unless row[pin_header].blank?
+            if row[pin_header] != @response_set.participant.id.to_s
+              errors << "Participant PIN does not match"
             else
-              questions = section.questions
-              row.headers.reject{|h| [pin_header, section_header].include?(h)}.each do |header|
-                question = questions.select{|q| q.text ==  header}.first
-                if question.blank?
-                  errors << "question '#{header}' could not be found"
-                else
-                  response = responses.select{|r| r.question_id == question.id}.first
-                  response ||= @response_set.responses.build(question: question)
-                  response.text = row[header]
+              section = sections.select{|s| s.title == row[section_header]}.first
+              if section.blank?
+                errors << "section '#{row[section_header]}' could not be found"
+              else
+                questions = section.questions
+                row.headers.reject{|h| [pin_header, section_header].include?(h)}.each do |header|
+                  question = questions.select{|q| q.text ==  header}.first
+                  if question.blank?
+                    errors << "question '#{header}' could not be found"
+                  else
+                    response = responses.select{|r| r.question_id == question.id}.first
+                    response ||= @response_set.responses.build(question: question)
+                    response.text = row[header]
+                  end
                 end
               end
             end
@@ -107,7 +109,7 @@ class Admin::ResponseSetsController < Admin::AdminController
         errors <<'Error parsing the file' + e.inspect
       end
     end
-    flash[:error] = errors.join('<br/>').html_safe if errors.any?
+    flash[:error] = errors.uniq.join('<br/>').html_safe if errors.any?
     render :edit
   end
 

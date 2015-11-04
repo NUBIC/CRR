@@ -1,7 +1,5 @@
-require 'csv'
-
 class Admin::ResponseSetsController < Admin::AdminController
-  before_filter :set_response_set, only: [:show, :edit, :update, :destroy, :load_from_file]
+
   def index
     @participant = Participant.find(params[:participant_id])
     respond_to do |format|
@@ -35,17 +33,20 @@ class Admin::ResponseSetsController < Admin::AdminController
   end
 
   def show
+    @response_set= ResponseSet.find(params[:id])
     authorize! :show, @response_set
     @survey = @response_set.survey
   end
 
   def edit
+    @response_set= ResponseSet.find(params[:id]).reload
     authorize! :edit, @response_set
     @survey = @response_set.survey
     @section = @survey.sections.find_by_id(params[:section_id]).nil? ? @survey.sections.first : @survey.sections.find_by_id(params[:section_id])
   end
 
   def update
+    @response_set= ResponseSet.find(params[:id])
     authorize! :update, @response_set
     @survey = @response_set.survey
     @response_set.update_attributes(response_set_params)
@@ -59,6 +60,7 @@ class Admin::ResponseSetsController < Admin::AdminController
   end
 
   def destroy
+    @response_set= ResponseSet.find(params[:id])
     @participant = @response_set.participant
     authorize! :destroy, @response_set
     @response_set.destroy
@@ -68,51 +70,4 @@ class Admin::ResponseSetsController < Admin::AdminController
   def response_set_params
     params.fetch(:response_set, {}).permit!
   end
-
-  def load_from_file
-    authorize! :update, @response_set
-    sections        = @response_set.survey.sections.to_a
-    uploaded_io     = params[:import_file]
-    pin_header      = 'PIN'
-    section_header  = 'Inst'
-    errors          = []
-    responses       = @response_set.responses
-    if uploaded_io.blank?
-        errors << 'File in not provided'
-    else
-      begin
-        CSV.new(uploaded_io.read, { headers: true }).each do |row|
-          if row[pin_header] != @response_set.participant.id.to_s
-              errors << "Patien PIN does not match"
-          else
-            section = sections.select{|s| s.title == row[section_header]}.first
-            if section.blank?
-              errors << "section '#{row[section_header]}' could not be found"
-            else
-              questions = section.questions
-              row.headers.reject{|h| [pin_header, section_header].include?(h)}.each do |header|
-                question = questions.select{|q| q.text ==  header}.first
-                if question.blank?
-                  errors << "question '#{header}' could not be found"
-                else
-                  response = responses.select{|r| r.question_id == question.id}.first
-                  response ||= @response_set.responses.build(question: question)
-                  response.text = row[header]
-                end
-              end
-            end
-          end
-        end
-      rescue Exception => e
-        errors <<'Error parsing the file' + e.inspect
-      end
-    end
-    flash[:error] = errors.join('<br/>').html_safe if errors.any?
-    render :edit
-  end
-
-  private
-    def set_response_set
-      @response_set= ResponseSet.find(params[:id])
-    end
 end

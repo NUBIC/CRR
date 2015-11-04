@@ -40,11 +40,7 @@ AudiologyRegistry::Application.routes.draw do
         get   :preview
       end
     end
-    resources :response_sets do
-      member do
-        patch :load_from_file
-      end
-    end
+    resources :response_sets
     resources :study_involvements do
       collection do
         get :study

@@ -419,9 +419,9 @@ $(document).ready(function() {
     return this.optional(element) || isBirthDate(date);
   }, "Birthdate can't be in future or more than 125 years ago.");
 
-  $.validator.addMethod("number", function(value, element) {
-    return this.optional(element) || value.match(/^\d+$/);
-  }, "Please specify a valid number");
+  // $.validator.addMethod("number", function(value, element) {
+  //   return this.optional(element) || value.match(/^-?\d{1,3}(,\d{3}|\d+)*(\.\d+)*$/);
+  // }, "Please specify a valid number");
 
   $.validator.addMethod("search_condition_value", function(value, element) {
     return value.match(/^\S+$/);

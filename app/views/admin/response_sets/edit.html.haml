@@ -1,76 +1,92 @@
-.row-fluid
-  .span12
-    .well.well-small.nu-well.text-center
-      %h4.text-center
-        =@response_set.participant.name<<"'s Survey"
-- if @response_set.errors.any?
+#response_set_edit
   .row-fluid
-    %h2= "#{pluralize(@response_set.errors.count, "error")} prohibited this relationship from being saved:"
-    %ul
-      - @response_set.errors.full_messages.each do |msg|
-        %li= msg
-.row-fluid
-  .span12
-    =simple_form_for @response_set,  :url=>admin_response_set_path(@response_set), :html=>{ :class => "validate-form edit_response_set_form"} do |f|
-      .tabbable.tabs-left#admin-survey-tabs
-        -if @response_set.survey.sections.size > 1
-          %ul.nav.nav-tabs.span2#section_tab_header
+    .span12
+      .well.well-small.nu-well.text-center
+        %h4.text-center
+          =@response_set.participant.name<<"'s Survey"
+  - if @response_set.errors.any?
+    .row-fluid
+      %h2= "#{pluralize(@response_set.errors.count, "error")} prohibited this relationship from being saved:"
+      %ul
+        - @response_set.errors.full_messages.each do |msg|
+          %li= msg
+  .row-fluid
+    .span12
+      =simple_form_for @response_set,  url: admin_response_set_path(@response_set), :html=>{ :class => "validate-form edit_response_set_form"} do |f|
+        .tabbable.tabs-left#admin-survey-tabs
+          -if @response_set.survey.sections.size > 1
+            %ul.nav.nav-tabs.span2#section_tab_header
+              = button_tag 'Load from file', 'data-toggle'=>'modal', 'data-target'=>'#load_from_file', class: "btn btn-primary nu-primary btn-block"
+              - @response_set.survey.sections.each_with_index do |s,si|
+                %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
+              = link_to "Exit", admin_participant_path(@response_set.participant, tab: "surveys"), class: "btn btn-primary nu-primary btn-block"
+          .error-msg.offset2
+          .tab-content.offset2#admin-survey-tab-content
             - @response_set.survey.sections.each_with_index do |s,si|
-              %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
-            =link_to "Exit", admin_participant_path(@response_set.participant, tab: "surveys"), class: "btn btn-primary nu-primary btn-block"
-        .error-msg.offset2
-        .tab-content.offset2#admin-survey-tab-content
-          - @response_set.survey.sections.each_with_index do |s,si|
-            .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
-              .row-fluid.section-title
-                %h3
-                  =s.title
-              -s.questions.each_with_index do |q,i|
-                .row-fluid
-                  .span12
-                    -if q.pick_one?
-                      -if q.answers.size > 7
-                        .radio-inline
+              .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
+                .row-fluid.section-title
+                  %h3
+                    =s.title
+                -s.questions.each_with_index do |q,i|
+                  .row-fluid
+                    .span12
+                      -if q.pick_one?
+                        -if q.answers.size > 7
+                          .radio-inline
+                            =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
+                        -else
                           =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
+                      -elsif q.pick_many?
+                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
+                      -elsif q.label?
+                        %b
+                          =q.text.html_safe
                       -else
-                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :radio_buttons,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
-                    -elsif q.pick_many?
-                      =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
-                    -elsif q.label?
-                      %b
-                        =q.text.html_safe
-                    -else
-                      =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:required_text => "true",:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date? or q.birth_date?} #{'birth-date' if q.birth_date?}", :placeholder=>"#{'MM/DD/YYYY' if q.date? or q.birth_date?}",:rows=>3 }, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
-                    %hr
-              .btn-toolbar.row-fluid
-                .span6
-                  - unless si == 0
-                    = button_tag :class=>"btn btn-link previous-section", :type => 'button' do
-                      %i.icon-backward
-                      Previous
-                .span6
-                  - if si == (@response_set.survey.sections.size - 1)
-                    = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section", "data-url" => admin_response_set_url(@response_set)
-                  - else
-                    = button_tag "Next", :class=>"btn btn-primary nu-primary next-section", "data-url" => admin_response_set_url(@response_set) do
-                      Next
-                      %i.icon-forward
-:javascript
-  function resizeSurvey() {
-    var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
-    $('#admin-survey-tab-content').height(tab_content_height).css({
-        overflow: "auto"
-    });
-    $('#admin-survey-tabs li, .previous-section, .next-section, .finish-section').click( function(){
+                        =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:required_text => "true",:input_html=>{:class=>"#{'input-mini' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date? or q.birth_date?} #{'birth-date' if q.birth_date?}", :placeholder=>"#{'MM/DD/YYYY' if q.date? or q.birth_date?}",:rows=>3 }, :label_html =>{:class=>"#{'label-required' if q.is_mandatory?}"}
+                      %hr
+                .btn-toolbar.row-fluid
+                  .span6
+                    - unless si == 0
+                      = button_tag :class=>"btn btn-link previous-section", :type => 'button' do
+                        %i.icon-backward
+                        Previous
+                  .span6
+                    - if si == (@response_set.survey.sections.size - 1)
+                      = button_tag "Submit", :value=>"finish", :class=>"btn btn-success finish-section", "data-url" => admin_response_set_url(@response_set)
+                    - else
+                      = button_tag "Next", :class=>"btn btn-primary nu-primary next-section", "data-url" => admin_response_set_url(@response_set) do
+                        Next
+                        %i.icon-forward
+  #load_from_file.modal.hide
+    .modal-header
+      %h5
+        Select a file to load.
+        = button_tag 'x', 'data-dismiss'=>'modal', 'aria-hidden'=>'true', class: 'close'
+    .modal-body
+      = form_tag load_from_file_admin_response_set_path(@response_set), method: 'patch', multipart: true, id: 'load_from_file', data: { target: '#response_set_edit'} do
+        .row-fluid
+          .span12
+            = file_field_tag :import_file
+        .row-fluid
+          .span12
+            = submit_tag 'Load', class: 'btn btn-primary nu-primary'
+
+  :javascript
+    function resizeSurvey() {
+      var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
       $('#admin-survey-tab-content').height(tab_content_height).css({
-        overflow: "auto"
+          overflow: "auto"
       });
-      $('#admin-survey-tab-content').scrollTop(0);
+      $('#admin-survey-tabs li, .previous-section, .next-section, .finish-section').click( function(){
+        $('#admin-survey-tab-content').height(tab_content_height).css({
+          overflow: "auto"
+        });
+        $('#admin-survey-tab-content').scrollTop(0);
+      });
+    }
+    $(document).ready(function(){
+      resizeSurvey();
     });
-  }
-  $(document).ready(function(){
-    resizeSurvey();
-  });
-  $(window).resize(function() {
-    resizeSurvey();
-  });
+    $(window).resize(function() {
+      resizeSurvey();
+    });

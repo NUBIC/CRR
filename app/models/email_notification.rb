@@ -13,10 +13,10 @@
 class EmailNotification < ActiveRecord::Base
   include WithActiveState
 
-  TYPES = ['Welcome'].freeze
+  TYPES = ['Welcome', 'Express sign up'].freeze
 
   validates :state, inclusion: { in: STATES }, presence: true
-  validates :email_type,  inclusion: { in: TYPES  }, presence: true
+  validates :email_type,  inclusion: { in: TYPES }, presence: true
 
   def editable?
     inactive?

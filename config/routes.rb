@@ -93,7 +93,12 @@ AudiologyRegistry::Application.routes.draw do
     end
   end
 
-  resources :accounts, except: [:new, :index]
+  resources :accounts, except: [:new, :index] do
+    collection do
+      post :express_sign_up
+    end
+  end
+
   resources :account_sessions do
     collection do
       get :back_to_website

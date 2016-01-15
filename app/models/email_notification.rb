@@ -13,7 +13,11 @@
 class EmailNotification < ActiveRecord::Base
   include WithActiveState
 
-  TYPES = ['Welcome', 'Express sign up'].freeze
+  WELCOME_PARTICIPANT = 'Welcome participant'
+  WELCOME_RESEARCHER  = 'Welcome researcher'
+  EXPRESS_SIGN_UP     = 'Express sign up'
+
+  TYPES = [WELCOME_PARTICIPANT, WELCOME_RESEARCHER, EXPRESS_SIGN_UP].freeze
 
   validates :state, inclusion: { in: STATES }, presence: true
   validates :email_type,  inclusion: { in: TYPES }, presence: true

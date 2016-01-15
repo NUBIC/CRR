@@ -14,6 +14,14 @@ class Admin::UsersController < Admin::AdminController
    authorize! :create, @user
    if @user.save
      flash[:notice] = "Created"
+     if @user.researcher?
+      welcome_email = EmailNotification.active.find_by(email_type: EmailNotification::WELCOME_RESEARCHER)
+      if welcome_email
+        outbound_email(@user.email, welcome_email.content, 'Welcome to the communication research registry.')
+      else
+        flash[:error] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+      end
+    end
    else
      flash[:error] = @user.errors.full_messages.to_sentence
    end
@@ -51,6 +59,5 @@ class Admin::UsersController < Admin::AdminController
  def user_params
    params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
  end
-
 end
 

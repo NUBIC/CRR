@@ -68,5 +68,28 @@ describe Admin::UsersController do
       User.all.size.should == 0
       response.should redirect_to(admin_users_path)
     end
+
+    it "should notify user of if email reminder is available" do
+      expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries,:size)
+      expect(flash[:error]).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+    end
+
+    it "should notify researcher of created account if email reminder is available" do
+      FactoryGirl.create(:email_notification, email_type: EmailNotification::WELCOME_RESEARCHER)
+      expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.to change(ActionMailer::Base.deliveries,:size).by(1)
+    end
+
+    it "should not notify data manager of created account" do
+      expect { post :create, { user: { netid: 'test_user', data_manager: true  } } }.not_to change(ActionMailer::Base.deliveries,:size)
+    end
+
+    it "should not notify admin of created account" do
+      expect { post :create, { user: { netid: 'test_user', admin: true  } } }.not_to change(ActionMailer::Base.deliveries,:size)
+    end
+
+    it "should not notify regular user of created account" do
+      expect { post :create, { user: { netid: 'test_user' } } }.not_to change(ActionMailer::Base.deliveries,:size)
+    end
+
   end
 end

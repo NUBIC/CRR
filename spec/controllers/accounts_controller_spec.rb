@@ -156,7 +156,7 @@ describe AccountsController do
 
       describe 'when corresponding EmailNotification is available' do
         before(:each) do
-          FactoryGirl.create(:email_notification, email_type: 'Express sign up')
+          FactoryGirl.create(:email_notification, email_type: EmailNotification::EXPRESS_SIGN_UP)
         end
 
         it 'sends welcome email and admin email when corresponding EmailNotification is available' do

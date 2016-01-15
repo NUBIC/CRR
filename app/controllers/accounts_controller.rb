@@ -22,7 +22,7 @@ class AccountsController < PublicController
     respond_to do |format|
       if @account.save
         format.html { redirect_to dashboard_path }
-        welcome_email = EmailNotification.active.find_by(email_type: 'Welcome')
+        welcome_email = EmailNotification.active.find_by(email_type: EmailNotification::WELCOME_PARTICIPANT)
         EmailNotificationsMailer.generic_email(@account.email, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email
       else
         format.html { redirect_to public_login_path(anchor: 'sign_up')
@@ -73,11 +73,10 @@ Dear User,
 The following user requested to be contacted by email via the express sign up.
 #{params[:name]}
 #{params[:email]}
-
           emailtext
-          express_sign_up_email = EmailNotification.active.find_by(email_type: 'Express sign up')
+          express_sign_up_email = EmailNotification.active.find_by(email_type: EmailNotification::EXPRESS_SIGN_UP)
           if express_sign_up_email
-            participant_email(params[:email], express_sign_up_email.content, 'Welcome to the communication research registry.')
+            outbound_email(params[:email], express_sign_up_email.content, 'Welcome to the communication research registry.')
             confirmation_message << ' We have sent a reminder to your email address.'
           else
             admin_notification << 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
@@ -86,10 +85,11 @@ The following user requested to be contacted by email via the express sign up.
           admin_email(admin_notification, 'Communication research registry express sign up notification')
         elsif phone_contact
           admin_notification = <<-emailtext
-            Dear User,
-            The following user requested to be contacted by phone via the express sign up.
-            #{params[:name]}
-            #{params[:phone]}
+Dear User,
+
+The following user requested to be contacted by phone via the express sign up.
+#{params[:name]}
+#{params[:phone]}
           emailtext
           admin_email(admin_notification, 'Communication research registry express sign up notification')
           confirmation_message << ' We will call you within two business days.'
@@ -104,16 +104,8 @@ The following user requested to be contacted by email via the express sign up.
   end
 
   private
-    def admin_email(content, subject)
-      EmailNotificationsMailer.generic_email(Rails.configuration.custom.app_config['contact_email'], content, subject).deliver!
-    end
-
-    def participant_email(email, content, subject)
-      EmailNotificationsMailer.generic_email(email, content, subject).deliver!
-    end
 
   def account_params
     params.require(:account).permit(:email, :password, :password_confirmation)
   end
-
 end

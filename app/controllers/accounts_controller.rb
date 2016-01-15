@@ -95,7 +95,7 @@ The following user requested to be contacted by email via the express sign up.
           confirmation_message << ' We will call you within two business days.'
         end
         flash[:notice] = confirmation_message
-        format.html { redirect_to public_login_path }
+        format.html { redirect_to public_login_path(anchor: 'express_sign_up') }
       else
         flash[:error] = errors.to_sentence
         format.html { redirect_to public_login_path(anchor: 'express_sign_up', contact: params[:contact], name: params[:name], email: params[:email]) }

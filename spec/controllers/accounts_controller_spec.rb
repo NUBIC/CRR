@@ -173,7 +173,7 @@ describe AccountsController do
 
       it 'redirects to the dashboard page' do
         post :express_sign_up, valid_express_signup_attributes
-        expect(response).to redirect_to public_login_path
+        expect(response).to redirect_to public_login_path(anchor: 'express_sign_up')
       end
     end
 
@@ -188,7 +188,7 @@ describe AccountsController do
 
       it 'redirects to the dashboard page' do
         post :express_sign_up, valid_express_signup_attributes
-        expect(response).to redirect_to public_login_path
+        expect(response).to redirect_to public_login_path(anchor: 'express_sign_up')
       end
 
       it 'generates proper notification message' do

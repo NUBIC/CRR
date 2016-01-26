@@ -16,6 +16,7 @@
 #  last_sign_in_at    :datetime
 #  current_sign_in_ip :inet
 #  last_sign_in_ip    :inet
+#  email              :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -60,15 +61,15 @@ class User < ActiveRecord::Base
 
   private
     def check_netid
-      # if Rails.env.staging? || Rails.env.production?
-        errors.add(:netid,"Not recognized") unless Devise::LDAP::Adapter.valid_login?(netid)
-      # end
+      unless Rails.env.development?
+        errors.add(:netid, "Not recognized") unless Devise::LDAP::Adapter.valid_login?(netid)
+      end
     end
 
   def update_from_ldap
-    # if Rails.env.staging? || Rails.env.production?
+    unless Rails.env.development?
       ldap_user = Devise::LDAP::Adapter.get_ldap_entry(netid)
-      self.update_attributes(first_name: ldap_user.givenname.first, last_name: ldap_user.sn.first)
-    # end
+      self.update_attributes(first_name: ldap_user.givenname.first, last_name: ldap_user.sn.first, email: ldap_user.mail.first)
+    end
   end
 end

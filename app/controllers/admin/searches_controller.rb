@@ -76,7 +76,14 @@ class Admin::SearchesController < Admin::AdminController
 
     @search.release_data(nil,params)
     if @search.save
-      flash[:notice] = "Participant Data Released"
+      flash[:notice] = 'Participant Data Released.'
+      email = EmailNotification.active.find_by(email_type: EmailNotification::BATCH_RELEASED)
+      if email
+        outbound_email(@search.user.email, email.content, 'Communication Research Registry Research request approved.')
+        flash[:notice] << ' Researcher had been notified of data release.'
+      else
+        flash[:error] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+      end
     else
       flash[:error] = @search.errors.full_messages.to_sentence
     end

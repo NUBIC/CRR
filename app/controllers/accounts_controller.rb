@@ -22,7 +22,7 @@ class AccountsController < PublicController
     respond_to do |format|
       if @account.save
         format.html { redirect_to dashboard_path }
-        welcome_email = EmailNotification.active.find_by(email_type: 'Welcome')
+        welcome_email = EmailNotification.active.find_by(email_type: EmailNotification::WELCOME_PARTICIPANT)
         EmailNotificationsMailer.generic_email(@account.email, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email
       else
         format.html { redirect_to public_login_path(anchor: 'sign_up')
@@ -51,6 +51,59 @@ class AccountsController < PublicController
       end
     end
   end
+
+  def express_sign_up
+    errors = []
+    errors << 'Name can\'t be blank' if params[:name].blank?
+    errors << 'Preferred contact can\'t be blank' if params[:contact].blank?
+
+    email_contact = params[:contact] == 'email'
+    phone_contact = params[:contact] == 'phone'
+    errors << 'Email can\'t be blank' if params[:email].blank? && email_contact
+    errors << 'Email is invalid' if !params[:email].blank? && params[:email] !~ /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i
+    errors << 'Phone can\'t be blank' if params[:phone].blank? && phone_contact
+
+    respond_to do |format|
+      if errors.empty?
+        confirmation_message = 'Thank you for your interest in the Communication Research Registry.'
+        if email_contact
+          admin_notification = <<-emailtext
+Dear User,
+
+The following user requested to be contacted by email via the express sign up.
+#{params[:name]}
+#{params[:email]}
+          emailtext
+          express_sign_up_email = EmailNotification.active.find_by(email_type: EmailNotification::EXPRESS_SIGN_UP)
+          if express_sign_up_email
+            outbound_email(params[:email], express_sign_up_email.content, 'Welcome to the communication research registry.')
+            confirmation_message << ' We have sent a reminder to your email address.'
+          else
+            admin_notification << 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+            confirmation_message << ' We will send a reminder to your email address.'
+          end
+          admin_email(admin_notification, 'Communication research registry express sign up notification')
+        elsif phone_contact
+          admin_notification = <<-emailtext
+Dear User,
+
+The following user requested to be contacted by phone via the express sign up.
+#{params[:name]}
+#{params[:phone]}
+          emailtext
+          admin_email(admin_notification, 'Communication research registry express sign up notification')
+          confirmation_message << ' We will call you within two business days.'
+        end
+        flash[:notice] = confirmation_message
+        format.html { redirect_to public_login_path(anchor: 'express_sign_up') }
+      else
+        flash[:error] = errors.to_sentence
+        format.html { redirect_to public_login_path(anchor: 'express_sign_up', contact: params[:contact], name: params[:name], email: params[:email]) }
+      end
+    end
+  end
+
+  private
 
   def account_params
     params.require(:account).permit(:email, :password, :password_confirmation)

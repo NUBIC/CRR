@@ -11,8 +11,6 @@ FactoryGirl.define do
 
   factory :user do |u|
     u.netid {generate :netid}
-    u.first_name {Faker::Name.first_name}
-    u.last_name {Faker::Name.last_name}
   end
 
   factory :participant do |p|
@@ -102,6 +100,6 @@ FactoryGirl.define do
   factory :email_notification do |a|
     a.state "active"
     a.content "Welcome!"
-    a.email_type 'Welcome'
+    a.email_type EmailNotification::WELCOME_PARTICIPANT
   end
 end

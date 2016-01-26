@@ -78,7 +78,7 @@ describe AccountsController do
     describe 'password' do
       it 'with invalid current password generates flash error' do
         put :update, {id: account.id, account: { email: 'test@test.com', current_password: '12345' } }
-        flash[:error].should == 'Current password doesn\'t match. Please try again.'
+        expect(flash[:error]).to eq 'Current password doesn\'t match. Please try again.'
       end
 
       it 're-renders the \'edit\' template' do
@@ -97,7 +97,7 @@ describe AccountsController do
     end
   end
 
-  describe 'GET dahboard' do
+  describe 'GET dashboard' do
     let(:account) { FactoryGirl.create(:account) }
 
     it 'deletes inactive participants' do
@@ -133,6 +133,81 @@ describe AccountsController do
       it 'renders edit page' do
         get :edit, {id: account.id}
         expect(response).to render_template('edit')
+      end
+    end
+  end
+
+  describe 'POST express_sign_up' do
+    describe 'with valid email contact params' do
+      let(:valid_express_signup_attributes) {{ name: 'Joe', contact: 'email', email: 'joe@doe.com'}}
+
+      describe 'when corresponding EmailNotification is not available' do
+        it 'sends admin email' do
+          expect {
+            post :express_sign_up, valid_express_signup_attributes
+          }.to change(ActionMailer::Base.deliveries,:size).by(1)
+        end
+
+        it 'generates proper notification message' do
+          post :express_sign_up, valid_express_signup_attributes
+          expect(flash[:notice]).to eq 'Thank you for your interest in the Communication Research Registry. We will send a reminder to your email address.'
+        end
+      end
+
+      describe 'when corresponding EmailNotification is available' do
+        before(:each) do
+          FactoryGirl.create(:email_notification, email_type: EmailNotification::EXPRESS_SIGN_UP)
+        end
+
+        it 'sends welcome email and admin email when corresponding EmailNotification is available' do
+          expect {
+            post :express_sign_up, valid_express_signup_attributes
+          }.to change(ActionMailer::Base.deliveries,:size).by(2)
+        end
+
+        it 'generates proper notification message' do
+          post :express_sign_up, valid_express_signup_attributes
+          expect(flash[:notice]).to eq 'Thank you for your interest in the Communication Research Registry. We have sent a reminder to your email address.'
+        end
+      end
+
+      it 'redirects to the dashboard page' do
+        post :express_sign_up, valid_express_signup_attributes
+        expect(response).to redirect_to public_login_path(anchor: 'express_sign_up')
+      end
+    end
+
+    describe 'with valid phone contact params' do
+      let(:valid_express_signup_attributes) {{ name: 'Joe', contact: 'phone', phone: '123-456-7891'}}
+
+      it 'sends admin email' do
+        expect {
+          post :express_sign_up, valid_express_signup_attributes
+        }.to change(ActionMailer::Base.deliveries,:size).by(1)
+      end
+
+      it 'redirects to the dashboard page' do
+        post :express_sign_up, valid_express_signup_attributes
+        expect(response).to redirect_to public_login_path(anchor: 'express_sign_up')
+      end
+
+      it 'generates proper notification message' do
+        post :express_sign_up, valid_express_signup_attributes
+        expect(flash[:notice]).to eq 'Thank you for your interest in the Communication Research Registry. We will call you within two business days.'
+      end
+    end
+
+    describe 'with invalid params' do
+      let(:invalid_express_signup_attributes) {{ name: 'Joe' }}
+
+      it 're-renders the \'express_sign_up\' template' do
+        post :express_sign_up, invalid_express_signup_attributes
+        expect(response).to redirect_to(public_login_path(anchor: 'express_sign_up', name: 'Joe'))
+      end
+
+      it 'keeps entered parameters' do
+        post :express_sign_up, invalid_express_signup_attributes
+        expect(controller.params[:name]).to eq invalid_express_signup_attributes[:name]
       end
     end
   end

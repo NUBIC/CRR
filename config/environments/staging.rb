@@ -75,7 +75,7 @@ AudiologyRegistry::Application.configure do
     :email => {
       :email_prefix => "[#{Rails.env}] ",
       :sender_address => %w(CRR-noreply@northwestern.edu),
-      :exception_recipients => %w(d-were@northwestern.edu y-bushmanova@northwestern.edu)
+      :exception_recipients => %w(y-bushmanova@northwestern.edu)
     }
 
   # Disable automatic flushing of the log to improve performance.

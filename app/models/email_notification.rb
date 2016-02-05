@@ -17,8 +17,9 @@ class EmailNotification < ActiveRecord::Base
   WELCOME_RESEARCHER  = 'Welcome researcher'
   EXPRESS_SIGN_UP     = 'Express sign up'
   BATCH_RELEASED      = 'Batch released'
+  RELEASE_EXPIRING    = 'Release expiring'
 
-  TYPES = [WELCOME_PARTICIPANT, WELCOME_RESEARCHER, EXPRESS_SIGN_UP, BATCH_RELEASED].freeze
+  TYPES = [WELCOME_PARTICIPANT, WELCOME_RESEARCHER, EXPRESS_SIGN_UP, BATCH_RELEASED, RELEASE_EXPIRING].freeze
 
   validates :state, inclusion: { in: STATES }, presence: true
   validates :email_type,  inclusion: { in: TYPES }, presence: true

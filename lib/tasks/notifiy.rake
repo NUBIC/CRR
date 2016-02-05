@@ -14,4 +14,19 @@ namespace :notify do
       Rails.logger.error('Email notification: email for expiring release is not available')
     end
   end
+
+  task :expired_release => :environment do
+    email = EmailNotification.active.find_by(email_type: EmailNotification::RELEASE_EXPIRED)
+    if email
+      Search.where(end_date: Date.today).each do |search|
+        user_emails = search.study.user_emails
+        if user_emails.any?
+          EmailNotificationsMailer.generic_email(user_emails, email.content, "Communication Research Registry: Research release for '#{search.name}' report is expired.").deliver!
+          Rails.logger.info("Study '#{search.study.name}' researchers were notified of expired release")
+        end
+      end
+    else
+      Rails.logger.error('Email notification: email for expired release is not available')
+    end
+  end
 end

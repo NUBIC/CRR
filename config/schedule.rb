@@ -25,10 +25,12 @@ case environment
   when 'staging'
     every :day, at: '6:00AM' do
       rake 'notify:expiring_release'
+      rake 'notify:expired_release'
     end
   when 'production'
     every :day, at: '6:00AM' do
       rake 'notify:expiring_release'
+      rake 'notify:expired_release'
     end
   end
 end

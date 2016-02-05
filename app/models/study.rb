@@ -58,6 +58,10 @@ class Study < ActiveRecord::Base
     short_title.blank? ? name : short_title
   end
 
+  def user_emails
+    users.pluck(:email).reject(&:blank?)
+  end
+
   private
   def default_args
     self.state ||='inactive'

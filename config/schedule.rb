@@ -19,7 +19,9 @@
 
 # Learn more: http://github.com/javan/whenever
 
+set :output, { standard: 'cron.log'}
 set :environment, ENV['RAILS_ENV']
+
 case environment
 when 'staging'
   every :day, at: '6:00AM' do

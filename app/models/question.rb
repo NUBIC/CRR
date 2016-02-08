@@ -98,7 +98,7 @@ class Question < ActiveRecord::Base
   end
 
   def search_display
-    "#{section.survey.title} - #{text}"
+    "#{section.survey.title} - #{section.title} - #{text}"
   end
 
   def survey_title

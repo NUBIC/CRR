@@ -27,7 +27,7 @@ describe Admin::SearchesController do
           puts @valid_release_data_attributes.inspect
           patch :release_data, @valid_release_data_attributes
           expect(flash[:notice]).to eq 'Participant Data Released.'
-          expect(flash[:error]).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+          expect(flash[:error]).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
         end
       end
 

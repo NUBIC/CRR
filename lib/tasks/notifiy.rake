@@ -4,14 +4,16 @@ namespace :notify do
     email = EmailNotification.active.find_by(email_type: EmailNotification::RELEASE_EXPIRING)
     if email
       Search.where(warning_date: Date.today).where('end_date is null or end_date > ?', Date.today).each do |search|
-        user_emails = search.study.user_emails
+        user_emails = search.user_emails
         if user_emails.any?
           EmailNotificationsMailer.generic_email(user_emails, email.content, "Communication Research Registry: Research release for '#{search.name}' report is expiring soon.").deliver!
-          Rails.logger.info("Study '#{search.study.name}' researchers were notified of expiring release")
+          puts "Study '#{search.study.name}' researchers were notified of expiring release"
+        else
+          puts "Study '#{search.study.name}' researchers could not be notified of expiring release: emails are not available"
         end
       end
     else
-      Rails.logger.error('Email notification: email for expiring release is not available')
+      puts 'Email notification: email for expiring release is not available'
     end
   end
 
@@ -19,14 +21,16 @@ namespace :notify do
     email = EmailNotification.active.find_by(email_type: EmailNotification::RELEASE_EXPIRED)
     if email
       Search.where(end_date: Date.today).each do |search|
-        user_emails = search.study.user_emails
+        user_emails = search.user_emails
         if user_emails.any?
           EmailNotificationsMailer.generic_email(user_emails, email.content, "Communication Research Registry: Research release for '#{search.name}' report is expired.").deliver!
-          Rails.logger.info("Study '#{search.study.name}' researchers were notified of expired release")
+          puts "Study '#{search.study.name}' researchers were notified of expired release"
+        else
+          puts "Study '#{search.study.name}' researchers could not be notified of expired release: emails are not available"
         end
       end
     else
-      Rails.logger.error('Email notification: email for expired release is not available')
+      puts 'Email notification: email for expired release is not available'
     end
   end
 end

@@ -134,6 +134,10 @@ class Search < ActiveRecord::Base
     self.search_condition_group.copy(source_record.search_condition_group)
   end
 
+  def user_emails
+    self.study.user_emails.push(self.user.email).reject(&:blank?).uniq
+  end
+
   private
     def end_date_cannot_be_before_start_date
       if end_date.present? && end_date <= start_date

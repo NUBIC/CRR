@@ -81,4 +81,8 @@ RSpec.configure do |config|
 
   config.include FactoryGirl::Syntax::Methods
   config.include TestLogins
+
+  config.before(:each) do
+    Setup.email_notifications
+  end
 end

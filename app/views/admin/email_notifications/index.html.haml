@@ -8,27 +8,31 @@
     %table.table.table-bordered.table-hover#email_notification_index_table
       %thead
         %tr
-          %th.span1 Type
-          %th.span1 State
-          %th.span1 Created On
-          %th.span1 Updated On
-          %th
+          %th.span3 Name
+          %th Description
+          %th State
+          %th.span2 Created On
+          %th.span2 Updated On
+          %th.span3
       %tbody
         - @email_notifications.each do |email_notification|
+          - css_class = 'muted' unless email_notification.active?
           %tr
             %td
-              = link_to email_notification.email_type, admin_email_notification_path(email_notification)
-            %td{:class=> "#{'muted' unless email_notification.active? }"}
+              = link_to email_notification.name, admin_email_notification_path(email_notification)
+            %td{ class: css_class}
+              = email_notification.description
+            %td{ class: css_class}
               = email_notification.state.titleize
-            %td{:class=> "#{'muted' unless email_notification.active?}"}
+            %td{ class: css_class}
               = email_notification.created_at.to_date
-            %td{:class=> "#{'muted' unless email_notification.active?}"}
+            %td{ class: css_class}
               = email_notification.updated_at.to_date
             %td
               .row-fluid
                 .span6
                   - confirmation_message = 'Are you sure you want to deactivate and edit this email?' if email_notification.active?
-                  = link_to "Edit", edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block', data: { confirm: confirmation_message}
+                  = link_to "Edit", edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block', data: { confirm: confirmation_message }
                 .span6
                   - if email_notification.active?
                     = form_for email_notification, url: deactivate_admin_email_notification_path(email_notification) do |f|

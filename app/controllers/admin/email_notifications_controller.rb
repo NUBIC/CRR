@@ -2,7 +2,7 @@ class Admin::EmailNotificationsController < Admin::AdminController
   before_filter :set_email_notification, except: :index
 
   def index
-   @email_notifications = EmailNotification.all
+   @email_notifications = EmailNotification.order(:name).all
    authorize! :index, EmailNotification
   end
 

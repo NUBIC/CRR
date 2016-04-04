@@ -15,6 +15,7 @@ $(document).ready ->
         null
         null
         null
+        null
         { className: "controls_column" },
       ]
       autoWidth: true

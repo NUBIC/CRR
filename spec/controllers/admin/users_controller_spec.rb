@@ -69,13 +69,15 @@ describe Admin::UsersController do
       response.should redirect_to(admin_users_path)
     end
 
-    it "should notify user of if email reminder is available" do
+    it "should notify user if email reminder is not available" do
+      welcome_email = EmailNotification.active.welcome_researcher
+      welcome_email.deactivate
+      welcome_email.save!
       expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries,:size)
       expect(flash[:error]).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
     end
 
     it "should notify researcher of created account if email reminder is available" do
-      FactoryGirl.create(:email_notification, email_type: EmailNotification::WELCOME_RESEARCHER)
       expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.to change(ActionMailer::Base.deliveries,:size).by(1)
     end
 

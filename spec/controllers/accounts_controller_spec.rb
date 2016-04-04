@@ -14,7 +14,6 @@ describe AccountsController do
       end
 
       it 'sends welcome email' do
-        welcome_email = FactoryGirl.create(:email_notification)
         expect {
           post :create, {account: valid_attributes}
         }.to change(ActionMailer::Base.deliveries,:size).by(1)
@@ -141,24 +140,7 @@ describe AccountsController do
     describe 'with valid email contact params' do
       let(:valid_express_signup_attributes) {{ name: 'Joe', contact: 'email', email: 'joe@doe.com'}}
 
-      describe 'when corresponding EmailNotification is not available' do
-        it 'sends admin email' do
-          expect {
-            post :express_sign_up, valid_express_signup_attributes
-          }.to change(ActionMailer::Base.deliveries,:size).by(1)
-        end
-
-        it 'generates proper notification message' do
-          post :express_sign_up, valid_express_signup_attributes
-          expect(flash[:notice]).to eq 'Thank you for your interest in the Communication Research Registry. We will send a reminder to your email address.'
-        end
-      end
-
       describe 'when corresponding EmailNotification is available' do
-        before(:each) do
-          FactoryGirl.create(:email_notification, email_type: EmailNotification::EXPRESS_SIGN_UP)
-        end
-
         it 'sends welcome email and admin email when corresponding EmailNotification is available' do
           expect {
             post :express_sign_up, valid_express_signup_attributes
@@ -168,6 +150,25 @@ describe AccountsController do
         it 'generates proper notification message' do
           post :express_sign_up, valid_express_signup_attributes
           expect(flash[:notice]).to eq 'Thank you for your interest in the Communication Research Registry. We have sent a reminder to your email address.'
+        end
+      end
+
+      describe 'when corresponding EmailNotification is not available' do
+        it 'sends admin email' do
+          express_sign_up_email = EmailNotification.active.express_sign_up
+          express_sign_up_email.deactivate
+          express_sign_up_email.save!
+          expect {
+            post :express_sign_up, valid_express_signup_attributes
+          }.to change(ActionMailer::Base.deliveries,:size).by(1)
+        end
+
+        it 'generates proper notification message' do
+          express_sign_up_email = EmailNotification.active.express_sign_up
+          express_sign_up_email.deactivate
+          express_sign_up_email.save!
+          post :express_sign_up, valid_express_signup_attributes
+          expect(flash[:notice]).to eq 'Thank you for your interest in the Communication Research Registry. We will send a reminder to your email address.'
         end
       end
 

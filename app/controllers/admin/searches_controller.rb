@@ -1,9 +1,11 @@
 class Admin::SearchesController < Admin::AdminController
+  include EmailNotifications
+
   before_filter :set_search, only: [:edit, :show, :update, :request_data, :release_data, :destroy]
   before_filter :set_studies, only: [:new, :edit, :show]
 
   def index
-    @searches = params[:state] == "data_requested" ? Search.requested : params[:state] == "data_released" ? Search.released : Search.all.default_ordering
+    @searches = params[:state] == 'data_requested' ? Search.requested : params[:state] == 'data_released' ? Search.released : Search.all.default_ordering
   end
 
   def new
@@ -30,7 +32,7 @@ class Admin::SearchesController < Admin::AdminController
     end
 
     if @search.save
-      flash[:notice] = "Saved"
+      flash[:notice] = 'Saved'
       redirect_to admin_search_path(@search)
     else
       flash[:error] = @search.errors.full_messages.to_sentence
@@ -40,9 +42,9 @@ class Admin::SearchesController < Admin::AdminController
 
   def show
     authorize! :show, @search
-    @data_requested       = @search.data_requested?
-    @data_released        = @search.data_released?
-    @new_search           = @search.new?
+    @data_requested         = @search.data_requested?
+    @data_released          = @search.data_released?
+    @new_search             = @search.new?
 
     @participants           = @new_search ? @search.result : @search.search_participants.map(&:participant)
     @participants_released  = @search.released_participants if @search.data_released?
@@ -52,7 +54,7 @@ class Admin::SearchesController < Admin::AdminController
     authorize! :update, @search
     @search.update_attributes(search_params)
     if @search.save
-      flash[:notice] = "Updated"
+      flash[:notice] = 'Updated'
     else
       flash[:error] = @search.errors.full_messages.to_sentence
     end
@@ -64,7 +66,7 @@ class Admin::SearchesController < Admin::AdminController
 
     @search.request_data(nil,params)
     if @search.save
-      flash[:notice] = "Data Request Submitted"
+      flash[:notice] = 'Data Request Submitted'
     else
       flash[:error] = @search.errors.full_messages.to_sentence
     end
@@ -77,10 +79,10 @@ class Admin::SearchesController < Admin::AdminController
     @search.release_data(nil,params)
     if @search.save
       flash[:notice] = 'Participant Data Released.'
-      email = EmailNotification.active.find_by(email_type: EmailNotification::BATCH_RELEASED)
+      email = EmailNotification.active.batch_released
       user_emails = @search.user_emails
       if email && user_emails
-        outbound_email(@search.user_emails, email.content, 'Communication Research Registry Research request approved.')
+        outbound_email(@search.user_emails, email.content, email.subject)
         flash[:notice] << ' Researcher had been notified of data release.'
       else
         flash[:error] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
@@ -89,8 +91,8 @@ class Admin::SearchesController < Admin::AdminController
       flash[:error] = @search.errors.full_messages.to_sentence
     end
     respond_to do |format|
-      format.html {redirect_to admin_searches_path}
-      format.js { render :js => "window.location.href = '#{admin_search_path(@search)}'" }
+      format.html { redirect_to admin_searches_path }
+      format.js { render js: "window.location.href = '#{admin_search_path(@search)}'" }
     end
   end
 

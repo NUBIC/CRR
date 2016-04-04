@@ -1,3 +1,24 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                 :integer          not null, primary key
+#  netid              :string(255)
+#  admin              :boolean
+#  researcher         :boolean
+#  data_manager       :boolean
+#  first_name         :string(255)
+#  last_name          :string(255)
+#  created_at         :datetime
+#  updated_at         :datetime
+#  sign_in_count      :integer          default(0), not null
+#  current_sign_in_at :datetime
+#  last_sign_in_at    :datetime
+#  current_sign_in_ip :inet
+#  last_sign_in_ip    :inet
+#  email              :string(255)
+#
+
 require 'spec_helper'
 
 describe User do

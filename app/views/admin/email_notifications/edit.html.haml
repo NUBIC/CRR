@@ -1,7 +1,7 @@
 #email_notification
   = form_for @email_notification, url: admin_email_notification_path(@email_notification), html: { class: 'form-horizontal'}  do |f|
     %h4
-      #{@email_notification.email_type} email notification. Last updated on #{@email_notification.updated_at.to_date} (#{@email_notification.state})
+      #{@email_notification.name} email notification. Last updated on #{@email_notification.updated_at.to_date} (#{@email_notification.state})
     .row-fluid
       .span12
         = f.text_area :content

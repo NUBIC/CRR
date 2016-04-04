@@ -24,7 +24,10 @@ describe Admin::SearchesController do
 
       describe 'when corresponding EmailNotification is not available' do
         it 'generates warning message' do
-          puts @valid_release_data_attributes.inspect
+          email_notification = EmailNotification.batch_released
+          email_notification.deactivate
+          email_notification.save!
+
           patch :release_data, @valid_release_data_attributes
           expect(flash[:notice]).to eq 'Participant Data Released.'
           expect(flash[:error]).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
@@ -32,10 +35,6 @@ describe Admin::SearchesController do
       end
 
       describe 'when corresponding EmailNotification is available' do
-        before(:each) do
-          FactoryGirl.create(:email_notification, email_type: EmailNotification::BATCH_RELEASED)
-        end
-
         it 'sends welcome email and admin email when corresponding EmailNotification is available' do
           expect {
             patch :release_data, @valid_release_data_attributes

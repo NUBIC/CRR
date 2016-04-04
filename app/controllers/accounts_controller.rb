@@ -1,4 +1,6 @@
 class AccountsController < PublicController
+  include EmailNotifications
+
   before_filter :require_user, :only=>[:dashboard, :update, :edit]
 
   def dashboard
@@ -22,8 +24,13 @@ class AccountsController < PublicController
     respond_to do |format|
       if @account.save
         format.html { redirect_to dashboard_path }
-        welcome_email = EmailNotification.active.find_by(email_type: EmailNotification::WELCOME_PARTICIPANT)
-        EmailNotificationsMailer.generic_email(@account.email, welcome_email.content, 'Welcome to the communication research registry.').deliver! if welcome_email
+        welcome_email = EmailNotification.active.welcome_participant
+        if welcome_email
+          outbound_email(@account.email, welcome_email.content,  welcome_email.subject)
+        else
+          admin_notification = 'ATTENTION: "welcome participant" notification email message could not be sent (corresponding email could have been deactivated)'
+          admin_email(admin_notification, 'Communication research registry sign up notification failure')
+        end
       else
         format.html { redirect_to public_login_path(anchor: 'sign_up')
         flash[:error] = @account.errors.full_messages.to_sentence }
@@ -53,44 +60,23 @@ class AccountsController < PublicController
   end
 
   def express_sign_up
-    errors = []
-    errors << 'Name can\'t be blank' if params[:name].blank?
-    errors << 'Preferred contact can\'t be blank' if params[:contact].blank?
-
-    email_contact = params[:contact] == 'email'
-    phone_contact = params[:contact] == 'phone'
-    errors << 'Email can\'t be blank' if params[:email].blank? && email_contact
-    errors << 'Email is invalid' if !params[:email].blank? && params[:email] !~ /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i
-    errors << 'Phone can\'t be blank' if params[:phone].blank? && phone_contact
-
+    errors = express_signup_validation_errors(params)
     respond_to do |format|
       if errors.empty?
         confirmation_message = 'Thank you for your interest in the Communication Research Registry.'
-        if email_contact
-          admin_notification = <<-emailtext
-Dear User,
-
-The following user requested to be contacted by email via the express sign up.
-#{params[:name]}
-#{params[:email]}
-          emailtext
-          express_sign_up_email = EmailNotification.active.find_by(email_type: EmailNotification::EXPRESS_SIGN_UP)
+        if params[:contact] == 'email'
+          express_sign_up_email = EmailNotification.active.express_sign_up
           if express_sign_up_email
-            outbound_email(params[:email], express_sign_up_email.content, 'Welcome to the communication research registry.')
+            outbound_email(params[:email], express_sign_up_email.content, express_sign_up_email.subject)
+            admin_email(express_sign_up_email_contact_text(params[:name], params[:email]), 'Communication research registry express sign up notification')
             confirmation_message << ' We have sent a reminder to your email address.'
           else
-            admin_notification << 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+            admin_notification = 'ATTENTION: "express sign up" notification email message could not be sent (corresponding email could have been deactivated)'
+            admin_email(admin_notification, 'Communication research registry express sign up notification failure')
             confirmation_message << ' We will send a reminder to your email address.'
           end
-          admin_email(admin_notification, 'Communication research registry express sign up notification')
-        elsif phone_contact
-          admin_notification = <<-emailtext
-Dear User,
-
-The following user requested to be contacted by phone via the express sign up.
-#{params[:name]}
-#{params[:phone]}
-          emailtext
+        elsif params[:contact] == 'phone'
+          admin_notification = express_sign_up_phone_contact_text(params[:name], params[:phone])
           admin_email(admin_notification, 'Communication research registry express sign up notification')
           confirmation_message << ' We will call you within two business days.'
         end
@@ -107,5 +93,38 @@ The following user requested to be contacted by phone via the express sign up.
 
   def account_params
     params.require(:account).permit(:email, :password, :password_confirmation)
+  end
+
+  def express_signup_validation_errors(params)
+    errors = []
+    errors << 'Name can\'t be blank'              if params[:name].blank?
+    errors << 'Preferred contact can\'t be blank' if params[:contact].blank?
+
+    email_contact = params[:contact] == 'email'
+    phone_contact = params[:contact] == 'phone'
+    errors << 'Email can\'t be blank' if params[:email].blank? && email_contact
+    errors << 'Email is invalid'      if !params[:email].blank? && params[:email] !~ /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i
+    errors << 'Phone can\'t be blank' if params[:phone].blank? && phone_contact
+    errors
+  end
+
+  def express_sign_up_email_contact_text(name, email)
+    <<-emailtext
+Dear User,
+
+The following user requested to be contacted by email via the express sign up.
+#{name}
+#{email}
+    emailtext
+  end
+
+  def express_sign_up_phone_contact_text(name, phone)
+    <<-emailtext
+Dear User,
+
+The following user requested to be contacted by phone via the express sign up.
+#{name}
+#{phone}
+    emailtext
   end
 end

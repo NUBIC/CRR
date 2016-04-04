@@ -13,19 +13,34 @@
 class EmailNotification < ActiveRecord::Base
   include WithActiveState
 
-  WELCOME_PARTICIPANT = 'Welcome participant'
-  WELCOME_RESEARCHER  = 'Welcome researcher'
-  EXPRESS_SIGN_UP     = 'Express sign up'
-  BATCH_RELEASED      = 'Batch released'
-  RELEASE_EXPIRING    = 'Release expiring'
-  RELEASE_EXPIRED     = 'Release expired'
-
-  TYPES = [WELCOME_PARTICIPANT, WELCOME_RESEARCHER, EXPRESS_SIGN_UP, BATCH_RELEASED, RELEASE_EXPIRING, RELEASE_EXPIRED].freeze
-
   validates :state, inclusion: { in: STATES }, presence: true
-  validates :email_type,  inclusion: { in: TYPES }, presence: true
+  validates :name,  presence: true, uniqueness: true
 
   def editable?
     inactive?
+  end
+
+  def self.welcome_participant
+    where(name: 'Welcome participant').first
+  end
+
+  def self.welcome_researcher
+    where(name: 'Welcome researcher').first
+  end
+
+  def self.express_sign_up
+    where(name: 'Express sign up').first
+  end
+
+  def self.batch_released
+    where(name: 'Batch released').first
+  end
+
+  def self.release_expiring
+    where(name: 'Release expiring').first
+  end
+
+  def self.release_expired
+    where(name: 'Release expired').first
   end
 end

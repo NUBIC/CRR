@@ -1,3 +1,13 @@
+# == Schema Information
+#
+# Table name: search_condition_groups
+#
+#  id                        :integer          not null, primary key
+#  search_id                 :integer
+#  search_condition_group_id :integer
+#  operator                  :string(255)
+#
+
 require 'spec_helper'
 
 describe SearchConditionGroup do

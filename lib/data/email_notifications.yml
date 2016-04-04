@@ -1,0 +1,61 @@
+- name: 'Welcome participant'
+  description: 'Sent when user creates account. If email is deactivated, email with error notification will be sent to admin.'
+  subject: 'Welcome to the communication research registry.'
+  content: |
+    Thank you for signing up for the communication research registry. We have received your information and we will contact you when a compatible experiment becomes available. Please note that you may not hear from us for a couple of months because most studies focus on a very specific criteria. However, you can trust that we will contact you when you are eligible for one of our studies
+
+    Please feel free to get in touch with us by phone (855-354-3273) or email (commresearchregistry@northwestern.edu) if you have any questions about the registry.
+
+    Thank you,
+
+    The Communication Research Registry Team
+- name: 'Welcome researcher'
+  description: 'Sent when researcher account is created. If email is deactivated, error notification will be displayed.'
+  subject: 'Welcome to the communication research registry.'
+  content: |
+    Dear Researcher,
+
+    Welcome to the Communication Research Registry. Your account has been created. You may log in with you Northwestern netID and password here:
+    https://crr.nubic.northwestern.edu/admin
+    Please feel free to get in touch with us by phone (855-354-3273) or email commresearchregistry@northwestern.edu if you have any questions about the registry.
+
+    The Communication Research Registry Team
+- name: 'Express sign up'
+  description: 'Sent when user opts for express sign up. If email is deactivated, email with error notification will be sent to admin.'
+  subject: 'Welcome to the communication research registry.'
+  content: |
+    Thank you for your interest in the Communication Research Registry. Recently, you completed the express sign up on our website. To complete your enrollment and enable you to be contacted for future studies you will need to go to https://crr.nubic.northwestern.edu and follow the steps in the “Sign Up” tab. Joining is easy and should take you no more than 15 minutes. You can also call us at 855-354-3273 and we can walk you through the sign up process over the phone if that is more convenient. If you are interested in signing up over the phone please respond to this email with the best time to call, so that we may contact you at your earliest convenience.
+    Thank you again for your interest in research and we hope to work with you soon!
+
+    Regards,
+
+    The Communication Research Registry Team
+- name: 'Batch released'
+  description: 'Sent to request submitter and all researchers from associated study upon request approval.'
+  subject: 'Communication Research Registry Research request approved.'
+  content: |
+    Dear Researcher,
+
+    Your recent request for participants has been approved. To see a list of all participants released under this request, please log into the Communication Research Registry website (https://crr.nubic.northwestern.edu/admin) and click on the "Requests" -> "Data Released".
+
+    Please feel free to get in touch with us by phone (855-354-3273) or email commresearchregistry@northwestern.edu if you have any questions about the registry.
+- name: 'Release expiring'
+  description: 'Sent to request submitter and all researchers from associated study on warning date'
+  subject: 'Communication Research Registry: Research release for {{search_name}} report is expiring soon.'
+  content: |
+    This is a friendly reminder that you have a week left to contact your current batch of 20 participants. After next week you will need to “return” the participants who you have not yet contacted, have been excluded, or have declined. Please remember to update the Release Report as it is due back to the registry coordinator at the end of the two week release period.
+
+    Regards,
+
+    The Communication Research Registry Team
+- name: 'Release expired'
+  description: 'Sent to request submitter and all researchers from associated study on end date'
+  subject: 'Communication Research Registry: Research release for {{search_name}} report is expired.'
+  content: |
+    Dear Researcher,
+
+    This is a friendly reminder that your release period has come to an end. You need to send the completed Release Report to the research coordinator at commresearchregistry@northwestern.edu by the end of today. You can find the Release Report Excel attached to the email sent on day 1 of your release period. All participants not listed as enrolled must be “returned” to the registry and their contact information forfeited. Please keep in mind that timeliness of participant returns affects your ability to use the registry in the future.
+
+    Regards,
+
+    The Communication Research Registry Team

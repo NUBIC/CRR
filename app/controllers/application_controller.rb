@@ -22,9 +22,9 @@ class ApplicationController < ActionController::Base
   end
 
   def set_no_cache
-    response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
+    response.headers['Cache-Control'] = 'no-cache, no-store, max-age=0, must-revalidate'
+    response.headers['Pragma']        = 'no-cache'
+    response.headers['Expires']       = '0'
   end
 
   def check_maintenance_mode
@@ -33,13 +33,5 @@ class ApplicationController < ActionController::Base
         render '/public/maintenance.html', layout: false
       end
     end
-  end
-
-  def admin_email(content, subject)
-    EmailNotificationsMailer.generic_email(Rails.configuration.custom.app_config['contact_email'], content, subject).deliver!
-  end
-
-  def outbound_email(email, content, subject)
-    EmailNotificationsMailer.generic_email(email, content, subject).deliver!
   end
 end

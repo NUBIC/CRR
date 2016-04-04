@@ -1,12 +1,13 @@
 namespace :notify do
   desc 'Notification of expiring release'
   task :expiring_release => :environment do
-    email = EmailNotification.active.find_by(email_type: EmailNotification::RELEASE_EXPIRING)
+    email = EmailNotification.active.release_expiring
     if email
       Search.where(warning_date: Date.today).where('end_date is null or end_date > ?', Date.today).each do |search|
         user_emails = search.user_emails
         if user_emails.any?
-          EmailNotificationsMailer.generic_email(user_emails, email.content, "Communication Research Registry: Research release for '#{search.name}' report is expiring soon.").deliver!
+          subject = email.subject.gsub('{{search_name}}', search.name)
+          EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver!
           puts "Study '#{search.study.name}' researchers were notified of expiring release"
         else
           puts "Study '#{search.study.name}' researchers could not be notified of expiring release: emails are not available"
@@ -18,12 +19,13 @@ namespace :notify do
   end
 
   task :expired_release => :environment do
-    email = EmailNotification.active.find_by(email_type: EmailNotification::RELEASE_EXPIRED)
+    email = EmailNotification.active.release_expired
     if email
       Search.where(end_date: Date.today).each do |search|
         user_emails = search.user_emails
         if user_emails.any?
-          EmailNotificationsMailer.generic_email(user_emails, email.content, "Communication Research Registry: Research release for '#{search.name}' report is expired.").deliver!
+          subject = email.subject.gsub('{{search_name}}', search.name)
+          EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver!
           puts "Study '#{search.study.name}' researchers were notified of expired release"
         else
           puts "Study '#{search.study.name}' researchers could not be notified of expired release: emails are not available"

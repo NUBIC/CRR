@@ -1,29 +1,23 @@
-# == Schema Information
-#
-# Table name: search_conditions
-#
-#  id                        :integer          not null, primary key
-#  search_condition_group_id :integer
-#  operator                  :string(255)
-#  question_id               :integer
-#  values                    :text
-#
-
 class SearchCondition < ActiveRecord::Base
+  # Globals
+  CALCULATED_DATE_UNITS   = { years_ago: 'years ago', months_ago: 'months ago', days_ago: 'days ago' }.freeze
+
+  # Dependencies
   include SearchOperator
 
+  # Attributes
   serialize :values, Array
+  attr_accessor :search_values, :calculated_date_units, :calculated_date_numbers, :search_subject, :is_calculated_date
 
+  # Associations
   belongs_to :search_condition_group
   belongs_to :question
 
-  CALCULATED_DATE_UNITS   = { years_ago: 'years ago', months_ago: 'months ago', days_ago: 'days ago' }.freeze
-
+  # Validations
   validates_presence_of  :question, :values, :operator
   validates_inclusion_of :operator, in: ->(record) { operators_by_type(operator_type_for_question(record.question)).map{|o| o[:symbol]}}
 
-  attr_accessor :search_values, :calculated_date_units, :calculated_date_numbers, :search_subject, :is_calculated_date
-
+  # Hooks
   after_initialize  :set_search_attributes, unless: Proc.new { |record| record.new_record? }
   after_save        :set_search_attributes
   before_validation :set_date_values, :cleanup_values

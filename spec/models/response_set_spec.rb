@@ -17,23 +17,23 @@ require 'spec_helper'
 describe ResponseSet do
   before(:each) do
     @participant = FactoryGirl.create(:participant)
-    @survey = FactoryGirl.create(:survey,:multiple_section=>true)
-    @section = @survey.sections.create(:title=>"test")
-    @q_pick_many = @section.questions.create(:text=>"test",:response_type=>"pick_many",:is_mandatory=>true,:code=>"q_many")
-    @q_pick_one = @section.questions.create(:text=>"test2",:response_type=>"pick_one",:is_mandatory=>true,:code=>"q_one")
-    @q_number = @section.questions.create(:text=>"test2",:response_type=>"number",:is_mandatory=>true,:code=>"q_number")
-    @q_date = @section.questions.create(:text=>"test2",:response_type=>"date",:is_mandatory=>true)
-    @q_short_text = @section.questions.create(:text=>"test2",:response_type=>"short_text",:is_mandatory=>true)
-    @q_long_text = @section.questions.create(:text=>"test2",:response_type=>"long_text",:is_mandatory=>true)
-    @response_set = @participant.response_sets.create(:survey_id=>@survey.id)
-    @pm_a1 = @q_pick_many.answers.create(:text=>"one")
-    @pm_a2 = @q_pick_many.answers.create(:text=>"two")
-    @pm_a3 = @q_pick_many.answers.create(:text=>"three")
-    @pm_a4 = @q_pick_many.answers.create(:text=>"four")
-    @po_a1 = @q_pick_one.answers.create(:text=>"red")
-    @po_a2 = @q_pick_one.answers.create(:text=>"blue")
-    @po_a3 = @q_pick_one.answers.create(:text=>"green")
-    @po_a4 = @q_pick_one.answers.create(:text=>"orange")
+    @survey = FactoryGirl.create(:survey,multiple_section: true)
+    @section = @survey.sections.create(title: "test")
+    @q_pick_many = @section.questions.create(text: "test",response_type: "pick_many",is_mandatory: true,code: "q_many")
+    @q_pick_one = @section.questions.create(text: "test2",response_type: "pick_one",is_mandatory: true,code: "q_one")
+    @q_number = @section.questions.create(text: "test2",response_type: "number",is_mandatory: true,code: "q_number")
+    @q_date = @section.questions.create(text: "test2",response_type: "date",is_mandatory: true)
+    @q_short_text = @section.questions.create(text: "test2",response_type: "short_text",is_mandatory: true)
+    @q_long_text = @section.questions.create(text: "test2",response_type: "long_text",is_mandatory: true)
+    @response_set = @participant.response_sets.create(survey_id: @survey.id)
+    @pm_a1 = @q_pick_many.answers.create(text: "one")
+    @pm_a2 = @q_pick_many.answers.create(text: "two")
+    @pm_a3 = @q_pick_many.answers.create(text: "three")
+    @pm_a4 = @q_pick_many.answers.create(text: "four")
+    @po_a1 = @q_pick_one.answers.create(text: "red")
+    @po_a2 = @q_pick_one.answers.create(text: "blue")
+    @po_a3 = @q_pick_one.answers.create(text: "green")
+    @po_a4 = @q_pick_one.answers.create(text: "orange")
   end
 
   it "should create getter setters that correspond to questions in survey" do
@@ -44,22 +44,22 @@ describe ResponseSet do
   it "should accept values for pick many" do
     @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym=>["#{@pm_a1.id}","#{@pm_a2.id}"])
     @response_set.reload.responses.size.should == 2
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id).size.should == 2
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id,:answer_id=>@pm_a1.id).size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id,:answer_id=>@pm_a2.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_many.id).size.should == 2
+    @response_set.reload.responses.where(question_id: @q_pick_many.id,answer_id: @pm_a1.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_many.id,answer_id: @pm_a2.id).size.should == 1
   end
 
   it "should properly replace value for pick many" do
     @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym=>["#{@pm_a1.id}","#{@pm_a2.id}"])
     @response_set.reload.responses.size.should == 2
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id).size.should == 2
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id,:answer_id=>@pm_a1.id).size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id,:answer_id=>@pm_a2.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_many.id).size.should == 2
+    @response_set.reload.responses.where(question_id: @q_pick_many.id,answer_id: @pm_a1.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_many.id,answer_id: @pm_a2.id).size.should == 1
     @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym=>["#{@pm_a3.id}","#{@pm_a4.id}"])
     @response_set.reload.responses.size.should == 2
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id).size.should == 2
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id,:answer_id=>@pm_a3.id).size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_many.id,:answer_id=>@pm_a4.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_many.id).size.should == 2
+    @response_set.reload.responses.where(question_id: @q_pick_many.id,answer_id: @pm_a3.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_many.id,answer_id: @pm_a4.id).size.should == 1
   end
 
   it "pick many should reject answers with the wrong question id" do
@@ -77,22 +77,22 @@ describe ResponseSet do
   it "should insert values for pick one" do
     @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym=>"#{@po_a1.id}")
     @response_set.reload.responses.size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_one.id,:answer_id=>@po_a1.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_one.id,answer_id: @po_a1.id).size.should == 1
   end
 
   it "should insert different value for pick one" do
     @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym=>"#{@po_a1.id}")
     @response_set.reload.responses.size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_one.id,:answer_id=>@po_a1.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_one.id,answer_id: @po_a1.id).size.should == 1
     @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym=>"#{@po_a2.id}")
     @response_set.reload.responses.size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_one.id,:answer_id=>@po_a2.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_one.id,answer_id: @po_a2.id).size.should == 1
   end
 
   it "should erase values for pick one" do
     @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym=>"#{@po_a1.id}")
     @response_set.reload.responses.size.should == 1
-    @response_set.reload.responses.where(:question_id=>@q_pick_one.id,:answer_id=>@po_a1.id).size.should == 1
+    @response_set.reload.responses.where(question_id: @q_pick_one.id,answer_id: @po_a1.id).size.should == 1
     @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym=>"")
     @response_set.reload.responses.size.should == 0
   end

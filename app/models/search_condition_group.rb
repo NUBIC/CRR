@@ -1,16 +1,11 @@
-# == Schema Information
-#
-# Table name: search_condition_groups
-#
-#  id                        :integer          not null, primary key
-#  search_id                 :integer
-#  search_condition_group_id :integer
-#  operator                  :string(255)
-#
-
 class SearchConditionGroup < ActiveRecord::Base
+  # Globals
+  DEFAULT_GROUP_OPERATOR = '|'.freeze
+
+  # Dependencies
   include SearchOperator
 
+  # Associations
   belongs_to  :search_condition_group
   belongs_to  :search
   has_many    :search_conditions
@@ -19,12 +14,12 @@ class SearchConditionGroup < ActiveRecord::Base
   accepts_nested_attributes_for :search_conditions, allow_destroy: true
   accepts_nested_attributes_for :search_condition_groups, allow_destroy: true
 
+  # Validations
   validates_inclusion_of :operator, in: group_operators.map{|o| o[:symbol]}
   validate :presence_of_search_or_search_condition_group
 
+  # Hooks
   before_validation :validate_presence_of_operator
-
-  DEFAULT_GROUP_OPERATOR = '|'.freeze
 
   def presence_of_search_or_search_condition_group
     return false if self.search.blank? && self.search_condition_group.blank?
@@ -36,7 +31,7 @@ class SearchConditionGroup < ActiveRecord::Base
     return sc_result if search_condition_groups.empty?
     scg_result = search_condition_groups.collect{|scg| scg.result}.inject(operator.to_sym)
     return scg_result if search_conditions.empty?
-    [sc_result,scg_result].inject(operator.to_sym)
+    [sc_result, scg_result].inject(operator.to_sym)
   end
 
   def get_search
@@ -44,16 +39,16 @@ class SearchConditionGroup < ActiveRecord::Base
   end
 
   def invert_operator
-    return "&" if operator.eql?("|")
-    return "|" if operator.eql?("&")
+    return '&' if operator.eql?('|')
+    return '|' if operator.eql?('&')
   end
 
   def is_or?
-    operator.eql?("|")
+    operator.eql?('|')
   end
 
   def is_and?
-    operator.eql?("&")
+    operator.eql?('&')
   end
 
   def has_conditions?

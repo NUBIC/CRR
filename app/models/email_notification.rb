@@ -1,18 +1,8 @@
-# == Schema Information
-#
-# Table name: email_notifications
-#
-#  id         :integer          not null, primary key
-#  state      :string(255)
-#  content    :text
-#  email_type :string(255)
-#  created_at :datetime
-#  updated_at :datetime
-#
-
 class EmailNotification < ActiveRecord::Base
+  # Dependencies
   include WithActiveState
 
+  # Validations
   validates :state, inclusion: { in: STATES }, presence: true
   validates :name,  presence: true, uniqueness: true
 

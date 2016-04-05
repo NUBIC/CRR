@@ -1,63 +1,30 @@
-# == Schema Information
-#
-# Table name: participants
-#
-#  id                            :integer          not null, primary key
-#  email                         :string(255)
-#  first_name                    :string(255)
-#  last_name                     :string(255)
-#  primary_phone                 :string(255)
-#  secondary_phone               :string(255)
-#  address_line1                 :string(255)
-#  address_line2                 :string(255)
-#  city                          :string(255)
-#  state                         :string(255)
-#  zip                           :string(255)
-#  stage                         :string(255)
-#  do_not_contact                :boolean
-#  child                         :boolean
-#  notes                         :text
-#  primary_guardian_first_name   :string(255)
-#  primary_guardian_last_name    :string(255)
-#  primary_guardian_email        :string(255)
-#  primary_guardian_phone        :string(255)
-#  secondary_guardian_first_name :string(255)
-#  secondary_guardian_last_name  :string(255)
-#  secondary_guardian_email      :string(255)
-#  secondary_guardian_phone      :string(255)
-#  created_at                    :datetime
-#  updated_at                    :datetime
-#  hear_about_registry           :string(255)
-#
-
 class Participant < ActiveRecord::Base
+  # Dependencies
   include AASM
-  scope :pending_approvals,     -> { where(stage: 'pending_approval').order("#{self.table_name}.created_at DESC") }
-  scope :approved,              -> { where(stage: 'approved').order("#{self.table_name}.created_at DESC") }
-  scope :approaching_deadlines, -> { joins(:study_involvements).where(stage: 'approved').where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}'
-    or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
-  scope :all_participants,      -> { where(stage: ['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
 
-  has_many :response_sets,              dependent: :destroy
-  has_many :surveys,                    through: :response_sets
-  has_many :contact_logs,               dependent: :destroy
-  has_many :study_involvements,         -> {order('end_date DESC')}, dependent: :destroy
-  has_many :origin_relationships,       class_name: 'Relationship', foreign_key: 'origin_id', dependent: :destroy
-  has_many :destination_relationships,  class_name: 'Relationship', foreign_key: 'destination_id', dependent: :destroy
-  has_many :consent_signatures,         dependent: :destroy
-  has_many :studies,                    through: :study_involvements
-  has_many :search_participants,        dependent: :destroy
-  has_one :account_participant,         dependent: :destroy
-  has_one :account,                     through: :account_participant
+  # Associations
+  has_many :response_sets, dependent: :destroy
+  has_many :surveys, through: :response_sets
+  has_many :contact_logs, dependent: :destroy
+  has_many :study_involvements, -> { order('end_date DESC') }, dependent: :destroy
+  has_many :origin_relationships, class_name: 'Relationship', foreign_key: 'origin_id', dependent: :destroy
+  has_many :destination_relationships, class_name: 'Relationship', foreign_key: 'destination_id', dependent: :destroy
+  has_many :consent_signatures, dependent: :destroy
+  has_many :studies, through: :study_involvements
+  has_many :search_participants, dependent: :destroy
+  has_one :account_participant, dependent: :destroy
+  has_one :account, through: :account_participant
 
   accepts_nested_attributes_for :origin_relationships, allow_destroy: true
 
-  validates :email, :format => {:with =>/\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
-  validates :primary_phone, :secondary_phone, :format => {:with =>/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
-  validates :zip, :numericality => true, allow_blank: true, :length => { :maximum => 5 }
+  # Validations
+  validates :email, format: {with: /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i }, allow_blank: true
+  validates :primary_phone, :secondary_phone, format: {with: /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/}, allow_blank: true
+  validates :zip, numericality: true, allow_blank: true, length: { maximum: 5 }
 
+  # AASM events and transitions
   aasm_column :stage
-  aasm_state :consent, :initial => true
+  aasm_state :consent, initial: true
   aasm_state :consent_denied
   aasm_state :demographics
   aasm_state :survey
@@ -65,39 +32,44 @@ class Participant < ActiveRecord::Base
   aasm_state :approved
   aasm_state :withdrawn
 
+  # Scopes
+  scope :by_stage,              -> (stages){ where(stage: stages) }
+  scope :pending_approvals,     -> { by_stage('pending_approval').order("#{self.table_name}.created_at DESC") }
+  scope :approved,              -> { by_stage('approved').order("#{self.table_name}.created_at DESC") }
+  scope :approaching_deadlines, -> { joins(:study_involvements).by_stage('approved').where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
+  scope :all_participants,      -> { by_stage(['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
+  scope :search,                -> (param){ where('first_name ilike ? or last_name ilike ?',"%#{param}%","%#{param}%") }
+
   aasm_event :sign_consent do
-    transitions :to => :demographics, :from => :consent, :on_transition => :create_consent_signature
+    transitions to: :demographics, from: :consent, on_transition: :create_consent_signature
   end
 
   aasm_event :take_survey do
-    transitions :to => :survey, :from => :demographics
-    # , :guard => :demographics_info_completed?
+    transitions to: :survey, from: :demographics
+    # , guard: :demographics_info_completed?
   end
 
   aasm_event :decline_consent do
-   transitions :to => :consent_denied, :from =>:consent
+   transitions to: :consent_denied, from: :consent
   end
 
   aasm_event :process_approvement do
-    transitions :to => :approved, :from => :survey, :guard => Proc.new {|p| !p.proxy? }
-    transitions :to => :pending_approval, :from => :survey, :guard => :proxy?
+    transitions to: :approved, from: :survey, guard: Proc.new {|p| !p.proxy? }
+    transitions to: :pending_approval, from: :survey, guard: :proxy?
   end
 
   aasm_event :verify do
-    transitions :to => :approved, :from => :pending_approval
+    transitions to: :approved, from: :pending_approval
   end
 
   aasm_event :approve do
-    transitions :to => :approved, :from => :pending_approval
-    transitions :to => :approved, :from => :survey
+    transitions to: :approved, from: :pending_approval
+    transitions to: :approved, from: :survey
   end
 
   aasm_event :withdraw do
-    transitions :to => :withdrawn
+    transitions to: :withdrawn
   end
-
-  scope :search , proc {|param|
-    where("first_name ilike ? or last_name ilike ? ","%#{param}%","%#{param}%")}
 
   def self.all_active_participants
     approaching_deadlines = Participant.approaching_deadlines
@@ -197,7 +169,7 @@ class Participant < ActiveRecord::Base
   end
 
   def open_public_response_sets
-    response_sets.where(:completed_at=>nil,:public=>true)
+    response_sets.where(completed_at: nil,public: true)
   end
 
   def public_response_sets

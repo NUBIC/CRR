@@ -1,38 +1,20 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer          not null, primary key
-#  netid              :string(255)
-#  admin              :boolean
-#  researcher         :boolean
-#  data_manager       :boolean
-#  first_name         :string(255)
-#  last_name          :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  sign_in_count      :integer          default(0), not null
-#  current_sign_in_at :datetime
-#  last_sign_in_at    :datetime
-#  current_sign_in_ip :inet
-#  last_sign_in_ip    :inet
-#  email              :string(255)
-#
-
 class User < ActiveRecord::Base
+  attr_accessor :study_tokens
+
+  # Dependencies
   # Include default devise modules. Others available are:
   devise :ldap_authenticatable, :trackable, :timeoutable
 
+  # Associations
   has_many :user_studies
   has_many :studies, through: :user_studies
 
-  # validates_uniqueness_of :netid, case_sensitive: false, allow_blank: false
+  # Validations
   validates_presence_of   :netid
-
   validate  :check_netid
-  after_create :update_from_ldap
 
-  attr_accessor :study_tokens
+  # Hooks
+  after_create :update_from_ldap
 
   def study_tokens=(ids)
     self.user_studies.destroy_all if ids.blank?
@@ -62,7 +44,7 @@ class User < ActiveRecord::Base
   private
     def check_netid
       unless Rails.env.development?
-        errors.add(:netid, "Not recognized") unless Devise::LDAP::Adapter.valid_login?(netid)
+        errors.add(:netid, 'Not recognized') unless Devise::LDAP::Adapter.valid_login?(netid)
       end
     end
 

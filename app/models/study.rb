@@ -1,50 +1,23 @@
-# == Schema Information
-#
-# Table name: studies
-#
-#  id                  :integer          not null, primary key
-#  irb_number          :string(255)
-#  name                :string(255)
-#  pi_name             :string(255)
-#  pi_email            :string(255)
-#  other_investigators :text
-#  contact_name        :string(255)
-#  contact_email       :string(255)
-#  short_title         :string(255)
-#  sites               :string(255)
-#  funding_source      :string(255)
-#  website             :string(255)
-#  start_date          :date
-#  end_date            :date
-#  min_age             :integer
-#  max_age             :integer
-#  accrual_goal        :integer
-#  number_of_visits    :integer
-#  protocol_goals      :text
-#  inclusion_criteria  :text
-#  exclusion_criteria  :text
-#  notes               :text
-#  state               :string(255)
-#
-
 class Study < ActiveRecord::Base
-  has_many :study_involvements,-> {order("end_date DESC, start_date DESC")}, :dependent=>:restrict_with_error
-  has_many :participants,:through=>:study_involvements
+  # Dependencies
+  include WithActiveState
+
+  # Associations
+  has_many :study_involvements, -> { order('end_date DESC, start_date DESC') }, dependent: :restrict_with_error
+  has_many :participants, through: :study_involvements
   has_many :user_studies
-  has_many :users, :through=>:user_studies
+  has_many :users, through: :user_studies
   has_many :searches
-  validates_presence_of :state,:irb_number,:name
-  STATES= ['active','inactive']
 
-  scope :active, -> {where(state:'active')}
-  validates_inclusion_of :state, :in => STATES
+  # Validations
+  validates :state, inclusion: { in: STATES }, presence: true
+  validates_presence_of :irb_number, :name
+
+  # Hooks
   after_initialize :default_args
-  scope :search , proc {|param|
-    where("irb_number ilike ? or name ilike ? ","%#{param}%","%#{param}%")}
 
-  def active?
-    state.eql?('active')
-  end
+  # Scopes
+  scope :search, -> (param){ where("irb_number ilike ? or name ilike ? ","%#{param}%","%#{param}%") }
 
   def active_participants
     study_involvements.active.collect{|s| s.participant}.flatten.uniq
@@ -63,7 +36,7 @@ class Study < ActiveRecord::Base
   end
 
   private
-  def default_args
-    self.state ||='inactive'
-  end
+    def default_args
+      self.deactivate if self.state.blank?
+    end
 end

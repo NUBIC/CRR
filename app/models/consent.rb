@@ -1,58 +1,41 @@
-# == Schema Information
-#
-# Table name: consents
-#
-#  id           :integer          not null, primary key
-#  content      :text
-#  state        :string(255)
-#  accept_text  :string(255)      default("I Accept")
-#  decline_text :string(255)      default("I Decline")
-#  consent_type :string(255)
-#  created_at   :datetime
-#  updated_at   :datetime
-#  comment      :text
-#
-
 class Consent < ActiveRecord::Base
-  has_many :consent_signatures,:dependent=>:restrict_with_error
+  # Globals
+  TYPES         = ['Adult','Child'].freeze
+  RELATIONSHIPS = ['Parent', 'Legal Guardian', 'Authorized Agent', 'Spouse'].freeze
 
-  TYPES = ['Adult','Child']
-  STATES= ['active','inactive']
-  RELATIONSHIPS = ['Parent', 'Legal Guardian', 'Authorized Agent', 'Spouse']
+  # Dependencies
+  include WithActiveState
 
-  validates_inclusion_of :state, :in => STATES
-  validates_uniqueness_of :state, :scope =>:consent_type, :if=>:active?,:message=>"Only one active consent per category allowed"
+  # Associations
+  has_many :consent_signatures, dependent: :restrict_with_error
+
+  # Validations
+  validates :state, inclusion: { in: STATES }, presence: true, uniqueness: { scope: :consent_type, if: :active?, message: 'Only one active consent per category allowed' }
+
+  # Hooks
   after_initialize :default_args
-  default_scope {order('state ASC, created_at DESC')}
+
+  # Scopes
+  default_scope { order('state ASC, created_at DESC') }
 
   def self.has_active_consent?
     child_consent and adult_consent
   end
 
   def self.child_consent
-    Consent.where("consent_type ='Child' AND state ='active'").order("created_at DESC").first
+    Consent.active.where(consent_type: 'Child').order('created_at DESC').first
   end
 
   def self.adult_consent
-    Consent.where("consent_type ='Adult' AND state ='active'").order("created_at DESC").first
-  end
-
-  def active?
-    state.eql?('active')
+    Consent.active.where(consent_type: 'Adult').order('created_at DESC').first
   end
 
   def editable?
-    !active? and consent_signatures.empty?
+    !active? && consent_signatures.empty?
   end
 
   private
-  def default_args
-    self.state ||='inactive'
-  end
-
-  def check_consent_signatures
-    if self.content_type_changed? or self.content_changed?
-      errors.add(:consent,"has been signed by users and can't be edited") unless answers.empty?
+    def default_args
+      self.deactivate if self.state.blank?
     end
-  end
 end

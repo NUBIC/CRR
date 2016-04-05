@@ -2,21 +2,21 @@ source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.2'
-gem "pg"
-gem "haml"
+gem 'pg'
+gem 'haml'
 gem 'american_date'
 gem 'exception_notification'
 gem 'jquery-rails'
-gem "twitter-bootstrap-rails"
+gem 'twitter-bootstrap-rails'
 gem 'therubyracer'
 gem 'cancan'
 gem 'rest-client'
-gem "authlogic"
+gem 'authlogic'
 gem 'paper_trail', '>= 3.0.0.beta1'
 gem 'validates_timeliness'
 gem 'highline'
 
-gem "aasm"
+gem 'aasm'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 gem 'less-rails'
@@ -28,8 +28,8 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 
 # gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
-gem "activerecord-session_store", "~> 0.1.0"
-gem "cocoon"
+gem 'activerecord-session_store', '~> 0.1.0'
+gem 'cocoon'
 
 # Use Capistrano for deployment
 group :development do
@@ -42,11 +42,11 @@ group :development, :test do
   gem 'annotate', '~> 2.5.0'
   gem 'database_cleaner'
   gem 'factory_girl'
-  gem "faker"
-  gem "factory_girl_rails", "~> 4.0"
+  gem 'faker'
+  gem 'factory_girl_rails', "~> 4.0"
   gem 'rspec-rails'
   gem 'shoulda'
-  gem "webrat"
+  gem 'webrat'
   gem 'simplecov', require: false
 end
 

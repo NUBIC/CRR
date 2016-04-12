@@ -2,6 +2,9 @@ class StudyInvolvement < ActiveRecord::Base
   # Globals
   VALID_STATES = ['none', 'enrolled', 'declined', 'no contact', 'withdrew', 'excluded', 'completed'].freeze
 
+  # Dependencies
+  has_paper_trail
+
   # Associations
   belongs_to :study
   belongs_to :participant

@@ -7,6 +7,7 @@ require 'shoulda'
 require 'factory_girl'
 require 'authlogic/test_case'
 require 'simplecov'
+require 'paper_trail/frameworks/rspec'
 
 include Authlogic::TestCase
 # Requires supporting ruby files with custom matchers and macros, etc,

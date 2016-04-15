@@ -3,7 +3,7 @@ class Admin::SurveysController < Admin::AdminController
    authorize! :index, Survey
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -11,7 +11,7 @@ class Admin::SurveysController < Admin::AdminController
     @survey = Survey.new
     authorize! :new, @survey
     respond_to do |format|
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -19,7 +19,7 @@ class Admin::SurveysController < Admin::AdminController
     @survey = Survey.find(params[:id])
     authorize! :new, @survey
     respond_to do |format|
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -27,7 +27,7 @@ class Admin::SurveysController < Admin::AdminController
     @survey = Survey.find(params[:id])
     authorize! :edit, @survey
     respond_to do |format|
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -36,13 +36,13 @@ class Admin::SurveysController < Admin::AdminController
     authorize! :update, @survey
     saved = @survey.update_attributes(survey_params)
     if saved
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @survey.errors.full_messages.to_sentence
+      flash['error'] = @survey.errors.full_messages.to_sentence
     end
     respond_to do |format|
       format.html {render (saved ? :show : :edit)}
-      format.js {render (saved ? :show : :edit),:layout => false}
+      format.js { render (saved ? :show : :edit), layout: false }
     end
   end
 
@@ -50,14 +50,14 @@ class Admin::SurveysController < Admin::AdminController
     @survey =  Survey.new(survey_params)
     authorize! :create, @survey
     if @survey.save
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @survey.errors.full_messages.to_sentence
+      flash['error'] = @survey.errors.full_messages.to_sentence
       @study = @survey.study
     end
     respond_to do |format|
       format.html {redirect_to admin_surveys_path}
-      format.js {render (@survey.save ? :show : :index),:layout => false}
+      format.js { render (@survey.save ? :show : :index), layout: false }
     end
   end
 
@@ -67,7 +67,7 @@ class Admin::SurveysController < Admin::AdminController
     @survey.destroy
     respond_to do |format|
       format.html {redirect_to admin_surveys_path}
-      format.js {render :index,:layout => false}
+      format.js {render :index, ayout: false}
     end
   end
   def activate
@@ -75,13 +75,13 @@ class Admin::SurveysController < Admin::AdminController
     authorize! :activate, @survey
     @survey.state='active'
     if @survey.save
-      flash[:notice]="Successfully activated"
+      flash['notice'] = 'Successfully activated'
     else
-      flash[:error]=@survey.errors.full_messages.to_sentence
+      flash['error'] = @survey.errors.full_messages.to_sentence
     end
     @survey.reload
     respond_to do |format|
-      format.js {render :show,:layout => false}
+      format.js {render :show, layout: false}
     end
   end
   def deactivate
@@ -89,13 +89,13 @@ class Admin::SurveysController < Admin::AdminController
     authorize! :deactivate, @survey
     @survey.state='inactive'
     if @survey.save
-      flash[:notice]="Successfully Deactivated"
+      flash['notice'] = 'Successfully Deactivated'
     else
-      flash[:error]=@survey.errors.full_messages.to_sentence
+      flash['error'] = @survey.errors.full_messages.to_sentence
     end
     @survey.reload
     respond_to do |format|
-      format.js {render :show,:layout => false}
+      format.js {render :show, layout: false}
     end
   end
 
@@ -105,7 +105,7 @@ class Admin::SurveysController < Admin::AdminController
     @response_set = @survey.response_sets.new
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
  def survey_params

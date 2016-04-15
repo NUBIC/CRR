@@ -107,7 +107,7 @@ class ResponseSet < ActiveRecord::Base
   private
     def send_alert
       if self.public? and !self.email.blank?
-        SurveyMailer.new_survey_alert(self).deliver!
+        SurveyMailer.new_survey_alert(self).deliver_now!
       end
     end
 end

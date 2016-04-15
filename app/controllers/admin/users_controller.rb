@@ -14,18 +14,19 @@ class Admin::UsersController < Admin::AdminController
   def create
     @user = User.new(user_params)
     authorize! :create, @user
+
     if @user.save
-      flash[:notice] = 'Created'
+      flash['notice'] = 'Created'
       if @user.researcher?
         welcome_email = EmailNotification.active.welcome_researcher
         if welcome_email
           outbound_email(@user.email, welcome_email.content, welcome_email.subject)
         else
-          flash[:error] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+          flash['error'] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
         end
       end
     else
-      flash[:error] = @user.errors.full_messages.to_sentence
+      flash['error'] = @user.errors.full_messages.to_sentence
     end
     redirect_to admin_users_path
   end
@@ -38,11 +39,12 @@ class Admin::UsersController < Admin::AdminController
   def update
     @user = User.find(params[:id])
     authorize! :update, @user
+
     @user.update_attributes(user_params)
     if @user.save
-      flash[:notice] = 'Updated'
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @user.errors.full_messages.to_sentence
+      flash['error'] = @user.errors.full_messages.to_sentence
     end
     redirect_to admin_users_path
   end
@@ -58,8 +60,9 @@ class Admin::UsersController < Admin::AdminController
     redirect_to admin_participants_path if can? :index, Participant
   end
 
-  def user_params
-    params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
-  end
+  private
+    def user_params
+      params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
+    end
 end
 

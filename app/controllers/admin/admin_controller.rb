@@ -7,13 +7,13 @@ class Admin::AdminController < ApplicationController
 
   # can can redirect for unauthorized error
   rescue_from CanCan::AccessDenied do |exception|
-    flash[:notice]="Access Denied"
+    flash['notice'] = 'Access Denied'
     redirect_to admin_default_path
   end
 
   def require_user
     unless user_signed_in? && current_user.has_system_access?
-      flash[:notice] = "Access Denied"
+      flash['notice'] = 'Access Denied'
       redirect_to '/logout'
       return false
     end

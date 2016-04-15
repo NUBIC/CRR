@@ -1,4 +1,4 @@
-#additonal-data{data: { header: display_participant_header(params[:state], @participants.length), url: new_admin_participant_path, text: "Add a participant"}}
+#additonal-data{data: { header: display_participant_header(params[:state], @participants.length), url: new_admin_participant_path, text: 'Add a participant'}}
 .row-fluid
   %table.table.table-bordered.table-hover#participants_list
     %thead
@@ -14,7 +14,7 @@
       - @participants.each do |p|
         %tr.display
           %td
-            =p.id
+            = p.id
           %td{ class: "#{'nu' if p.pending_approval?}" }
             = link_to p.first_name, admin_participant_path(p)
           %td{ class: "#{'nu' if p.pending_approval?}" }
@@ -39,5 +39,5 @@
           %td
             = p.created_at.to_date
           %td
-            = p.account ? p.account.email : ""
+            = p.account ? p.account.email : ''
 

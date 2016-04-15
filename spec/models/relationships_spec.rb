@@ -2,19 +2,19 @@ require 'spec_helper'
 
 describe Relationship do
   let(:relationship) { FactoryGirl.create(:relationship) }
-  it "creates a new instance given valid attributes" do
-    relationship.should_not be_nil
+  it 'creates a new instance given valid attributes' do
+    expect(relationship).not_to be_nil
   end
 
-  it { should validate_presence_of :category }
-  it { should validate_presence_of :origin }
-  it { should validate_presence_of :destination }
+  it { is_expected.to validate_presence_of :category }
+  it { is_expected.to validate_presence_of :origin }
+  it { is_expected.to validate_presence_of :destination }
   describe 'category' do
-    it "should allow valid values" do
+    it 'should allow valid values' do
       Relationship::CATEGORIES.each do |v|
-        should allow_value(v).for(:category)
+        is_expected.to allow_value(v).for(:category)
       end
     end
-    it { should_not allow_value("other").for(:category) }
+    it { is_expected.not_to allow_value('other').for(:category) }
   end
 end

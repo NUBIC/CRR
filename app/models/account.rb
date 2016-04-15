@@ -16,15 +16,15 @@ class Account < ActiveRecord::Base
   end
 
   def active_participants
-    participants.reject { |p| p.inactive? }
+    participants.select { |p| p.active? }
   end
 
   def inactive_participants
-    participants.reject { |p| p.active? }
+    participants.select { |p| p.inactive? }
   end
 
   def other_participants(participant)
-    active_participants.reject { |p| p == participant || p.inactive?}
+    active_participants.reject{ |p| p == participant}
   end
 
   def has_self_participant?

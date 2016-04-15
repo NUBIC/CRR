@@ -4,117 +4,127 @@ describe Admin::ConsentsController do
   before(:each) do
     @consent = FactoryGirl.create(:consent)
     login_user
-    controller.current_user.stub(:has_system_access?).and_return(true)
+    allow(controller.current_user).to receive(:has_system_access?).and_return(true)
   end
 
   describe 'unauthorized access' do
-    ['data_manager?','researcher?'].each do |role|
+    ['data_manager?', 'researcher?'].each do |role|
       before(:each) do
-        controller.current_user.stub(:admin?).and_return(false)
+        allow(controller.current_user).to receive(:admin?).and_return(false)
         all_roles = ['data_manager?','researcher?']
-        all_roles.each{|r| r.eql?(role) ? controller.current_user.stub(r.to_sym).and_return(true) : controller.current_user.stub(r.to_sym).and_return(false)}
+        all_roles.each do |r|
+          if r.eql?(role)
+            allow(controller.current_user).to receive(r.to_sym).and_return(true)
+          else
+            allow(controller.current_user).to receive(r.to_sym).and_return(false)
+          end
+        end
       end
 
       it "should deny access to an attempt by a #{role} to create a consent" do
         post :create, { consent: { content: 'test'}}
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to edit a consent by a #{role}" do
-        post :edit, { id: @consent.id, format: :js }
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        xhr :post, :edit, { id: @consent.id }
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to update a consent by a #{role}" do
-        post :update, { id: @consent.id, format: :js  }
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        xhr :post, :update, { id: @consent.id }
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to delete a consent by a #{role}" do
         post :destroy, { id: @consent.id }
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to activate a consent by a #{role}" do
-        put :activate, { id: @consent.id, format: :js  }
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        xhr :put, :activate, { id: @consent.id }
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
       it "should deny access to an attempt to deactivate a consent by a #{role}" do
-        put :deactivate, { id: @consent.id, format: :js  }
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        xhr :put, :deactivate, { id: @consent.id }
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
     end
   end
 
   describe 'authorized user' do
     before(:each) do
-      controller.current_user.stub(:admin?).and_return(true)
+      allow(controller.current_user).to receive(:admin?).and_return(true)
     end
 
     describe 'active consent' do
       before(:each) do
         @consent.state= 'active'
         @consent.save
-        @consent.reload.state.should == 'active'
+        expect(@consent.reload.state).to eq 'active'
       end
 
       it 'should allow access to dectivate a consent by an authorized user' do
-        put :deactivate, { id: @consent.id, format: :js }
-        response.should redirect_to(admin_consents_path)
-        @consent.reload.state.should == 'inactive'
+        xhr :put, :deactivate, { id: @consent.id }
+        expect(response).to redirect_to(controller: :consents, action: :index)
+        expect(@consent.reload.state).to eq 'inactive'
       end
 
       it 'should deny access to edit  an active consent by an authorized user' do
-        get :edit, { id: @consent.id, format: :js }
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        xhr :get, :edit, { id: @consent.id }
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
 
       it 'should deny access to update an inactive consent by an authorized user' do
-        put :update, { id: @consent.id, consent: { title: 'a second consent'}, format: :js}
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        xhr :put, :update, { id: @consent.id, consent: { title: 'a second consent'}}
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
 
       it 'should deny access to delete an inactive consent by an authorized user' do
         put :destroy, { id: @consent.id }
-        Consent.all.size.should == 1
-        response.should redirect_to(admin_default_path)
-        flash[:notice].should == 'Access Denied'
+        expect(Consent.all.size).to eq 1
+        expect(response).to redirect_to(controller: :users, action: :dashboard)
+        expect(flash['notice']).to eq 'Access Denied'
       end
     end
 
     describe 'inactive consent' do
       it 'should allow access to an attempt to create a consent by an authorized user' do
         post :create, { consent: { content: 'a second consent', consent_type: 'adult'}}
-        response.should redirect_to(admin_consents_path)
-        Consent.all.size.should == 2
+        expect(response).to redirect_to(controller: :consents, action: :index)
+        expect(Consent.all.size).to eq 2
       end
+
       it 'should allow access to edit  a consent by an authorized user' do
         get :edit, { id: @consent.id }
-        response.should render_template('edit')
+        expect(response).to render_template('edit')
       end
+
       it 'should allow access to update a consent by an authorized user' do
         put :update, { id: @consent.id, consent: { content: 'a second consent', consent_type: 'adult'}}
-        response.should redirect_to(admin_consents_path)
-        @consent.reload.content.should == 'a second consent'
+        expect(response).to redirect_to(controller: :consents, action: :index)
+        expect(@consent.reload.content).to eq 'a second consent'
       end
+
       it 'should allow access to activate a consent by an authorized user' do
-        @consent.state.should == 'inactive'
+        expect(@consent.state).to eq 'inactive'
         put :activate, { id: @consent.id }
-        response.should redirect_to(admin_consents_path)
-        @consent.reload.state.should == 'active'
+        expect(response).to redirect_to(controller: :consents, action: :index)
+        expect(@consent.reload.state).to eq 'active'
       end
+
       it 'should allow access to delete a consent by an authorized user' do
         put :destroy, { id: @consent.id }
-        Consent.all.size.should ==0
-        response.should redirect_to(admin_consents_path)
+        expect(Consent.all.size).to eq 0
+        expect(response).to redirect_to(controller: :consents, action: :index)
       end
 
       describe 'with signed consent signatures 'do
@@ -125,32 +135,34 @@ describe Admin::ConsentsController do
 
         it 'should deny access to delete a consent' do
           put :destroy, { id: @consent.id }
-          Consent.all.size.should ==1
-          response.should redirect_to(admin_default_path)
-          flash[:notice].should == 'Access Denied'
+          expect(Consent.all.size).to eq 1
+          expect(response).to redirect_to(controller: :users, action: :dashboard)
+          expect(flash['notice']).to eq 'Access Denied'
         end
 
         it 'should deny access to edit consent' do
           get :edit, { id: @consent.id }
-          response.should redirect_to(admin_default_path)
-          flash[:notice].should == 'Access Denied'
+          expect(response).to redirect_to(controller: :users, action: :dashboard)
+          expect(flash['notice']).to eq 'Access Denied'
         end
 
         it 'should deny access to update consent' do
-          put :update, { id: @consent.id, consent: { title: 'a second consent'},:format => :js}
-          response.should redirect_to(admin_default_path)
-          flash[:notice].should == 'Access Denied'
+          xhr :put, :update, { id: @consent.id, consent: { title: 'a second consent'}}
+          expect(response).to redirect_to(controller: :users, action: :dashboard)
+          expect(flash['notice']).to eq 'Access Denied'
         end
       end
     end
+
     it 'should allow access to view a consent by an authorized user' do
       get :show, { id: @consent.id }
-      response.should render_template('show')
+      expect(response).to render_template('show')
     end
+
     it 'should allow access to an attempt to create a consent by an authorized user' do
       post :create, { consent: { title: 'a second consent'}}
-      Consent.all.size.should == 2
-      response.should redirect_to(admin_consents_path)
+      expect(Consent.all.size).to eq 2
+      expect(response).to redirect_to(controller: :consents, action: :index)
     end
   end
 end

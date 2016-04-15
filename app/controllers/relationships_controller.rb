@@ -20,9 +20,9 @@ class RelationshipsController < PublicController
    @participant = @relationship.participant
    @relationship.update_attributes(relationship_params)
    if @relationship.save
-     flash[:notice]="Updated relationship"
+     flash['notice']="Updated relationship"
    else
-     flash[:notice]=@relationship.errors.full_messages.to_sentence
+     flash['notice']=@relationship.errors.full_messages.to_sentence
    end
     respond_to do |format|
       format.js {render :index,:layout => false}
@@ -31,9 +31,9 @@ class RelationshipsController < PublicController
  def create
    @relationship = Relationship.new(relationship_params)
    if @relationship.save
-     flash[:notice]="Added relationship"
+     flash['notice']="Added relationship"
    else
-     flash[:notice]=@relationship.errors.full_messages.to_sentence
+     flash['notice']=@relationship.errors.full_messages.to_sentence
    end
    @participant = @relationship.origin
     respond_to do |format|

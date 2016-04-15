@@ -33,7 +33,7 @@ class AccountsController < PublicController
         end
       else
         format.html { redirect_to public_login_path(anchor: 'sign_up')
-        flash[:error] = @account.errors.full_messages.to_sentence }
+        flash['error'] = @account.errors.full_messages.to_sentence }
       end
     end
   end
@@ -47,13 +47,13 @@ class AccountsController < PublicController
         if @account.save
           format.html { redirect_to dashboard_path }
         else
-          flash[:error] = @account.errors.full_messages.to_sentence
+          flash['error'] = @account.errors.full_messages.to_sentence
           format.html { render action: 'edit' }
         end
       end
     else
       respond_to do |format|
-        flash[:error] = 'Current password doesn\'t match. Please try again.'
+        flash['error'] = 'Current password doesn\'t match. Please try again.'
         format.html { render action: 'edit' }
       end
     end
@@ -80,10 +80,10 @@ class AccountsController < PublicController
           admin_email(admin_notification, 'Communication research registry express sign up notification')
           confirmation_message << ' We will call you within two business days.'
         end
-        flash[:notice] = confirmation_message
+        flash['notice'] = confirmation_message
         format.html { redirect_to public_login_path(anchor: 'express_sign_up') }
       else
-        flash[:error] = errors.to_sentence
+        flash['error'] = errors.to_sentence
         format.html { redirect_to public_login_path(anchor: 'express_sign_up', contact: params[:contact], name: params[:name], email: params[:email]) }
       end
     end

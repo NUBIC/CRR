@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
     values = ids.split(',').collect{|val| val.to_i}
     self.user_studies.where("study_id not in (?)",values).destroy_all
     values.each do |val|
-      self.user_studies.find_or_create_by_study_id(val)
+      self.user_studies.find_or_create_by(study_id: val)
     end
   end
 

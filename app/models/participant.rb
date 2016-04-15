@@ -23,53 +23,48 @@ class Participant < ActiveRecord::Base
   validates :zip, numericality: true, allow_blank: true, length: { maximum: 5 }
 
   # AASM events and transitions
-  aasm_column :stage
-  aasm_state :consent, initial: true
-  aasm_state :consent_denied
-  aasm_state :demographics
-  aasm_state :survey
-  aasm_state :pending_approval
-  aasm_state :approved
-  aasm_state :withdrawn
+  aasm column: :stage do
+    state :consent, initial: true
+    state :consent_denied, :demographics, :survey, :pending_approval, :approved, :withdrawn
+
+    event :sign_consent do
+      transitions to: :demographics, from: :consent, after: :create_consent_signature
+    end
+
+    event :take_survey do
+      transitions from: :demographics, to: :survey
+    end
+
+    event :decline_consent do
+      transitions from: :consent, to: :consent_denied
+    end
+
+    event :process_approvement do
+      transitions from: :survey, to: :approved, unless: :proxy?
+      transitions from: :survey, to: :pending_approval, if: :proxy?
+    end
+
+    event :verify do
+      transitions from: :pending_approval, to: :approved
+    end
+
+    event :approve do
+      transitions from: :pending_approval, to: :approved
+      transitions from: :survey, to: :approved
+    end
+
+    event :withdraw do
+      transitions to: :withdrawn
+    end
+  end
 
   # Scopes
   scope :by_stage,              -> (stages){ where(stage: stages) }
-  scope :pending_approvals,     -> { by_stage('pending_approval').order("#{self.table_name}.created_at DESC") }
+  scope :pending_approval,      -> { by_stage('pending_approval').order("#{self.table_name}.created_at DESC") }
   scope :approved,              -> { by_stage('approved').order("#{self.table_name}.created_at DESC") }
   scope :approaching_deadlines, -> { joins(:study_involvements).by_stage('approved').where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
   scope :all_participants,      -> { by_stage(['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
   scope :search,                -> (param){ where('first_name ilike ? or last_name ilike ?',"%#{param}%","%#{param}%") }
-
-  aasm_event :sign_consent do
-    transitions to: :demographics, from: :consent, on_transition: :create_consent_signature
-  end
-
-  aasm_event :take_survey do
-    transitions to: :survey, from: :demographics
-    # , guard: :demographics_info_completed?
-  end
-
-  aasm_event :decline_consent do
-   transitions to: :consent_denied, from: :consent
-  end
-
-  aasm_event :process_approvement do
-    transitions to: :approved, from: :survey, guard: Proc.new {|p| !p.proxy? }
-    transitions to: :pending_approval, from: :survey, guard: :proxy?
-  end
-
-  aasm_event :verify do
-    transitions to: :approved, from: :pending_approval
-  end
-
-  aasm_event :approve do
-    transitions to: :approved, from: :pending_approval
-    transitions to: :approved, from: :survey
-  end
-
-  aasm_event :withdraw do
-    transitions to: :withdrawn
-  end
 
   def self.all_active_participants
     approaching_deadlines = Participant.approaching_deadlines
@@ -101,7 +96,7 @@ class Participant < ActiveRecord::Base
   def address
     addr = [address_line1, address_line2, city].reject(&:blank?).join(' ').strip
     addr1 = [state, zip].reject(&:blank?).join(' ').strip
-    addr1.blank? ? addr.blank? ? nil : addr : addr << "," << addr1
+    addr1.blank? ? addr.blank? ? nil : addr : addr << ", " << addr1
   end
 
   def on_study?
@@ -141,23 +136,23 @@ class Participant < ActiveRecord::Base
   end
 
   def open?
-    [:consent, :demographics, :survey].include?(self.aasm_current_state)
+    [:consent, :demographics, :survey].include?(self.aasm.current_state)
   end
 
   def consented?
-    [:demographics, :completed, :survey, :pending_approval, :approved].include?(self.aasm_current_state) and !self.consent_signatures.empty?
+    [:demographics, :completed, :survey, :pending_approval, :approved].include?(self.aasm.current_state) and !self.consent_signatures.empty?
   end
 
   def completed?
-    [:pending_approval, :approved].include?(self.aasm_current_state)
+    [:pending_approval, :approved].include?(self.aasm.current_state)
   end
 
   def inactive?
-    [:new, :consent, :demographics, :consent_denied].include?(self.aasm_current_state)
+    [:consent, :demographics, :consent_denied].include?(self.aasm.current_state)
   end
 
   def active?
-    !inactive?
+    !inactive? && self.aasm.current_state != :withdrawn
   end
 
   def active_studies

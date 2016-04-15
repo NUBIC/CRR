@@ -42,9 +42,9 @@ class ParticipantsController < PublicController
     @participant = Participant.create!
     account_participant = AccountParticipant.new(:participant => @participant, :account => @account)
     # authorize! :create, @participant
-    account_participant.proxy = true if params[:proxy] == "true"
+    account_participant.proxy = true if params[:proxy] == 'true'
     if account_participant.save
-      if params[:child] == "true"
+      if params[:child] == 'true'
         @participant.child = true
         @participant.save
       end
@@ -53,7 +53,7 @@ class ParticipantsController < PublicController
         @participant.save
       end
     else
-      flash[:error] = account_participant.errors
+      flash['error'] = account_participant.errors
     end
     redirect_to enroll_participant_path(@participant)
   end
@@ -71,7 +71,7 @@ class ParticipantsController < PublicController
     if @participant.save
       @participant.take_survey! if @participant.demographics?
     else
-      flash[:error] = @participant.errors.full_messages.to_sentence
+      flash['error'] = @participant.errors.full_messages.to_sentence
     end
     @participant.survey? ? create_and_redirect_response_set(@participant) : redirect_to(enroll_participant_path(@participant))
   end

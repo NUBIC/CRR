@@ -23,7 +23,7 @@ class Admin::ContactLogsController < Admin::AdminController
     if @contact_log.save
       redirect_to admin_participant_path(@participant)
     else
-      flash[:notice]=@contact_log.errors.full_messages.to_sentence
+      flash['notice'] = @contact_log.errors.full_messages.to_sentence
       redirect_to edit_admin_contact_log_path(@contact_log)
     end
   end
@@ -35,7 +35,7 @@ class Admin::ContactLogsController < Admin::AdminController
     if @contact_log.save
       redirect_to admin_participant_path(@participant)
     else
-      flash[:notice]=@contact_log.errors.full_messages.to_sentence
+      flash['notice'] = @contact_log.errors.full_messages.to_sentence
       redirect_to new_admin_contact_log_path(participant_id: @participant.id)
     end
   end

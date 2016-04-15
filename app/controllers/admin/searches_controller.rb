@@ -32,10 +32,10 @@ class Admin::SearchesController < Admin::AdminController
     end
 
     if @search.save
-      flash[:notice] = 'Saved'
+      flash['notice'] = 'Saved'
       redirect_to admin_search_path(@search)
     else
-      flash[:error] = @search.errors.full_messages.to_sentence
+      flash['error'] = @search.errors.full_messages.to_sentence
       redirect_to new_admin_search_path
     end
   end
@@ -54,9 +54,9 @@ class Admin::SearchesController < Admin::AdminController
     authorize! :update, @search
     @search.update_attributes(search_params)
     if @search.save
-      flash[:notice] = 'Updated'
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @search.errors.full_messages.to_sentence
+      flash['error'] = @search.errors.full_messages.to_sentence
     end
     redirect_to admin_search_path(@search)
   end
@@ -66,9 +66,9 @@ class Admin::SearchesController < Admin::AdminController
 
     @search.request_data(nil,params)
     if @search.save
-      flash[:notice] = 'Data Request Submitted'
+      flash['notice'] = 'Data Request Submitted'
     else
-      flash[:error] = @search.errors.full_messages.to_sentence
+      flash['error'] = @search.errors.full_messages.to_sentence
     end
     redirect_to admin_search_path(@search)
   end
@@ -78,17 +78,17 @@ class Admin::SearchesController < Admin::AdminController
 
     @search.release_data(nil,params)
     if @search.save
-      flash[:notice] = 'Participant Data Released.'
+      flash['notice'] = 'Participant Data Released.'
       email = EmailNotification.active.batch_released
       user_emails = @search.user_emails
       if email && user_emails
         outbound_email(@search.user_emails, email.content, email.subject)
-        flash[:notice] << ' Researcher had been notified of data release.'
+        flash['notice'] << ' Researcher had been notified of data release.'
       else
-        flash[:error] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
+        flash['error'] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
       end
     else
-      flash[:error] = @search.errors.full_messages.to_sentence
+      flash['error'] = @search.errors.full_messages.to_sentence
     end
     respond_to do |format|
       format.html { redirect_to admin_searches_path }

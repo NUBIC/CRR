@@ -1,13 +1,13 @@
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.2'
+gem 'rails', '4.2.6'
 gem 'pg'
 gem 'haml'
 gem 'american_date'
 gem 'exception_notification'
 gem 'jquery-rails'
-gem 'twitter-bootstrap-rails'
+gem 'twitter-bootstrap-rails', '2.2.8'
 gem 'therubyracer'
 gem 'cancan'
 gem 'rest-client'
@@ -18,32 +18,31 @@ gem 'highline'
 
 gem 'aasm'
 # Use SCSS for stylesheets
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails'
 gem 'less-rails'
 
 # Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails'
 
 # Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
+gem 'uglifier'
 
 # gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
-gem 'activerecord-session_store', '~> 0.1.0'
+gem 'activerecord-session_store'
 gem 'cocoon'
 
 # Use Capistrano for deployment
 group :development do
-  gem 'capistrano', '~> 3.2.0'
+  gem 'capistrano'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
 end
 
 group :development, :test do
-  gem 'annotate', '~> 2.5.0'
   gem 'database_cleaner'
   gem 'factory_girl'
   gem 'faker'
-  gem 'factory_girl_rails', "~> 4.0"
+  gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'shoulda'
   gem 'webrat'
@@ -62,7 +61,7 @@ gem 'devise_ldap_authenticatable'
 #gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
@@ -80,6 +79,6 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-gem "simple_form"
-gem "roxml"
+gem 'simple_form'
+gem 'roxml'
 gem 'whenever'

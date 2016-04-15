@@ -70,7 +70,7 @@ class Admin::ParticipantsController < Admin::AdminController
         redirect_to admin_participant_path(@participant)
       end
     else
-      flash[:error] = @participant.errors.full_messages.to_sentence
+      flash['error'] = @participant.errors.full_messages.to_sentence
       redirect_to admin_participant_path(@participant)
     end
   end

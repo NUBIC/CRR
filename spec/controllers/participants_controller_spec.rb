@@ -4,49 +4,52 @@ describe ParticipantsController do
   setup :activate_authlogic
   let(:account) { FactoryGirl.create(:account) }
   let(:participant) { FactoryGirl.create(:participant) }
+
   before(:each) do
-    @adult_survey = setup_survey("adult")
-    @child_survey = setup_survey("child")
+    @adult_survey = setup_survey('adult')
+    @child_survey = setup_survey('child')
   end
 
   describe '#index' do
     before(:each) do
       @account_participant = FactoryGirl.create(:account_participant, account: account, participant: participant, proxy: true)
     end
-    it "returns the participant" do
-      get :enroll, :id => participant.id
-      flash[:error].should be_nil
+    it 'returns the participant' do
+      get :enroll, id: participant.id
+      expect(flash['error']).to be_nil
     end
 
-    it "create and redirects to the edit_response_set of adult_survey if participant state is 'survey' and is adult participant" do
-      participant.stage = "survey"
+    it 'create and redirects to the edit_response_set of adult_survey if participant state is "survey" and is adult participant' do
+      participant.stage = 'survey'
       participant.save
       get :enroll, id: participant.id
-      participant.response_sets.size.should == 1
-      response.should redirect_to edit_response_set_path(participant.recent_response_set)
-      participant.recent_response_set.survey.should == @adult_survey
+      expect(participant.response_sets.size).to eq 1
+      expect(response).to redirect_to(controller: :response_sets, action: :edit, id: participant.recent_response_set.id)
+      expect(participant.recent_response_set.survey).to eq @adult_survey
     end
 
-    it "create and redirects to the edit_response_set of child_survey if participant state is 'survey' and is child participant" do
-      participant.stage = "survey"
+    it 'create and redirects to the edit_response_set of child_survey if participant state is "survey" and is child participant' do
+      participant.stage = 'survey'
       participant.child = true
       participant.save
       get :enroll, id: participant.id
-      participant.response_sets.size.should == 1
-      response.should redirect_to edit_response_set_path(participant.recent_response_set)
-      participant.recent_response_set.survey.should == @child_survey
+      expect(participant.response_sets.size).to eq 1
+      expect(response).to redirect_to(controller: :response_sets, action: :edit, id: participant.recent_response_set.id)
+      expect(participant.recent_response_set.survey).to eq @child_survey
     end
 
-    describe "unauthorized access" do
+    describe 'unauthorized access' do
       before(:each) do
-        AccountSession.create(FactoryGirl.create(:account, email: "other@test.con"))
+        AccountSession.create(FactoryGirl.create(:account, email: 'other@test.con'))
         get :enroll, id: participant.id
       end
-      it "redirect_to to the logout page" do
-        response.should redirect_to dashboard_url
+
+      it 'redirect_to to the logout page' do
+        expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
-      it "displays 'Access Denied' flash message" do
-        flash[:error].should == "Access Denied"
+
+      it 'displays "Access Denied" flash message' do
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end
@@ -55,43 +58,46 @@ describe ParticipantsController do
     before(:each) do
       @account_participant = FactoryGirl.create(:account_participant, account: account, participant: participant, proxy: true)
     end
-    it "return the participant for consent view" do
+
+    it 'return the participant for consent view' do
       get :enroll, id: participant.id
-      flash[:error].should be_nil
+      expect(flash['error']).to be_nil
     end
 
-    describe "unauthorized access" do
+    describe 'unauthorized access' do
       before(:each) do
-        AccountSession.create(FactoryGirl.create(:account, email: "other@test.con"))
+        AccountSession.create(FactoryGirl.create(:account, email: 'other@test.con'))
         get :enroll, id: participant.id
       end
-      it "redirect_to to the logout page" do
-        response.should redirect_to dashboard_url
+
+      it 'redirect_to to the logout page' do
+        expect(response).to redirect_to redirect_to(controller: :accounts, action: :dashboard)
       end
-      it "displays 'Access Denied' flash message" do
-        flash[:error].should == "Access Denied"
+
+      it 'displays "Access Denied" flash message' do
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end
 
   describe '#create' do
-    it "creates the empty participant and account_participant" do
+    it 'creates the empty participant and account_participant' do
       post :create, account_id: account.id
-      account.participants.size.should == 1
-      account.account_participants.size.should == 1
+      expect(account.participants.size).to eq 1
+      expect(account.account_participants.size).to eq 1
     end
 
-    it "creates the empty child participant and account_participant" do
-      post :create, account_id: account.id, child: "true"
-      account.participants.first.child.should be_true
+    it 'creates the empty child participant and account_participant' do
+      post :create, account_id: account.id, child: 'true'
+      expect(account.participants.first.child).to be true
     end
   end
 
   private
     def setup_survey(code)
-      survey = FactoryGirl.create(:survey, code: code, :multiple_section=>false)
-      survey.sections.first.questions.create(:text=>"question 1",:response_type=>'date')
-      survey.state = "active"
+      survey = FactoryGirl.create(:survey, code: code, multiple_section: false)
+      survey.sections.first.questions.create(text: 'question 1', response_type: 'date')
+      survey.state = 'active'
       survey.save
       survey
     end

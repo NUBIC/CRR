@@ -8,7 +8,7 @@ class ResponseSetsController < PublicController
     if @response_set.save
       redirect_to(edit_response_set_path(@response_set))
     else
-      flash[:notice] = @response_set.errors.full_messages.to_sentence
+      flash['notice'] = @response_set.errors.full_messages.to_sentence
       redirect_to redirect_to enroll_participant_path(participant)
     end
   end
@@ -36,11 +36,11 @@ class ResponseSetsController < PublicController
     @survey = @response_set.survey
     @response_set.update_attributes(response_set_params)
     unless @response_set.save and (!params[:button].eql?("finish") || @response_set.reload.complete!)
-      flash[:error] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
+      flash['error'] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
     end
     respond_to do |format|
-      format.html{ redirect_to (@response_set.errors.empty? and params[:button].eql?("finish")) ? dashboard_path(participant_id: @response_set.participant) : edit_response_set_path(@response_set.reload)}
-      format.js {render ((flash[:error].blank? and params[:button].eql?("finish")) ? dashboard_path(participant_id: @response_set.participant) : :edit),:layout=>false}
+      format.html{ redirect_to (@response_set.errors.empty? and params[:button].eql?('finish')) ? dashboard_path(participant_id: @response_set.participant) : edit_response_set_path(@response_set.reload)}
+      format.js {render ((flash['error'].blank? and params[:button].eql?('finish')) ? dashboard_path(participant_id: @response_set.participant) : :edit),:layout=>false}
     end
   end
 

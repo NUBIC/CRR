@@ -14,7 +14,7 @@ AudiologyRegistry::Application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
   # config.assets.compress = true
-  # config.serve_static_assets = false
+  # config.serve_static_files = false
   # config.assets.compile = false
   # config.assets.digest = true
   config.assets.debug = true

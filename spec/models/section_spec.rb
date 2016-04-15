@@ -1,28 +1,15 @@
-# == Schema Information
-#
-# Table name: sections
-#
-#  id            :integer          not null, primary key
-#  survey_id     :integer
-#  title         :text
-#  display_order :integer
-#
-
 require 'spec_helper'
 
 describe Section do
-  before(:each) do
-  end
+  it 'should not allow more than one section where multiple section is false' do
+    survey = FactoryGirl.create(:survey, multiple_section: false)
+    expect(survey.sections.size).to eq 1
 
-  it "should not allow more than one section where multiple section is false" do 
-    survey = FactoryGirl.create(:survey,:multiple_section=>false) 
-    survey.sections.size.should == 1
     survey.reload
-    section = survey.sections.create(:title=>"test")
+    section = survey.sections.create(title: 'test')
     survey.reload
-    survey.sections.size.should == 1
-    section.should_not be_valid
-    section.should have_at_least(1).error_on(:survey_id)
+    expect(survey.sections.size).to eq 1
+    expect(section).not_to be_valid
+    expect(section.errors[:survey_id].size).to be >= 1
   end
-  
 end

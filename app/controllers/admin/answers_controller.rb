@@ -6,7 +6,7 @@ class Admin::AnswersController < Admin::AdminController
     authorize! :new, @answer
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js { render layout: false }
     end
   end
 
@@ -14,7 +14,7 @@ class Admin::AnswersController < Admin::AdminController
     @answer = Answer.find(params[:id])
     authorize! :show, @answer
     respond_to do |format|
-      format.js {render :layout => false}
+      format.js { render layout: false }
     end
   end
 
@@ -23,7 +23,7 @@ class Admin::AnswersController < Admin::AdminController
     authorize! :edit, @answer
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js { render layout: false }
     end
   end
 
@@ -32,12 +32,12 @@ class Admin::AnswersController < Admin::AdminController
     authorize! :update, @answer
     saved = @answer.update_attributes(answer_params)
     if saved
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @answer.errors.full_messages.to_sentence
+      flash['error'] = @answer.errors.full_messages.to_sentence
     end
     respond_to do |format|
-      format.js {render :show,:layout => false}
+      format.js { render :show, layout: false }
     end
   end
 
@@ -46,14 +46,14 @@ class Admin::AnswersController < Admin::AdminController
     authorize! :create, @answer
     @question = @answer.question
     if @answer.save
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @answer.errors.full_messages.to_sentence
+      flash['error'] = @answer.errors.full_messages.to_sentence
     end
     @question.reload
     respond_to do |format|
-      format.html {redirect_to edit_question_path(@question)}
-      format.js {render "admin/questions/show",:layout => false}
+      format.html { redirect_to edit_question_path(@question) }
+      format.js { render 'admin/questions/show', layout: false }
     end
   end
 
@@ -64,7 +64,7 @@ class Admin::AnswersController < Admin::AdminController
     @answer.destroy
     @question.reload
     respond_to do |format|
-      format.js {render "admin/questions/show",:layout => false}
+      format.js { render 'admin/questions/show', layout: false }
     end
   end
  def answer_params

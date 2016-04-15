@@ -36,8 +36,8 @@ class Question < ActiveRecord::Base
   validate :validate_question_type, :code_unique
 
   # Hooks
-  before_validation  :check_display_order
-  after_initialize :default_args
+  before_validation :check_display_order
+  after_initialize  :default_args
 
   # Scopes
   default_scope {order('display_order ASC')}

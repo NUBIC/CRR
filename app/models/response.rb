@@ -27,23 +27,23 @@ class Response < ActiveRecord::Base
   def to_s
     question.multiple_choice? ? answer.text : self.text
   end
-  private
 
-  def validate_question_type
-    if self.question.response_type.eql?('number')
-      begin
-        Float(self.text)
-      rescue
-        errors.add(:question, "#{question.display_order} is not a valid number")
+  private
+    def validate_question_type
+      if self.question.response_type.eql?('number')
+        begin
+          Float(self.text)
+        rescue
+          errors.add(:question, "#{question.display_order} is not a valid number")
+        end
+      elsif self.question.response_type.eql?("date")
+        begin
+          Date.parse(self.text)
+        rescue
+          errors.add(:question,"#{question.text} is not a date.")
+        end
+      elsif self.question.multiple_choice?
+        errors.add(:answer, 'doesn\'t match question') unless question.answers.include?(answer)
       end
-    elsif self.question.response_type.eql?("date")
-      begin
-        Date.parse(self.text)
-      rescue
-        errors.add(:question,"#{question.text} is not a date.")
-      end
-    elsif self.question.multiple_choice?
-      errors.add(:answer, 'doesn\'t match question') unless question.answers.include?(answer)
     end
-  end
 end

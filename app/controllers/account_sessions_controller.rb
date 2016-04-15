@@ -1,7 +1,8 @@
 class AccountSessionsController < PublicController
-  before_filter :require_no_user, :only=>[:new]
-  before_filter :require_user, :only=>[:destroy]
+  before_filter :require_no_user, only: [:new]
+  before_filter :require_user, only: [:destroy]
   # GET /account_sessions/new
+
   def new
     @account_session = AccountSession.new
 
@@ -20,8 +21,8 @@ class AccountSessionsController < PublicController
     if @account_session.save
       redirect_to dashboard_path
     else
-      flash[:error] = @account_session.errors.full_messages.to_sentence
-      redirect_to public_login_path(:anchor => "login_tab")
+      flash['error'] = @account_session.errors.full_messages.to_sentence
+      redirect_to public_login_path( anchor: 'login_tab' )
     end
   end
 

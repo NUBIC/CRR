@@ -4,7 +4,7 @@ describe Admin::SearchesController do
   before(:each) do
     @user = FactoryGirl.create(:user, netid: 'test_user')
     login_user
-    controller.current_user.stub(:has_system_access?).and_return(true)
+    allow(controller.current_user).to receive(:has_system_access?).and_return(true)
   end
 
   describe 'PATCH release_data' do
@@ -19,7 +19,7 @@ describe Admin::SearchesController do
 
     describe 'authorized access' do
       before(:each) do
-        controller.current_user.stub(:admin?).and_return(true)
+        allow(controller.current_user).to receive(:admin?).and_return(true)
       end
 
       describe 'when corresponding EmailNotification is not available' do
@@ -29,8 +29,8 @@ describe Admin::SearchesController do
           email_notification.save!
 
           patch :release_data, @valid_release_data_attributes
-          expect(flash[:notice]).to eq 'Participant Data Released.'
-          expect(flash[:error]).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
+          expect(flash['notice']).to eq 'Participant Data Released.'
+          expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
         end
       end
 
@@ -43,13 +43,13 @@ describe Admin::SearchesController do
 
         it 'generates proper notification message' do
           patch :release_data, @valid_release_data_attributes
-          expect(flash[:notice]).to eq 'Participant Data Released. Researcher had been notified of data release.'
+          expect(flash['notice']).to eq 'Participant Data Released. Researcher had been notified of data release.'
         end
       end
 
       it 'redirects to the searches index page' do
         patch :release_data, @valid_release_data_attributes
-        expect(response).to redirect_to admin_searches_path
+        expect(response).to redirect_to(controller: :searches, action: :index)
       end
     end
   end

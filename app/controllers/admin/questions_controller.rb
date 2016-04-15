@@ -3,7 +3,7 @@ class Admin::QuestionsController < Admin::AdminController
     @section= Section.find(params[:section_id])
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
   def search
@@ -19,7 +19,7 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :new, @question
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -28,7 +28,7 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :show, @question
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -37,7 +37,7 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :edit, @question
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -46,13 +46,13 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :update, @question
     saved = @question.update_attributes(question_params)
     if saved
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @question.errors.full_messages.to_sentence
+      flash['error'] = @question.errors.full_messages.to_sentence
     end
     @question.reload
     respond_to do |format|
-      format.js {render :show,:layout => false}
+      format.js {render :show, layout: false}
     end
   end
 
@@ -61,12 +61,12 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :create, @question
     @section = @question.section
     if @question.save
-      flash[:notice] = "Created"
+      flash['notice'] = 'Created'
     else
-      flash[:error] = @question.errors.full_messages.to_sentence
+      flash['error'] = @question.errors.full_messages.to_sentence
     end
     respond_to do |format|
-      format.js {render "admin/sections/show",:layout => false}
+      format.js { render 'admin/sections/show', layout: false}
     end
   end
 
@@ -75,13 +75,14 @@ class Admin::QuestionsController < Admin::AdminController
     authorize! :destroy, @question
     @section = @question.section
     @question.destroy
-    flash[:notice] = "Question Deleted"
+    flash['notice'] = 'Question Deleted'
     @section.reload
     respond_to do |format|
-      format.js {render "admin/sections/show",:layout => false}
+      format.js { render 'admin/sections/show', layout: false }
     end
   end
- def question_params
-   params.require(:question).permit(:text,:response_type,:code,:help_text,:display_order,:is_mandatory,:survey_id,:section_id)
- end
+
+  def question_params
+    params.require(:question).permit(:text,:response_type,:code,:help_text,:display_order,:is_mandatory,:survey_id,:section_id)
+  end
 end

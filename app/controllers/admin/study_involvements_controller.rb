@@ -7,7 +7,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
     @study = Study.find(params[:study_id])
     @study_involvements = params[:state].eql?('active') ? @study.study_involvements.active : @study.study_involvements
     respond_to do |format|
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -26,12 +26,13 @@ class Admin::StudyInvolvementsController < Admin::AdminController
   def update
     @study_involvement = StudyInvolvement.find(params[:id])
     authorize! :update, @study_involvement
+
     @study_involvement.update_attributes(si_params)
     @participant = @study_involvement.participant
     if @study_involvement.save
      redirect_to admin_participant_path(@participant)
     else
-     flash[:notice]=@study_involvement.errors.full_messages.to_sentence
+     flash['notice'] = @study_involvement.errors.full_messages.to_sentence
      redirect_to edit_admin_study_involvement_path(@study_involvement)
     end
   end
@@ -39,11 +40,12 @@ class Admin::StudyInvolvementsController < Admin::AdminController
   def create
     @study_involvement = StudyInvolvement.new(si_params)
     authorize! :create, @study_involvement
+
     @participant = @study_involvement.participant
     if @study_involvement.save
      redirect_to admin_participant_path(@participant)
     else
-     flash[:notice]=@study_involvement.errors.full_messages.to_sentence
+     flash['notice'] = @study_involvement.errors.full_messages.to_sentence
      redirect_to new_admin_study_involvement_path(participant_id: @participant.id)
     end
   end
@@ -56,8 +58,9 @@ class Admin::StudyInvolvementsController < Admin::AdminController
     redirect_to admin_participant_path(@participant)
   end
 
-  def si_params
-    params.require(:study_involvement).permit(:participant_id,:study_id,:notes,:start_date,:end_date,:warning_date,:state,:state_date)
-  end
+  private
+    def si_params
+      params.require(:study_involvement).permit(:participant_id,:study_id,:notes,:start_date,:end_date,:warning_date,:state,:state_date)
+    end
 end
 

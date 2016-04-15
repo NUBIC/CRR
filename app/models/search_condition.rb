@@ -18,7 +18,7 @@ class SearchCondition < ActiveRecord::Base
   validates_inclusion_of :operator, in: ->(record) { operators_by_type(operator_type_for_question(record.question)).map{|o| o[:symbol]}}
 
   # Hooks
-  after_initialize  :set_search_attributes, unless: Proc.new { |record| record.new_record? }
+  after_initialize  :set_search_attributes, unless: :new_record?
   after_save        :set_search_attributes
   before_validation :set_date_values, :cleanup_values
 

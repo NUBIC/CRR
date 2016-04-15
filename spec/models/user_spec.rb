@@ -1,32 +1,11 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                 :integer          not null, primary key
-#  netid              :string(255)
-#  admin              :boolean
-#  researcher         :boolean
-#  data_manager       :boolean
-#  first_name         :string(255)
-#  last_name          :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  sign_in_count      :integer          default(0), not null
-#  current_sign_in_at :datetime
-#  last_sign_in_at    :datetime
-#  current_sign_in_ip :inet
-#  last_sign_in_ip    :inet
-#  email              :string(255)
-#
-
 require 'spec_helper'
 
 describe User do
   let(:user){ FactoryGirl.create(:user) }
 
-  it { should have_many(:user_studies) }
-  it { should have_many(:studies) }
-  it { should validate_presence_of(:netid) }
+  it { is_expected.to have_many(:user_studies) }
+  it { is_expected.to have_many(:studies) }
+  it { is_expected.to validate_presence_of(:netid) }
 
   describe 'with valid user' do
     before(:each) do
@@ -40,6 +19,7 @@ describe User do
     end
 
     it 'populates user details from LDAP' do
+
       expect(user.first_name).to eq 'Joe'
       expect(user.last_name).to eq 'Doe'
       expect(user.email).to eq 'joe@doe.com'

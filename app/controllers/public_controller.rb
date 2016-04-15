@@ -3,7 +3,7 @@ class PublicController < ApplicationController
   helper_method :current_user
 
   rescue_from CanCan::AccessDenied do |exception|
-    flash[:error]="Access Denied"
+    flash['error']="Access Denied"
     if current_user
       redirect_to dashboard_url
     else
@@ -32,7 +32,7 @@ class PublicController < ApplicationController
   def require_user
     if current_user.blank?
       store_location
-      flash[:info] = "Please login or create a new account"
+      flash['info'] = "Please login or create a new account"
       redirect_to public_login_url
       return false
     end
@@ -40,7 +40,7 @@ class PublicController < ApplicationController
 
   def require_no_user
     if current_user
-      flash[:notice]="You are currently logged in"
+      flash['notice']="You are currently logged in"
       redirect_to dashboard_url
     end
   end

@@ -7,7 +7,7 @@ namespace :notify do
         user_emails = search.user_emails
         if user_emails.any?
           subject = email.subject.gsub('{{search_name}}', search.name)
-          EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver!
+          EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver_now!
           puts "Study '#{search.study.name}' researchers were notified of expiring release"
         else
           puts "Study '#{search.study.name}' researchers could not be notified of expiring release: emails are not available"
@@ -25,7 +25,7 @@ namespace :notify do
         user_emails = search.user_emails
         if user_emails.any?
           subject = email.subject.gsub('{{search_name}}', search.name)
-          EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver!
+          EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver_now!
           puts "Study '#{search.study.name}' researchers were notified of expired release"
         else
           puts "Study '#{search.study.name}' researchers could not be notified of expired release: emails are not available"

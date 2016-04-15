@@ -6,7 +6,7 @@ class Admin::SectionsController < Admin::AdminController
     authorize! :new, @section
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -15,7 +15,7 @@ class Admin::SectionsController < Admin::AdminController
     authorize! :show, @section
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -24,7 +24,7 @@ class Admin::SectionsController < Admin::AdminController
     authorize! :edit, @section
     respond_to do |format|
       format.html
-      format.js {render :layout => false}
+      format.js {render layout: false}
     end
   end
 
@@ -33,14 +33,14 @@ class Admin::SectionsController < Admin::AdminController
     authorize! :update, @section
     saved = @section.update_attributes(section_params)
     if saved
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @survey.errors.full_messages.to_sentence
+      flash['error'] = @survey.errors.full_messages.to_sentence
     end
     @section.reload
     respond_to do |format|
       format.html {redirect_to edit_survey_section_path(@survey_section)}
-      format.js {render (saved ? :show : :edit),:layout => false}
+      format.js {render (saved ? :show : :edit), layout: false}
     end
   end
 
@@ -49,12 +49,12 @@ class Admin::SectionsController < Admin::AdminController
     authorize! :create, @section
     @survey = @section.survey
     if @section.save
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @section.errors.full_messages.to_sentence
+      flash['error'] = @section.errors.full_messages.to_sentence
     end
     respond_to do |format|
-      format.js {render "admin/surveys/show",:layout => false}
+      format.js {render 'admin/surveys/show', layout: false}
     end
   end
 
@@ -65,10 +65,10 @@ class Admin::SectionsController < Admin::AdminController
     @section.destroy
     @survey.reload
     respond_to do |format|
-      format.js {render "admin/surveys/show",:layout => false}
+      format.js {render 'admin/surveys/show', layout: false}
     end
   end
  def section_params
-   params.require(:section).permit(:title,:display_order,:survey_id)
+   params.require(:section).permit(:title, :display_order, :survey_id)
  end
 end

@@ -1,17 +1,17 @@
 class PasswordResetsController < PublicController
   before_filter :require_no_user
-  before_filter :load_account_using_perishable_token, :only => [ :edit, :update ]
+  before_filter :load_account_using_perishable_token, only: [ :edit, :update ]
 
   def create
     @account = Account.find_by_email(params[:email])
     if @account
       @account.reset_token
-      PasswordResetMailer.password_reset_instructions(@account).deliver!
-      flash[:notice] = "Instructions to reset your password have been emailed to you"
+      PasswordResetMailer.password_reset_instructions(@account).deliver_now!
+      flash['notice'] = "Instructions to reset your password have been emailed to you"
       redirect_to public_login_url
     else
-      flash[:error] = "Unknown email address: #{params[:email]}."
-      redirect_to public_login_url(:anchor => "password_reset_tab")
+      flash['error'] = "Unknown email address: #{params[:email]}."
+      redirect_to public_login_url(anchor: 'password_reset_tab')
     end
   end
 
@@ -23,8 +23,8 @@ class PasswordResetsController < PublicController
     if @account.save
       redirect_to dashboard_path
     else
-      flash[:error] = @account.errors.full_messages.to_sentence
-      render :action => :edit
+      flash['error'] = @account.errors.full_messages.to_sentence
+      render action: :edit
     end
   end
 
@@ -36,7 +36,7 @@ class PasswordResetsController < PublicController
   def load_account_using_perishable_token
     @account = Account.find_using_perishable_token(params[:id])
     unless @account
-      flash[:error] = "We're sorry, but we could not locate your account"
+      flash['error'] = "We're sorry, but we could not locate your account"
       redirect_to public_login_url
     end
   end

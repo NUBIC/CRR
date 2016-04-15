@@ -20,17 +20,17 @@ class Search < ActiveRecord::Base
   after_initialize :default_args
 
   # AASM events and transitions
-  aasm_column :state
-  aasm_state :new, initial: true
-  aasm_state :data_requested
-  aasm_state :data_released
+  aasm column: :state do
+    state :new, initial: true
+    state :data_requested, :data_released
 
-  aasm_event :request_data do
-    transitions to: :data_requested,from: [:new], on_transition: [:process_request]
-  end
+    event :request_data do
+      transitions from: :new, to: :data_requested, after: [:process_request]
+    end
 
-  aasm_event :release_data do
-    transitions to: :data_released, from: [:data_requested,:new],on_transition: [:process_release]
+    event :release_data do
+      transitions from: [:data_requested,:new], to: :data_released, after: [:process_release]
+    end
   end
 
   # Scopes

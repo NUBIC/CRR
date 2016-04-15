@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe StudyInvolvement do
-  it { should validate_presence_of :start_date }
-  it { should validate_presence_of :participant}
-  it { should validate_presence_of :study }
-  it { should be_versioned }
+  it { is_expected.to validate_presence_of :start_date }
+  it { is_expected.to validate_presence_of :participant}
+  it { is_expected.to validate_presence_of :study }
+  it { is_expected.to be_versioned }
 
   let(:study_involvement) { FactoryGirl.create(:study_involvement) }
   let(:date) { Date.new(2013, 10, 10) }
@@ -17,19 +17,19 @@ describe StudyInvolvement do
   describe 'validates end_date' do
     it 'should not be before start_date' do
       study_involvement = FactoryGirl.build(:study_involvement, start_date: date, end_date: date - 1.days)
-      study_involvement.should_not be_valid
-      study_involvement.should have(1).error_on(:end_date)
-      study_involvement.errors[:end_date].should == ['can\'t be before start_date']
+      expect(study_involvement).not_to be_valid
+      expect(study_involvement.errors[:end_date]).not_to be_empty
+      expect(study_involvement.errors[:end_date]).to include 'can\'t be before start_date'
     end
 
     it 'should be after start_date' do
       study_involvement = FactoryGirl.build(:study_involvement, start_date: date, end_date: date + 1.days)
-      study_involvement.should be_valid
+      expect(study_involvement).to be_valid
     end
 
     it 'can be nil' do
       study_involvement = FactoryGirl.build(:study_involvement, end_date: date)
-      study_involvement.should be_valid
+      expect(study_involvement).to be_valid
     end
   end
 
@@ -44,32 +44,32 @@ describe StudyInvolvement do
     end
 
     it 'should include study involvement whose end date is in future' do
-      @study_involvements.should include @si1
+      expect(@study_involvements).to include @si1
     end
 
     it 'should include study involvement whose end date is today' do
-      @study_involvements.should include @si2
+      expect(@study_involvements).to include @si2
     end
 
     it 'should not include study involvement whose end date is in past' do
-      @study_involvements.should_not include @si3
+      expect(@study_involvements).not_to include @si3
     end
   end
 
   describe 'active?' do
     it 'should be true if end date is today' do
       study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today)
-      study_involvement.active?.should be_true
+      expect(study_involvement).to be_active
     end
 
     it 'should be true if end date is in future' do
       study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today + 10.days)
-      study_involvement.active?.should be_true
+      expect(study_involvement).to be_active
     end
 
     it 'should be false if end date is in past' do
       study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today - 10.days)
-      study_involvement.active?.should be_false
+      expect(study_involvement).not_to be_active
     end
   end
 end

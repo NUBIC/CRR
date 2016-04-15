@@ -1,7 +1,7 @@
 class Admin::ConsentsController < Admin::AdminController
   def index
     @consents = Consent.all
-   authorize! :index, Consent
+    authorize! :index, Consent
   end
 
   def new
@@ -13,9 +13,9 @@ class Admin::ConsentsController < Admin::AdminController
     @consent = Consent.new(consent_params)
     authorize! :create, @consent
     if @consent.save
-      flash[:notice] = "Created"
+      flash['notice'] = 'Created'
     else
-      flash[:error] = @consent.errors.full_messages.to_sentence
+      flash['error'] = @consent.errors.full_messages.to_sentence
     end
     redirect_to admin_consents_path
   end
@@ -35,9 +35,9 @@ class Admin::ConsentsController < Admin::AdminController
     authorize! :update, @consent
     @consent.update_attributes(consent_params)
     if @consent.save
-      flash[:notice] = "Updated"
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @consent.errors.full_messages.to_sentence
+      flash['error'] = @consent.errors.full_messages.to_sentence
     end
     redirect_to admin_consents_path
   end
@@ -45,22 +45,24 @@ class Admin::ConsentsController < Admin::AdminController
   def deactivate
     @consent = Consent.find(params[:id])
     authorize! :deactivate, @consent
-    @consent.state="inactive"
+
+    @consent.deactivate
     if @consent.save
-      flash[:notice] = "Deactivated"
+      flash['notice'] = 'Deactivated'
     else
-      flash[:error] = @consent.errors.full_messages.to_sentence
+      flash['error'] = @consent.errors.full_messages.to_sentence
     end
     redirect_to admin_consents_path
   end
   def activate
     @consent = Consent.find(params[:id])
     authorize! :activate, @consent
-    @consent.state="active"
+
+    @consent.activate
     if @consent.save
-      flash[:notice] = "Activated"
+      flash['notice'] = 'Activated'
     else
-      flash[:error] = @consent.errors.full_messages.to_sentence
+      flash['error'] = @consent.errors.full_messages.to_sentence
     end
     redirect_to admin_consents_path
   end

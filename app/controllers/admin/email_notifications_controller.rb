@@ -20,9 +20,9 @@ class Admin::EmailNotificationsController < Admin::AdminController
     authorize! :update, @email_notification
     @email_notification.update_attributes(email_notification_params)
     if @email_notification.save
-      flash[:notice] = 'Updated'
+      flash['notice'] = 'Updated'
     else
-      flash[:error] = @email_notification.errors.full_messages.to_sentence
+      flash['error'] = @email_notification.errors.full_messages.to_sentence
     end
     redirect_to admin_email_notifications_path
   end
@@ -31,9 +31,9 @@ class Admin::EmailNotificationsController < Admin::AdminController
     authorize! :deactivate, @email_notification
     @email_notification.deactivate
     if @email_notification.save
-      flash[:notice] = 'Deactivated'
+      flash['notice'] = 'Deactivated'
     else
-      flash[:error] = @email_notification.errors.full_messages.to_sentence
+      flash['error'] = @email_notification.errors.full_messages.to_sentence
     end
     redirect_to admin_email_notifications_path
   end
@@ -42,9 +42,9 @@ class Admin::EmailNotificationsController < Admin::AdminController
     authorize! :activate, @email_notification
     @email_notification.activate
     if @email_notification.save
-      flash[:notice] = 'Activated'
+      flash['notice'] = 'Activated'
     else
-      flash[:error] = @email_notification.errors.full_messages.to_sentence
+      flash['error'] = @email_notification.errors.full_messages.to_sentence
     end
     redirect_to admin_email_notifications_path
   end

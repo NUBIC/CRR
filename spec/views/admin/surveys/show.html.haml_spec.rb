@@ -15,20 +15,20 @@ describe 'admin/surveys/show.html.haml' do
       @survey.state='active'
       @survey.save
       @survey.reload
-      @survey.state.should == 'active'
+      expect(@survey.state).to eq('active')
     end
 
     it 'not provide ability to add sections or edit' do
       assign(:survey,@survey)
       render
-      rendered.should_not contain('Edit')
-      rendered.should_not contain('Add Section')
+      expect(rendered).not_to  match /Edit/
+      expect(rendered).not_to  match /Add Section/
     end
 
     it 'should provide ability to deactivate survey' do
-      assign(:survey,@survey)
+      assign(:survey, @survey)
       render
-      rendered.should contain('Deactivate')
+      expect(rendered).to  match /Deactivate/
     end
   end
 
@@ -36,16 +36,16 @@ describe 'admin/surveys/show.html.haml' do
     it 'should show add section and edit buttons' do
       assign(:survey,@survey)
       render
-      rendered.should contain('Edit')
-      rendered.should contain('Add Section')
+      expect(rendered).to  match /Edit/
+      expect(rendered).to  match /Add Section/
     end
 
     it 'should not show add section button for single section survey' do
       @survey.update_attributes(:multiple_section=>false)
       @survey.reload
-      assign(:survey,@survey)
+      assign(:survey, @survey)
       render
-      rendered.should_not contain('Add Section')
+      expect(rendered).not_to  match /Add Section/
     end
   end
 end

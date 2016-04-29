@@ -1,18 +1,20 @@
 require 'csv'
 
 class Admin::ResponseSetsController < Admin::AdminController
-  before_filter :set_response_set, only: [:show, :edit, :update, :destroy, :load_from_file]
+  before_action :set_response_set, only: [:show, :edit, :update, :destroy, :load_from_file]
+
   def index
+    authorize ResponseSet
     @participant = Participant.find(params[:participant_id])
     respond_to do |format|
-      format.js {render layout: false}
+      format.js { render layout: false }
     end
   end
 
   def new
-    @participant = Participant.find(params[:participant_id])
+    @participant  = Participant.find(params[:participant_id])
     @response_set = @participant.response_sets.new
-    authorize! :new, @response_set
+    authorize @response_set
     @surveys = Survey.all.select{|s| s.active?}
     respond_to do |format|
       format.js {render layout: false}
@@ -20,12 +22,13 @@ class Admin::ResponseSetsController < Admin::AdminController
   end
 
   def create
-    @response_set= ResponseSet.new(response_set_params)
-    authorize! :create, @response_set
+    @response_set = ResponseSet.new(response_set_params)
+    authorize @response_set
+
     @participant = @response_set.participant
     saved = @response_set.save
     unless saved
-      flash['notice'] = @response_set.errors.full_messages.to_sentence
+      flash['error'] = @response_set.errors.full_messages.to_sentence
       @surveys = Survey.all.select{|s| s.active?}
     end
     respond_to do |format|
@@ -34,43 +37,43 @@ class Admin::ResponseSetsController < Admin::AdminController
     end
   end
 
-  def show
-    authorize! :show, @response_set
-    @survey = @response_set.survey
-  end
-
   def edit
-    authorize! :edit, @response_set
+    authorize @response_set
     @survey = @response_set.survey
     @section = @survey.sections.find_by_id(params[:section_id]).nil? ? @survey.sections.first : @survey.sections.find_by_id(params[:section_id])
   end
 
   def update
-    authorize! :update, @response_set
+    authorize @response_set
     @survey = @response_set.survey
     @response_set.update_attributes(response_set_params)
-    unless @response_set.save && (!params[:button].eql?('finish') || @response_set.reload.complete!)
+    finish = params[:button].eql?('finish')
+
+    unless @response_set.save && (!finish || finish && @response_set.reload.complete!)
       flash['error'] = @response_set.errors.full_messages.flatten.uniq.compact.to_sentence +  @response_set.responses.collect{|r| r.errors.full_messages}.flatten.uniq.compact.to_sentence
     end
-    respond_to do |format|
-      format.html{ redirect_to (@response_set.errors.empty? && params[:button].eql?('finish')) ? admin_participant_path(@response_set.participant, tab: 'surveys') : edit_admin_response_set_path(@response_set.reload)}
-      format.js {render ((flash['error'].blank? && params[:button].eql?('finish')) ? admin_participant_path(@response_set.participant, tab: 'surveys') : :edit),layout: false}
+
+    if finish && flash['error'].blank?
+      respond_to do |format|
+        format.html { redirect_to admin_participant_path(@response_set.participant, tab: 'surveys') }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to edit_admin_response_set_path(@response_set.reload) }
+        format.js   { render :edit, layout: false }
+      end
     end
   end
 
   def destroy
+    authorize @response_set
     @participant = @response_set.participant
-    authorize! :destroy, @response_set
     @response_set.destroy
     redirect_to admin_participant_path(@participant, tab: 'surveys')
   end
 
-  def response_set_params
-    params.fetch(:response_set, {}).permit!
-  end
-
   def load_from_file
-    authorize! :update, @response_set
+    authorize @response_set
     sections        = @response_set.survey.sections.to_a
     uploaded_io     = params[:import_file]
     pin_header      = 'PIN'
@@ -116,5 +119,9 @@ class Admin::ResponseSetsController < Admin::AdminController
   private
     def set_response_set
       @response_set = ResponseSet.find(params[:id])
+    end
+
+    def response_set_params
+      params.fetch(:response_set, {}).permit!
     end
 end

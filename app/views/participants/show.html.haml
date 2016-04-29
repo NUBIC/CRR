@@ -1,8 +1,9 @@
 .row-fluid
-  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+  = link_to 'Return', dashboard_path, class: 'btn btn-primary nu-primary'
 %br
 .alert.alert-success
-  %h4=@participant.name
+  %h4
+    = @participant.name
 .row-fluid
   .row-fluid
     .span6
@@ -11,27 +12,33 @@
         %tbody
           %tr
             %th.muted First Name:
-            %td= @participant.first_name
+            %td
+              = @participant.first_name
           %tr
             %th.muted Last Name:
-            %td= @participant.last_name
+            %td
+              = @participant.last_name
     .span6
       %h5 Participant Address
       %table.table
         %tbody
           %tr
             %th.muted Address
-            %td= @participant.address
+            %td
+              = @participant.address
           %tr
-            %th.muted  Primary Phone
-            %td=@participant.primary_phone
+            %th.muted Primary Phone
+            %td
+              = @participant.primary_phone
           %tr
-            %th.muted  Secondary Phone
-            %td=@participant.secondary_phone
+            %th.muted Secondary Phone
+            %td
+              = @participant.secondary_phone
           %tr
-            %th.muted  Email
-            %td=@participant.email
-  -if @participant.proxy?
+            %th.muted Email
+            %td
+              = @participant.email
+  - if @participant.proxy?
     .row-fluid
       .span6
         %h5 Primary Guardian
@@ -39,33 +46,41 @@
           %tbody
             %tr
               %th.muted First Name:
-              %td= @participant.primary_guardian_first_name
+              %td
+                = @participant.primary_guardian_first_name
             %tr
               %th.muted Last Name:
-              %td= @participant.primary_guardian_last_name
+              %td
+                = @participant.primary_guardian_last_name
             %tr
               %th.muted Email Address:
-              %td= @participant.primary_guardian_email
+              %td
+                = @participant.primary_guardian_email
             %tr
               %th.muted Phone Number:
-              %td= @participant.primary_guardian_phone
+              %td
+                = @participant.primary_guardian_phone
       .span6
         %h5 Secondary Guardian
         %table.table
           %tbody
             %tr
               %th.muted First Name:
-              %td= @participant.secondary_guardian_first_name
+              %td
+                = @participant.secondary_guardian_first_name
             %tr
               %th.muted Last Name:
-              %td= @participant.secondary_guardian_last_name
+              %td
+                = @participant.secondary_guardian_last_name
             %tr
               %th.muted Email Address:
-              %td= @participant.secondary_guardian_email
+              %td
+                = @participant.secondary_guardian_email
             %tr
               %th.muted Phone Number:
-              %td= @participant.secondary_guardian_phone
-  -if @participant.relationships.size > 0
+              %td
+                = @participant.secondary_guardian_phone
+  - if @participant.relationships.size > 0
     .row-fluid
       %h5 Realtionships
     %table.table.bordered
@@ -74,12 +89,13 @@
           %th Name
           %th Relationship
       %tbody
-        -@participant.relationships.each do |relationship|
+        - @participant.relationships.each do |relationship|
           %tr
             %td
-              -p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
+              - p = relationship.origin.eql?(@participant) ? relationship.destination : relationship.origin
               =link_to p.name, participant_path(p)
-            %td=relationship.origin.eql?(@participant) ? relationship.category : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category]
+            %td
+              = relationship.origin.eql?(@participant) ? relationship.category : Relationship::CATEGORIES_DESTINATION_TRANSLATION[relationship.category]
 .row-fluid
-  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+  = link_to 'Return', dashboard_path,class: 'btn btn-primary nu-primary'
 %br

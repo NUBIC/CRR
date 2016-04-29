@@ -6,7 +6,7 @@ class ResponseSet < ActiveRecord::Base
   belongs_to :survey
 
   # Validations
-  validates_presence_of :survey_id,:participant_id
+  validates_presence_of :survey_id, :participant_id
 
   # Hooks
   after_initialize :create_question_methods

@@ -3,7 +3,7 @@
   %b
     %span.participant_full_name
   %span is the
-  = f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}, { prompt: 'Select Relationship'}, :class => "required"
+  = f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}, { prompt: 'Select Relationship' }, class: 'required'
   %span of
   %b
-    = f.select :destination_id, current_user.other_participants(@participant).collect{|p| [p.name,p.id]}, { prompt: 'Select Person'}, :class => "required destination_relationship", :style=>"display:none;"
+    = f.select :destination_id, current_user.other_participants(@participant).collect{|p| [p.name,p.id]}, { prompt: 'Select Person'}, class: 'required destination_relationship', style: 'display:none;'

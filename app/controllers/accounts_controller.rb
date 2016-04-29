@@ -1,26 +1,12 @@
 class AccountsController < PublicController
   include EmailNotifications
 
-  before_filter :require_user, :only=>[:dashboard, :update, :edit]
-
-  def dashboard
-    @account = current_user
-    authorize! :dashboard, @account
-    @account.inactive_participants.each { |p| p.destroy }
-    @participant = Participant.find(params[:participant_id]) if params[:participant_id]
-    @active_participants = @account.active_participants
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def edit
-    @account = Account.find(params[:id])
-    authorize! :edit, @account
-  end
+  before_action :require_user, only: [:dashboard, :update, :edit]
+  before_action :set_account, only: [:edit, :update]
 
   def create
     @account = Account.new(account_params)
+    authorize @account
     respond_to do |format|
       if @account.save
         format.html { redirect_to dashboard_path }
@@ -38,9 +24,12 @@ class AccountsController < PublicController
     end
   end
 
+  def edit
+    authorize @account
+  end
+
   def update
-    @account = Account.find(params[:id])
-    authorize! :update, @account
+    authorize @account
     if @account.valid_password?(params[:account][:current_password])
       @account.update_attributes(account_params)
       respond_to do |format|
@@ -59,7 +48,19 @@ class AccountsController < PublicController
     end
   end
 
+  def dashboard
+    @account = current_user
+    authorize @account
+    @account.inactive_participants.each { |p| p.destroy }
+    @participant = Participant.find(params[:participant_id]) if params[:participant_id]
+    @active_participants = @account.active_participants
+    respond_to do |format|
+      format.html
+    end
+  end
+
   def express_sign_up
+    authorize Account
     errors = express_signup_validation_errors(params)
     respond_to do |format|
       if errors.empty?
@@ -90,26 +91,29 @@ class AccountsController < PublicController
   end
 
   private
+    def set_account
+      @account = Account.find(params[:id])
+    end
 
-  def account_params
-    params.require(:account).permit(:email, :password, :password_confirmation)
-  end
+    def account_params
+      params.require(:account).permit(:email, :password, :password_confirmation)
+    end
 
-  def express_signup_validation_errors(params)
-    errors = []
-    errors << 'Name can\'t be blank'              if params[:name].blank?
-    errors << 'Preferred contact can\'t be blank' if params[:contact].blank?
+    def express_signup_validation_errors(params)
+      errors = []
+      errors << 'Name can\'t be blank'              if params[:name].blank?
+      errors << 'Preferred contact can\'t be blank' if params[:contact].blank?
 
-    email_contact = params[:contact] == 'email'
-    phone_contact = params[:contact] == 'phone'
-    errors << 'Email can\'t be blank' if params[:email].blank? && email_contact
-    errors << 'Email is invalid'      if !params[:email].blank? && params[:email] !~ /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i
-    errors << 'Phone can\'t be blank' if params[:phone].blank? && phone_contact
-    errors
-  end
+      email_contact = params[:contact] == 'email'
+      phone_contact = params[:contact] == 'phone'
+      errors << 'Email can\'t be blank' if params[:email].blank? && email_contact
+      errors << 'Email is invalid'      if params[:email].present? && params[:email] !~ /\A[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+\z/i
+      errors << 'Phone can\'t be blank' if params[:phone].blank? && phone_contact
+      errors
+    end
 
-  def express_sign_up_email_contact_text(name, email)
-    <<-emailtext
+    def express_sign_up_email_contact_text(name, email)
+      <<-emailtext
 Dear User,
 
 The following user requested to be contacted by email via the express sign up.
@@ -118,7 +122,7 @@ The following user requested to be contacted by email via the express sign up.
     emailtext
   end
 
-  def express_sign_up_phone_contact_text(name, phone)
+    def express_sign_up_phone_contact_text(name, phone)
     <<-emailtext
 Dear User,
 
@@ -126,5 +130,5 @@ The following user requested to be contacted by phone via the express sign up.
 #{name}
 #{phone}
     emailtext
-  end
+    end
 end

@@ -1,27 +1,29 @@
 .well.nu-small.nu-well.text-center
-  .nu-header.text-center="Consent"
+  .nu-header.text-center
+    Consent
 .row-fluid
   #consent-content.consent-content
-    -@consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
-    !=@consent.content
+    - @consent = @participant.child? ? Consent.child_consent : Consent.adult_consent
+    != @consent.content
   .row-fluid
     %small
       %i
         Please scroll to the end of the consent form to continue.
   #consent-controls
-    = form_for @participant.consent_signatures.new(:consent=>@consent), :url=>consent_signature_participant_path(@participant), :html => {:id => 'new-consent-sign'} do |f|
-      = hidden_field_tag "consent_response"
-      =f.hidden_field :consent_id
+    = form_for @participant.consent_signatures.new(consent: @consent), url: consent_signature_participant_path(@participant), html: {id: 'new-consent-sign'} do |f|
+      = hidden_field_tag 'consent_response'
+      = f.hidden_field :consent_id
       .row-fluid
-        %label.radio.inline
-          = radio_button_tag 'consent', 'agree', false, class: "consent-agree"
-          .consent-agree-text
-            = @participant.proxy? ? @participant.child? ? "I accept on behalf of my child" : "I accept on behalf of participant" : "I accept"
-        %label.radio.inline
-          = radio_button_tag 'consent', 'disagree', false, class: "consent-disagree"
-          .text-error
-            = @participant.proxy? ? @participant.child? ? "I decline on behalf of my child" : "I decline on behalf of participant" : "I decline"
-      -if @participant.proxy?
+        .span12
+          %label.radio.inline
+            = radio_button_tag 'consent', 'agree', false, class: 'consent-agree'
+            .consent-agree-text
+              = @participant.proxy? ? @participant.child? ? 'I accept on behalf of my child' : 'I accept on behalf of participant' : 'I accept'
+          %label.radio.inline
+            = radio_button_tag 'consent', 'disagree', false, class: 'consent-disagree'
+            .text-error
+              = @participant.proxy? ? @participant.child? ? 'I decline on behalf of my child' : 'I decline on behalf of participant' : 'I decline'
+      - if @participant.proxy?
         .proxy-consent
           %br
           .row-fluid
@@ -32,23 +34,9 @@
                 %i Required field
             .span6.form-inline
               = f.label :proxy_relationship, @participant.child? ? 'Your relationship to child: ' : 'Your relationship to participant: '
-              = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, :class => "required"
+              = f.select :proxy_relationship, Consent::RELATIONSHIPS.collect{|rel| [rel.titleize, rel]}, { prompt: 'Select Relationship'}, class: 'required'
               %small.text-error
                 %i Required field
       %br
       .row-fluid
-        = f.button "Next", class: "btn btn-primary nu-primary", id: "consent-next", disable_with: "Please Wait"
-:javascript
-  function resizeConsent() {
-    var consent_content_height = $(window).height() - $('#consent-content').offset().top - $("#consent-controls").height()-1.5*$('.footer').height();
-    $('#consent-content').height(consent_content_height).css({
-        overflow: "auto",
-        border: "2px solid"
-    });
-  }
-  $(document).ready(function(){
-    resizeConsent();
-  });
-  $(window).resize(function() {
-    resizeConsent();
-  });
+        = f.button 'Next', class: 'btn btn-primary nu-primary', id: 'consent-next', disable_with: 'Please Wait'

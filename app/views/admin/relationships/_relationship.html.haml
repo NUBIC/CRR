@@ -1,0 +1,46 @@
+- form_url = @relationship.new_record? ? admin_relationships_path : admin_relationship_path(@relationship)
+
+= form_for @relationship, url: form_url, html: { class: 'form-horizontal' } do |f|
+  .modal-header.well.nu-well
+    .row-fluid
+      .span5
+        %h3
+          = @participant.name
+          = image_tag "child.png" if @participant.child
+          = image_tag 'siblings.png' if @participant.has_relationships?
+      .span5
+        %h5
+        = @relationship.new_record? ? 'Add Relationship' : 'Edit Relationship'
+      .pull-right
+        = button_tag 'x', data: { dismiss: 'modal'}, aria: { hidden: true }, class: 'close'
+  .modal-body
+    .row-fluid
+      = f.hidden_field :origin_id
+      .control-group
+        = f.label :category, 'Is', class: 'control-label'
+        .controls
+          = f.select :category, Relationship::CATEGORIES.collect{|rel| [rel, rel]}
+          %small.text-error
+            %i Required field
+    .row-fluid
+      .control-group
+        = f.label :destination_id, 'Of', class: 'control-label'
+        .controls.token
+          - if @relationship.new_record?
+            = f.text_field :destination_id, class: 'tokeninput', data: { url: search_admin_participants_path(format: :json), limit: 1, hint_text: 'Search participant name'}
+          - else
+            = text_field_tag('destination', @relationship.destination.name, readonly: true)
+
+    .row-fluid
+      .control-group
+        = f.label :notes, class: 'control-label'
+        .controls
+          = f.text_area :notes,class: 'input-block-level'
+    .row-fluid
+      .control-group
+        .controls
+          - button_label = @relationship.new_record? ? 'Create' : 'Update'
+          = f.button button_label, class: 'btn btn-primary nu-primary'
+          = link_to 'Cancel', admin_participant_path(@participant), class: 'btn btn-warning'
+          - unless @relationship.new_record?
+            = link_to 'Delete', admin_relationship_path(@relationship), method: :delete, class: 'btn btn-danger', data: { confirm: 'Are you sure you want to delete this relationship?' }

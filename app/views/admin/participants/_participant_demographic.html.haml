@@ -1,95 +1,99 @@
-=form_for @participant, :url=>admin_participant_path(@participant), :html => { :class => "form-horizontal participant_demographic"} do |f|
+= form_for @participant, url: admin_participant_path(@participant), html: { class: 'form-horizontal participant_demographic'} do |f|
   -if @participant.child?
-    = render :partial => 'participant_child_proxy', :locals => {:f => f}
+    = render partial: 'participant_child_proxy', locals: {f: f}
   -else
     .row-fluid
-      %h4="Participant Information"
+      %h4
+        Participant Information
       .control-group
-        =f.label :first_name, "Participant's First Name", :class => "control-label"
+        = f.label :first_name, 'Participant\'s First Name', class: 'control-label'
         .controls
-          =f.text_field  :first_name, :class => "required"
+          = f.text_field :first_name, class: 'required'
           %small.text-error
             %i Required field
       .control-group
-        =f.label :last_name, "Participant's Last Name", :class => "control-label"
+        = f.label :last_name, 'Participant\'s Last Name', class: 'control-label'
         .controls
-          =f.text_field  :last_name, :class => "required"
+          = f.text_field :last_name, class: 'required'
           %small.text-error
             %i Required field
     .row-fluid
-      %h4="Household Information"
+      %h4
+        Household Information
       .control-group
-        =f.label :address_line1, "Address", :class => "control-label"
+        = f.label :address_line1, 'Address', class: 'control-label'
         .controls
-          =f.text_field  :address_line1
+          = f.text_field :address_line1
       .control-group
-        =f.label :address_line2, "Address Line 2", :class => "control-label"
+        = f.label :address_line2, 'Address Line 2', class: 'control-label'
         .controls
-          =f.text_field  :address_line2
+          = f.text_field :address_line2
       .control-group
-        =f.label :city, :class => "control-label"
+        = f.label :city, class: 'control-label'
         .controls
-          =f.text_field  :city
+          = f.text_field :city
       .control-group
-        =f.label :state, :class => "control-label"
+        = f.label :state, class: 'control-label'
         .controls
-          =f.select :state, us_states, { prompt: 'Select State'}
+          = f.select :state, us_states, { prompt: 'Select State'}
       .control-group
-        =f.label :zip, :class => "control-label"
+        = f.label :zip, class: 'control-label'
         .controls
-          =f.text_field  :zip, class: "zipcode"
+          = f.text_field :zip, class: 'zipcode'
       .control-group
-        =f.label :email, "Email Address", :class => "control-label"
+        = f.label :email, 'Email Address', class: 'control-label'
         .controls
-          =f.text_field  :email, class: "email"
+          = f.text_field :email, class: 'email'
       .control-group
-        =f.label :primary_phone, "Primary Phone Number", :class => "control-label"
+        = f.label :primary_phone, 'Primary Phone Number', class: 'control-label'
         .controls
-          =f.text_field  :primary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :primary_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
       .control-group
-        =f.label :secondary_phone, "Secondary Phone Number", :class => "control-label"
+        = f.label :secondary_phone, 'Secondary Phone Number', class: 'control-label'
         .controls
-          =f.text_field  :secondary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :secondary_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
     .row-fluid
-      %h4="Primary Guardian"
+      %h4
+        Primary Guardian
       .control-group
-        =f.label :primary_guardian_first_name, "First Name", :class => "control-label"
+        = f.label :primary_guardian_first_name, 'First Name', class: 'control-label'
         .controls
-          =f.text_field :primary_guardian_first_name
+          = f.text_field :primary_guardian_first_name
       .control-group
-        =f.label :primary_guardian_last_name, "Last Name", :class => "control-label"
+        = f.label :primary_guardian_last_name, 'Last Name', class: 'control-label'
         .controls
-          =f.text_field :primary_guardian_last_name
+          = f.text_field :primary_guardian_last_name
       .control-group
-        =f.label :primary_guardian_email, "Email Address", :class => "control-label"
+        = f.label :primary_guardian_email, 'Email Address', class: 'control-label'
         .controls
-          =f.text_field :primary_guardian_email, class: "email"
+          = f.text_field :primary_guardian_email, class: 'email'
       .control-group
-        =f.label :primary_guardian_phone, "Phone Number", :class => "control-label"
+        = f.label :primary_guardian_phone, 'Phone Number', class: 'control-label'
         .controls
-          =f.text_field :primary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :primary_guardian_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
     .row-fluid
-      %h4="Secondary Guardian"
+      %h4
+        Secondary Guardian
       .control-group
-        =f.label :secondary_guardian_first_name, "First Name", :class => "control-label"
+        = f.label :secondary_guardian_first_name, 'First Name', class: 'control-label'
         .controls
-          =f.text_field :secondary_guardian_first_name
+          = f.text_field :secondary_guardian_first_name
       .control-group
-        =f.label :secondary_guardian_last_name, "Last Name", :class => "control-label"
+        = f.label :secondary_guardian_last_name, 'Last Name', class: 'control-label'
         .controls
-          =f.text_field :secondary_guardian_last_name
+          = f.text_field :secondary_guardian_last_name
       .control-group
-        =f.label :secondary_guardian_email, "Email Address", :class => "control-label"
+        = f.label :secondary_guardian_email, 'Email Address', class: 'control-label'
         .controls
-          =f.text_field :secondary_guardian_email, class: "email"
+          = f.text_field :secondary_guardian_email, class: 'email'
       .control-group
-        =f.label :secondary_guardian_phone, "Phone Number", :class => "control-label"
+        = f.label :secondary_guardian_phone, 'Phone Number', class: 'control-label'
         .controls
-          =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :secondary_guardian_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
   .row-fluid
     .form-inline
-      =f.label :hear_about_registry, "How did you hear about the Communication Research Registry?"
-      =f.text_field :hear_about_registry, :class => "input-xxlarge"
+      = f.label :hear_about_registry, 'How did you hear about the Communication Research Registry?'
+      = f.text_field :hear_about_registry, class: 'input-xxlarge'
   .row-fluid
     .btn-group
-      =f.button "Next",:class=>"btn btn-primary nu-primary"
+      = f.button 'Next',class: 'btn btn-primary nu-primary'

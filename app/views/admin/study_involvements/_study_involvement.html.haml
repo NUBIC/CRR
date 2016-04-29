@@ -1,0 +1,63 @@
+- form_url = @study_involvement.new_record? ? admin_study_involvements_path : admin_study_involvement_path(@study_involvement)
+
+= form_for @study_involvement, url: form_url, html: { class: 'form-horizontal validate-form'} do |f|
+  .modal-header.well.nu-well
+    .row-fluid
+      .span5
+        %h3
+          = @participant.name
+          = image_tag 'child.png' if @participant.child
+          = image_tag 'siblings.png' if @participant.has_relationships?
+      .span5
+        %h5
+          - if @study_involvement.new_record?
+            Add Study History
+          - else
+            Edit Study History
+      .pull-right
+        = button_tag 'x', data: { dismiss: 'modal'}, aria: { hidden: true }, class: 'close'
+  .modal-body
+    .row-fluid
+      .control-group
+        = f.hidden_field :participant_id
+        = f.label :study_id, 'Study', class: 'control-label'
+        .controls
+          = f.select :study_id, Study.all.collect{|s| ["#{s.display_name} - #{s.irb_number}", s.id]}
+          %small.text-error
+            %i Required field
+      .control-group
+        = f.label :state, 'Status', class: 'control-label'
+        .controls
+          = f.select :state, StudyInvolvement::VALID_STATES.collect{|k|[k.titleize, k]}
+      .control-group
+        = f.label :state_date, 'Status Date', class: 'control-label'
+        .controls
+          = f.text_field :state_date, value: @study_involvement.state_date, class: 'input-small date', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
+      .control-group
+        = f.label :start_date, class: 'control-label'
+        .controls
+          = f.text_field :start_date, value: @study_involvement.start_date, class: 'input-small date required', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
+          %small.text-error
+            %i Required field
+      .control-group
+        = f.label :warning_date, class: 'control-label'
+        .controls
+          = f.text_field :warning_date, value: @study_involvement.warning_date, class: 'input-small date', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
+      .control-group
+        = f.label :end_date, class: 'control-label'
+        .controls
+          = f.text_field :end_date, value: @study_involvement.end_date, class: 'input-small date required', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
+          %small.text-error
+            %i Required field
+      .control-group
+        = f.label :notes, class: 'control-label'
+        .controls
+          = f.text_area :notes, rows: 3, class: 'input-xxlarge'
+    .row-fluid
+      .control-group
+        .controls
+          - button_label = @study_involvement.new_record? ? 'Create' : 'Update'
+          = f.button button_label, class: 'btn btn-primary nu-primary'
+          = link_to 'Cancel', admin_participant_path(@participant), class: 'btn btn-warning'
+          - unless @study_involvement.new_record?
+            = link_to "Delete", admin_study_involvement_path(@study_involvement), method: :delete, class: 'btn btn-danger', data: { confirm: "Are you sure you want to delete this study history?" }

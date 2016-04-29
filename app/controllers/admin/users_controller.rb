@@ -1,19 +1,21 @@
 class Admin::UsersController < Admin::AdminController
   include EmailNotifications
 
+  before_action :set_user, only: [:edit, :update, :destroy]
+
   def index
+    authorize User
     @users = User.all
-    authorize! :index, User
   end
 
   def new
     @user = User.new
-    authorize! :new, @user
+    authorize @user
   end
 
   def create
     @user = User.new(user_params)
-    authorize! :create, @user
+    authorize @user
 
     if @user.save
       flash['notice'] = 'Created'
@@ -32,13 +34,11 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def edit
-    @user = User.find(params[:id])
-    authorize! :edit, @user
+    authorize @user
   end
 
   def update
-    @user = User.find(params[:id])
-    authorize! :update, @user
+    authorize @user
 
     @user.update_attributes(user_params)
     if @user.save
@@ -50,17 +50,21 @@ class Admin::UsersController < Admin::AdminController
   end
 
   def destroy
-    @user = User.find(params[:id])
-    authorize! :destroy, @user
+    authorize @user
     @user.destroy
     redirect_to admin_users_path
   end
 
   def dashboard
-    redirect_to admin_participants_path if can? :index, Participant
+    authorize User
+    redirect_to admin_participants_path if policy(Participant).index?
   end
 
   private
+    def set_user
+      @user = User.find(params[:id])
+    end
+
     def user_params
       params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
     end

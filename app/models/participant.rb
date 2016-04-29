@@ -28,7 +28,7 @@ class Participant < ActiveRecord::Base
     state :consent_denied, :demographics, :survey, :pending_approval, :approved, :withdrawn
 
     event :sign_consent do
-      transitions to: :demographics, from: :consent, after: :create_consent_signature
+      transitions to: :demographics, from: :consent
     end
 
     event :take_survey do
@@ -109,10 +109,6 @@ class Participant < ActiveRecord::Base
 
   def search_display
     [name, address, email, primary_phone].reject{|r| r.blank?}.join(' - ').strip
-  end
-
-  def create_consent_signature(params)
-    consent_signatures.create(params)
   end
 
   def create_response_set(survey)

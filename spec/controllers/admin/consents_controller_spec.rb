@@ -24,36 +24,36 @@ describe Admin::ConsentsController do
       it "should deny access to an attempt by a #{role} to create a consent" do
         post :create, { consent: { content: 'test'}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to edit a consent by a #{role}" do
         xhr :post, :edit, { id: @consent.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to update a consent by a #{role}" do
         xhr :post, :update, { id: @consent.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to delete a consent by a #{role}" do
         post :destroy, { id: @consent.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it "should deny access to an attempt to activate a consent by a #{role}" do
         xhr :put, :activate, { id: @consent.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
       it "should deny access to an attempt to deactivate a consent by a #{role}" do
         xhr :put, :deactivate, { id: @consent.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end
@@ -79,20 +79,20 @@ describe Admin::ConsentsController do
       it 'should deny access to edit  an active consent by an authorized user' do
         xhr :get, :edit, { id: @consent.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to update an inactive consent by an authorized user' do
         xhr :put, :update, { id: @consent.id, consent: { title: 'a second consent'}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to delete an inactive consent by an authorized user' do
         put :destroy, { id: @consent.id }
         expect(Consent.all.size).to eq 1
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
 
@@ -137,19 +137,19 @@ describe Admin::ConsentsController do
           put :destroy, { id: @consent.id }
           expect(Consent.all.size).to eq 1
           expect(response).to redirect_to(controller: :users, action: :dashboard)
-          expect(flash['notice']).to eq 'Access Denied'
+          expect(flash['error']).to eq 'Access Denied'
         end
 
         it 'should deny access to edit consent' do
           get :edit, { id: @consent.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
-          expect(flash['notice']).to eq 'Access Denied'
+          expect(flash['error']).to eq 'Access Denied'
         end
 
         it 'should deny access to update consent' do
           xhr :put, :update, { id: @consent.id, consent: { title: 'a second consent'}}
           expect(response).to redirect_to(controller: :users, action: :dashboard)
-          expect(flash['notice']).to eq 'Access Denied'
+          expect(flash['error']).to eq 'Access Denied'
         end
       end
     end

@@ -1,0 +1,40 @@
+- form_url    = @question.new_record? ? admin_questions_path : admin_question_path(@question)
+- form_target = @question.new_record? ? "#section_#{@question.section.id}" : "#q_#{@question.id}"
+- form_id     = @question.new_record? ? 'admin_new_question' : 'admin_edit_question'
+- cancel_link = @question.new_record? ? admin_section_path(@question.section) : admin_question_path(@question)
+
+= form_for @question, url: form_url, html: { class: 'form-horizontal validate-form ajax-form', data: { target: form_target }, id: form_id} do |f|
+  .row-fluid
+    - if @question.new_record?
+      = f.hidden_field :section_id
+    = f.text_area :text, rows: 1, class: 'input-xxlarge required'
+    %small.text-error
+      %i Required field
+    = f.text_field :help_text, placeholder: "Hint text..."
+  .row-fluid
+    %h6.muted Options
+  .row-fluid
+    .span3
+      = f.select :response_type, Question::VALID_RESPONSE_TYPES.collect{|k|[ Question::VIEW_RESPONSE_TYPE_TRANSLATION[k],k]}
+    .span3
+      .control-group
+        = f.label :code, class: 'control-label'
+        .controls
+          = f.text_field :code, class: 'input-small required'
+          %small.text-error
+            %i Required field
+    .span3
+      .control-group
+        = f.label :display_order,class: 'control-label'
+        .controls
+          = f.select :display_order, (1..@question.section.questions.size+1).collect{|display_order| [display_order,display_order]},{},class: 'input-mini'
+  .row-fluid
+    .span3
+      .control-group
+        = f.label :is_mandatory , 'Mandatory', class: 'control-label'
+        .controls
+          = f.check_box :is_mandatory
+  .row-fluid
+    .btn-group
+      = f.button 'Update',class: "btn btn-mini btn-success"
+      = link_to 'Cancel', cancel_link, data: { async: true, target: form_target}, class: 'btn btn-mini btn-warning'

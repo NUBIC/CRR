@@ -1,0 +1,32 @@
+%h5
+  = question.text.html_safe
+.row-fluid
+  %h6.muted
+    Options:
+  .row-fluid
+    .span3.offset1
+      = "Type: #{Question::VIEW_RESPONSE_TYPE_TRANSLATION[question.response_type]}"
+    .span3
+      = "Code: #{question.code}"
+    .span3
+      = "Mandatory: #{question.is_mandatory? ? 'Yes' : 'No'}"
+  - unless question.section.survey.active?
+    .row-fluid
+      = form_tag admin_question_path(question), method: 'delete', class: 'ajax-form', data: { target:  "#section_#{question.section.id}"} do
+        .btn-group
+          = link_to 'Edit' ,edit_admin_question_path(question),class: 'btn btn-mini btn-primary', data: { async: true, target: "#q_#{question.id}"}
+          = button_tag 'Delete', class: 'btn btn-mini btn-danger'
+-if question.multiple_choice?
+  %h6.muted
+    Answer choices:
+  .row-fluid
+    - question.answers.each do |a|
+      .row-fluid
+        .offset1{ id: "answer_#{a.id}" }
+          = render partial: 'admin/answers/answer_display', locals: { answer: a }
+  - unless question.section.survey.active?
+    .row-fluid
+      .offset1{id: "q_#{question.id}_new_answer"}
+        = link_to "Add Answer",new_admin_answer_path(question_id: question.id),class: 'btn btn-mini btn-primary', data: { async: true, target: "#q_#{question.id}_new_answer"}
+%hr
+

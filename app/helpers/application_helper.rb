@@ -121,4 +121,12 @@ module ApplicationHelper
   def search_condition_group_operator_class(search_condition_group)
     "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"
   end
+
+  def recruiting_adults?
+    Consent.adult_consent && Survey.adult_survey
+  end
+
+  def recruiting_children?
+    Consent.child_consent && Survey.child_survey
+  end
 end

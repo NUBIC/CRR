@@ -7,6 +7,7 @@ describe 'admin/surveys/show.html.haml' do
     @question = @section.questions.create(text: 'question 1', response_type: 'pick_one')
     @answer = @question.answers.create(text:'answer 1')
     @answer2 = @question.answers.create(text:'answer 2')
+    allow(view).to receive(:policy).and_return(double("some policy", destroy?: true))
     login_user
   end
 
@@ -34,7 +35,7 @@ describe 'admin/surveys/show.html.haml' do
 
   describe 'inactive survey' do
     it 'should show add section and edit buttons' do
-      assign(:survey,@survey)
+      assign(:survey, @survey)
       render
       expect(rendered).to  match /Edit/
       expect(rendered).to  match /Add Section/

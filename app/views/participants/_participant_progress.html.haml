@@ -1,18 +1,16 @@
--step_content = {:consent => "Consent",
-  :demographics =>  "Contact Information",
-  :survey => "Survey"}
+- step_content = { consent: 'Consent', demographics: 'Contact Information', survey: 'Survey'}
 .row-fluid
   .span2
-  -participant_steps.each_with_index do |s,i|
-    -sc = step_content[s]
-    -if s != participant_state.to_sym
+  - participant_steps.each_with_index do |s,i|
+    - sc = step_content[s]
+    - if s != participant_state.to_sym
       .span3.muted
         .progressbar-nonactive.input-append
-          =i+1
-        =sc
-    -else
+          = i+1
+        = sc
+    - else
       .span3
         .progressbar.input-append
-          =i+1
-        =sc
+          = i+1
+        = sc
 

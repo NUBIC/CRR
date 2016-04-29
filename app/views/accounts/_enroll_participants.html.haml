@@ -1,0 +1,20 @@
+- unless current_user.has_self_participant?
+  - if recruiting_adults?
+    = form_tag participants_path, method: :post do
+      = hidden_field_tag 'account_id', @account.id
+      = submit_tag 'Myself', class: 'btn btn-primary nu-primary'
+
+- if recruiting_children?
+  = form_tag participants_path, method: :post do
+    = hidden_field_tag 'account_id', @account.id
+    = hidden_field_tag 'proxy', true
+    = hidden_field_tag 'child', true
+    = submit_tag 'My Child', class: 'btn btn-primary nu-primary'
+
+- if recruiting_adults?
+  = form_tag participants_path, method: :post do
+    = hidden_field_tag 'account_id', @account.id
+    = hidden_field_tag 'proxy', true
+    = submit_tag 'An Adult', class: 'btn btn-primary nu-primary'
+    %em.muted
+      for whom you act as a legal guardian or authorized agent

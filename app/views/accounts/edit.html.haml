@@ -1,1 +1,19 @@
-= render :partial => 'account_update.html.haml'
+%h5 Update Password
+= form_tag account_path(@account), method: :put, html: { class: "form-horizontal" } do
+  = label_tag 'Enter your current and a new password.'
+  .row-fluid
+    .control-group
+      = label_tag 'Current Password'
+      .controls
+        = password_field_tag 'account[current_password]'
+    .control-group
+      = label_tag 'New Password'
+      .controls
+        = password_field_tag 'account[password]'
+    .control-group
+      = label_tag 'Confirm New Password'
+      .controls
+        = password_field_tag 'account[password_confirmation]'
+  .row-fluid
+    = submit_tag 'Update', class: 'btn btn-success'
+    = link_to 'Cancel', dashboard_path, class: 'btn btn-warning'

@@ -22,17 +22,16 @@
                       = response_set.display_text
                     - else
                       .nu-incomplete-link
-                        = link_to("Click here to finish #{response_set.display_text}", edit_response_set_path(response_set))
+                        = link_to "Click here to finish #{response_set.display_text}", edit_response_set_path(response_set)
             %td
               - if participant.consented?
                 %i.icon-folder-open
                 = link_to 'View Consent', consent_participant_path(participant)
 
   .row-fluid
-    - if ((Consent.child_consent or Consent.adult_consent) and (Survey.adult_survey or Survey.child_survey))
-      = button_tag 'add_participant', 'data-toggle'=>'modal', 'data-target'=>'#add_participant', class: 'btn btn-primary nu-primary' do
+    - if recruiting_adults? || recruiting_children?
+      = button_tag 'add_participant', data: { toggle: 'modal', target: '#add_participant' }, class: 'btn btn-primary nu-primary' do
         - @account.active_participants.size > 0 ? 'Add Another Participant' : 'Add Participant'
-
     .pull-right
       = link_to 'Take me back to the Communication Research Registry website.', :back_to_website
   %br
@@ -42,29 +41,10 @@
     %h5
       Who would you like to add to the Registry?
       - if @account.active_participants.size > 0
-        = button_tag 'x', 'data-dismiss'=>'modal', 'aria-hidden'=>'true', class: 'close'
+        = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
   .row-fluid
     .modal-body
-      - unless current_user.has_self_participant?
-        - if Consent.adult_consent and Survey.adult_survey
-          = form_tag participants_path, method: 'post' do
-            = hidden_field_tag 'account_id', @account.id
-            = submit_tag 'Myself', class: 'btn btn-primary nu-primary'
-
-      - if Consent.child_consent and Survey.child_survey
-        = form_tag participants_path, method: 'post' do
-          = hidden_field_tag 'account_id', @account.id
-          = hidden_field_tag 'proxy', true
-          = hidden_field_tag 'child', true
-          = submit_tag 'My Child', class: 'btn btn-primary nu-primary'
-
-      - if Consent.adult_consent and Survey.adult_survey
-        = form_tag participants_path, method: 'post' do
-          = hidden_field_tag 'account_id', @account.id
-          = hidden_field_tag 'proxy', true
-          = submit_tag 'An Adult', class: 'btn btn-primary nu-primary'
-          %em.muted
-            for whom you act as a legal guardian or authorized agent
+      = render partial: 'enroll_participants'
       = link_to 'Take me back to the Communication Research Registry website.', :back_to_website
 
 #add_another_participant.modal.hide
@@ -73,7 +53,7 @@
       .modal-body
         %h5
           = "Thank you for completing a follow-up survey on behalf of #{@participant.name}."
-          = button_tag 'x', 'data-dismiss'=>'modal', 'aria-hidden'=>'true', class: 'close'
+          = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
         %br
         .row-fluid
           = link_to 'OK', dashboard_path, class: "btn btn-primary nu-primary"
@@ -82,67 +62,14 @@
       %h5
         - if @participant
           = @participant.proxy? ? "Thank you for adding #{@participant.name} to the registry!" : 'Thank you for adding yourself to the registry!'
-          = button_tag 'x', 'data-dismiss'=>'modal', 'aria-hidden'=>'true', class: 'close'
-      %h5
-        = 'Would you like to add another participant?'
+          = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
+      %h5 Would you like to add another participant?
     .row-fluid
       .modal-body
-        - unless current_user.has_self_participant?
-          - if Consent.adult_consent and Survey.adult_survey
-            = form_tag participants_path, method: 'post' do
-              = hidden_field_tag 'account_id', @account.id
-              = submit_tag 'Myself', class: 'btn btn-primary nu-primary'
-        - if Consent.child_consent and Survey.child_survey
-          = form_tag participants_path, method: 'post'  do
-            = hidden_field_tag 'account_id', @account.id
-            = hidden_field_tag 'proxy', true
-            = hidden_field_tag 'child', true
-            = submit_tag 'My Child', class: 'btn btn-primary nu-primary'
-        - if Consent.adult_consent and Survey.adult_survey
-          = form_tag participants_path, method: 'post' do
-            = hidden_field_tag 'account_id', @account.id
-            = hidden_field_tag 'proxy', true
-            = submit_tag 'An Adult', class: 'btn btn-primary nu-primary'
-            %em.muted
-              for whom you act as a legal guardian or authorized agent
+        = render partial: 'enroll_participants'
         .row-fluid
           = link_to "No thanks, I'm done.", dashboard_path
         %br
         .row-fluid
           = link_to 'No thanks, take me back to the Communication Research Registry website.', :back_to_website
 
-:javascript
-  $(document).ready(function(){
-    var count = $('#additonal-data').data("count");
-    if (count == 0) {
-      $('#add_participant').modal({
-        'backdrop': 'static',
-        'keyboard': false,
-        'show': true
-        });
-    }
-
-    var participant = $('#additonal-data').data("participant");
-    if (participant) {
-      $('#add_another_participant').modal({
-        'show': true
-      });
-    }
-  });
-
-/ -if @account.all_participants.size == 0
-/   :javascript
-/     $(document).ready(function(){
-/       $('#add_participant').modal({
-/       'backdrop': 'static',
-/       'keyboard': false,
-/       'show': true
-/       });
-/     });
-/ -if @participant
-/   :javascript
-/     $(document).ready(function(){
-/       $('#add_another_participant').modal({
-/       'show': true
-/       });
-/     });

@@ -1,18 +1,1 @@
-=form_for @section ,:url=>admin_section_path(@section) ,:html=>{:class=>"ajax-form","data-target"=>"#section_#{@section.id}", :id=> "admin_edit_section"} do |f|
-  .row-fluid
-    =f.label :title
-    =f.text_field :title, :class => "required"
-    %small.text-error
-      %i Required field
-    =f.label :display_order
-    =f.select :display_order, (1..@section.survey.sections.size+1).collect{|display_order| [display_order,display_order]},{},:class=>"input-mini"
-  .row-fluid
-    .btn-group
-      =f.button "Update",:class=>"btn btn-mini btn-success"
-      =link_to 'Cancel',admin_survey_path(@section.survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-warning"
-:javascript
-  $(document).ready(function(){
-    $('#admin_edit_section').validate();
-  });
-
-
+= render @section

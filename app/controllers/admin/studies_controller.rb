@@ -1,24 +1,19 @@
 class Admin::StudiesController < Admin::AdminController
-  def index
-    @studies = Study.all.order(state: :asc)
-    authorize! :index, Study
-  end
+  before_action :set_study, only: [:show, :edit, :update, :destroy, :activate, :deactivate]
 
-  def search
-    @searchs = Study.search(params[:q])
-    respond_to do |format|
-      format.json {render :json => @searchs.to_json(:only=>[:id],:methods=>[:search_display])}
-    end
+  def index
+    authorize Study
+    @studies = Study.all.order(state: :asc)
   end
 
   def new
     @study = Study.new
-    authorize! :new, @study
+    authorize @study
   end
 
   def create
     @study = Study.new(study_params)
-    authorize! :create, @study
+    authorize @study
     if @study.save
       flash['notice'] = 'Created'
     else
@@ -27,19 +22,16 @@ class Admin::StudiesController < Admin::AdminController
     redirect_to admin_studies_path
   end
 
-  def edit
-    @study = Study.find(params[:id])
-    authorize! :edit, @study
+  def show
+    authorize @study
   end
 
-  def show
-    @study = Study.find(params[:id])
-    authorize! :show, @study
+  def edit
+    authorize @study
   end
 
   def update
-    @study = Study.find(params[:id])
-    authorize! :update, @study
+    authorize @study
 
     @study.update_attributes(study_params)
     if @study.save
@@ -50,10 +42,14 @@ class Admin::StudiesController < Admin::AdminController
     redirect_to admin_study_path(@study)
   end
 
-  def activate
-    @study = Study.find(params[:id])
-    authorize! :activate, @study
+  def destroy
+    authorize @study
+    @study.destroy
+    redirect_to admin_studies_path
+  end
 
+  def activate
+    authorize @study
     @study.activate
     if @study.save
       flash['notice'] = 'Successfully activated'
@@ -64,9 +60,7 @@ class Admin::StudiesController < Admin::AdminController
   end
 
   def deactivate
-    @study = Study.find(params[:id])
-    authorize! :deactivate, @study
-
+    authorize @study
     @study.deactivate
     if @study.save
       flash['notice'] = "Successfully activated"
@@ -76,16 +70,23 @@ class Admin::StudiesController < Admin::AdminController
     redirect_to admin_studies_path
   end
 
-  def destroy
-    @study = Study.find(params[:id])
-    authorize! :destroy, @study
-    @study.destroy
-    redirect_to admin_studies_path
+  def search
+    authorize Study
+    @search = Study.search(params[:q])
+    respond_to do |format|
+      format.json {render json: @search.to_json(only: [:id], methods: [:search_display])}
+    end
   end
 
   private
+    def set_study
+      @study = Study.find(params[:id])
+    end
+
     def study_params
-      params.require(:study).permit(:irb_number,:active_on,:inactive_on,:name,:short_title,:pi_name,:pi_email,:other_investigators,:contact_name,:contact_email,:short_title,:sites,:funding_source,:website,:start_date,:end_date,:min_age,:max_age,:accrual_goal,:number_of_visits,:protocol_goals,:inclusion_criteria,:exclusion_criteria)
+      params.require(:study).permit(:irb_number, :active_on, :inactive_on, :name, :short_title, :pi_name, :pi_email,
+        :other_investigators, :contact_name, :contact_email, :short_title, :sites, :funding_source, :website, :start_date,
+        :end_date, :min_age, :max_age, :accrual_goal, :number_of_visits, :protocol_goals, :inclusion_criteria, :exclusion_criteria)
     end
 end
 

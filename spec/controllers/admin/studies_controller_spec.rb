@@ -23,37 +23,37 @@ describe Admin::StudiesController do
       it 'should deny access to an attempt by a #{role} to create a study' do
         post :create, { study: { name: 'test'}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to edit a study by a #{role}' do
         post :edit, { id: @study.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to update a study by a #{role}' do
         post :update, { id: @study.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to delete a study by a #{role}' do
         post :destroy, { id: @study.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to activate a study by a #{role}' do
         put :activate, { id: @study.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to deactivate a study by a #{role}' do
         put :deactivate, { id: @study.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end

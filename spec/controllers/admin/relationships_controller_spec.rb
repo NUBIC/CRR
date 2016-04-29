@@ -27,25 +27,25 @@ describe Admin::RelationshipsController do
       it "should deny access to an attempt by a #{role} to create a relationship" do
         post :create, { relationship: { origin_id: @participant1.id, destination_id: @participant2.id, category: @category}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to edit a relationship by a #{role}' do
         post :edit, { id: @relationship.id, participant_id: @participant1.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to update a relationship by a #{role}' do
         post :update, { id: @relationship.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to delete a relationship by a #{role}' do
         post :destroy, { id: @relationship.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end

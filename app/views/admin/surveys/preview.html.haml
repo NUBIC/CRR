@@ -1,29 +1,31 @@
 .row-fluid
   .span12
-    %h4.text-center= @survey.title
+    %h4.text-center
+      = @survey.title
     %hr
 .row-fluid
   .span12
-    =simple_form_for @response_set  do |f|
+    = simple_form_for @response_set  do |f|
       .row-fluid
         .tabbable.tabs-left
-          %ul.nav.nav-tabs.span2{"data-spy"=>"affix","data-offset-top"=>"200"}
-            -if @survey.sections.size > 1
+          %ul.nav.nav-tabs.span2{ data: { spy: 'affix', offset_top: 200}}
+            - if @survey.sections.size > 1
               - @survey.sections.each_with_index do |s,si|
-                %li{:class=>"#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
-            =link_to "Back to #{@survey.title}",admin_survey_path(@survey),"data-async"=>true,"data-target"=>"#forms",:class=>"btn btn-mini btn-block btn-success"
+                %li{class: "#{'active' if si==0}"}
+                  = link_to s.title, "#section_#{s.id}", data: { toggle: 'tab' }
+            = link_to "Back to #{@survey.title}", admin_survey_path(@survey), data: { async: true, target: '#forms'}, class: 'btn btn-mini btn-block btn-success'
           .tab-content.offset2
             - @survey.sections.each_with_index do |s,si|
-              .tab-pane{:id=>"section_#{s.id}",:class=>"#{'active' if si==0}"}
-                -s.questions.each_with_index do |q,i|
+              .tab-pane{id: "section_#{s.id}", class: "#{'active' if si==0}"}
+                - s.questions.each_with_index do |q,i|
                   .row-fluid
                     .span12
-                      -if q.response_type.eql?("pick_one")
-                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=>:select,required: q.is_mandatory?,:hint=>q.help_text
-                      -elsif q.response_type.eql?("pick_many")
-                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, :as=> :check_boxes,required: q.is_mandatory?,:hint=>q.help_text
-                      -elsif q.response_type.eql?("none")
-                        =q.text.html_safe
-                      -else
-                        =f.input "q_#{q.id}".to_sym,:label=>q.text ,:as=>Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,:required=>q.is_mandatory?,hint: q.help_text,:input_html=>{:class=>"#{'input-medium' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small' if q.date?}","data-provide"=>"#{'datepicker' if q.date?}",:rows=>3 }, :placeholder => "#{'mm/dd/yyyy' if q.date?}"
+                      - if q.pick_one?
+                        = f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, as: :select,required: q.is_mandatory?, hint: q.help_text
+                      - elsif q.pick_many?
+                        = f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, as: :check_boxes, required: q.is_mandatory?, hint: q.help_text
+                      - elsif q.label?
+                        = q.text.html_safe
+                      - else
+                        = f.input "q_#{q.id}".to_sym, label: q.text, as: Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym, required: q.is_mandatory?, hint: q.help_text, input_html: { class: "#{'input-medium' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small' if q.date?}", data: { provider: "#{'datepicker' if q.date?}", rows: 3 }}, placeholder: "#{'mm/dd/yyyy' if q.date?}"
                       %hr

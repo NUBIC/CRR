@@ -1,23 +1,23 @@
 class Admin::EmailNotificationsController < Admin::AdminController
-  before_filter :set_email_notification, except: :index
+  before_action :set_email_notification, except: :index
 
   def index
-   @email_notifications = EmailNotification.order(:name).all
-   authorize! :index, EmailNotification
+    @email_notifications = EmailNotification.order(:name).all
+    authorize EmailNotification
   end
 
   def show
-    authorize! :show, @email_notification
+    authorize @email_notification
   end
 
   def edit
-    authorize! :edit, @email_notification
+    authorize @email_notification
     @email_notification.deactivate
     @email_notification.save
   end
 
   def update
-    authorize! :update, @email_notification
+    authorize @email_notification
     @email_notification.update_attributes(email_notification_params)
     if @email_notification.save
       flash['notice'] = 'Updated'
@@ -28,7 +28,7 @@ class Admin::EmailNotificationsController < Admin::AdminController
   end
 
   def deactivate
-    authorize! :deactivate, @email_notification
+    authorize @email_notification
     @email_notification.deactivate
     if @email_notification.save
       flash['notice'] = 'Deactivated'
@@ -39,7 +39,7 @@ class Admin::EmailNotificationsController < Admin::AdminController
   end
 
   def activate
-    authorize! :activate, @email_notification
+    authorize @email_notification
     @email_notification.activate
     if @email_notification.save
       flash['notice'] = 'Activated'

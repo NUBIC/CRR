@@ -1,22 +1,22 @@
 .row-fluid
-  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+  = link_to 'Return', dashboard_path, class: 'btn btn-primary nu-primary'
 %br
--unless @participant.consent_signatures.last.blank?
+- unless @participant.consent_signatures.last.blank?
   .row-fluid
-    !=@participant.consent_signatures.last.consent.content
+    != @participant.consent_signatures.last.consent.content
   .row-fluid
-    -unless @participant.consent_signatures.last.proxy_name.blank?
+    - unless @participant.consent_signatures.last.proxy_name.blank?
       .span4
         %b
-          ="Signed By: #{@participant.consent_signatures.last.proxy_name}"
-    -unless @participant.consent_signatures.last.proxy_relationship.blank?
+          = "Signed By: #{@participant.consent_signatures.last.proxy_name}"
+    - unless @participant.consent_signatures.last.proxy_relationship.blank?
       .span4
         %b
-          ="Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship.titleize}"
+          = "Relationship to participant: #{@participant.consent_signatures.last.proxy_relationship.titleize}"
     .span4
       %b
-        ="Signed On: #{@participant.consent_signatures.last.created_at.to_date}"
+        = "Signed On: #{@participant.consent_signatures.last.created_at.to_date}"
 .row-fluid
-  =link_to "Return", dashboard_path,:class=>"btn btn-primary nu-primary"
+  = link_to 'Return', dashboard_path, class: 'btn btn-primary nu-primary'
 %br
 

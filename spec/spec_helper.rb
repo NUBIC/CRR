@@ -1,8 +1,7 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'shoulda'
 require 'factory_girl'
 require 'authlogic/test_case'
@@ -16,7 +15,7 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
 module TestLogins
   def login_user
-    @request.env["devise.mapping"] = Devise.mappings[:user]
+    @request.env['devise.mapping'] = Devise.mappings[:user]
     user = User.find_by_netid('test_user')
     user ||= FactoryGirl.create(:user, netid: 'test_user')
     sign_in user
@@ -49,7 +48,6 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = "random"
-  config.treat_symbols_as_metadata_keys_with_true_values = true
 
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction

@@ -1,34 +1,30 @@
 class Admin::SearchesController < Admin::AdminController
   include EmailNotifications
 
-  before_filter :set_search, only: [:edit, :show, :update, :request_data, :release_data, :destroy]
-  before_filter :set_studies, only: [:new, :edit, :show]
+  before_action :set_search, only: [:edit, :show, :update, :request_data, :release_data, :destroy]
+  before_action :set_studies, only: [:new, :edit, :show]
 
   def index
+    authorize Search
     @searches = params[:state] == 'data_requested' ? Search.requested : params[:state] == 'data_released' ? Search.released : Search.all.default_ordering
   end
 
   def new
     @search = Search.new
-    authorize! :new, @search
-  end
-
-  def edit
-    authorize! :edit, @search
+    authorize @search
   end
 
   def create
     @search         = Search.new(search_params)
-    authorize! :create, @search
+    authorize @search
 
     @search.user_id = current_user.id
 
     if params[:source_search]
       @source_search = Search.find(params[:source_search])
-      authorize! :show, @source_search
+      authorize @source_search, :show?
 
       @search.copy(@source_search)
-      authorize! :update, @search
     end
 
     if @search.save
@@ -41,7 +37,7 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def show
-    authorize! :show, @search
+    authorize @search
     @data_requested         = @search.data_requested?
     @data_released          = @search.data_released?
     @new_search             = @search.new?
@@ -50,8 +46,12 @@ class Admin::SearchesController < Admin::AdminController
     @participants_released  = @search.released_participants if @search.data_released?
   end
 
+  def edit
+    authorize @search
+  end
+
   def update
-    authorize! :update, @search
+    authorize @search
     @search.update_attributes(search_params)
     if @search.save
       flash['notice'] = 'Updated'
@@ -61,8 +61,14 @@ class Admin::SearchesController < Admin::AdminController
     redirect_to admin_search_path(@search)
   end
 
+  def destroy
+    authorize @search
+    @search.destroy
+    redirect_to admin_searches_path
+  end
+
   def request_data
-    authorize! :request_data, @search
+    authorize @search
 
     @search.request_data(nil,params)
     if @search.save
@@ -74,7 +80,7 @@ class Admin::SearchesController < Admin::AdminController
   end
 
   def release_data
-    authorize! :release_data, @search
+    authorize @search
 
     @search.release_data(nil,params)
     if @search.save
@@ -94,12 +100,6 @@ class Admin::SearchesController < Admin::AdminController
       format.html { redirect_to admin_searches_path }
       format.js { render js: "window.location.href = '#{admin_search_path(@search)}'" }
     end
-  end
-
-  def destroy
-    authorize! :destroy, @search
-    @search.destroy
-    redirect_to admin_searches_path
   end
 
   private

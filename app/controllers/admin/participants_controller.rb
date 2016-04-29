@@ -1,66 +1,41 @@
 class Admin::ParticipantsController < Admin::AdminController
+  before_action :set_participant, only: [:show, :edit, :update, :enroll, :consent, :consent_signature, :withdraw, :verify]
 
   def index
     @participants = params[:state].blank? ? Participant.all_participants.eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study) : Participant.send(params[:state]).eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study)
-    authorize! :index, Participant
-  end
-
-
-  def global
-    @participants = Participant.all.reject{|par| par.inactive?}
-  end
-
-  def enroll
-    @participant = Participant.find(params[:id])
-    authorize! :enroll, @participant
-    if @participant.survey?
-      create_and_redirect_response_set(@participant) unless @participant.recent_response_set
-      redirect_to(edit_response_set_path(@participant.recent_response_set))
-    end
+    authorize Participant
   end
 
   def new
     @participant = Participant.new
-    authorize! :new, @participant
-  end
-
-  def consent
-    @participant = Participant.find(params[:id])
-    authorize! :consent, @participant
-  end
-
-  def search
-    @participants = Participant.search(params[:q])
-    authorize! :search, Participant
-    respond_to do |format|
-      format.json {render :json => @participants.to_json(:only=>[:id],:methods=>[:search_display])}
-    end
+    authorize @participant
   end
 
   def create
     @participant = Participant.new(participant_params)
-    authorize! :create, @participant
-    @participant.save
-    redirect_to enroll_admin_participant_path(@participant)
+    authorize @participant
+    if @participant.save
+      redirect_to enroll_admin_participant_path(@participant)
+    else
+      flash['error'] = @participant.errors.full_messages.to_sentence
+      render :new
+    end
   end
 
   def show
-    @participant = Participant.find(params[:id])
-    authorize! :show, @participant
+    authorize @participant
   end
 
   def edit
-    @participant = Participant.find(params[:id])
-    authorize! :edit, @participant
+    authorize @participant
     respond_to do |format|
       format.html
-      format.js {render :layout=>false}
+      format.js {render layout: false}
     end
   end
 
   def update
-    @participant =  Participant.find(params[:id])
-    authorize! :update, @participant
+    authorize @participant
     @participant.update_attributes(participant_params)
     if @participant.save
       @participant.take_survey! if @participant.demographics?
@@ -71,13 +46,28 @@ class Admin::ParticipantsController < Admin::AdminController
       end
     else
       flash['error'] = @participant.errors.full_messages.to_sentence
-      redirect_to admin_participant_path(@participant)
+      render :edit
+    end
+  end
+
+  def global
+    authorize Participant
+    @participants = Participant.all.reject{|par| par.inactive?}
+  end
+
+  def enroll
+    authorize @participant
+    if @participant.survey?
+      if @participant.recent_response_set
+        redirect_to(edit_response_set_path(@participant.recent_response_set))
+      else
+        create_and_redirect_response_set(@participant)
+      end
     end
   end
 
   def consent_signature
-    @participant = Participant.find(params[:id])
-    authorize! :consent_signature, @participant
+    authorize @participant
     @participant.sign_consent!(nil, consent_signature_params)
     respond_to do |format|
       format.html { redirect_to enroll_admin_participant_path(@participant) }
@@ -85,37 +75,47 @@ class Admin::ParticipantsController < Admin::AdminController
   end
 
   def withdraw
-    @participant = Participant.find(params[:id])
-    authorize! :withdraw, @participant
+    authorize @participant
     @participant.withdraw!
     redirect_to admin_participants_path
   end
 
   def verify
-    @participant = Participant.find(params[:id])
-    authorize! :verify, @participant
+    authorize @participant
     @participant.verify!
     redirect_to admin_participant_path(@participant)
   end
 
-  def participant_params
-    params.require(:participant).permit(:child,:first_name, :last_name, :address_line1, :address_line2, :city, :state,
-      :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
-      :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
-      :secondary_guardian_email, :secondary_guardian_phone, :notes, :do_not_contact, :hear_about_registry)
-  end
-
-  def participant_relationship_params
-    params.require(:participant).permit(relationships: [ :category, :destination_id ])
-  end
-
-  def consent_signature_params
-    params.require(:consent_signature).permit(:date, :consent_id, :proxy_name, :proxy_relationship)
+  def search
+    authorize Participant
+    @participants = Participant.search(params[:q])
+    respond_to do |format|
+      format.json {render json: @participants.to_json(only: [:id],methods: [:search_display])}
+    end
   end
 
   private
-  def create_and_redirect_response_set(participant)
-    response_set = participant.create_response_set(participant.child? ? Survey.child_survey : Survey.adult_survey)
-    redirect_to(edit_admin_response_set_path(response_set))
-  end
+    def set_participant
+      @participant = Participant.find(params[:id])
+    end
+
+    def participant_params
+      params.require(:participant).permit(:child,:first_name, :last_name, :address_line1, :address_line2, :city, :state,
+        :zip, :primary_phone, :secondary_phone, :email, :primary_guardian_first_name, :primary_guardian_last_name,
+        :primary_guardian_email, :primary_guardian_phone, :secondary_guardian_first_name, :secondary_guardian_last_name,
+        :secondary_guardian_email, :secondary_guardian_phone, :notes, :do_not_contact, :hear_about_registry)
+    end
+
+    def participant_relationship_params
+      params.require(:participant).permit(relationships: [ :category, :destination_id ])
+    end
+
+    def consent_signature_params
+      params.require(:consent_signature).permit(:date, :consent_id, :proxy_name, :proxy_relationship)
+    end
+
+    def create_and_redirect_response_set(participant)
+      response_set = participant.create_response_set(participant.child? ? Survey.child_survey : Survey.adult_survey)
+      redirect_to(edit_admin_response_set_path(response_set))
+    end
 end

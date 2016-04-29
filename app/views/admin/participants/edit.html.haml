@@ -1,134 +1,139 @@
-=form_for @participant, :url=>admin_participant_path(@participant),:html => {:class => "form-horizontal validate-form"} do |f|
+= form_for @participant, url: admin_participant_path(@participant),html: {class: 'form-horizontal validate-form'} do |f|
   .modal-header.well.nu-well
     .row-fluid
       %h3
-        ="#{@participant.name}"
-        =image_tag "child.png" if @participant.child
-        =image_tag 'siblings.png' if @participant.has_relationships?
-        =button_tag 'x', "data-dismiss"=>"modal", "aria-hidden"=>"true", :class=>"close"
+        = @participant.name
+        = image_tag 'child.png' if @participant.child
+        = image_tag 'siblings.png' if @participant.has_relationships?
+        = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: true }, class: 'close'
   .modal-body
     .row-fluid
-      %h4="Participant Information:"
+      %h4
+        Participant Information:
     .row-fluid
       .control-group
-        =f.label :first_name, "First Name", :class => "control-label"
+        = f.label :first_name, 'First Name', class: 'control-label'
         .controls
-          =f.text_field  :first_name, :class => "required"
+          = f.text_field :first_name, class: 'required'
           %small.text-error
             %i Required field
       .control-group
-        =f.label :last_name, "Last Name", :class => "control-label"
+        = f.label :last_name, 'Last Name', class: 'control-label'
         .controls
-          =f.text_field  :last_name, :class => "required"
+          = f.text_field :last_name, class: 'required'
           %small.text-error
             %i Required field
     .row-fluid
       -if @participant.child
-        %h4="Household Information:"
+        %h4
+          Household Information:
       -else
-        %h4="Contact Information:"
+        %h4
+          Contact Information:
     .row-fluid
       .control-group
-        =f.label :address_line1, "Address Line1", :class => "control-label"
+        = f.label :address_line1, 'Address Line1', class: 'control-label'
         .controls
-          =f.text_field  :address_line1
+          = f.text_field :address_line1
       .control-group
-        =f.label :address_line2, "Address Line2", :class => "control-label"
+        = f.label :address_line2, 'Address Line2', class: 'control-label'
         .controls
-          =f.text_field  :address_line2
+          = f.text_field :address_line2
     .row-fluid
       .control-group
-        =f.label :city, :class => "control-label"
+        = f.label :city, class: 'control-label'
         .controls
-          =f.text_field  :city
+          = f.text_field :city
       .control-group
-        =f.label :state, :class => "control-label"
+        = f.label :state, class: 'control-label'
         .controls
           = f.select :state, us_states, { prompt: 'Select State'}
       .control-group
-        =f.label :zip, :class => "control-label"
+        = f.label :zip, class: 'control-label'
         .controls
-          =f.text_field  :zip, class: "zipcode"
+          = f.text_field :zip, class: 'zipcode'
     .row-fluid
-      -unless @participant.child
+      - unless @participant.child
         .control-group
-          =f.label :email, "Email Address", :class => "control-label"
+          = f.label :email, 'Email Address', class: 'control-label'
           .controls
-            =f.text_field :email, class: "email"
+            = f.text_field :email, class: 'email'
       .control-group
-        =f.label :primary_phone, "Primary Phone Number", :class => "control-label"
+        = f.label :primary_phone, 'Primary Phone Number', class: 'control-label'
         .controls
-          =f.text_field :primary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :primary_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
       .control-group
-        =f.label :secondary_phone, "Secondary Phone Number", :class => "control-label"
+        = f.label :secondary_phone, 'Secondary Phone Number', class: 'control-label'
         .controls
-          =f.text_field :secondary_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :secondary_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
     .row-fluid
-      %h4="Primary Guardian:"
+      %h4
+        Primary Guardian:
     .row-fluid
       .control-group
-        =f.label :primary_guardian_first_name, "First Name", :class => "control-label"
+        = f.label :primary_guardian_first_name, 'First Name', class: 'control-label'
         .controls
-          -if @participant.child
-            =f.text_field :primary_guardian_first_name, :class => "required"
+          - if @participant.child
+            = f.text_field :primary_guardian_first_name, class: 'required'
             %small.text-error
               %i Required field
-          -else
-            =f.text_field :primary_guardian_first_name
+          - else
+            = f.text_field :primary_guardian_first_name
       .control-group
-        =f.label :primary_guardian_last_name, "Last Name", :class => "control-label"
+        = f.label :primary_guardian_last_name, 'Last Name', class: 'control-label'
         .controls
-          -if @participant.child
-            =f.text_field :primary_guardian_last_name, :class => "required"
+          - if @participant.child
+            = f.text_field :primary_guardian_last_name, class: 'required'
             %small.text-error
               %i Required field
-          -else
+          - else
             =f.text_field :primary_guardian_last_name
       .control-group
-        =f.label :primary_guardian_email, "Email Address", :class => "control-label"
+        = f.label :primary_guardian_email, 'Email Address', class: 'control-label'
         .controls
-          =f.text_field :primary_guardian_email, class: "email"
+          = f.text_field :primary_guardian_email, class: 'email'
       .control-group
-        =f.label :primary_guardian_phone, "Phone Number", :class => "control-label"
+        = f.label :primary_guardian_phone, 'Phone Number', class: 'control-label'
         .controls
-          =f.text_field :primary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+          = f.text_field :primary_guardian_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
     .row-fluid
-      %h4="Secondary Guardian:"
-    .row-fluid
-      .control-group
-        =f.label :secondary_guardian_first_name, "First Name", :class => "control-label"
-        .controls
-          =f.text_field :secondary_guardian_first_name
-      .control-group
-        =f.label :secondary_guardian_last_name, "Last Name", :class => "control-label"
-        .controls
-          =f.text_field :secondary_guardian_last_name
-      .control-group
-        =f.label :secondary_guardian_email, "Email Address", :class => "control-label"
-        .controls
-          =f.text_field :secondary_guardian_email, class: "email"
-      .control-group
-        =f.label :secondary_guardian_phone, "Phone Number", :class => "control-label"
-        .controls
-          =f.text_field :secondary_guardian_phone, class: "phone", placeholder: "xxx-xxx-xxxx"
+      %h4
+        Secondary Guardian:
     .row-fluid
       .control-group
-        =f.label :do_not_contact,'Do not contact',:class=>"control-label"
+        = f.label :secondary_guardian_first_name, 'First Name', class: 'control-label'
         .controls
-          =f.check_box :do_not_contact
+          = f.text_field :secondary_guardian_first_name
+      .control-group
+        = f.label :secondary_guardian_last_name, 'Last Name', class: 'control-label'
+        .controls
+          = f.text_field :secondary_guardian_last_name
+      .control-group
+        = f.label :secondary_guardian_email, 'Email Address', class: 'control-label'
+        .controls
+          = f.text_field :secondary_guardian_email, class: 'email'
+      .control-group
+        = f.label :secondary_guardian_phone, 'Phone Number', class: 'control-label'
+        .controls
+          = f.text_field :secondary_guardian_phone, class: 'phone', placeholder: 'xxx-xxx-xxxx'
+    .row-fluid
+      .control-group
+        = f.label :do_not_contact,'Do not contact',class: 'control-label'
+        .controls
+          = f.check_box :do_not_contact
           %small
             (Please check if you want to mark participant as do not contact)
       .control-group
-        =f.label :notes, :class=>"control-label"
+        = f.label :notes, class: 'control-label'
         .controls
-          =f.text_area :notes, :rows=>3, :class=>"input-block-level"
+          = f.text_area :notes, rows: 3, class: 'input-block-level'
     .row-fluid
       .form-inline
-        =f.label :hear_about_registry, "How did you hear about the Communication Research Registry?"
-        =f.text_field :hear_about_registry, :class => "input-xxlarge"
+        = f.label :hear_about_registry, 'How did you hear about the Communication Research Registry?'
+        = f.text_field :hear_about_registry, class: 'input-xxlarge'
 
     .row-fluid
       .control-group
         .controls
-          =f.button "Update",:class=>"btn btn-success"
-          =link_to "Cancel", admin_participant_path(@participant), :class=>"btn btn-warning"
+          = f.button 'Update',class: 'btn btn-success'
+          = link_to 'Cancel', admin_participant_path(@participant), class: 'btn btn-warning'

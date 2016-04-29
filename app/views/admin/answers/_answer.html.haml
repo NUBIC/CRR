@@ -1,0 +1,21 @@
+- form_url    = @answer.new_record? ? admin_answers_path :  admin_answer_path(@answer)
+- form_target = @answer.new_record? ? "#q_#{@question.id}" : "#answer_#{@answer.id}"
+- form_id     = @answer.new_record? ? 'admin_new_answer' : 'admin_edit_answer'
+- cancel_url  = @answer.new_record? ? admin_question_path(@question) : admin_answer_path(@answer)
+
+= form_for @answer, url: form_url, html: { class: 'form-horizontal validate-form ajax-form', data: { target: form_target }, id: form_id } do |f|
+  .row-fluid
+    - if @answer.new_record?
+      = f.hidden_field :question_id
+    .span3
+      = f.text_field :text,class: 'input-large required', placeholder: 'answer text'
+      %small.text-error
+        %i Required field
+    .span2
+      = f.text_field :code,class: 'input-mini required', placeholder: 'code'
+      %small.text-error
+        %i Required field
+    .span2
+      .btn-group
+        = f.button 'Update',class: 'btn btn-mini btn-success'
+        = link_to 'Cancel', cancel_url, data: { async: true, target: form_target }, class: 'btn btn-mini btn-warning'

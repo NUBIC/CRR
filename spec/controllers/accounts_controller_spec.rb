@@ -13,7 +13,16 @@ describe AccountsController do
         }.to change(Account, :count).by(1)
       end
 
-      it 'sends welcome email' do
+      it 'sends welcome email if available' do
+        expect {
+          post :create, {account: valid_attributes}
+        }.to change(ActionMailer::Base.deliveries,:size).by(1)
+      end
+
+      it 'sends admin notification email if welcome email is not available' do
+        email_notification = EmailNotification.active.welcome_participant
+        email_notification.deactivate
+        email_notification.save
         expect {
           post :create, {account: valid_attributes}
         }.to change(ActionMailer::Base.deliveries,:size).by(1)
@@ -44,11 +53,31 @@ describe AccountsController do
     end
   end
 
+  describe 'GET edit' do
+    let(:account) { FactoryGirl.create(:account) }
+
+    describe 'unauthorized access' do
+      let(:other_account) { FactoryGirl.create(:account, email: 'test1@test.com') }
+      it 'redirects to dashboard page if user is logged in and tried to edit other user\'s account' do
+        AccountSession.create(other_account)
+        get :edit, {id: account.id}
+        expect(response).to redirect_to(controller: :accounts, action: :dashboard)
+      end
+    end
+
+    describe 'authorized access' do
+      it 'renders edit page' do
+        get :edit, {id: account.id}
+        expect(response).to render_template('edit')
+      end
+    end
+  end
+
   describe 'PUT update' do
     let(:account) { FactoryGirl.create(:account) }
     describe 'with valid params' do
       it 'updates the requested account' do
-        put :update, {id: account.id, account: valid_attributes}
+        put :update, { id: account.id, account: valid_attributes }
       end
 
       it 'assigns the requested account as @account' do
@@ -100,38 +129,16 @@ describe AccountsController do
     let(:account) { FactoryGirl.create(:account) }
 
     it 'deletes inactive participants' do
-      # controller.stub(:current_user).and_return(account)
-
-      # Participant.aasm.states.map(&:name).each do |state|
-      #   account.participants << FactoryGirl.create(:participant, state: state)
-      # end
-
-      # expect(account.participants.length).to eq Participant.aasm.states.length
-      # get :dashboard
-      # expect(response).to render_template('dashboard')
-      # expect(account.participants.reload.length).to be < Participant.aasm.states.length
-      # [:new, :consent, :demographics, :consent_denied].each do |state|
-      #   expect(account.participants.where(state: state.to_s)).to be_empty
-      # end
-    end
-  end
-
-  describe 'GET edit' do
-    let(:account) { FactoryGirl.create(:account) }
-
-    describe 'unauthorized access' do
-      let(:other_account) { FactoryGirl.create(:account, email: 'test1@test.com') }
-      it 'redirects to dashboard page if user is logged in and tried to edit other user\'s account' do
-        AccountSession.create(other_account)
-        get :edit, {id: account.id}
-        expect(response).to redirect_to(controller: :accounts, action: :dashboard)
+      Participant.aasm.states.map(&:name).each do |state|
+        account.participants << FactoryGirl.create(:participant, state: state)
       end
-    end
 
-    describe 'authorized access' do
-      it 'renders edit page' do
-        get :edit, {id: account.id}
-        expect(response).to render_template('edit')
+      expect(account.participants.length).to eq Participant.aasm.states.length
+      get :dashboard
+      expect(response).to render_template('dashboard')
+      expect(account.participants.reload.length).to be < Participant.aasm.states.length
+      [:new, :consent, :demographics, :consent_denied].each do |state|
+        expect(account.participants.where(state: state.to_s)).to be_empty
       end
     end
   end

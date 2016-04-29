@@ -22,6 +22,23 @@ $(document).ready(function() {
         }
       }
     })
-  })
+  });
+
+  function resizeSurvey() {
+    if ($('#survey-tab-content').length){
+      var tab_content_height = $(window).height() - $('#survey-tab-content').offset().top - 1.25 * $('.footer').height();
+      $('#survey-tab-content').height(tab_content_height).css({ overflow: "auto"});
+      $('#survey-tabs li, .previous-section, .next-section, .finish-section').click( function(){
+        $('#survey-tab-content').height(tab_content_height).css({ overflow: "auto" });
+        $('#survey-tab-content').scrollTop(0);
+      });
+    }
+  }
+
+  resizeSurvey();
+
+  $(window).resize(function() {
+    resizeSurvey();
+  });
 });
 

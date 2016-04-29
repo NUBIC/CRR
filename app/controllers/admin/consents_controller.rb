@@ -1,17 +1,19 @@
 class Admin::ConsentsController < Admin::AdminController
+  before_action :set_consent, only: [:show, :edit, :update, :destroy, :activate, :deactivate]
+
   def index
     @consents = Consent.all
-    authorize! :index, Consent
+    authorize Consent
   end
 
   def new
     @consent = Consent.new
-    authorize! :new, @consent
+    authorize @consent
   end
 
   def create
     @consent = Consent.new(consent_params)
-    authorize! :create, @consent
+    authorize @consent
     if @consent.save
       flash['notice'] = 'Created'
     else
@@ -21,18 +23,15 @@ class Admin::ConsentsController < Admin::AdminController
   end
 
   def show
-    @consent = Consent.find(params[:id])
-    authorize! :show, @consent
+    authorize @consent
   end
 
   def edit
-    @consent = Consent.find(params[:id])
-    authorize! :edit, @consent
+    authorize @consent
   end
 
   def update
-    @consent = Consent.find(params[:id])
-    authorize! :update, @consent
+    authorize @consent
     @consent.update_attributes(consent_params)
     if @consent.save
       flash['notice'] = 'Updated'
@@ -42,10 +41,14 @@ class Admin::ConsentsController < Admin::AdminController
     redirect_to admin_consents_path
   end
 
-  def deactivate
-    @consent = Consent.find(params[:id])
-    authorize! :deactivate, @consent
+  def destroy
+    authorize @consent
+    @consent.destroy
+    redirect_to admin_consents_path
+  end
 
+  def deactivate
+    authorize @consent
     @consent.deactivate
     if @consent.save
       flash['notice'] = 'Deactivated'
@@ -54,10 +57,9 @@ class Admin::ConsentsController < Admin::AdminController
     end
     redirect_to admin_consents_path
   end
-  def activate
-    @consent = Consent.find(params[:id])
-    authorize! :activate, @consent
 
+  def activate
+    authorize @consent
     @consent.activate
     if @consent.save
       flash['notice'] = 'Activated'
@@ -67,14 +69,12 @@ class Admin::ConsentsController < Admin::AdminController
     redirect_to admin_consents_path
   end
 
-  def destroy
-    @consent = Consent.find(params[:id])
-    authorize! :destroy, @consent
-    @consent.destroy
-    redirect_to admin_consents_path
-  end
+  private
+    def set_consent
+      @consent = Consent.find(params[:id])
+    end
 
-  def consent_params
-    params.require(:consent).permit(:content, :state,:accept_text, :decline_text, :consent_type, :comment)
-  end
+    def consent_params
+      params.require(:consent).permit(:content, :state,:accept_text, :decline_text, :consent_type, :comment)
+    end
 end

@@ -1,5 +1,5 @@
 .row-fluid
-  =link_to "Return", dashboard_path,:class=>"btn btn-primary"
+  = link_to 'Return', dashboard_path, class: 'btn btn-primary'
 .row-fluid
   .span12
     %h4.text-center
@@ -8,25 +8,29 @@
 .row-fluid
   .span12
     - @response_set.survey.sections.each do |section|
-      -if @response_set.survey.sections.size> 1
-        %h4=section.title
-      -section.questions.each do |question|
+      - if @response_set.survey.sections.size > 1
+        %h4
+          = section.title
+      - section.questions.each do |question|
         .row-fluid
           .span12
-          %h5=question.text.html_safe
-        -unless question.response_type.eql?("none")
+          %h5
+            = question.text.html_safe
+        - unless question.label?
           .row-fluid
             .offset1
-              %h6.muted Responses:
+              %h6.muted
+                Responses:
             .offset2
-              -answers = @response_set.responses.select{|r| r.question.eql?(question)}
-              -if answers.empty?
-                ="No Response"
-              -else
+              - answers = @response_set.responses.select{|r| r.question.eql?(question)}
+              - if answers.empty?
+                No Response
+              - else
                 %ul
-                  -answers.each do |answer|
-                    %li=answer.to_s
+                  - answers.each do |answer|
+                    %li
+                      = answer.to_s
 .row-fluid
-  =link_to "Return", dashboard_path,:class=>"btn btn-primary"
+  = link_to 'Return', dashboard_path, class: 'btn btn-primary'
 %br
 

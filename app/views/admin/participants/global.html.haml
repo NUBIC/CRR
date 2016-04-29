@@ -11,7 +11,7 @@
         %th Account Email
     %tbody
       - @participants.each do |p|
-        %tr.display{:class=>"#{'nu' if p.pending_approval?}"}
+        %tr.display{class: "#{'nu' if p.pending_approval?}"}
           %td
             = link_to p.id, admin_participant_path(p)
           %td

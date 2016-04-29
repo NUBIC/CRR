@@ -1,4 +1,5 @@
-%h5="#{@study.display_name} participants: "
+%h5
+  = "#{@study.display_name} participants: "
 %table.table.table-bordered.table-condensed
   %thead
     %tr
@@ -8,10 +9,13 @@
       %th State
       %th State Date
   %tbody
-    -@study_involvements.each do |si|
+    - @study_involvements.each do |si|
       %tr
-        %td=si.participant.name
-        %td=si.start_date
-        %td=si.end_date
-        %td="" #si.state
-        %td="" #si.state_date
+        %td
+          = si.participant.name
+        %td
+          = si.start_date
+        %td
+          = si.end_date
+        %td
+        %td

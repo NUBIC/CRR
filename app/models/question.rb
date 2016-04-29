@@ -47,7 +47,7 @@ class Question < ActiveRecord::Base
   end
 
   def soft_errors
-    if ['pick_one', 'pick_many'].include?(response_type)
+    if multiple_choice?
       return 'multiple choice questions must have at least 2 answers' if answers.size < 2
     end
   end

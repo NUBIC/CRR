@@ -26,54 +26,54 @@ describe Admin::QuestionsController do
       it 'should deny access to an attempt to create a question by an unauthorized user' do
         post :create, { question: { section_id: @section.id}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to a billing users  attempt to create a question by an unauthorized user' do
         allow(controller.current_user).to receive(:billing?).and_return(true)
         post :create, { question: { section_id: @section.id}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to edit a question by an unauthorized user' do
         post :edit, { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an billing users  attempt to edit a question by an unauthorized user' do
         allow(controller.current_user).to receive(:billing?).and_return(true)
         post :edit, { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
 
       it 'should deny access to an attempt to update a question by an unauthorized user' do
         post :update, { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an billing users attempt to update a question by an unauthorized user' do
         allow(controller.current_user).to receive(:billing?).and_return(true)
         post :update, { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to delete a question by an unauthorized user' do
         post :destroy, { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an billing users attempt to delete a question by an unauthorized user' do
         allow(controller.current_user).to receive(:billing?).and_return(true)
         post :destroy, { id: @question.id}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end
@@ -94,26 +94,26 @@ describe Admin::QuestionsController do
         xhr :post, :create, { question: { section_id: @section.id, title: 'a second question'}}
         expect(@section.reload.questions.size).to eq 1
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to edit  a question by an authorized user' do
         get :edit, { id: @question.id}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to update a question by an authorized user' do
         xhr :put, :update, { id: @question.id, question: { title: 'a second question'}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to delete a question by an authorized user' do
         xhr :put, :destroy, { id: @question.id, question: { title: 'a second question'}}
         expect(@survey.questions.size).to eq 1
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
 

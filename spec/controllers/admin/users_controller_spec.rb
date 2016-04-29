@@ -26,19 +26,19 @@ describe Admin::UsersController do
           post :create, { user: { netid: 'test_user' } }
         }.not_to change{ User.count }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to edit a user by a #{role}' do
         post :edit, { id: @user.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to update a user by a #{role}' do
         post :update, { id: @user.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to delete a user by a #{role}' do
@@ -46,7 +46,7 @@ describe Admin::UsersController do
           put :destroy, { id: @user.id }
         }.not_to change{ User.count }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
   end

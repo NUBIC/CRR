@@ -1,17 +1,21 @@
 class Admin::SearchConditionsController < Admin::AdminController
-  before_filter :set_search_condidion, only: [:edit, :show, :update, :destroy]
-  before_filter :set_available_questions
+  before_action :set_search_condidion, only: [:edit, :show, :update, :destroy]
+  before_action :set_available_questions
 
-  def index
-    @search_condition_conditions = SearchCondition.data_requested + SearchCondition.data_released
-  end
+  # def index
+  #   authorize SearchCondition
+  #   @search_condition_conditions = SearchCondition.data_requested + SearchCondition.data_released
+  # end
 
   def new
     @search_condition = SearchCondition.new(search_condition_group_id: params[:search_condition_group_id])
+    authorize @search_condition
   end
 
   def create
     @search_condition = SearchCondition.new(search_condition_params)
+    authorize @search_condition
+
     if @search_condition.save
       flash['notice'] = 'Updated'
       render :show
@@ -21,13 +25,16 @@ class Admin::SearchConditionsController < Admin::AdminController
     end
   end
 
-  def edit
+  def show
+    authorize @search_condition
   end
 
-  def show
+  def edit
+    authorize @search_condition
   end
 
   def update
+    authorize @search_condition
     params[:search_condition][:values] ||= []
     @search_condition.update_attributes(search_condition_params)
     if @search_condition.save
@@ -40,14 +47,16 @@ class Admin::SearchConditionsController < Admin::AdminController
   end
 
   def destroy
+    authorize @search_condition
     @search = @search_condition.get_search
     @search_condition.destroy
     redirect_to admin_search_path(@search)
   end
 
-  def search_condition_values
-    @question         = Question.find(params[:question_id])                 unless params[:question_id].blank?
-    @search_condition = SearchCondition.find(params[:search_condition_id])  unless params[:search_condition_id].blank?
+  def values
+    authorize SearchCondition
+    @search_condition   = SearchCondition.find(params[:id]) if params[:id]
+    @question           = Question.find(params[:question_id]) unless params[:question_id].blank?
   end
 
   private
@@ -56,7 +65,6 @@ class Admin::SearchConditionsController < Admin::AdminController
         :search_condition_group_id,
         :operator,
         :question_id,
-        :answer_id,
         calculated_date_numbers: [],
         calculated_date_units: [],
         values: []
@@ -71,4 +79,3 @@ class Admin::SearchConditionsController < Admin::AdminController
       @available_questions = Question.unscoped.joins(section: :survey).where.not(response_type: 'none').order('surveys.title, questions.display_order')
     end
 end
-

@@ -1,6 +1,6 @@
-#additonal-data{data: {header: "Studies (#{Study.all.size})", url: new_admin_study_path, target: "#studies", async: true, text: "Add a study"}}
+#additonal-data{data: { header: "Studies (#{Study.all.size})", url: new_admin_study_path, target: '#studies', async: true, text: 'Add a study'} }
 #studies.row-fluid
-  %table.table.table-bordered.table-hover{:id=>'index_list'}
+  %table.table.table-bordered.table-hover#index_list
     %thead
       %tr
         %th Short Title
@@ -12,13 +12,22 @@
         %th Currently Released
         %th State
     %tbody
-      -@studies.each do |study|
+      - @studies.each do |study|
+        - css_class = study.active? ? '' : 'muted'
         %tr
-          %td=link_to study.short_title, admin_study_path(study, :anchor => "overview")
-          %td{:class=> "#{'muted' unless study.active? }"}=study.pi_name
-          %td{:class=> "#{'muted' unless study.active? }"}=study.start_date
-          %td{:class=> "#{'muted' unless study.active? }"}=study.end_date
-          %td{:class=> "#{'muted' unless study.active? }"}=study.accrual_goal
-          %td{:class=> "#{'muted' unless study.active? }"}=study.study_involvements.count
-          %td{:class=> "#{'muted' unless study.active? }"}=link_to study.study_involvements.active.count, admin_study_path(study, :anchor => "participants")
-          %td{:class=> "#{'muted' unless study.active? }"}=study.state.titleize
+          %td
+            = link_to study.short_title, admin_study_path(study, anchor: 'overview')
+          %td{class: css_class}
+            = study.pi_name
+          %td{class: css_class}
+            = study.start_date
+          %td{class: css_class}
+            = study.end_date
+          %td{class: css_class}
+            = study.accrual_goal
+          %td{class: css_class}
+            = study.study_involvements.count
+          %td{class: css_class}
+            = link_to study.study_involvements.active.count, admin_study_path(study, anchor: 'participants')
+          %td{class: css_class}
+            = study.state.titleize

@@ -1,4 +1,4 @@
-#additonal-data{data: {header: "Users (#{User.all.size})", url: new_admin_user_path, target: "#users", async: true, text: "Add an user"}}
+#additonal-data{data: {header: "Users (#{User.all.size})", url: new_admin_user_path, target: '#users', async: true, text: 'Add an user'}}
 #users.row-fluid
   %table.table.table-bordered.table-hover#user_list
     %thead
@@ -13,7 +13,7 @@
       - @users.each do |user|
         %tr
           %td
-            = link_to user.full_name, edit_admin_user_path(user), data: { async: true, target: '#users' }
+            = link_to user.full_name, edit_admin_user_path(user)
           %td
             = user.netid
           %td

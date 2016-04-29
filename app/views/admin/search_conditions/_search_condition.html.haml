@@ -1,6 +1,7 @@
 - search_condition    ||= @search_condition
 - available_questions ||= @available_questions
 - path = search_condition.persisted? ? admin_search_condition_path(search_condition) : admin_search_conditions_path
+
 - if search_condition.persisted?
   - data_target = "#search_condition_#{search_condition.id}"
   - search_condition_css_class = 'edit_search_condition'
@@ -25,8 +26,8 @@
           = image_tag 'question_search.png'
 
       = render partial: 'question_modal_list', locals: { available_questions: available_questions }
-    .span5.offset1.search-condition-values{ data: { source: search_condition_values_admin_search_conditions_path(search_condition_id: search_condition.id) }}
-      = render partial: 'search_condition_values_form', locals: { question: search_condition.question }
+    .span5.offset1.search-condition-values{ data: { source: values_admin_search_conditions_path(id: search_condition.id) }}
+      = render partial: 'values_form', locals: { question: search_condition.question }
 
     .span2.pull-right.text-right
       .btn-group

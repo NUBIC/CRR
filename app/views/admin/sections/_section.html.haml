@@ -1,0 +1,24 @@
+- form_target = @section.new_record? ? '#forms' : "#section_#{@section.id}"
+- form_id     = @section.new_record? ? 'admin_new_section' : 'admin_edit_section'
+
+= form_for @section, url: admin_section_path(@section), html: { class: 'form-horizontal validate-form ajax-form', data: { target: form_target }, id: form_id } do |f|
+  - if @section.new_record?
+    = f.hidden_field :survey_id
+  .control-group
+    = f.label :title, class: 'control-label'
+    .controls
+      = f.text_field :title, class: 'required'
+      %small.text-error
+        %i Required Field
+  .control-group
+    = f.label :display_order, class: 'control-label'
+    .controls
+      = f.select :display_order, (1..@section.survey.sections.size+1).collect{|display_order| [display_order,display_order]},{}, class: 'input-mini'
+  .control-group
+    .controls
+      .btn-group
+        - button_label = @section.new_record? ? 'Create' : 'Update'
+        = f.button button_label, class: "btn btn-mini btn-success"
+        = link_to 'Cancel', admin_survey_path(@section.survey), data: { async: true, target: '#forms' }, class: 'btn btn-mini btn-warning'
+
+

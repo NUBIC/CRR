@@ -50,7 +50,6 @@ GEM
       scrypt (>= 1.2, < 3.0)
     bcrypt (3.1.11)
     builder (3.2.2)
-    cancan (1.6.10)
     capistrano (3.4.1)
       i18n
       rake (>= 10.0.0)
@@ -150,6 +149,8 @@ GEM
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
     pg (0.18.4)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (1.6.4)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -283,7 +284,6 @@ DEPENDENCIES
   activerecord-session_store
   american_date
   authlogic
-  cancan
   capistrano
   capistrano-rails
   capistrano-rvm
@@ -303,6 +303,7 @@ DEPENDENCIES
   less-rails
   paper_trail
   pg
+  pundit
   rails (= 4.2.6)
   rest-client
   roxml

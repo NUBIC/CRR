@@ -31,7 +31,7 @@
 
   .row-fluid
     .span12.search-container
-      - if can? :edit, @search
+      - if policy(@search).edit?
         %h5 Filter participants by the following conditions
         = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: search_condition_group }
       - else

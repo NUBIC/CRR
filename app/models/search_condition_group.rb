@@ -2,6 +2,7 @@ class SearchConditionGroup < ActiveRecord::Base
   # Globals
   DEFAULT_GROUP_OPERATOR = '|'.freeze
 
+
   # Dependencies
   include SearchOperator
 

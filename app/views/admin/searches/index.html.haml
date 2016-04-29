@@ -1,7 +1,7 @@
 #search.row-fluid
   .span12
     / This will be inserted into table header div
-    .header.hidden.table-header{ data: {'target-table'=>'search_index_table'} }
+    .header.hidden.table-header{ data: { target_table: 'search_index_table'} }
       %h4
         = display_search_header(params[:state])
         = link_to 'Build a request', new_admin_search_path, class: 'btn btn-primary nu-primary'
@@ -18,7 +18,7 @@
           %th End of release
       %tbody
         - @searches.each do |search|
-          - if can? :show, search
+          - if policy(search).show?
             %tr
               %td{ class: "#{'nu' if search.data_requested?}" }
                 = link_to search.display_name, admin_search_path(search)

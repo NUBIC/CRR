@@ -1,84 +1,101 @@
 .row-fluid
-  .span1
-    = link_to "Back to studies", admin_studies_path, class: "btn btn-primary btn-block"
+  .span5
+    = link_to 'Back to studies', admin_studies_path, class: 'btn btn-primary'
 %h3
-  = "#{@study.short_title}"
+  = @study.short_title
 #study.accordion
   .accordion-group
     %h4
-      .accordion-heading=link_to "Overview","#overview","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
+      .accordion-heading
+        = link_to 'Overview', '#overview', data: { toggle: 'collapse', parent: '#study' }, class: 'accordion-toggle'
     #overview.acordion-body.collapse
       .accordion-inner
         .row-fluid
           .span12
-            -if @study.active?
-              =form_for @study ,:url=> deactivate_admin_study_path(@study) do |f|
-                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary nu-primary"
-                =f.button "Deactivate",:class=>"btn btn-mini btn-warning"
-            -else
-              =form_for @study ,:url=> activate_admin_study_path(@study) do |f|
-                =link_to "Edit",edit_admin_study_path(@study),:class=>"btn btn-mini btn-primary nu-primary"
-                =f.button "Activate",:class=>"btn btn-mini btn-success"
+            - if @study.active?
+              = form_for @study , url: deactivate_admin_study_path(@study) do |f|
+                = link_to 'Edit', edit_admin_study_path(@study), class: 'btn btn-mini btn-primary nu-primary'
+                = f.button 'Deactivate', class: 'btn btn-mini btn-warning'
+            - else
+              = form_for @study, url: activate_admin_study_path(@study) do |f|
+                = link_to 'Edit', edit_admin_study_path(@study), class: 'btn btn-mini btn-primary nu-primary'
+                = f.button 'Activate', class: 'btn btn-mini btn-success'
         .row-fluid
           %table
             %tbody
               %tr
                 %th.muted Name
-                %td=@study.name
+                %td
+                  = @study.name
               %tr
                 %th.muted Short Title
-                %td=@study.short_title
+                %td
+                  = @study.short_title
               %tr
                 %th.muted IRB Number
-                %td=@study.irb_number
+                %td
+                  = @study.irb_number
               %tr
                 %th.muted Website
-                %td=@study.website
+                %td
+                  = @study.website
               %tr
                 %th.muted Sites
-                %td=@study.sites
+                %td
+                  = @study.sites
               %tr
                 %th.muted PI
-                %td="#{@study.pi_name} - #{@study.pi_email}"
+                %td
+                  = "#{@study.pi_name} - #{@study.pi_email}"
               %tr
                 %th.muted Other Investigators
-                %td=@study.other_investigators
+                %td
+                  = @study.other_investigators
               %tr
                 %th.muted Study Contact
-                %td="#{@study.contact_name} - #{@study.contact_email}"
+                %td
+                  = "#{@study.contact_name} - #{@study.contact_email}"
               %tr
                 %th.muted Funding Source
-                %td=@study.funding_source
+                %td
+                  = @study.funding_source
               %tr
                 %th.muted Active Dates
-                %td="#{@study.start_date} - #{@study.end_date}"
+                %td
+                  = "#{@study.start_date} - #{@study.end_date}"
               %tr
                 %th.muted Age Range
-                %td="#{@study.min_age} - #{@study.max_age}"
+                %td
+                  = "#{@study.min_age} - #{@study.max_age}"
               %tr
                 %th.muted Visits
-                %td=@study.number_of_visits
+                %td
+                  = @study.number_of_visits
               %tr
                 %th.muted Inclusion Criteria
-                %td!=@study.inclusion_criteria
+                %td
+                  != @study.inclusion_criteria
               %tr
                 %th.muted Exclusion Criteria
-                %td!=@study.exclusion_criteria
+                %td
+                  != @study.exclusion_criteria
               %tr
                 %th.muted Protocol Goals
-                %td!=@study.protocol_goals
+                %td
+                  != @study.protocol_goals
               %tr
                 %th.muted Notes
-                %td!=@study.notes
+                %td
+                  != @study.notes
 
   .accordion-group
     %h4
-      .accordion-heading=link_to "Participants","#participants","data-toggle"=>"collapse","data-parent"=>"#study",:class=>"accordion-toggle"
+      .accordion-heading= link_to 'Participants', '#participants', data: { toggle: 'collapse', parent: '#study' }, class: 'accordion-toggle'
     #participants.acordion-body.collapse
       .accordion-inner
-        #additonal-data{data: {header: "#{@study.study_involvements.active.count} currently / #{@study.study_involvements.count} total released", count: @study.study_involvements.active.count}}
+        #additonal-data{data: { header: "#{@study.study_involvements.active.count} currently / #{@study.study_involvements.count} total released", count: @study.study_involvements.active.count} }
         .row-fluid
-          %table.table.table-bordered.table-hover{:id=>'study_participant_list'}
+          %table.table.table-bordered.table-hover#study_participant_list
             %thead
               %tr.display
                 %th.span2 First Name
@@ -88,21 +105,22 @@
                 %th.span2 Start of Release
                 %th.span2 End of Release
             %tbody
-              -@study.study_involvements.each do |si|
+              - @study.study_involvements.each do |si|
                 %tr.display
-                  %td=link_to(si.participant.first_name, admin_participant_path(si.participant))
                   %td
-                    =link_to(si.participant.last_name, admin_participant_path(si.participant))
+                    = link_to(si.participant.first_name, admin_participant_path(si.participant))
+                  %td
+                    = link_to(si.participant.last_name, admin_participant_path(si.participant))
                     .pull-right
-                      =image_tag "child.png" if si.participant.child?
-                      =image_tag 'siblings.png' if si.participant.has_relationships?
+                      = image_tag 'child.png' if si.participant.child?
+                      = image_tag 'siblings.png' if si.participant.has_relationships?
                   %td
                     - if si.active?
                       .user-circle
-                  %td=si.state.titleize
-                  %td=si.start_date
-                  %td=si.end_date
-:javascript
-  $(document).ready(function () {
-    location.hash && $(location.hash + '.collapse').collapse('show');
-  });
+                  %td
+                    = si.state.titleize
+                  %td
+                    = si.start_date
+                  %td
+                    = si.end_date
+

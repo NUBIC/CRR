@@ -38,7 +38,7 @@
             .span12
               = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: scg }
         - unless search_condition_group.search_condition_group && search_condition_group.search_condition_group.search_condition_group
-          = link_to admin_search_condition_groups_path(search_condition_group_id: search_condition_group.id), method: :post, class: 'btn btn-small btn-search-condition-group-add' do
+          = link_to admin_search_condition_groups_path(search_condition_group: { search_condition_group_id: search_condition_group.id}), method: :post, class: 'btn btn-small btn-search-condition-group-add' do
             %i.icon-plus
             Add group of conditions
         .row-fluid.search_condition_group_new_condition_group{ id: "#{search_condition_group.id}_new_condition_group" }

@@ -13,7 +13,8 @@ $(document).ready(function() {
       } else if (element.is("select")) {
         element.closest('.select').append(error);
       } else {
-        error.insertAfter(element);
+        element.parent().append(error);
+        // error.insertAfter(element);
       }
     }
   });
@@ -41,9 +42,12 @@ $(document).ready(function() {
    $("form.ajax-form").livequery(function(){
      var $form = $(this);
      var $target = $($form.attr('data-target'));
+     if ($form.hasClass('validate-form')){
+       $(this).validate({ onfocusout: false });
+     }
      $form.ajaxForm(
      {
-       target: $target,//$(this).attr('data-target'),
+       target: $target,
        dataType: 'html',
        success: function(data,message,xhr) {
        $target.html(data);
@@ -318,26 +322,7 @@ $(document).ready(function() {
     });
   });
 
-  $("#new-consent-sign").livequery(function(){
-    $(this).validate({
-      messages: {
-        "consent_signature[proxy_name]": "Please enter your full name.",
-        "consent_signature[proxy_relationship]": "Please enter your relatiohsip to participant."
-      }
-    });
-  });
 
-  $(".consent-agree").livequery('click',function(e){
-    $(".proxy-consent").show();
-    $("#consent_response").val("accept");
-    $("#consent-next").removeAttr("disabled");
-  });
-
-  $(".consent-disagree").livequery('click',function(e){
-    $(".proxy-consent").hide();
-    $("#consent_response").val("decline");
-    $("#consent-next").removeAttr("disabled");
-  });
 
   $(".destination_relationship").livequery(function(){
     var name_text = $(this).find('option:selected').text();
@@ -365,19 +350,7 @@ $(document).ready(function() {
       $(this).append($("<div class='input-append'></div>")).append($("<span>" + $('#additonal-data').data("header") + "</span>"));
   });
 
-  $('.consent-agree').attr('disabled', 'disabled');
-  $('.consent-agree-text').addClass('muted')
 
-  $("#consent-next").attr("disabled", "disabled");
-  $(".proxy-consent").hide();
-
-  $('#consent-content').scroll(function(){
-    var $contentelement =  $(this)[0];
-    if (($contentelement.scrollTop + $contentelement.offsetHeight) >= $contentelement.scrollHeight){
-      $('.consent-agree').removeAttr('disabled');
-      $('.consent-agree-text').addClass('text-success');
-    }
-  });
 
   $(".edit_response_set_form").livequery(function(){
     $(this).validate();

@@ -17,36 +17,36 @@ describe Admin::SurveysController do
     it 'should deny access to an attempt by an unauthorized user to create a survey' do
       post :create, { survey: { title: 'test'}}
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to edit a survey by an unauthorized user' do
       post :edit, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to update a survey by an unauthorized user' do
       post :update, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to delete a survey by an unauthorized user' do
       post :destroy, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to activate a survey by an unauthorized user' do
       put :activate, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
     it 'should deny access to an attempt to deactivate a survey by an unauthorized user' do
       put :deactivate, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
   end
 
@@ -60,37 +60,37 @@ describe Admin::SurveysController do
     it 'should deny access to an attempt to create a survey by an unauthorized user' do
       post :create, { survey: { title: 'test survey' }}
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to edit a survey by an unauthorized user' do
       post :edit, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to update a survey by an unauthorized user' do
       post :update, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to delete a survey by an unauthorized user' do
       post :destroy, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to activate a survey by an unauthorized user' do
       put :activate, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
 
     it 'should deny access to an attempt to deactivate a survey by an unauthorized user' do
       put :deactivate, { id: @survey.id }
       expect(response).to redirect_to(controller: :users, action: :dashboard)
-      expect(flash['notice']).to eq 'Access Denied'
+      expect(flash['error']).to eq 'Access Denied'
     end
   end
 
@@ -116,13 +116,13 @@ describe Admin::SurveysController do
       it 'should deny access to edit  an inactive survey by an authorized user' do
         xhr :get, :edit, { id: @survey.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to update an inactive survey by an authorized user' do
         xhr :put, :update, { id: @survey.id, survey: { title: 'a second survey'}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to delete an inactive survey by an authorized user' do
@@ -130,7 +130,7 @@ describe Admin::SurveysController do
           xhr :put, :destroy, { id: @survey.id }
         }.not_to change{ Survey.count }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['notice']).to eq 'Access Denied'
+        expect(flash['error']).to eq 'Access Denied'
       end
     end
 

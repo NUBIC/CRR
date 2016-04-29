@@ -1,0 +1,44 @@
+- form_url      = @user.new_record? ? admin_users_path : admin_user_path(@user)
+- button_label  = @user.new_record? ? 'Create' : 'Update'
+
+.span12
+  .span5
+    .btn-toolbar
+      = link_to 'Back to users', admin_users_path, class: 'btn btn-primary'
+= form_for @user, url: form_url, html: { class: 'form-horizontal validate-form'}  do |f|
+  .row-fluid
+    .control-group
+      = f.label :netid, class: 'control-label'
+      .controls
+        = f.text_field :netid, class: 'input-mini required', disabled: @user.persisted?
+        %small.text-error
+          %i Required Field
+    - if @user.persisted?
+      .control-group
+        = f.label :email, class: 'control-label'
+        .controls
+          = f.text_field :email, disabled: true
+    .control-group
+      = f.label :admin, class: 'control-label'
+      .controls
+        .checkbox
+          = f.check_box :admin
+    .control-group
+      = f.label :data_manager, class: 'control-label'
+      .controls
+        .checkbox
+          = f.check_box :data_manager
+    .control-group
+      = f.label :researcher, class: 'control-label'
+      .controls
+        .checkbox
+          = f.check_box :researcher
+    - if @user.persisted?
+      .control-group
+        = f.label :study_tokens, 'Studies', class: "control-label"
+        .controls
+          = f.text_field :study_tokens, class: 'tokeninput input-mini', data: { url: search_admin_studies_path(format: :json), limit: 100, hint_text: 'Enter study name or IRB number...', pre: @user.studies.to_json(only: [:id],methods: [:search_display]) }
+    .control-group
+      .controls
+        = f.button button_label, class: 'btn btn-primary nu-primary'
+        = link_to 'Cancel', admin_users_path, class: 'btn btn-warning'

@@ -1,7 +1,7 @@
 #email_notification.row-fluid
   .span12
     / This will be inserted into table header div
-    .header.hidden.table-header{ data: {'target-table'=>'email_notification_index_table'} }
+    .header.hidden.table-header{ data: { target_table: 'email_notification_index_table'} }
       %h4
         = "Email notifications (#{EmailNotification.all.size})"
 
@@ -32,7 +32,7 @@
               .row-fluid
                 .span6
                   - confirmation_message = 'Are you sure you want to deactivate and edit this email?' if email_notification.active?
-                  = link_to "Edit", edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block', data: { confirm: confirmation_message }
+                  = link_to 'Edit', edit_admin_email_notification_path(email_notification), class: 'btn btn-primary nu-primary btn-block', data: { confirm: confirmation_message }
                 .span6
                   - if email_notification.active?
                     = form_for email_notification, url: deactivate_admin_email_notification_path(email_notification) do |f|

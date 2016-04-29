@@ -24,7 +24,7 @@ class Admin::AnswersController < Admin::AdminController
 
     @question = @answer.question.reload
     respond_to do |format|
-      format.html { redirect_to edit_question_path(@question) }
+      format.html { redirect_to edit_admin_question_path(@question) }
       format.js { render 'admin/questions/show', layout: false }
     end
   end

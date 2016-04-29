@@ -8,6 +8,7 @@ describe Admin::AnswersController do
     @answer   = @question.answers.create(text: 'answer 1')
     login_user
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
+    @params   = { question_id: @question.id, text: 'a second answer', response_type: 'date'}
   end
 
   describe 'unauthorized user' do
@@ -24,62 +25,46 @@ describe Admin::AnswersController do
         end
       end
 
-      it 'should deny access to an attempt to access a new answer form by an unauthorized user' do
-        get :new, { question_id: @question.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'GET new' do
+        before(:each) do
+          get :new, question_id: @question.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to an attempt to create a answer by an unauthorized user' do
-        post :create, { answer: { question_id: @question.id}}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'POST create' do
+        before(:each) do
+          post :create, answer: @params
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to a billing users  attempt to create a answer by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :create, { answer: { question_id: @question.id}}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'GET show' do
+        before(:each) do
+          get :show, id: @answer.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to an attempt to edit a answer by an unauthorized user' do
-        post :edit, { id: @answer.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'GET edit' do
+        before(:each) do
+          get :edit, id: @answer.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to an billing users  attempt to edit a answer by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :edit, { id: @answer.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'POST update' do
+        before(:each) do
+          post :update, id: @answer.id, answer: @params
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to an attempt to update a answer by an unauthorized user' do
-        post :update, { id: @answer.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
-      it 'should deny access to an billing users attempt to update a answer by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :update, { id: @answer.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
-      it 'should deny access to an attempt to delete a answer by an unauthorized user' do
-        post :destroy, { id: @answer.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
-      it 'should deny access to an billing users attempt to delete a answer by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :destroy, { id: @answer.id}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'POST destroy' do
+        before(:each) do
+          post :destroy, id: @answer.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
     end
   end
@@ -97,58 +82,173 @@ describe Admin::AnswersController do
         expect(@survey.reload.state).to eq 'active'
       end
 
-      it 'should deny access to an attempt to create a answer by an authorized user' do
-        xhr :post, :create, { answer: { question_id: @question.id, title: 'a second answer'}}
-        expect(@question.reload.answers.size).to eq 2
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'GET new' do
+        before(:each) do
+          get :new, question_id: @question.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to edit  a answer by an authorized user' do
-        xhr :get, :edit, { id: @answer.id, format:  :js}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'POST create' do
+        before(:each) do
+          post :create, answer: @params
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to update a answer by an authorized user' do
-        xhr :put, :update, { id: @answer.id, answer: { title: 'a second answer'}}
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'GET edit' do
+        before(:each) do
+          get :edit, id: @answer.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
 
-      it 'should deny access to delete a answer by an authorized user' do
-        xhr :put, :destroy, { id: @answer.id, answer: { title: 'a second answer'}}
-        expect(@question.answers.size).to eq 2
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
+      describe 'POST update' do
+        before(:each) do
+          post :update, id: @answer.id, answer: @params
+        end
+        include_examples 'unauthorized access: admin controller'
+      end
+
+      describe 'POST destroy' do
+        before(:each) do
+          post :destroy, id: @answer.id
+        end
+        include_examples 'unauthorized access: admin controller'
       end
     end
 
     describe 'inactive survey' do
-      it 'should allow access to an attempt to create a answer by an authorized user' do
-        xhr :post, :create, { answer: { question_id: @question.id, text: 'a second answer', response_type: 'date'}}
-        expect(response).to render_template('show')
-        expect(@question.reload.answers.size).to eq 2
-      end
-      it 'should allow access to edit  a answer by an authorized user' do
-        xhr :get, :edit, { id: @answer.id }
-        expect(response).to render_template('edit')
-      end
-      it 'should allow access to update a answer by an authorized user' do
-        xhr :put, :update, { id: @answer.id, answer: { text: 'a second answer'}}
-        expect(response).to render_template('show')
-        expect(@answer.reload.text).to eq 'a second answer'
-      end
-      it 'should allow access to delete a answer by an authorized user' do
-        xhr :put, :destroy, { id: @answer.id, answer: { title: 'a second answer'}}
-        expect(response).to render_template('questions/show')
-        expect(@question.reload.answers.size).to eq 0
-      end
-    end
+      describe 'GET new' do
+        it 'renders NEW template in HTML format' do
+          get :new, question_id: @question.id
+          expect(response).to render_template('new')
+        end
 
-    it 'should allow access to view a answer by an authorized user' do
-      xhr :get, :show, { id: @answer.id }
-      expect(response).to render_template('show')
+        it 'renders NEW template in JS format' do
+          xhr :get, :new, question_id: @question.id
+          expect(response).to render_template('new')
+        end
+      end
+
+      describe 'POST create' do
+        describe 'with valid params' do
+          it 'creates an answer' do
+            expect {
+              post :create, answer: @params
+            }.to change{Answer.count}.by(1)
+          end
+
+          it 'populates "notice" flash' do
+            post :create, answer: @params
+            expect(flash['notice']).to eq 'Updated'
+          end
+
+          it 'redirects to EDIT question in HTML format' do
+            post :create, answer: @params
+            expect(response).to redirect_to(controller: :questions, action: :edit, id: Answer.last.question.id)
+          end
+
+          it 'renders SHOW template in JS format' do
+            xhr :post, :create, answer: @params
+            expect(response).to render_template('show')
+          end
+        end
+
+        describe 'with invalid params' do
+          before(:each) do
+            allow_any_instance_of(Answer).to receive(:save).and_return(false)
+          end
+
+          it 'does not create an answer' do
+            expect {
+              post :create, answer: @params
+            }.not_to change{Answer.count}
+          end
+
+          it 'populates "error" flash' do
+            post :create, answer: @params
+            expect(flash['error']).not_to be_nil
+          end
+
+          it 'redirects to EDIT question in HTML format' do
+            post :create, answer: @params
+            expect(response).to redirect_to(controller: :questions, action: :edit, id: Answer.last.question.id)
+          end
+
+          it 'renders SHOW template in JS format' do
+            xhr :post, :create, answer: @params
+            expect(response).to render_template('show')
+          end
+        end
+      end
+
+      describe 'GET show' do
+        it 'renders SHOW template in JS format' do
+          xhr :get, :show, id: @answer.id
+          expect(response).to render_template('show')
+        end
+      end
+
+      describe 'GET edit' do
+        it 'renders EDIT template in JS format' do
+          xhr :get, :edit, id: @answer.id
+          expect(response).to render_template('edit')
+        end
+
+        it 'renders EDIT template in HTML format' do
+          get :edit, id: @answer.id
+          expect(response).to render_template('edit')
+        end
+      end
+
+      describe 'POST update' do
+        before(:each) do
+          xhr :post, :update, id: @answer.id, answer: @params
+        end
+
+        describe 'with valid params' do
+          it 'updates an answer' do
+            expect(@answer.reload.text).to eq 'a second answer'
+          end
+
+          it 'populates "notice" flash' do
+            expect(flash['notice']).to eq 'Updated'
+          end
+
+          it 'renders SHOW template in JS format' do
+            expect(response).to render_template('show')
+          end
+        end
+
+        describe 'with invalid params' do
+          before(:each) do
+            allow_any_instance_of(Answer).to receive(:save).and_return(false)
+          end
+
+          it 'does not update an answer' do
+            expect(@answer.text).not_to eq 'a second answer'
+          end
+
+          it 'renders SHOW template in JS format' do
+            xhr :post, :create, answer: @params
+            expect(response).to render_template('show')
+          end
+        end
+      end
+
+      describe 'POST destroy' do
+        it 'destroys answer' do
+          expect {
+            xhr :post, :destroy, id: @answer.id
+          }.to change{Answer.count}.by(-1)
+        end
+
+        it 'renders question show template' do
+          xhr :post, :destroy, id: @answer.id
+          expect(response).to render_template('admin/questions/show')
+        end
+      end
     end
   end
 end

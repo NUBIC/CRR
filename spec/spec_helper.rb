@@ -75,4 +75,14 @@ RSpec.configure do |config|
   config.before(:each) do
     Setup.email_notifications
   end
+
+  RSpec.shared_examples 'unauthorized access: admin controller' do |collection_class|
+    it 'redirects to dashboard' do
+      expect(response).to redirect_to(controller: :users, action: :dashboard)
+    end
+
+    it 'displays "Access Denied" flash message' do
+      expect(flash['error']).to eq 'Access Denied'
+    end
+  end
 end

@@ -1,4 +1,8 @@
 FactoryGirl.define do
+  factory :study_involvement_state do
+    name "MyString"
+    status "MyString"
+  end
 
 
   sequence :irb_number do |n|

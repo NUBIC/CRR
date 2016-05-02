@@ -19,10 +19,7 @@ $(document).ready(function() {
     }
   });
   // -------------- Common UI --------------
-  $('a[data-toggle=modal]').livequery('click',function(){
-    $($(this).attr('data-target')).html("<h5 class='modal-header text-center'>Loading...</h5>");
-    $($(this).attr('data-target')).load($(this).attr('href'));
-  });
+
 
   $(".wyswig").livequery(function(){
     $(this).jqte();

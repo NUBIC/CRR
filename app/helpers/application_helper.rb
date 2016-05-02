@@ -129,4 +129,13 @@ module ApplicationHelper
   def recruiting_children?
     Consent.child_consent && Survey.child_survey
   end
+
+  def study_involvement_state_help
+    html = '<small>'
+    StudyInvolvementState::VALID_STATES.each do |s|
+      html << "<b>#{s[:name].titleize}</b>: #{s[:description]}<br/>"
+    end
+    html << '</small>'
+    html.html_safe
+  end
 end

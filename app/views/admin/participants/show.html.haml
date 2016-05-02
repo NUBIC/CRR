@@ -87,29 +87,33 @@
                 %thead
                   %tr
                     %th{rowspan: 2} Study Name
-                    %th{rowspan: 2} Status
-                    %th{rowspan: 2} Status Date
                     %th{colspan: 3, style: 'text-align: center'} Release
+                    %th{colspan: 3, style: 'text-align: center'} Enrollment State
                     %th{rowspan: 2} Notes
                   %tr
                     %th Start
                     %th Warning
                     %th End
+                    %th State
+                    %th Date
+                    %th Status
                 %tbody
                   - @participant.study_involvements.each do |si|
                     %tr
                       %td
                         = link_to si.study.display_name, edit_admin_study_involvement_path(si), data: { toggle: 'modal', target: '#study'}
                       %td
-                        = si.state.titleize
-                      %td
-                        = si.state_date
-                      %td
                         = si.start_date
                       %td
                         = si.warning_date
                       %td
                         = si.end_date
+                      %td
+                        = si.study_involvement_state.name.titleize if si.study_involvement_state
+                      %td
+                        = si.study_involvement_state.date if si.study_involvement_state
+                      %td
+                        = si.study_involvement_state.status if si.study_involvement_state
                       %td
                         = si.notes
           %br

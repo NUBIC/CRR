@@ -1,22 +1,18 @@
 class StudyInvolvement < ActiveRecord::Base
-  # Globals
-  VALID_STATES = ['none', 'enrolled', 'declined', 'no contact', 'withdrew', 'excluded', 'completed'].freeze
-
   # Dependencies
   has_paper_trail
 
   # Associations
   belongs_to :study
   belongs_to :participant
+  has_one :study_involvement_state, dependent: :destroy
+
+  accepts_nested_attributes_for :study_involvement_state, allow_destroy: true
 
   # Validations
   validates_presence_of :start_date, :participant, :study, :end_date
   validates_uniqueness_of :participant_id, scope: :study
   validate :end_date_cannot_be_before_start_date
-  validates_inclusion_of :state, in: VALID_STATES
-
-  # Hooks
-  after_initialize :default_args
 
   # Scopes
   scope :active,  -> { where("start_date <= '#{Date.today}' and end_date >= '#{Date.today}'") }
@@ -26,14 +22,14 @@ class StudyInvolvement < ActiveRecord::Base
     self.end_date >= Date.today
   end
 
+  def state
+    study_involvement_state ? study_involvement_state.name.titleize : ''
+  end
+
   private
     def end_date_cannot_be_before_start_date
       if end_date.present? && end_date < start_date
         errors.add(:end_date, 'can\'t be before start_date')
       end
-    end
-
-    def default_args
-      self.state = 'none' if self.state.blank?
     end
 end

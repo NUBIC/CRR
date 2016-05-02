@@ -1,8 +1,4 @@
 class StudyInvolvementPolicy < ApplicationPolicy
-  def index?
-    can_manage?
-  end
-
   def new?
     can_manage?
   end

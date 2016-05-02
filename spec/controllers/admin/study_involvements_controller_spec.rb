@@ -6,8 +6,7 @@ describe Admin::StudyInvolvementsController do
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
     @participant        = FactoryGirl.create(:participant, stage: 'approved')
     @study              = FactoryGirl.create(:study)
-    @valid_params       = { participant_id: @participant.id, study_id: @study.id, start_date: Date.today, end_date: Date.tomorrow }
-    @invalid_params     = { participant_id: @participant.id, study_id: @study.id, end_date: Date.today, start_date: Date.tomorrow }
+    @params             = { participant_id: @participant.id, study_id: @study.id, start_date: Date.today, end_date: Date.tomorrow, study_involvement_state_attributes: { name: StudyInvolvementState::VALID_STATES.sample[:name] }}
     @study_involvement  = FactoryGirl.create(:study_involvement)
   end
 
@@ -25,76 +24,39 @@ describe Admin::StudyInvolvementsController do
         end
       end
 
-      describe 'GET index' do
-        it 'redirects to dashboard' do
-          get :index, participant_id: @participant.id
-          expect(response).to redirect_to(controller: :users, action: :dashboard)
-        end
-
-        it 'displays "Access Denied" flash message' do
-          get :index, participant_id: @participant.id
-          expect(flash['error']).to eq 'Access Denied'
-        end
-      end
-
       describe 'GET new' do
-        it 'redirects to dashboard' do
+        before(:each) do
           get :new, participant_id: @participant.id
-          expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
-
-        it 'displays "Access Denied" flash message' do
-          get :new, participant_id: @participant.id
-          expect(flash['error']).to eq 'Access Denied'
-        end
+        include_examples 'unauthorized access: admin controller'
       end
 
       describe 'POST create' do
-        it 'redirects to dashboard' do
-          post :create, study_involvement: @valid_params
-          expect(response).to redirect_to(controller: :users, action: :dashboard)
+        before(:each) do
+          post :create, study_involvement: @params
         end
-
-        it 'displays "Access Denied" flash message' do
-          post :create, study_involvement: @valid_params
-          expect(flash['error']).to eq 'Access Denied'
-        end
+        include_examples 'unauthorized access: admin controller'
       end
 
       describe 'GET edit' do
-        it 'redirects to dashboard' do
+        before(:each) do
           get :edit, id: @study_involvement.id
-          expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
-
-        it 'displays "Access Denied" flash message' do
-          get :edit, id: @study_involvement.id
-          expect(flash['error']).to eq 'Access Denied'
-        end
+        include_examples 'unauthorized access: admin controller'
       end
 
       describe 'POST update' do
-        it 'redirects to dashboard' do
-          post :update, id: @study_involvement.id, study_involvement: @valid_params
-          expect(response).to redirect_to(controller: :users, action: :dashboard)
+        before(:each) do
+          post :update, id: @study_involvement.id, study_involvement: @params
         end
-
-        it 'displays "Access Denied" flash message' do
-          post :update, id: @study_involvement.id, study_involvement: @valid_params
-          expect(flash['error']).to eq 'Access Denied'
-        end
+        include_examples 'unauthorized access: admin controller'
       end
 
       describe 'POST destroy' do
-        it 'redirects to dashboard' do
+        before(:each) do
           post :destroy, id: @study_involvement.id
-          expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
-
-        it 'displays "Access Denied" flash message' do
-          post :destroy, id: @study_involvement.id
-          expect(flash['error']).to eq 'Access Denied'
-        end
+        include_examples 'unauthorized access: admin controller'
       end
     end
   end
@@ -102,20 +64,6 @@ describe Admin::StudyInvolvementsController do
   describe 'authorized access' do
     before(:each) do
       allow(controller.current_user).to receive(:admin?).and_return(true)
-    end
-
-    describe 'GET index' do
-      before(:each) do
-        get :index, participant_id: @participant.id
-      end
-
-      it 'renders index template' do
-        expect(response).to render_template('index')
-      end
-
-      it 'assigns participant' do
-        expect(assigns(:participant)).to eq @participant
-      end
     end
 
     describe 'GET new' do
@@ -130,36 +78,50 @@ describe Admin::StudyInvolvementsController do
       it 'assigns participant' do
         expect(assigns(:participant)).to eq @participant
       end
+
+      it 'builds study involvement state' do
+        expect(assigns(:study_involvement)).not_to be_nil
+        expect(assigns(:study_involvement).study_involvement_state).not_to be_nil
+      end
     end
 
     describe 'POST create' do
       describe 'with valid parameters' do
-        it 'creates a participant' do
+        it 'creates a study_involvement' do
           expect {
-            post :create, study_involvement: @valid_params
+            post :create, study_involvement: @params
           }.to change{StudyInvolvement.count}.by(1)
         end
 
+        it 'creates a study_involvement_status' do
+          expect {
+            post :create, study_involvement: @params
+          }.to change{StudyInvolvementState.count}.by(1)
+        end
+
         it 'redirects to participant page' do
-          post :create, study_involvement: @valid_params
+          post :create, study_involvement: @params
           expect(response).to redirect_to(controller: :participants, action: :show, id: @participant.id)
         end
       end
 
       describe 'with invalid parameters' do
+        before(:each) do
+          allow_any_instance_of(StudyInvolvement).to receive(:save).and_return(false)
+          post :create, study_involvement: @params
+        end
+
         it 'does not create a participant' do
           expect {
-            post :create, study_involvement: @invalid_params
+            post :create, study_involvement: @params
           }.not_to change{StudyInvolvement.count}
         end
 
         it 'redirects to new involvement page' do
-          post :create, study_involvement: @invalid_params
           expect(response).to redirect_to(controller: :study_involvements, action: :new, participant_id: @participant.id)
         end
 
         it 'displays error message' do
-          post :create, study_involvement: @invalid_params
           expect(flash['error']).not_to be_nil
         end
       end
@@ -177,19 +139,32 @@ describe Admin::StudyInvolvementsController do
       it 'assigns participant' do
         expect(assigns(:participant)).to eq @study_involvement.participant
       end
+
+      it 'builds study involvement state if does not exist' do
+        expect(assigns(:study_involvement)).not_to be_nil
+        expect(assigns(:study_involvement).study_involvement_state).not_to be_nil
+      end
+
+      it 'uses study involvement state if available' do
+        study_involvement_state = @study_involvement.build_study_involvement_state(name: StudyInvolvementState::VALID_STATES.sample[:name])
+        study_involvement_state.save!
+        get :edit, id: @study_involvement.id
+        expect(assigns(:study_involvement).study_involvement_state).to eq study_involvement_state
+      end
     end
 
     describe 'POST update' do
       describe 'with valid parameters' do
         it 'redirects to participant page' do
-          post :update, id: @study_involvement.id, study_involvement: @valid_params
+          post :update, id: @study_involvement.id, study_involvement: @params
           expect(response).to redirect_to(controller: :participants, action: :show, id: @participant.id)
         end
       end
 
       describe 'with invalid parameters' do
         before(:each) do
-          post :update, id: @study_involvement.id, study_involvement: @invalid_params
+          allow_any_instance_of(StudyInvolvement).to receive(:save).and_return(false)
+          post :update, id: @study_involvement.id, study_involvement: @params
         end
 
         it 'redirects to edit involvement page' do

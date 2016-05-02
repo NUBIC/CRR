@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe StudyInvolvement do
+  it { is_expected.to have_one :study_involvement_state }
   it { is_expected.to validate_presence_of :start_date }
   it { is_expected.to validate_presence_of :participant}
   it { is_expected.to validate_presence_of :study }

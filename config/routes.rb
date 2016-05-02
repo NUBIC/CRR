@@ -126,11 +126,7 @@ AudiologyRegistry::Application.routes.draw do
     end
 
     # study involvments controller
-    resources :study_involvements, only: [:index, :new, :create, :edit, :update, :destroy] do
-      # collection do
-      #   get :study
-      # end
-    end
+    resources :study_involvements, only: [:new, :create, :edit, :update, :destroy]
 
     # surveys controller
     resources :surveys do

@@ -5,9 +5,11 @@ class StudyInvolvement < ActiveRecord::Base
   # Associations
   belongs_to :study
   belongs_to :participant
-  has_one :study_involvement_state, dependent: :destroy
+  has_one :study_involvement_status, dependent: :destroy
+  has_one :search_participant_study_involvement
+  has_one :search_participant, through: :search_participant_study_involvement, dependent: :destroy
 
-  accepts_nested_attributes_for :study_involvement_state, allow_destroy: true
+  accepts_nested_attributes_for :study_involvement_status, allow_destroy: true
 
   # Validations
   validates_presence_of :start_date, :participant, :study, :end_date
@@ -15,15 +17,37 @@ class StudyInvolvement < ActiveRecord::Base
   validate :end_date_cannot_be_before_start_date
 
   # Scopes
-  scope :active,  -> { where("start_date <= '#{Date.today}' and end_date >= '#{Date.today}'") }
-  scope :warning, -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
+  scope :active,    -> { where("start_date <= '#{Date.today}' and end_date >= '#{Date.today}'") }
+  scope :warning,   -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
+  scope :approved,  -> { joins(:study_involvement_status).where( study_involvement_statuses: { state: 'approved' })}
+  scope :pending,   -> { joins(:study_involvement_status).where( study_involvement_statuses: { state: 'pending'})}
 
   def active?
     self.end_date >= Date.today
   end
 
-  def state
-    study_involvement_state ? study_involvement_state.name.titleize : ''
+  def inactive?
+    end_date.present? && end_date < Date.today
+  end
+
+  def status
+    if study_involvement_status.present?
+      if study_involvement_status.approved?
+        study_involvement_status.name.titleize
+      else
+        study_involvement_status.state.titleize
+      end
+    else
+      'None'
+    end
+  end
+
+  def status=(status)
+    if study_involvement_status.present?
+      self.study_involvement_status.name = status
+    else
+      self.build_study_involvement_status(name: status)
+    end
   end
 
   private

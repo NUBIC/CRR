@@ -2,8 +2,9 @@ class Admin::ParticipantsController < Admin::AdminController
   before_action :set_participant, only: [:show, :edit, :update, :enroll, :consent, :consent_signature, :withdraw, :verify]
 
   def index
-    @participants = params[:state].blank? ? Participant.all_participants.eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study) : Participant.send(params[:state]).eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study)
     authorize Participant
+    participants = Participant.eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study)
+    @participants = params[:state].blank? ? participants.all_participants : participants.send(params[:state])
   end
 
   def new

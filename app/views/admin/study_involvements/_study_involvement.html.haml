@@ -41,20 +41,20 @@
           = f.text_field :end_date, value: @study_involvement.end_date, class: 'input-small date required', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
           %small.text-error
             %i Required field
-      = f.fields_for :study_involvement_state do |ff|
+      = f.fields_for :study_involvement_status do |ff|
         .control-group
-          = ff.label 'study_involvement_state', class: 'control-label' do
+          = ff.label 'study_involvement_status', class: 'control-label' do
             Study Involvement
-            %span.btn-link.btn-mini.help-popover{ title: 'State Flags', data: { toggle: 'popover', content: study_involvement_state_help.html_safe, html: 'true', placement: 'right'}}
+            %span.btn-link.btn-mini.help-popover{ title: 'State Flags', data: { toggle: 'popover', content: study_involvement_status_help.html_safe, html: 'true', placement: 'right'}}
               %i.icon-question-sign
           .controls.controls-row.muted
-            = ff.label :name, 'State', class: 'span3'
+            = ff.label :name, 'Completion status', class: 'span3'
             = ff.label :date, class: 'span2'
-            = ff.label :status, class: 'span2'
+            = ff.label :state, class: 'span2'
           .controls.controls-row
-            = ff.select :name, StudyInvolvementState::VALID_STATES.map{ |s| [s[:name].titleize, s[:name]]}, {}, class: 'span3'
+            = ff.select :name, StudyInvolvementStatus.valid_statuses.map{ |s| [s[:name].titleize, s[:name]]}, {}, class: 'span3'
             = ff.text_field :date, class: 'input-small date span2', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
-            = ff.select :status, StudyInvolvementState.aasm.states_for_select, {}, class: 'span2'
+            = ff.select :state, StudyInvolvementStatus.aasm.states_for_select, {}, class: 'span2'
 
       .control-group
         = f.label :notes, class: 'control-label'

@@ -7,8 +7,11 @@ class Search < ActiveRecord::Base
   belongs_to :user
   has_one     :search_condition_group, dependent: :destroy
   has_many    :search_participants,    dependent: :destroy
+  has_many    :study_involvements, through: :search_participants
 
   accepts_nested_attributes_for :search_condition_group, allow_destroy: true
+  accepts_nested_attributes_for :search_participants
+  accepts_nested_attributes_for :study_involvements
 
   # Validations
   validates_presence_of :study
@@ -29,17 +32,21 @@ class Search < ActiveRecord::Base
     end
 
     event :release_data do
-      transitions from: [:data_requested,:new], to: :data_released, after: [:process_release]
+      transitions from: [:data_requested, :new], to: :data_released, after: [:process_release]
     end
   end
 
   # Scopes
   def self.requested
-    where(state: :data_requested).joins(:study).order('request_date DESC, studies.name ASC').readonly(false)
+    where(state: 'data_requested')
   end
 
   def self.released
-    where(state: :data_released).joins(:study).order('process_date DESC, studies.name ASC').readonly(false)
+    where(state: 'data_released')
+  end
+
+  def self.expiring
+    where("#{self.table_name}.warning_date <= '#{Date.today}' and (#{self.table_name}.end_date is null or #{self.table_name}.end_date > '#{Date.today}')")
   end
 
   def self.default_ordering
@@ -47,7 +54,7 @@ class Search < ActiveRecord::Base
   end
 
   def self.with_user(user)
-    Search.joins(study: [:user_studies, :searches]).where( user_studies: { user_id: user.id }).distinct
+    includes(study: [:user_studies, :searches]).where( user_studies: { user_id: user.id })
   end
 
   # Functions
@@ -56,37 +63,41 @@ class Search < ActiveRecord::Base
     return search_condition_group.result.reject {|p| p.has_study?(study) | p.do_not_contact? }
   end
 
-  def released_participants
-    search_participants.release.collect{|sp| sp.participant}.flatten.uniq
-  end
-
-  def process_request(params)
+  def process_request
     result.each {|participant| self.search_participants.create(participant: participant)}
-    self.request_date=Date.today
-    save
+    self.request_date = Date.today
+    self.save
   end
 
   def process_release(params)
     if self.data_requested?
-      result_search_participants = self.search_participants.where(participant_id: params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact)
-      result_search_participants.each do |sp|
-        sp.released = true
-        sp.participant.study_involvements.create(start_date: params[:start_date], end_date: params[:end_date], warning_date: params[:warning_date], study_id: study.id)
-        sp.save
+      result_search_participants = self.search_participants.where(participant_id: params[:participant_ids])
+      result_search_participants.each do |search_participant|
+        search_participant.released = true
+        study_involvement = search_participant.participant.study_involvements.create(start_date: params[:start_date], end_date: params[:end_date], warning_date: params[:warning_date], study_id: study.id)
+        search_participant.study_involvement = study_involvement
+        search_participant.save
       end
     else
-      participants = Participant.find(params[:participant_ids].keys.collect{|k| k.to_i}.flatten.uniq.compact)
+      participants = Participant.find(params[:participant_ids])
       participants.each do |participant|
-        self.search_participants.create(participant: participant, released: true)
-        si = participant.study_involvements.create(start_date: params[:start_date],end_date: params[:end_date],warning_date: params[:warning_date], study_id: study.id)
+        search_participant  = self.search_participants.create(participant: participant, released: true)
+        study_involvement   = participant.study_involvements.create(start_date: params[:start_date],end_date: params[:end_date],warning_date: params[:warning_date], study_id: study.id)
+        search_participant.study_involvement = study_involvement
+        search_participant.save
       end
       (self.result - participants).each{ |participant| self.search_participants.create(participant: participant)}
     end
     self.process_date = Date.today
-    self.start_date = params[:start_date]
+    self.start_date   = params[:start_date]
     self.warning_date = params[:warning_date]
-    self.end_date = params[:end_date]
+    self.end_date     = params[:end_date]
     self.save
+  end
+
+  def process_return(params)
+    study_involvements =  self.study_involvements.where(id: params[:study_involvement_ids])
+    study_involvements.map{|i| i.update_attributes(status: params[:study_involvement_status])}
   end
 
   def set_request_date
@@ -112,14 +123,24 @@ class Search < ActiveRecord::Base
 
   def copy(source_record)
     return unless source_record.is_a?(self.class)
-    self.study_id = source_record.study_id unless self.study_id
-    self.name     = "#{source_record.name}_copy - #{Date.today}" unless self.name
     self.build_search_condition_group
     self.search_condition_group.copy(source_record.search_condition_group)
   end
 
   def user_emails
     self.study.user_emails.push(self.user.email).reject(&:blank?).uniq
+  end
+
+  def return_status
+    if study_involvements.blank?
+      nil
+    elsif study_involvements.approved.size == study_involvements.size
+      'return accepted'
+    elsif study_involvements.pending.size == study_involvements.size
+      'returned'
+    elsif study_involvements.pending.any?
+      'partially returned'
+    end
   end
 
   private

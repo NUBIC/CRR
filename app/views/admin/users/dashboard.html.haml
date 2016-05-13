@@ -1,35 +1,25 @@
 .row-fluid
-  %table.table.table-bordered.table-hover#dashboard_list
+  %table#participants_index_table.table.table-bordered.table-hover
     %thead
       %tr.display
-        %th First Name
-        %th Last Name
+        %th.span1 ID
+        %th.span3 First Name
+        %th.span3 Last Name
         %th Studies
-        %th End of Release
         %th Join Date
     %tbody
-      - current_user.active_participants.each do |p|
+      - current_user.active_participants.each do |participant|
         %tr.display
           %td
-            = link_to(p.first_name, admin_participant_path(p))
+            = participant.id
           %td
-            = link_to(p.last_name, admin_participant_path(p))
+            = link_to(participant.first_name, admin_participant_path(participant))
+          %td
+            = link_to(participant.last_name, admin_participant_path(participant))
             .pull-right
-              = image_tag 'child.png' if p.child?
-              = image_tag 'siblings.png' if p.has_relationships?
+              = image_tag 'child.png' if participant.child?
+              = image_tag 'siblings.png' if participant.has_relationships?
           %td
-            %ul.unstyled
-              - p.study_involvements.each_with_index do |si,i|
-                %li{class: "#{'more_display' if i > 2}"}
-                  = si.study.display_name
-                  %span.muted
-                    = " (#{si.state})"
-              %li.pull-right.btn.btn-link.show_button
-                = 'See more...' if p.study_involvements.size > 3
+            = render partial: '/admin/study_involvements/list', locals: { participant: participant }
           %td
-            %ul.unstyled
-              - p.study_involvements.each_with_index do |si,i|
-                %li{class: "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}"}
-                  =si.end_date
-          %td
-            = p.created_at.to_date
+            = participant.created_at.to_date

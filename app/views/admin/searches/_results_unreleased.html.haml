@@ -1,3 +1,12 @@
+/ This will be inserted into table header div
+.header.table-header{ data: { target_table: 'search_result_list'} }
+  %h5
+    Results: #{@participants_count} participants returned
+    - if @search.result.any? && policy(@search).request_data?
+      = form_for @search, url: request_data_admin_search_path(@search) do |f|
+        .paragraph
+          = f.button 'Request results', class: 'btn btn-success'
+
 - if current_user.admin? || current_user.data_manager?
   .row-fluid
     .span12
@@ -31,7 +40,7 @@
             - @participants.each do |participant|
               %tr.show-hide-container
                 %td
-                  = check_box_tag "[participant_ids][#{participant.id}]", participant.id, false, class: 'selectalloption'
+                  = check_box_tag "[participant_ids][]", participant.id, false, class: 'selectalloption'
                 %td
                   = link_to participant.id, admin_participant_path(participant)
                 %td

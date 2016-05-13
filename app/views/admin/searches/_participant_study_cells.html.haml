@@ -1,10 +1,10 @@
 %td
   %ul.unstyled.show-hide-group
-    - participant.study_involvements.each_with_index do |si,i|
+    - participant.study_involvements.each_with_index do |study_involvement, i|
       %li{ class: "#{'more_display' if i > 1}" }
-        = link_to si.study.display_name, admin_study_path(si.study)
+        = link_to study_involvement.study.display_name, admin_study_path(study_involvement.study)
         %span.muted
-          = " (#{si.state})"
+          = " (#{study_involvement.status})"
     - if participant.study_involvements.size > 2
       %li.pull-right.btn.btn-link
         %span.show_button

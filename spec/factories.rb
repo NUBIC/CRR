@@ -1,5 +1,11 @@
 FactoryGirl.define do
   factory :study_involvement_state do
+    
+  end
+  factory :search_participant_study_involvement do
+
+  end
+  factory :study_involvement_status do
     name "MyString"
     status "MyString"
   end

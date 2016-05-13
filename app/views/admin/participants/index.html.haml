@@ -1,43 +1,38 @@
-#additonal-data{data: { header: display_participant_header(params[:state], @participants.length), url: new_admin_participant_path, text: 'Add a participant'}}
+#participant.row-fluid
+  .span12
+    / This will be inserted into table header div
+    .header.hidden.table-header{ data: { target_table: 'participants_index_table'} }
+      %h4
+        = display_participant_header(params[:state], @participants.length)
+        = link_to 'Add a participant', new_admin_participant_path, class: 'btn btn-primary nu-primary'
+
 .row-fluid
-  %table.table.table-bordered.table-hover#participants_list
+  %table#participants_index_table.table.table-bordered.table-hover
     %thead
       %tr.display
-        %th Participant ID
-        %th First Name
-        %th Last Name
+        %th.span1 ID
+        %th.span2 First Name
+        %th.span3 Last Name
         %th Studies
-        %th End of Release
         %th Join Date
         %th Account Email
     %tbody
-      - @participants.each do |p|
+      - @participants.each do |participant|
         %tr.display
-          %td
-            = p.id
-          %td{ class: "#{'nu' if p.pending_approval?}" }
-            = link_to p.first_name, admin_participant_path(p)
-          %td{ class: "#{'nu' if p.pending_approval?}" }
-            = link_to p.last_name, admin_participant_path(p)
+          - css_class = 'nu' if participant.pending_approval?
+          %td{ class: css_class }
+            = participant.id
+          %td{ class: css_class }
+            = link_to participant.first_name, admin_participant_path(participant)
+          %td{ class: css_class }
+            = link_to participant.last_name, admin_participant_path(participant)
             .pull-right
-              = image_tag 'child.png' if p.child?
-              = image_tag 'siblings.png' if p.has_relationships?
-          %td
-            %ul.unstyled
-              - p.study_involvements.each_with_index do |si,i|
-                %li{ class: "#{'more_display' if i > 2}" }
-                  = link_to si.study.display_name, admin_participant_path(p, tab: 'studies')
-                  %span.muted
-                    = " (#{si.state})"
-              %li.pull-right.btn.btn-link.show_button
-                = 'See more...' if p.study_involvements.size > 3
-          %td
-            %ul.unstyled
-              - p.study_involvements.each_with_index do |si,i|
-                %li{ class: "#{'more_display' if i > 2} #{'muted' if (!si.end_date.blank? && si.end_date < Date.today)}" }
-                  = si.end_date
-          %td
-            = p.created_at.to_date
-          %td
-            = p.account ? p.account.email : ''
+              = image_tag 'child.png' if participant.child?
+              = image_tag 'siblings.png' if participant.has_relationships?
+          %td{ class: css_class }
+            = render partial: '/admin/study_involvements/list', locals: { participant: participant }
+          %td{ class: css_class }
+            = participant.created_at.to_date
+          %td{ class: css_class }
+            = participant.account.email if participant.account
 

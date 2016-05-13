@@ -108,6 +108,7 @@ AudiologyRegistry::Application.routes.draw do
       member do
         patch :request_data
         patch :release_data
+        patch :return_data
       end
     end
 

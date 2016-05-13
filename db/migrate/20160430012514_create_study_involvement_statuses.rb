@@ -1,10 +1,10 @@
-class CreateStudyInvolvementStates < ActiveRecord::Migration
-  def change
-    create_table :study_involvement_states do |t|
+class CreateStudyInvolvementStatuses < ActiveRecord::Migration
+  def up
+    create_table :study_involvement_statuses do |t|
       t.references :study_involvement
       t.string :name
       t.date  :date
-      t.string :status
+      t.string :state
 
       t.timestamps null: false
     end
@@ -16,11 +16,12 @@ class CreateStudyInvolvementStates < ActiveRecord::Migration
       when 'enrolled'
         'completed'
       when 'withdrew'
-        'cancelled'
+        'canceled'
       else
         study_involvement.state
       end
-      study_involvement.build_study_involvement_state(name: new_state, date: study_involvement.state_date)
+      say study_involvement.inspect
+      study_involvement.build_study_involvement_status(name: new_state, date: study_involvement.state_date)
       study_involvement.save!
     end
   end

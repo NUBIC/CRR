@@ -1,0 +1,51 @@
+#results_released_not_returned
+  = form_for @search, url: return_data_admin_search_path(@search) do |f|
+    .row-group
+      .row-fluid
+        .span8
+          / This will be inserted into table header div
+          .header.table-header{ data: { target_table: 'search_result_list'} }
+            %h5
+              #{@search_participants_released.size} Participants released
+          %table.table.table-bordered.table-hover#search_result_list{ data: { selectable: 'true' }}
+            %thead
+              %tr
+                %th
+                  = check_box_tag "selectall"
+                %th
+                  ID
+                %th.span2
+                  First Name
+                %th.span3
+                  Last Name
+                %th.span5
+                  Studies
+            %tbody
+              - @search_participants_not_returned.each do |search_participant|
+                - participant = search_participant.participant
+                %tr
+                  %td
+                    = check_box_tag "[study_involvement_ids][]", search_participant.study_involvement.id, false, class: 'selectalloption'
+                  %td
+                    = participant.id
+                  %td
+                    = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
+                  %td
+                    = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+                  %td
+                    = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
+        #participant-return-ui.span4
+          .row-group-header{ data: { placeholder: 'Please select participants'}}
+            Set selected participants to:
+          .row-group
+            .control-group
+              = label_tag 'study_involvement_status', class: 'control-label' do
+                Completion status
+              .controls.controls-row
+                = select_tag 'study_involvement_status', grouped_options_for_select(study_involvement_status_options), include_blank: true, class: 'input-block-level'
+                %span.btn.btn-primary.help-popover{ title: 'State Flags', data: { toggle: 'modal', target: '#study_involvement_status_help'}}
+                  What do these mean?
+                = render partial: '/admin/study_involvements/help_modal'
+            .control-group
+              .controls.controls-row
+                = submit_tag 'Submit', class: 'btn btn-primary'

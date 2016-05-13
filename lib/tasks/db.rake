@@ -47,15 +47,67 @@ namespace :db do
     end
   end
 
-  private
-  def pgpassword_wrapper(password)
-    # Unlike mysqldump, you don't enter in the password on the command line, you set an environment variable
-    raise 'You need to pass in a block' unless block_given?
-    begin
-      ENV['PGPASSWORD'] = password
-      yield
-    ensure
-      ENV['PGPASSWORD'] = nil
+  desc "de-identify current database"
+  task de_id: :environment do
+    ActiveRecord::Base.record_timestamps = false
+    PaperTrail.enabled = false
+
+    fail "I cannot, in good conscience, let you do this in production" if Rails.env.production?
+    date_shift = rand(20).years + rand(20).month + rand(20).days
+    batch_size = 2000
+
+    puts "Processing #{Participant.count} participants in batches of #{batch_size}"
+    Participant.find_in_batches(batch_size: batch_size).with_index do |group, batch|
+      print "batch #{batch}..."
+      group.each{|participant| de_id_participant(participant, date_shift)}
+    end
+
+    puts "Processing #{Account.count} accounts in batches of #{batch_size}"
+    Account.find_in_batches(batch_size: batch_size).with_index do |group, batch|
+      print "batch #{batch}..."
+      group.each{|account| de_id_account(account, date_shift)}
     end
   end
+
+  private
+
+    def pgpassword_wrapper(password)
+      # Unlike mysqldump, you don't enter in the password on the command line, you set an environment variable
+      raise 'You need to pass in a block' unless block_given?
+      begin
+        ENV['PGPASSWORD'] = password
+        yield
+      ensure
+        ENV['PGPASSWORD'] = nil
+      end
+    end
+
+    def de_id_participant(participant, date_shift)
+      participant.email             = Faker::Internet.email                             unless participant.email.blank?
+      participant.first_name        = Faker::Name.first_name                            unless participant.first_name.blank?
+      participant.last_name         = Faker::Name.last_name                             unless participant.last_name.blank?
+      participant.primary_phone     = Faker::PhoneNumber.phone_number.split(" x")[0]    unless participant.primary_phone.blank?
+      participant.secondary_phone   = Faker::PhoneNumber.phone_number.split(" x")[0]    unless participant.secondary_phone.blank?
+      participant.address_line1     = Faker::Address.street_address                     unless participant.address_line1.blank?
+      participant.address_line2     = Faker::Address.secondary_address                  unless participant.address_line2.blank?
+      participant.city              = Faker::Address.city                               unless participant.city.blank?
+      participant.state             = Faker::Address.state                              unless participant.state.blank?
+      participant.zip               = Faker::Address.zip                                unless participant.zip.blank?
+
+      participant.primary_guardian_first_name = Faker::Name.first_name                  unless participant.primary_guardian_first_name.blank?
+      participant.primary_guardian_last_name  = Faker::Name.last_name                   unless participant.primary_guardian_last_name.blank?
+      participant.primary_guardian_email      = Faker::Internet.email                   unless participant.primary_guardian_email.blank?
+      participant.primary_guardian_phone      = Faker::PhoneNumber.phone_number.split(" x")[0]  unless participant.primary_guardian_phone.blank?
+
+      participant.secondary_guardian_first_name = Faker::Name.first_name                  unless participant.secondary_guardian_first_name.blank?
+      participant.secondary_guardian_last_name  = Faker::Name.last_name                   unless participant.secondary_guardian_last_name.blank?
+      participant.secondary_guardian_email      = Faker::Internet.email                   unless participant.secondary_guardian_email.blank?
+      participant.secondary_guardian_phone      = Faker::PhoneNumber.phone_number.split(" x")[0]  unless participant.secondary_guardian_phone.blank?
+      participant.save(:validate=>false)
+    end
+
+    def de_id_account(account, date_shift)
+      account.email = Faker::Internet.email unless account.email.blank?
+      account.save!
+    end
 end

@@ -1,0 +1,12 @@
+#study_involvement_status_help.modal.hide
+  .modal-header.nu
+    %h4
+      Status Flags
+      = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
+  .modal-body
+    - StudyInvolvementStatus.valid_statuses.each do |state|
+      %big
+        = state[:name].titleize
+      %p
+        = state[:description]
+      %br

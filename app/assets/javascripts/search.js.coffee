@@ -1,24 +1,28 @@
 $(document).ready ->
   # ---------------- index page ----------------
   $('#search table#search_index_table').livequery ->
-    table_element = $(this)
-    table_element.dataTable
+    $tableElement = $(this)
+
+    $tableElement.dataTable
       bScrollCollapse: true
       sPaginationType: "bootstrap"
       sDom: "<'row-fluid'<'span6 data-table-info-header'><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
       sWrapper: "dataTables_wrapper form-inline"
-      aaSorting: []
+      aaSorting: [[ 1, "asc" ]]
       bFilter: true
       iDisplayLength: 30
       bLengthChange: false
       oLanguage: { sSearch: "Filter:&nbsp;" }
       fnInitComplete: (oSettings, json)  ->
-        setTableHeader('search', table_element)
+        setTableHeader($tableElement)
 
   # ---------------- show/edit page ----------------
   # display results
   $('#search table#search_result_list').livequery ->
     $tableElement = $(this)
+    aoColumnDefs = []
+    if $tableElement.data('selectable')
+      aoColumnDefs = [{ 'bSortable': false, 'aTargets': [ 0 ] }]
 
     table = $tableElement.dataTable
       bScrollCollapse: true
@@ -26,20 +30,32 @@ $(document).ready ->
       sDom: "<'row-fluid'<'span6 data-table-info-header'><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
       sWrapper: "dataTables_wrapper form-inline"
       aaSorting: []
-      aoColumnDefs: [{ 'bSortable': false, 'aTargets': [ 0 ] }]
+      aoColumnDefs: aoColumnDefs
       bFilter: true
       iDisplayLength: 30
       bLengthChange: false
       oLanguage: { sSearch: "Filter:&nbsp;" }
       fnInitComplete: (oSettings, json)  ->
-        setTableHeader('search', $tableElement)
+        setTableHeader($tableElement)
 
     showHideMore(table.fnGetNodes(), true)
 
-    $checkboxes      = $('.selectalloption', table.fnGetNodes())
-    $releaseButton  = $('#release')
-    releaseButtonText = $releaseButton.html()
+    $releaseButton                = $('#release')
+    releaseButtonText             = $releaseButton.html()
+    $returnUIContainer            = $('#participant-return-ui')
+    $returnUIContainerHeader      = $returnUIContainer.find('.row-group-header')
+    $returnUIContainerBody        = $returnUIContainer.find('.row-group')
+    returnUIContainerHeaderText   = $returnUIContainerHeader.html()
+    $checkboxes                   = $('.selectalloption', table.fnGetNodes())
+    $submitReturnButton           = $returnUIContainerBody.find('input[type="submit"]')
+    $studyInvolvementStatusSelect = $('#study_involvement_status')
 
+    # Match minimal height of the return UI container to participants table
+    returnUIContainerHeaderTotalHeight  = $returnUIContainerHeader.height() + parseInt($returnUIContainerHeader.css('padding-top')) + parseInt($returnUIContainerHeader.css('padding-bottom'))
+    returnUIContainerBodyPadding        = parseInt($returnUIContainerBody.css('padding-top')) + parseInt($returnUIContainerBody.css('padding-bottom'))
+    $returnUIContainerBody.css('min-height', $('#search_result_list_wrapper').height() - returnUIContainerHeaderTotalHeight - returnUIContainerBodyPadding)
+
+    # "Release" button functionality. Disable button unless there is a selected participant
     setReleaseButton = () ->
       $releaseButton.attr('disabled', !$checkboxes.is(':checked'))
       count = $checkboxes.filter(":checked").length
@@ -48,15 +64,35 @@ $(document).ready ->
         label = label + 's'
       $releaseButton.html(releaseButtonText + ' ' + $checkboxes.filter(":checked").length + ' ' + label)
 
-    setReleaseButton()
+    # Return UI functionality: hide content if participants are not selected
+    setReturnUIVisibility = () ->
+      $returnUIContainerBody.contents().attr('hidden', !$checkboxes.is(':checked'))
+      if $checkboxes.is(':checked')
+        $returnUIContainerHeader.html(returnUIContainerHeaderText)
+      else
+        $returnUIContainerHeader.html($returnUIContainerHeader.data('placeholder'))
 
+    # Return UI functionality: disable submit button until state is selected
+    setSubmitReturnButton = () ->
+      $submitReturnButton.attr('disabled', $studyInvolvementStatusSelect.find('option:selected').val().length == 0)
+
+    setReleaseButton()      if $releaseButton.length
+    setReturnUIVisibility() if $returnUIContainer.length
+    setSubmitReturnButton() if $submitReturnButton.length
+
+    $studyInvolvementStatusSelect.on 'change', () ->
+      setSubmitReturnButton()
+
+    # 'selectall' checkboxes are reused in release and return workflows.
     $('#selectall').on 'click', () ->
       $checkboxes.prop('checked', $(this).is(':checked'))
-      setReleaseButton()
+      setReleaseButton() if $releaseButton.length
+      setReturnUIVisibility() if $returnUIContainer.length
 
     $checkboxes.on 'click', () ->
       $('#selectall').prop('checked', $checkboxes.filter(':checked').length == $checkboxes.length)
-      setReleaseButton()
+      setReleaseButton() if $releaseButton.length
+      setReturnUIVisibility() if $returnUIContainer.length
 
   # edit page -- search UI
   $('.btn-search-condition-add').livequery ->
@@ -87,7 +123,6 @@ $(document).ready ->
           location.reload()
 
   formatQuestion = (question) ->
-
     if $(question.element).hasClass('active')
       return $('<span class="user-circle"></span><span>' + question.text + '</span>'
       );
@@ -114,7 +149,6 @@ $(document).ready ->
       else
         $valuesContainer.html('')
         $submitButton.disable
-
 
   $('.question_list').livequery ->
     $tableElement = $(this)

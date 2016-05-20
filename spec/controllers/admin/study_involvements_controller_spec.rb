@@ -6,7 +6,7 @@ describe Admin::StudyInvolvementsController do
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
     @participant        = FactoryGirl.create(:participant, stage: 'approved')
     @study              = FactoryGirl.create(:study)
-    @params             = { participant_id: @participant.id, study_id: @study.id, start_date: Date.today, end_date: Date.tomorrow, study_involvement_state_attributes: { name: StudyInvolvementState::VALID_STATES.sample[:name] }}
+    @params             = { participant_id: @participant.id, study_id: @study.id, start_date: Date.today, end_date: Date.tomorrow, study_involvement_status_attributes: { name: StudyInvolvementStatus.valid_statuses.sample[:name] }}
     @study_involvement  = FactoryGirl.create(:study_involvement)
   end
 
@@ -81,7 +81,7 @@ describe Admin::StudyInvolvementsController do
 
       it 'builds study involvement state' do
         expect(assigns(:study_involvement)).not_to be_nil
-        expect(assigns(:study_involvement).study_involvement_state).not_to be_nil
+        expect(assigns(:study_involvement).study_involvement_status).not_to be_nil
       end
     end
 
@@ -96,7 +96,7 @@ describe Admin::StudyInvolvementsController do
         it 'creates a study_involvement_status' do
           expect {
             post :create, study_involvement: @params
-          }.to change{StudyInvolvementState.count}.by(1)
+          }.to change{StudyInvolvementStatus.count}.by(1)
         end
 
         it 'redirects to participant page' do
@@ -142,14 +142,14 @@ describe Admin::StudyInvolvementsController do
 
       it 'builds study involvement state if does not exist' do
         expect(assigns(:study_involvement)).not_to be_nil
-        expect(assigns(:study_involvement).study_involvement_state).not_to be_nil
+        expect(assigns(:study_involvement).study_involvement_status).not_to be_nil
       end
 
       it 'uses study involvement state if available' do
-        study_involvement_state = @study_involvement.build_study_involvement_state(name: StudyInvolvementState::VALID_STATES.sample[:name])
-        study_involvement_state.save!
+        study_involvement_status = @study_involvement.build_study_involvement_status(name: StudyInvolvementStatus.valid_statuses.sample[:name])
+        study_involvement_status.save!
         get :edit, id: @study_involvement.id
-        expect(assigns(:study_involvement).study_involvement_state).to eq study_involvement_state
+        expect(assigns(:study_involvement).study_involvement_status).to eq study_involvement_status
       end
     end
 

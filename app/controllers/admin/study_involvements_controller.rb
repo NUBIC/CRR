@@ -4,7 +4,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
   def new
     @participant = Participant.find(params[:participant_id])
     @study_involvement = @participant.study_involvements.new
-    @study_involvement.build_study_involvement_state
+    @study_involvement.build_study_involvement_status
     authorize @study_involvement
   end
 
@@ -24,7 +24,7 @@ class Admin::StudyInvolvementsController < Admin::AdminController
   def edit
     authorize @study_involvement
     @participant = @study_involvement.participant
-    @study_involvement.build_study_involvement_state unless @study_involvement.study_involvement_state
+    @study_involvement.build_study_involvement_status unless @study_involvement.study_involvement_status
   end
 
   def update
@@ -52,6 +52,6 @@ class Admin::StudyInvolvementsController < Admin::AdminController
     end
 
     def study_involvment_params
-      params.require(:study_involvement).permit(:participant_id, :study_id, :notes, :start_date, :end_date, :warning_date, :state, :state_date, study_involvement_state_attributes: [:name, :date, :status])
+      params.require(:study_involvement).permit(:participant_id, :study_id, :notes, :start_date, :end_date, :warning_date, :state, :state_date, study_involvement_status_attributes: [:name, :date, :state])
     end
 end

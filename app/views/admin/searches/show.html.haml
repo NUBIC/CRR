@@ -1,35 +1,56 @@
 - search_condition_group = @search.search_condition_group
 #search
-  - if @data_released
+  - if @search.data_released?
     .row-fluid
       .alert.nu-well
-        %h5
-          Data for this search has been released on #{@search.process_date}
-  - elsif @data_requested
+        %h5 Data for this search has been released on #{@search.process_date}
+  - elsif @search.data_requested?
     .row-fluid
       .alert.nu-well
-        %h5
-          Data for this search has been requested and is pending release.
+        %h5 Data for this search has been requested and is pending release.
   .row-fluid
     #search_name.span9
-      %h3
-        Name: #{@search.name}
       %h4
-        Study: #{@search.study.display_name}
+        Name: #{@search.name}
+        %br
+        %small
+          Study: #{@search.study.display_name}
 
     .span3
       .pull-right.btn-group
         - if search_condition_group.has_conditions?
           = button_tag 'Copy to a new request', data: { toggle: 'modal', target: '#new_search' }, class: 'btn btn-small'
-        - if @new_search || @data_requested && current_user.admin?
+        - if policy(@search).edit?
           = link_to edit_admin_search_path(@search, change_name: true), data: { async: true, target: '#search_name'}, class: 'btn btn-small' do
             Rename
           = link_to edit_admin_search_path(@search, change_study: true), data: { async: true, target: '#search_name'}, class: 'btn btn-small' do
             Change study
+        - if policy(@search).destroy?
           = link_to admin_search_path(@search), method: :delete, data: { confirm: "Are you sure you want to delete request #{@search.name}?" }, class: 'btn btn-danger btn-small' do
             Delete
+  - if @search.data_released?
+    .row-fluid
+      .span3
+        %b Start Date:
+        %span
+          = @search.start_date
+      .span3
+        %b Warning Date:
+        %span
+          = @search.warning_date
+      .span3
+        %b End Date:
+        %span
+          = @search.end_date
 
-  .row-fluid
+  - unless policy(@search).edit?
+    .row-fluid
+      .span12
+        %small
+          %a.dashed_underline{ data: { toggle: 'collapse', target: '#search-conditions-container'}}
+            Show request conditions
+
+  #search-conditions-container.row-fluid{class: "#{'collapse' unless policy(@search).edit?}" }
     .span12.search-container
       - if policy(@search).edit?
         %h5 Filter participants by the following conditions
@@ -37,20 +58,29 @@
       - else
         %h5 Participants filtered by the folowing conditions
         = render partial: 'admin/search_condition_groups/show', locals: { search_condition_group: search_condition_group }
+      %br
 
-  = render partial: 'results' if search_condition_group.has_conditions?
+  - if search_condition_group.has_conditions?
+    - if @search.data_requested? || @search.new?
+      = render partial: 'results_unreleased'
+    - elsif @search.data_released?
+      - if current_user.admin? || current_user.data_manager?
+        = render partial: 'results_released_admin'
+      - else
+        = render partial: 'results_released_user'
 
-  #new_search.modal.modal-large.hide
-    .row-fluid
-      .span12
-        .well.nu-well Please select request criteria
-    .row-fluid
-      .span10
-        = form_for Search.new( name: @search.name, study: @search.study), url: admin_searches_path( source_search: @search ), html: { class: 'form-horizontal'} do |f|
-          = render partial: 'search', locals: { f: f }
-          .control-group
-            .controls
-              = f.button 'Start', class: 'btn btn-primary nu-primary'
-              = button_tag 'Cancel', data: { dismiss: 'modal' }, aria: { hidden: true }, class: 'btn btn-warning'
+
+#new_search.modal.modal-large.hide
+  .modal-header.nu
+    %h5
+      Copy #{@search.name} to a new request
+      = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
+  .modal-body
+    = form_for Search.new( name: @search.name, study: @search.study), url: admin_searches_path( source_search: @search ), html: { class: 'form-horizontal'} do |f|
+      = render partial: 'search', locals: { f: f }
+      .control-group
+        .controls
+          = f.button 'Start', class: 'btn btn-primary nu-primary'
+          = button_tag 'Cancel', data: { dismiss: 'modal' }, aria: { hidden: true }, class: 'btn btn-warning'
 
 

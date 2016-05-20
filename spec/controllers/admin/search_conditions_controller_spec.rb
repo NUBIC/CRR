@@ -22,9 +22,9 @@ describe Admin::SearchConditionsController do
   end
 
   describe 'unauthorized access' do
-    ['data_manager?', 'researcher?'].each do |role|
+    ['data_manager?', 'researcher?', 'admin?'].each do |role|
       before(:each) do
-        allow(controller.current_user).to receive(:admin?).and_return(false)
+        allow(controller.current_user).to receive(role.to_sym).and_return(false)
       end
 
       describe 'POST create' do

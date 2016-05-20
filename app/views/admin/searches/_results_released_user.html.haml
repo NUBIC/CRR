@@ -1,18 +1,15 @@
+- show_returned = @state == 'returned'
 .row-fluid
   .span12
-    .row-group
-      %table.table.table-bordered.table-hover#search_result_list
-        %thead
-          %tr
-            %th First Name
-            %th Last Name
-            %th Studies
-            %th End of Release
-        %tbody
-          - @participants_released.each do |participant|
-            %tr.show-hide-container
-              %td
-                = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
-              %td
-                = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
-              = render partial: 'participant_study_cells', locals: { participant: participant}
+    .row-fluid
+      .span12
+        %ul.nav.nav-tabs
+          %li{ class: "#{'active' if @state.blank? }"}
+            = link_to "Participants released (#{@search_participants_not_returned.size})", admin_search_path(@search)
+          %li{ class: "#{'active' if @state == 'returned'}"}
+            = link_to "Participants returned (#{@search_participants_returned.size})", admin_search_path(@search, state: 'returned')
+    - if @state.blank?
+      = render partial: 'results_released_not_returned'
+    - else
+      = render partial: 'results_released_returned'
+

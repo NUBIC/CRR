@@ -1,4 +1,21 @@
 class SearchPolicy < ApplicationPolicy
+  class Scope
+    attr_reader :user, :scope
+
+    def initialize(user, scope)
+      @user  = user
+      @scope = scope
+    end
+
+    def resolve
+      if user.admin?
+        scope.all
+      else
+        scope.with_user(user)
+      end
+    end
+  end
+
   def index?
     can_manage? || is_researcher?
   end
@@ -8,7 +25,7 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def create?
-    can_manage? || is_researcher?
+    can_manage? || is_researcher? && on_study?
   end
 
   def show?
@@ -27,12 +44,24 @@ class SearchPolicy < ApplicationPolicy
     can_manage? && !record.data_released? || is_researcher? && on_study? && record.new?
   end
 
-  def request_data?
+  def copy?
     can_manage? || is_researcher? && on_study?
+  end
+
+  def request_data?
+    (can_manage? || is_researcher? && on_study?) && !record.data_requested?
   end
 
   def release_data?
     can_manage? && !record.data_released?
+  end
+
+  def return_data?
+    (can_manage? || is_researcher? && on_study?) && record.data_released?
+  end
+
+  def view_results?
+    can_manage? || (is_researcher? && on_study? && record.data_released?)
   end
 
   private

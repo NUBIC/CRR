@@ -24,10 +24,11 @@
         $displayList.hide()
         $element.text(moreLabel)
 
-@setTableHeader = (element_id, target) ->
-  header = $('#' + element_id + ' .table-header[data-target-table="' + $(target).attr('id') + '"]')
-  $('#' + $(target).attr('id') + '_wrapper .data-table-info-header').html(header.html())
-  header.hide()
+@setTableHeader = (target) ->
+  $header = $('.table-header[data-target-table="' + $(target).attr('id') + '"]')
+  if $header.length
+    $('#' + $(target).attr('id') + '_wrapper .data-table-info-header').html($header.html())
+    $header.remove()
 
 $('a.maintenance_mode_link').livequery ->
   $(this).on 'ajax:success', () ->
@@ -35,9 +36,9 @@ $('a.maintenance_mode_link').livequery ->
 
 $('a[data-toggle=modal]').livequery ->
   $(this).on 'click', () ->
-    console.log 'here'
-    $($(this).attr('data-target')).html("<h5 class='modal-header text-center'>Loading...</h5>")
-    $($(this).attr('data-target')).load($(this).attr('href'))
+    if $(this).attr('href')
+      $($(this).attr('data-target')).html("<h5 class='modal-header text-center'>Loading...</h5>")
+      $($(this).attr('data-target')).load($(this).attr('href'))
 
 # Bootstrap popover with custom click outside of popover and close(x) icon on popover
 

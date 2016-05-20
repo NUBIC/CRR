@@ -94,28 +94,28 @@
                     %th Start
                     %th Warning
                     %th End
-                    %th State
-                    %th Date
                     %th Status
+                    %th Date
+                    %th State
                 %tbody
-                  - @participant.study_involvements.each do |si|
+                  - @participant.study_involvements.each do |study_involvement|
                     %tr
                       %td
-                        = link_to si.study.display_name, edit_admin_study_involvement_path(si), data: { toggle: 'modal', target: '#study'}
+                        = link_to study_involvement.study.display_name, edit_admin_study_involvement_path(study_involvement), data: { toggle: 'modal', target: '#study'}
                       %td
-                        = si.start_date
+                        = study_involvement.start_date
                       %td
-                        = si.warning_date
+                        = study_involvement.warning_date
                       %td
-                        = si.end_date
+                        = study_involvement.end_date
                       %td
-                        = si.study_involvement_state.name.titleize if si.study_involvement_state
+                        = study_involvement.study_involvement_status.name.titleize if study_involvement.study_involvement_status
                       %td
-                        = si.study_involvement_state.date if si.study_involvement_state
+                        = study_involvement.study_involvement_status.date if study_involvement.study_involvement_status
                       %td
-                        = si.study_involvement_state.status if si.study_involvement_state
+                        = study_involvement.study_involvement_status.state if study_involvement.study_involvement_status
                       %td
-                        = si.notes
+                        = study_involvement.notes
           %br
           .contact-log
             .row-fluid

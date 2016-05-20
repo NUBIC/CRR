@@ -1,0 +1,21 @@
+- participant ||= @participant
+- show_all ||= false
+%ul.unstyled.show-hide-group
+  - participant.study_involvements.order('end_date DESC').each_with_index do |study_involvement, i|
+    - study_display_name = truncate(study_involvement.study.display_name, length: 50)
+    %li{ class: "#{'more_display' if i > 2 && !show_all}" }
+      .row-fluid.height-inherit
+        .span8.height-inherit
+          - if policy(study_involvement.study).show?
+            = link_to study_display_name, admin_participant_path(participant, tab: 'basics')
+          - else
+            = study_display_name
+          %small.muted
+            = " (#{study_involvement.status})"
+        .span4.height-inherit
+          %small.pull-right.nowrap{ class: "#{'muted' if study_involvement.inactive?}" }
+            End of release:
+            = study_involvement.end_date
+  - if participant.study_involvements.size > 3 && !show_all
+    %li.pull-right.btn.btn-link.show_button
+      = 'See more...'

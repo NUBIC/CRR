@@ -65,16 +65,6 @@ module ApplicationHelper
     state.blank? ? "All Participants (#{count})" : state == "approved" ? "Approved Participants (#{count})" : "Participants Pending Approval (#{count})"
   end
 
-  def display_search_header(state)
-    if state.blank?
-      current_user.admin? ? "All Requests for Participants (#{Search.all.count})" : "All Requests for Participants (#{Search.with_user(current_user).count})"
-    elsif state == "data_requested"
-      current_user.admin? ? "Data Requests (#{Search.requested.count})" : "Data Requests (#{Search.with_user(current_user).requested.count})"
-    elsif state == "data_released"
-      current_user.admin? ? "Data Released (#{Search.released.count})" : "Data Released (#{Search.with_user(current_user).released.count})"
-    end
-  end
-
   def display_address(participant)
     addr = [participant.address_line1, participant.address_line2].reject(&:blank?).join(', ').strip
     addr1 = [participant.city, participant.state, participant.zip].reject(&:blank?).join(' ').strip
@@ -130,12 +120,16 @@ module ApplicationHelper
     Consent.child_consent && Survey.child_survey
   end
 
-  def study_involvement_state_help
+  def study_involvement_status_help
     html = '<small>'
-    StudyInvolvementState::VALID_STATES.each do |s|
+    StudyInvolvementStatus.valid_statuses.each do |s|
       html << "<b>#{s[:name].titleize}</b>: #{s[:description]}<br/>"
     end
     html << '</small>'
     html.html_safe
+  end
+
+  def study_involvement_status_options
+    StudyInvolvementStatus.valid_statuses.group_by{|h| h[:group]}.map{|k,v| [k, v.map{|s| [s[:name].titleize, s[:name]]}]}
   end
 end

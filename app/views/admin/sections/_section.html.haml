@@ -1,7 +1,8 @@
 - form_target = @section.new_record? ? '#forms' : "#section_#{@section.id}"
 - form_id     = @section.new_record? ? 'admin_new_section' : 'admin_edit_section'
+- form_url    = @section.new_record? ? admin_sections_path : admin_section_path(@section)
 
-= form_for @section, url: admin_section_path(@section), html: { class: 'form-horizontal validate-form ajax-form', data: { target: form_target }, id: form_id } do |f|
+= form_for @section, url: form_url, html: { class: 'form-horizontal validate-form ajax-form', data: { target: form_target }, id: form_id } do |f|
   - if @section.new_record?
     = f.hidden_field :survey_id
   .control-group

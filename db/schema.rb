@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160522040525) do
+ActiveRecord::Schema.define(version: 20160522040729) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -188,10 +188,12 @@ ActiveRecord::Schema.define(version: 20160522040525) do
   end
 
   create_table "search_conditions", force: :cascade do |t|
-    t.integer "search_condition_group_id"
-    t.string  "operator",                  limit: 255
-    t.integer "question_id"
-    t.text    "values"
+    t.integer  "search_condition_group_id"
+    t.string   "operator",                  limit: 255
+    t.integer  "question_id"
+    t.text     "values"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "search_participant_study_involvements", force: :cascade do |t|

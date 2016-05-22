@@ -1,0 +1,12 @@
+= form_for ['admin', @comment.commentable, @comment], html: { class: 'validate-form ajax-form', data: { target:  '#comments'}} do |f|
+  .row-fluid
+    .span8
+      .control-group
+        .controls
+          = f.text_area :content, class: 'input-block-level required'
+  .row-fluid
+    .span4
+      .control-group
+        .controls
+          = f.submit 'Save', class: 'btn btn-primary nu-primary'
+          = link_to 'Cancel', ['admin', @comment.commentable, Comment], data: { async: true, target: '#comments' }, class: 'btn btn-warning'

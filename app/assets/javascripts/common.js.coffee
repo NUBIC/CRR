@@ -56,5 +56,51 @@ $('body').livequery 'click', (e) ->
     $('[data-toggle="popover"]').popover('hide');
 
 
+processAcyncRequest = ($link) ->
+  method  = $link.attr('data-method')
+  $target = $($link.attr('data-target'))
+
+  if method
+    $.ajax({
+      type: method
+      url: $link.attr('href')
+      dataType: 'html'
+      success: (data,textStatus,jqXHR) ->
+        if jqXHR.getResponseHeader('x-flash-errors') != null
+          $('.errors').notify({
+            message: { text: jqXHR.getResponseHeader('x-flash-errors') }
+            type: "error"
+          }).show()
+        else
+          $target.html(data)
+          if jqXHR.getResponseHeader('x-flash-notice') != null
+            $('.notifications').notify({
+              message: { text: jqXHR.getResponseHeader('x-flash-notice') }
+            }).show()
+        $($link.attr('data-target')).html(data)
+        $('#flash').html(jqXHR.getResponseHeader('x-flash') + '<div class=close></div>')
+      error: (jqXHR, status, error) ->
+        $('.errors').notify({
+          message: { text: jqXHR.getResponseHeader('x-flash-errors') }
+          type: "error"
+        }).show()
+    });
+  else
+    $($target).load( $link.attr('href'))
+  false
+
+$('a[data-async=true]').livequery 'click', () ->
+  $link = $(this)
+
+  if $link.attr('data-confirm')
+    message = $link.attr('data-confirm')
+    html    = "<div class=\"modal\" id=\"acyncConfirmationDialog\">\n  <div class=\"modal-header\">\n    <a class=\"close\" data-dismiss=\"modal\">×</a>\n    <h5>Are you sure?</h5>\n  </div>\n  <div class=\"modal-body\">\n    <p>" + message + "</p>\n  </div>\n  <div class=\"modal-footer\">\n    <a data-dismiss=\"modal\" class=\"btn btn-warning\">Cancel</a>\n    <a data-dismiss=\"modal\" class=\"btn btn-primary confirm\">OK</a>\n  </div>\n</div>"
+    $(html).modal()
+    $('#acyncConfirmationDialog .confirm').on 'click', () ->
+      processAcyncRequest($link)
+      $(html).modal('hide')
+  else
+    processAcyncRequest($link)
+  false
 
 

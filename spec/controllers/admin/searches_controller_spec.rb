@@ -486,6 +486,19 @@ describe Admin::SearchesController do
                 expect(assigns(:participants)).to be_nil
               end
             end
+
+            it 'sets comments' do
+              @search.comments.create(content: Faker::Lorem.sentence)
+              get :show, id: @search.id
+              expect(assigns(:comments).select(&:persisted?)).to match_array @search.comments.all
+            end
+
+            it 'builds a new comment' do
+              get :show, id: @search.id
+              expect(assigns(:comment)).to be_a Comment
+              expect(assigns(:comment)).to be_new_record
+              expect(assigns(:comment).commentable).to eq @search
+            end
           end
         end
       end

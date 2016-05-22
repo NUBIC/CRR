@@ -3,11 +3,12 @@ class Search < ActiveRecord::Base
   include AASM
 
   # Associations
-  belongs_to :study
-  belongs_to :user
+  belongs_to  :study
+  belongs_to  :user
   has_one     :search_condition_group, dependent: :destroy
   has_many    :search_participants,    dependent: :destroy
   has_many    :study_involvements, through: :search_participants
+  has_many    :comments, as: :commentable, dependent: :destroy
 
   accepts_nested_attributes_for :search_condition_group, allow_destroy: true
   accepts_nested_attributes_for :search_participants

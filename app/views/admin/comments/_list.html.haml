@@ -1,0 +1,15 @@
+#comments
+  %b Comments
+  %br
+  - @comments.select(&:persisted?).each do |comment|
+    .row-fluid
+      #{comment.content} -
+      %i
+        #{l(comment.created_at)} -
+      %i
+        #{comment.user.full_name}
+      - if policy(comment).destroy?
+        = link_to ['admin', @comment.commentable, comment], data: { async: true, target: '#comments', confirm: 'Are you sure you want to delete this comment?'}, method: :delete do
+          %i.icon-remove.red
+  %br
+  = render @comment

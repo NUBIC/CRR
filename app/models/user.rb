@@ -6,12 +6,13 @@ class User < ActiveRecord::Base
   devise :ldap_authenticatable, :trackable, :timeoutable
 
   # Associations
-  has_many :user_studies
-  has_many :studies, through: :user_studies
+  has_many  :user_studies
+  has_many  :studies, through: :user_studies
+  has_many  :comments, as: :commentable
 
   # Validations
   validates_presence_of   :netid
-  validate  :check_netid
+  validate                :check_netid
 
   # Hooks
   after_create :update_from_ldap

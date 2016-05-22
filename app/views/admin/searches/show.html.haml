@@ -69,6 +69,8 @@
       - else
         = render partial: 'results_released_user'
 
+  %hr
+  = render partial: '/admin/comments/list', locals: { commentable: @search }
 
 #new_search.modal.modal-large.hide
   .modal-header.nu

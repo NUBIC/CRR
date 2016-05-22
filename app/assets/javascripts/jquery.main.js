@@ -25,10 +25,11 @@ $(document).ready(function() {
     $(this).jqte();
     });
 
-  $("a[data-async=true]").livequery('click',function(){
-    $($(this).attr("data-target")).load( $(this).attr("href"));
-    return false;
-  });
+  // $("a[data-async=true]").livequery('click',function(){
+
+  //   $($(this).attr("data-target")).load( $(this).attr("href"));
+  //   return false;
+  // });
 
   $(".tokeninput").livequery(
     function(){

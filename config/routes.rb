@@ -110,6 +110,7 @@ AudiologyRegistry::Application.routes.draw do
         patch :release_data
         patch :return_data
       end
+      resources :comments, only: [:index, :create, :destroy]
     end
 
     # sections controller

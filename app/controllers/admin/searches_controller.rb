@@ -62,6 +62,8 @@ class Admin::SearchesController < Admin::AdminController
       @search_participants_returned      = @search_participants_released.returned
       @search_participants_not_returned  = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
     end
+    @comments = @search.comments
+    @comment  = @search.comments.build
   end
 
   def edit

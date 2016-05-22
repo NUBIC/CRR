@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160522041638) do
+ActiveRecord::Schema.define(version: 20160522041829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -249,28 +249,30 @@ ActiveRecord::Schema.define(version: 20160522041638) do
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
   create_table "studies", force: :cascade do |t|
-    t.string  "irb_number",          limit: 255
-    t.string  "name",                limit: 255
-    t.string  "pi_name",             limit: 255
-    t.string  "pi_email",            limit: 255
-    t.text    "other_investigators"
-    t.string  "contact_name",        limit: 255
-    t.string  "contact_email",       limit: 255
-    t.string  "short_title",         limit: 255
-    t.string  "sites",               limit: 255
-    t.string  "funding_source",      limit: 255
-    t.string  "website",             limit: 255
-    t.date    "start_date"
-    t.date    "end_date"
-    t.integer "min_age"
-    t.integer "max_age"
-    t.integer "accrual_goal"
-    t.integer "number_of_visits"
-    t.text    "protocol_goals"
-    t.text    "inclusion_criteria"
-    t.text    "exclusion_criteria"
-    t.text    "notes"
-    t.string  "state",               limit: 255
+    t.string   "irb_number",          limit: 255
+    t.string   "name",                limit: 255
+    t.string   "pi_name",             limit: 255
+    t.string   "pi_email",            limit: 255
+    t.text     "other_investigators"
+    t.string   "contact_name",        limit: 255
+    t.string   "contact_email",       limit: 255
+    t.string   "short_title",         limit: 255
+    t.string   "sites",               limit: 255
+    t.string   "funding_source",      limit: 255
+    t.string   "website",             limit: 255
+    t.date     "start_date"
+    t.date     "end_date"
+    t.integer  "min_age"
+    t.integer  "max_age"
+    t.integer  "accrual_goal"
+    t.integer  "number_of_visits"
+    t.text     "protocol_goals"
+    t.text     "inclusion_criteria"
+    t.text     "exclusion_criteria"
+    t.text     "notes"
+    t.string   "state",               limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "study_involvement_statuses", force: :cascade do |t|

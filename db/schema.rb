@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160522040729) do
+ActiveRecord::Schema.define(version: 20160522040831) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -231,9 +231,11 @@ ActiveRecord::Schema.define(version: 20160522040729) do
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree
 
   create_table "sections", force: :cascade do |t|
-    t.integer "survey_id"
-    t.text    "title"
-    t.integer "display_order"
+    t.integer  "survey_id"
+    t.text     "title"
+    t.integer  "display_order"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sessions", force: :cascade do |t|

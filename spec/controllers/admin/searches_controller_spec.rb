@@ -280,6 +280,49 @@ describe Admin::SearchesController do
         end
       end
     end
+
+    describe 'POST approve_return' do
+      describe 'without a role' do
+        before(:each) do
+          ROLES.map{|role| allow(controller.current_user).to receive(role.to_sym).and_return(false) }
+          post :approve_return, id: @search.id
+        end
+        include_examples 'unauthorized access: admin controller'
+      end
+
+      describe 'researcher on another study' do
+        before(:each) do
+          allow(controller.current_user).to receive(:researcher?).and_return(true)
+          @user.studies << @other_study
+          post :approve_return, id: @search.id
+        end
+        include_examples 'unauthorized access: admin controller'
+      end
+
+      describe 'researcher on same study' do
+        before(:each) do
+          allow(controller.current_user).to receive(:researcher?).and_return(true)
+          @user.studies << @study
+          post :approve_return, id: @search.id
+        end
+        include_examples 'unauthorized access: admin controller'
+      end
+
+      describe 'searches in other than "data_released" state' do
+        ROLES.each do |role|
+          ['new', 'data_requested'].each do |state|
+            before(:each) do
+              allow(controller.current_user).to receive(role.to_sym).and_return(true)
+              @user.studies << @study if role == 'researcher?'
+              @search.state = state
+              @search.save!
+              post :return_data, id: @search.id
+            end
+            include_examples 'unauthorized access: admin controller'
+          end
+        end
+      end
+    end
   end
 
   describe 'authorized access' do
@@ -680,9 +723,9 @@ describe Admin::SearchesController do
             expect(flash['notice']).not_to be_nil
           end
 
-          it 'redirects to search index' do
+          it 'redirects to search SHOW' do
             post :release_data, @valid_release_data_attributes
-            expect(response).to redirect_to(controller: :searches, action: :index)
+            expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
           end
 
           describe 'when corresponding EmailNotification is not available' do
@@ -721,9 +764,9 @@ describe Admin::SearchesController do
             expect(flash['error']).not_to be_nil
           end
 
-          it 'redirects to search index' do
+          it 'redirects to search SHOW' do
             post :release_data, @valid_release_data_attributes
-            expect(response).to redirect_to(controller: :searches, action: :index)
+            expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
           end
         end
       end
@@ -753,9 +796,9 @@ describe Admin::SearchesController do
           expect(flash['notice']).not_to be_nil
         end
 
-        it 'redirects to search index' do
+        it 'redirects to search SHOW' do
           post :return_data, @valid_return_data_attributes
-          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
+          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'released')
         end
       end
 
@@ -769,9 +812,56 @@ describe Admin::SearchesController do
           expect(flash['error']).not_to be_nil
         end
 
-        it 'redirects to search index' do
+        it 'redirects to search SHOW' do
           post :return_data, @valid_return_data_attributes
-          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
+          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'released')
+        end
+      end
+    end
+
+    describe 'POST approve_return' do
+      before(:each) do
+        allow(controller.current_user).to receive(:admin?).and_return(true)
+        @search.state = 'data_released'
+        @search.save!
+
+        @valid_return_data_attributes = { id: @search.id, study_involvement_ids: [@study_involvement.id]}
+      end
+
+      describe 'with valid parameters' do
+        before(:each) do
+          allow_any_instance_of(Search).to receive(:save).and_return(true)
+        end
+
+        it 'returns data' do
+          expect_any_instance_of(Search).to receive(:process_return_approval)
+          post :approve_return, @valid_return_data_attributes
+        end
+
+        it 'populates "notice" flash' do
+          post :approve_return, @valid_return_data_attributes
+          expect(flash['notice']).not_to be_nil
+        end
+
+        it 'renders SHOW' do
+          post :approve_return, @valid_return_data_attributes
+          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'returned')
+        end
+      end
+
+      describe 'with invalid parameters' do
+        before(:each) do
+          allow_any_instance_of(Search).to receive(:save).and_return(false)
+        end
+
+        it 'populates "error" flash' do
+          post :approve_return, @valid_return_data_attributes
+          expect(flash['error']).not_to be_nil
+        end
+
+        it 'redirects to SHOW' do
+          post :approve_return, @valid_return_data_attributes
+          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'returned')
         end
       end
     end

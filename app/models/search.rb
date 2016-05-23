@@ -101,8 +101,13 @@ class Search < ActiveRecord::Base
     study_involvements.map{|i| i.update_attributes(status: params[:study_involvement_status])}
   end
 
+  def process_return_approval(params)
+    study_involvements =  self.study_involvements.where(id: params[:study_involvement_ids])
+    study_involvements.map{|i| i.study_involvement_status.approve!}
+  end
+
   def set_request_date
-    self.request_date=Date.today
+    self.request_date = Date.today
     save
   end
 

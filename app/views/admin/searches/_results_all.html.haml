@@ -2,7 +2,7 @@
 .header.table-header{ data: { target_table: 'search_result_list'} }
   %h5
     .user-circle.input-append
-      #{@participants_released.size} released / #{@participants_count} participants returned
+    #{@search_participants_released.size} released / #{@participants_count} participants returned
 .row-fluid
   .span12
     .row-group
@@ -14,7 +14,6 @@
             %th Last Name
             %th Released In this request
             %th Studies
-            %th End of Release
         %tbody
           - @participants.each do |participant|
             %tr.show-hide-container
@@ -30,4 +29,5 @@
               %td
                 - if participant.released?(@search)
                   .user-circle
-              = render partial: 'participant_study_cells', locals: { participant: participant}
+              %td
+                = render partial: '/admin/study_involvements/list', locals: { participant: participant }

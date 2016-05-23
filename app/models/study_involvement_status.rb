@@ -30,7 +30,7 @@ class StudyInvolvementStatus < ActiveRecord::Base
     state :pending, initial: true
     state :approved
 
-    event :approved do
+    event :approve do
       transitions to: :approved, from: :pending
     end
   end

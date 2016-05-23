@@ -63,27 +63,6 @@ $(document).ready(function() {
        }
    } );});
 
-  $(".release-data-ajax-form").livequery(
-    'submit', function(e){
-      var formData= $(this).serializeArray();
-      var table = $('#search_result_list').dataTable();
-      var allData =table.$('input').serializeArray().concat(formData);
-      $.ajax({
-        type:"POST",
-        url: $(this).attr("action"),
-        data: allData,
-        success: function(data,message,xhr) {
-          if (xhr.getResponseHeader('x-flash-errors') !== null){
-            $(".notifications").notify({
-              message: { text: xhr.getResponseHeader('x-flash-errors') },
-              type: "error"
-            }).show();
-          }
-       }
-      });
-      return false;
-    });
-
   // -------------- datatables --------------
   $('#index_list').livequery(function(){
     $(this).dataTable( {

@@ -109,6 +109,7 @@ AudiologyRegistry::Application.routes.draw do
         patch :request_data
         patch :release_data
         patch :return_data
+        patch :approve_return
       end
       resources :comments, only: [:index, :create, :destroy]
     end

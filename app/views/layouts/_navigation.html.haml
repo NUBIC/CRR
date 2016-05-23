@@ -38,7 +38,7 @@
           %li
             = link_to "Requests expiring (#{searches.expiring.count})", admin_searches_path(state: 'data_expiring')
           %li
-            = link_to "View All (#{searches.count})", admin_searches_path
+            = link_to "All requests (#{searches.count})", admin_searches_path
           %li.divider
           %li
             = link_to 'Build a request', new_admin_search_path

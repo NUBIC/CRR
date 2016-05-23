@@ -60,6 +60,10 @@ class SearchPolicy < ApplicationPolicy
     (can_manage? || is_researcher? && on_study?) && record.data_released?
   end
 
+  def approve_return?
+    can_manage? && record.data_released?
+  end
+
   def view_results?
     can_manage? || (is_researcher? && on_study? && record.data_released?)
   end

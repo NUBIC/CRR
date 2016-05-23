@@ -1,39 +1,49 @@
-.row-group
-  .row-fluid
-    / This will be inserted into table header div
-    .header.table-header{ data: { target_table: 'search_result_list'} }
-      %h5
-        #{@search_participants_released.size} Participants released
-    %table.table.table-bordered.table-hover#search_result_list
-      %thead
-        %tr
-          %th
-            ID
-          %th.span2
-            First Name
-          %th.span3
-            Last Name
-          %th.span5
-            Studies
-          %th
-            Return status
-          %th
-            Return date
-      %tbody
-        - @search_participants_returned.each do |search_participant|
-          - participant = search_participant.participant
+- render_form ||= false
+#results_released_returned
+  .row-group
+    .row-fluid
+      / This will be inserted into table header div
+      .header.table-header{ data: { target_table: 'search_result_list'} }
+        %h5
+          #{@search_participants_released.size} Participants released
+      %table.table.table-bordered.table-hover#search_result_list
+        %thead
           %tr
-            %td
-              = participant.id
-            %td
-              = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
-            %td
-              = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
-            %td
-              = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
-            %td
-              #{search_participant.study_involvement.study_involvement_status.name.titleize}
-              %small.muted
-                (#{search_participant.study_involvement.study_involvement_status.state.titleize})
-            %td
-              = l(search_participant.study_involvement.study_involvement_status.created_at)
+            - if render_form
+              %th= check_box_tag "selectall"
+            %th
+              ID
+            %th.span2
+              First Name
+            %th.span3
+              Last Name
+            %th.span5
+              Studies
+            %th
+              Return status
+            %th
+              Return date
+        %tbody
+          - @search_participants_returned.each do |search_participant|
+            - participant = search_participant.participant
+            %tr
+              - if render_form
+                - disabled = search_participant.study_involvement.study_involvement_status.state == 'approved'
+                %td
+                  = check_box_tag "[study_involvement_ids][]", search_participant.study_involvement.id, false, class: 'selectalloption', disabled: disabled
+              %td
+                = participant.id
+              %td
+                = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
+              %td
+                = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+              %td
+                = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
+              %td
+                #{search_participant.study_involvement.study_involvement_status.name.titleize}
+                %small.muted
+                  (#{search_participant.study_involvement.study_involvement_status.state.titleize})
+              %td
+                = l(search_participant.study_involvement.study_involvement_status.created_at)
+      - if render_form
+        = submit_tag 'Approve return', class: 'btn btn-success', id: 'approve_return'

@@ -1,8 +1,8 @@
 class Admin::SearchesController < Admin::AdminController
   include EmailNotifications
 
-  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data]
-  before_action :set_studies, only: [:new, :edit, :show]
+  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return]
+  before_action :set_studies, only: [:new, :edit, :show, :release_data ]
 
   def index
     authorize Search
@@ -52,8 +52,8 @@ class Admin::SearchesController < Admin::AdminController
   def show
     authorize @search
     @state  = params[:state]
-    participants   = @search.new? ? @search.result : @search.search_participants.map(&:participant)
 
+    participants   = @search.new? ? @search.result : @search.search_participants.map(&:participant)
     @participants       = participants if policy(@search).view_results?
     @participants_count = participants.size
 
@@ -62,6 +62,7 @@ class Admin::SearchesController < Admin::AdminController
       @search_participants_returned      = @search_participants_released.returned
       @search_participants_not_returned  = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
     end
+
     @comments = @search.comments
     @comment  = @search.comments.build
   end
@@ -116,10 +117,7 @@ class Admin::SearchesController < Admin::AdminController
     else
       flash['error'] = @search.errors.full_messages.to_sentence
     end
-    respond_to do |format|
-      format.html { redirect_to admin_searches_path }
-      format.js { render js: "window.location.href = '#{admin_search_path(@search)}'" }
-    end
+    redirect_to admin_search_path(@search)
   end
 
   def return_data
@@ -130,7 +128,18 @@ class Admin::SearchesController < Admin::AdminController
     else
       flash['error'] = @search.errors.full_messages.to_sentence
     end
-    redirect_to admin_search_path(@search)
+    redirect_to admin_search_path(@search, state: 'released')
+  end
+
+  def approve_return
+    authorize @search
+    @search.process_return_approval(approve_return_params)
+    if @search.save
+      flash['notice'] = 'Returns approved'
+    else
+      flash['error'] = @search.errors.full_messages.to_sentence
+    end
+    redirect_to admin_search_path(@search, state: 'returned')
   end
 
   private
@@ -155,8 +164,7 @@ class Admin::SearchesController < Admin::AdminController
       params.require(:participant_ids)
       params.require(:start_date)
       params.require(:end_date)
-      params.permit(:warning_date)
-      params.permit(participant_ids: [])
+      params.permit(:id, :start_date, :warning_date, :end_date, participant_ids: [])
     end
 
     def return_data_params
@@ -164,6 +172,12 @@ class Admin::SearchesController < Admin::AdminController
       params.require(:study_involvement_status)
       params.require(:study_involvement_ids)
       params.permit(:study_involvement_status, :id, study_involvement_ids: [])
+    end
+
+    def approve_return_params
+      params.require(:id)
+      params.require(:study_involvement_ids)
+      params.permit(:id, study_involvement_ids: [])
     end
 end
 

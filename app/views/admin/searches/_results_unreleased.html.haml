@@ -2,16 +2,16 @@
 .header.table-header{ data: { target_table: 'search_result_list'} }
   %h5
     Results: #{@participants_count} participants returned
-    - if @search.result.any? && policy(@search).request_data?
+    - if @search.result.any? && current_user.researcher? && policy(@search).request_data?
       = form_for @search, url: request_data_admin_search_path(@search) do |f|
         .paragraph
           = f.button 'Request results', class: 'btn btn-success'
 
-- if current_user.admin? || current_user.data_manager?
-  .row-fluid
-    .span12
-      .row-group-header
-        = form_for @search, url: release_data_admin_search_path(@search), html: { class: 'validate-form release-data-ajax-form form-horizontal' } do |f|
+- if policy(@search).release_data?
+  = form_for @search, url: release_data_admin_search_path(@search) do |f|
+    .row-fluid
+      .span12
+        .row-group-header
           .row-fluid
             .span3
               %b Released Date:
@@ -23,31 +23,31 @@
               %b End of Release:
               = text_field_tag 'end_date', 2.week.from_now.to_date, class: 'input-small date required', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy', id: 'search-end-of-release-date'
             .span3
-              = f.button 'Release', class: 'btn btn-success pull-right', id: 'release'
-  .row-fluid
-    .span12
-      .row-group
-        %table.table.table-bordered.table-hover#search_result_list
-          %thead
-            %tr
-              %th= check_box_tag "selectall"
-              %th ID
-              %th First Name
-              %th Last Name
-              %th Studies
-              %th End of Release
-          %tbody
-            - @participants.each do |participant|
-              %tr.show-hide-container
-                %td
-                  = check_box_tag "[participant_ids][]", participant.id, false, class: 'selectalloption'
-                %td
-                  = link_to participant.id, admin_participant_path(participant)
-                %td
-                  = link_to participant.first_name, admin_participant_path(participant)
-                %td
-                  = link_to participant.last_name, admin_participant_path(participant)
-                  .pull-right
-                    = image_tag 'child.png' if participant.child?
-                    = image_tag 'siblings.png' if participant.has_relationships?
-                = render partial: 'participant_study_cells', locals: { participant: participant}
+              = f.button 'Release', class: 'btn btn-success pull-right', id: 'release', data: { confirm: 'Are you sure you want to release these participants?'}
+    .row-fluid
+      .span12
+        .row-group
+          %table.table.table-bordered.table-hover#search_result_list
+            %thead
+              %tr
+                %th= check_box_tag "selectall"
+                %th ID
+                %th First Name
+                %th Last Name
+                %th Studies
+                %th End of Release
+            %tbody
+              - @participants.each do |participant|
+                %tr.show-hide-container
+                  %td
+                    = check_box_tag "[participant_ids][]", participant.id, false, class: 'selectalloption'
+                  %td
+                    = link_to participant.id, admin_participant_path(participant)
+                  %td
+                    = link_to participant.first_name, admin_participant_path(participant)
+                  %td
+                    = link_to participant.last_name, admin_participant_path(participant)
+                    .pull-right
+                      = image_tag 'child.png' if participant.child?
+                      = image_tag 'siblings.png' if participant.has_relationships?
+                  = render partial: 'participant_study_cells', locals: { participant: participant}

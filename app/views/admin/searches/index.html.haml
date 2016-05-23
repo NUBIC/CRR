@@ -7,7 +7,7 @@
   %li{class: "#{'active' if @state == 'data_expiring'}"}
     = link_to "Requests expiring (#{searches.expiring.count})", admin_searches_path(state: 'data_expiring')
   %li{class: "#{'active' if @state.blank?}"}
-    = link_to "View All (#{searches.count})", admin_searches_path
+    = link_to "All requests (#{searches.count})", admin_searches_path
 
 .tab-content
   #search.row-fluid

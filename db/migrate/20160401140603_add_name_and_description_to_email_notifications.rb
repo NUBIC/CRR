@@ -10,6 +10,7 @@ class AddNameAndDescriptionToEmailNotifications < ActiveRecord::Migration
     end
 
     remove_column :email_notifications, :email_type, :string
+    Setup.email_notifications
   end
 
   def down

@@ -205,4 +205,9 @@ describe SearchCondition do
       end
     end
   end
+
+  it 'gets parent search' do
+    condition = @search_condition_group.search_conditions.new()
+    expect(@search_condition_group.get_search).to eq @search
+  end
 end

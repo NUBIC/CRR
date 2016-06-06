@@ -53,7 +53,7 @@ class SearchConditionGroup < ActiveRecord::Base
   end
 
   def has_conditions?
-    search_conditions.any? || search_condition_groups.joins(:search_conditions).all.any?
+    search_conditions.any? || search_condition_groups.any?{ |search_condition_group| search_condition_group.has_conditions? }
   end
 
   def validate_presence_of_operator
@@ -65,7 +65,7 @@ class SearchConditionGroup < ActiveRecord::Base
   end
 
   def copy(source_record)
-    return unless source_record.is_a?(self.class)
+    raise TypeError, "source has to be an object of class #{self.class.to_s}" unless source_record.is_a?(self.class)
     self.operator = source_record.operator
     source_record.search_conditions.each do |source_search_condition|
       search_condition = self.search_conditions.build

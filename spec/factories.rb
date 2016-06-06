@@ -1,13 +1,13 @@
 FactoryGirl.define do
   factory :study_involvement_state do
-    
+
   end
   factory :search_participant_study_involvement do
 
   end
   factory :study_involvement_status do
-    name "MyString"
-    status "MyString"
+    name  StudyInvolvementStatus.valid_statuses.map{|s| s[:name]}.sample
+    association :study_involvement, factory: :study_involvement
   end
 
 
@@ -30,8 +30,8 @@ FactoryGirl.define do
 
   factory :relationship do |r|
     r.category 'Child'
-    r.association :origin, :factory => :participant
-    r.association :destination, :factory => :participant
+    r.association :origin, factory: :participant
+    r.association :destination, factory: :participant
   end
 
   factory :study do |s|
@@ -42,17 +42,17 @@ FactoryGirl.define do
   factory :study_involvement do |si|
     si.start_date Date.new(2013, 10, 5)
     si.end_date Date.new(2013, 10, 10)
-    si.association :study, :factory => :study
-    si.association :participant, :factory => :participant
+    si.association :study, factory: :study
+    si.association :participant, factory: :participant
   end
 
   factory :contact_log do |cl|
     cl.mode 'phone'
-    cl.association :participant, :factory => :participant
+    cl.association :participant, factory: :participant
   end
 
   factory :search do |search|
-    search.association :study, :factory => :study
+    search.association :study, factory: :study
   end
   factory :search_condition_group do |scg|
     scg.association :search
@@ -103,7 +103,7 @@ FactoryGirl.define do
   end
 
   factory :consent_signature do |cs|
-    cs.association :consent, :factory => :consent
-    cs.association :participant, :factory => :participant
+    cs.association :consent, factory: :consent
+    cs.association :participant, factory: :participant
   end
 end

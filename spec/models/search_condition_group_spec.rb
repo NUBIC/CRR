@@ -80,4 +80,98 @@ describe SearchConditionGroup do
     @search_condition_group.save
     expect(@search_condition_group.result).to match_array([@participant3])
   end
+
+  it 'inverts current operator' do
+    @search_condition_group.operator = '|'
+    expect(@search_condition_group.invert_operator).to eq '&'
+
+    @search_condition_group.operator = '&'
+    expect(@search_condition_group.invert_operator).to eq '|'
+  end
+
+  it 'detects "OR" grouping' do
+    @search_condition_group.operator = '|'
+    expect(@search_condition_group).to be_is_or
+
+    @search_condition_group.operator = '&'
+    expect(@search_condition_group).not_to be_is_or
+  end
+
+  it 'detects "AND" grouping' do
+    @search_condition_group.operator = '&'
+    expect(@search_condition_group).to be_is_and
+
+    @search_condition_group.operator = '|'
+    expect(@search_condition_group).not_to be_is_and
+  end
+
+  describe 'detecting search conditions' do
+    it 'returns false if there are no search conditions in the group' do
+      expect(@search_condition_group).not_to have_conditions
+    end
+
+    it 'returns true if group has search conditions' do
+      search_condition = @search_condition_group.search_conditions.create(question: @q_date, values: ['12/12/2003'], operator: '>')
+      expect(@search_condition_group).to have_conditions
+    end
+
+    it 'returns false if search condition group has group without conditions' do
+      search_condition_group = @search_condition_group.search_condition_groups.create
+      expect(@search_condition_group).not_to have_conditions
+    end
+
+    it 'returns true if search condition group has group with conditions' do
+      search_condition_group = @search_condition_group.search_condition_groups.create
+      search_condition = search_condition_group.search_conditions.create(question: @q_date, values: ['12/12/2003'], operator: '>')
+      expect(@search_condition_group).to have_conditions
+    end
+  end
+
+  it 'returns pretty operator' do
+    @search_condition_group.operator = '&'
+    expect(@search_condition_group.pretty_operator).to eq 'AND'
+
+    @search_condition_group.operator = '|'
+    expect(@search_condition_group.pretty_operator).to eq 'OR'
+  end
+
+  describe 'getting parent search' do
+    it 'gets parent search for root search condition group' do
+      expect(@search_condition_group.get_search).to eq @search
+    end
+
+    it 'gets parent search from parent search condition group if current search condition group is nested' do
+      search_condition_group = @search_condition_group.search_condition_groups.create
+      expect(search_condition_group.search_condition_group).to receive(:get_search).and_return(@search)
+      search_condition_group.get_search
+    end
+  end
+
+  describe 'copying' do
+    before(:each) do
+      @source_search_condition_group = @search_condition_group.search_condition_groups.create(operator: '&')
+      (1..rand(10)).map{ @source_search_condition_group.search_conditions.create(question: @q_date, values: ['12/12/2003'], operator: '>') }
+      (1..rand(10)).map{ @source_search_condition_group.search_condition_groups.create }
+      @new_search_condition_group = @search_condition_group.search_condition_groups.create(operator: '|')
+    end
+
+    it 'fails to copy from another class' do
+      expect{@new_search_condition_group.copy(@search)}.to raise_error(TypeError).with_message('source has to be an object of class SearchConditionGroup')
+    end
+
+    it 'copies operator from the source record' do
+      @new_search_condition_group.copy(@source_search_condition_group)
+      expect(@new_search_condition_group.operator).to eq @source_search_condition_group.operator
+    end
+
+    it 'copies search conditions from the source record' do
+      @new_search_condition_group.copy(@source_search_condition_group)
+      expect(@new_search_condition_group.search_conditions.size).to eq @source_search_condition_group.search_conditions.size
+    end
+
+    it 'copies search condition groups from the source record' do
+      @new_search_condition_group.copy(@source_search_condition_group)
+      expect(@new_search_condition_group.search_condition_groups.size).to eq @source_search_condition_group.search_condition_groups.size
+    end
+  end
 end

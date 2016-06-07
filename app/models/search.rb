@@ -26,14 +26,22 @@ class Search < ActiveRecord::Base
   # AASM events and transitions
   aasm column: :state do
     state :new, initial: true
-    state :data_requested, :data_released
+    state :data_requested, :data_released, :data_returned, :data_return_approved
 
     event :request_data do
       transitions from: :new, to: :data_requested, after: [:process_request]
     end
 
     event :release_data do
-      transitions from: [:data_requested, :new], to: :data_released, after: [:process_release]
+      transitions from: [:data_requested, :new], to: :data_released, after: :process_release
+    end
+
+    event :complete_data_return do
+      transitions from: :data_released, to: :data_returned, guard: :all_participants_returned?, after: :set_return_completed_date
+    end
+
+    event :approve_data_return do
+      transitions from: :data_returned, to: :data_return_approved, after: :set_return_approved_date
     end
   end
 
@@ -46,8 +54,20 @@ class Search < ActiveRecord::Base
     where(state: 'data_released')
   end
 
+  def self.returned
+    where(state: 'data_returned')
+  end
+
+  def self.return_approved
+    where(state: 'data_return_approved')
+  end
+
   def self.expiring
     where("#{self.table_name}.warning_date <= '#{Date.today}' and (#{self.table_name}.end_date is null or #{self.table_name}.end_date > '#{Date.today}')")
+  end
+
+  def self.all_released
+    where(state: ['data_released', 'data_returned', 'data_return_approved'])
   end
 
   def self.default_ordering
@@ -64,12 +84,18 @@ class Search < ActiveRecord::Base
     return search_condition_group.result.reject {|p| p.has_study?(study) | p.do_not_contact? }
   end
 
+  # Methods associated with state change
+
+  # Triggered after researcher submits data request and state is changed to 'data requested'
   def process_request
     result.each {|participant| self.search_participants.create(participant: participant)}
     self.request_date = Date.today
     self.save
   end
 
+  # Triggered after state is changed to 'release processed'.
+  # Marks selected search participants as released and creates linked records in study_involvements table.
+  # Populates release start, stop and warning dates for the search.
   def process_release(params)
     if self.data_requested?
       result_search_participants = self.search_participants.where(participant_id: params[:participant_ids])
@@ -93,32 +119,25 @@ class Search < ActiveRecord::Base
     self.start_date   = params[:start_date]
     self.warning_date = params[:warning_date]
     self.end_date     = params[:end_date]
-    self.save
+    self.save!
   end
 
+  # Called on data return event. Updates status for selected study involvements.
+  # Moves search to 'data_returned' state when all participants are returned.
   def process_return(params)
     study_involvements =  self.study_involvements.where(id: params[:study_involvement_ids])
     study_involvements.map{|i| i.update_attributes(status: params[:study_involvement_status])}
+    self.complete_data_return! if self.all_participants_returned? && !self.data_returned?
   end
 
-  def process_return_approval(params)
-    study_involvements =  self.study_involvements.where(id: params[:study_involvement_ids])
-    study_involvements.map{|i| i.study_involvement_status.approve!}
+  # Called on return approval. Updates all study involvement statuses to 'approved' state
+  # and changes search status to 'data_return_approved'
+  def process_return_approval
+    study_involvements =  self.study_involvements.map{|i| i.study_involvement_status.approve!}
+    self.approve_data_return!
   end
 
-  def set_request_date
-    self.request_date = Date.today
-    save
-  end
-
-  def default_args
-    if self.id
-      self.name = "Request_#{self.id}" if self.name.blank?
-    else
-      self.name = "Request_#{Search.all.size+1}" if self.name.blank?
-    end
-  end
-
+  # Helper methods
   def display_user
     user.nil? ? '' : user.full_name
   end
@@ -149,7 +168,23 @@ class Search < ActiveRecord::Base
     end
   end
 
+  def all_participants_returned?
+    study_involvements.count == study_involvements.joins(:study_involvement_status).count
+  end
+
+  def results_available?
+    self.data_released? || self.data_returned? || self.data_return_approved?
+  end
+
   private
+    def default_args
+      if self.id
+        self.name = "Request_#{self.id}" if self.name.blank?
+      else
+        self.name = "Request_#{Search.all.size+1}" if self.name.blank?
+      end
+    end
+
     def end_date_cannot_be_before_start_date
       if end_date.present? && end_date <= start_date
         errors.add(:end_date, 'can\'t be before release date')
@@ -166,5 +201,15 @@ class Search < ActiveRecord::Base
 
     def create_condition_group
       self.build_search_condition_group unless self.search_condition_group
+    end
+
+    def set_return_approved_date
+      self.return_approved_date = Date.today
+      save
+    end
+
+    def set_return_completed_date
+      self.return_completed_date = Date.today
+      save
     end
 end

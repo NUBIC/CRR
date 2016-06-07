@@ -49,7 +49,6 @@ $(document).ready ->
     $checkboxes                   = $('.selectalloption', table.fnGetNodes()).not(':disabled')
     $submitReturnButton           = $returnUIContainerBody.find('input[type="submit"]')
     $studyInvolvementStatusSelect = $('#study_involvement_status')
-    $approveReturnButton          = $('#approve_return')
 
     # Match minimal height of the return UI container to participants table
     returnUIContainerHeaderTotalHeight  = $returnUIContainerHeader.height() + parseInt($returnUIContainerHeader.css('padding-top')) + parseInt($returnUIContainerHeader.css('padding-bottom'))
@@ -84,24 +83,16 @@ $(document).ready ->
     $studyInvolvementStatusSelect.on 'change', () ->
       setSubmitReturnButton()
 
-    # Approve UI functionality: disable submit button until study involvements are selected
-    seApproveReturnButton = () ->
-      $approveReturnButton.attr('disabled',!$checkboxes.is(':checked'))
-
-    seApproveReturnButton() if $approveReturnButton.length
-
     # 'selectall' checkboxes are reused in release and return workflows.
     $('#selectall').on 'click', () ->
       $checkboxes.prop('checked', $(this).is(':checked'))
       setReleaseButton() if $releaseButton.length
       setReturnUIVisibility() if $returnUIContainer.length
-      seApproveReturnButton() if $approveReturnButton.length
 
     $checkboxes.on 'click', () ->
       $('#selectall').prop('checked', $checkboxes.filter(':checked').length == $checkboxes.length)
       setReleaseButton() if $releaseButton.length
       setReturnUIVisibility() if $returnUIContainer.length
-      seApproveReturnButton() if $approveReturnButton.length
 
   # edit page -- search UI
   $('.btn-search-condition-add').livequery ->

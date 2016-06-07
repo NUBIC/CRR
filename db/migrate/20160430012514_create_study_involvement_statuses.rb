@@ -20,7 +20,6 @@ class CreateStudyInvolvementStatuses < ActiveRecord::Migration
       else
         study_involvement.state
       end
-      say study_involvement.inspect
       study_involvement.build_study_involvement_status(name: new_state, date: study_involvement.state_date)
       study_involvement.save!
     end

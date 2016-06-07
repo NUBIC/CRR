@@ -16,7 +16,7 @@
             %th Studies
         %tbody
           - @participants.each do |participant|
-            %tr.show-hide-container
+            %tr
               %td
                 = link_to participant.id, admin_participant_path(participant)
               %td

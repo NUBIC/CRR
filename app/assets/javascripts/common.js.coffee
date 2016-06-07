@@ -1,9 +1,6 @@
 @showHideMore = (target, applyToContainer) ->
   getDisplayList = (triggerElement) ->
-    if applyToContainer
-      $displayList = triggerElement.closest('.show-hide-container').find('.more_display')
-    else
-      $displayList = triggerElement.closest('.show-hide-group').find('.more_display')
+    $displayList = triggerElement.closest('.show-hide-group').find('.more_display')
     return $displayList
 
   moreLabel = 'See more...'
@@ -30,6 +27,25 @@
     $('#' + $(target).attr('id') + '_wrapper .data-table-info-header').html($header.html())
     $header.remove()
 
+@initializeDefaultTable = ($target, callback, sorting, header) ->
+  sorting = [[ 0, "asc" ]] unless sorting
+  header = 'header' unless header
+  $target.dataTable( {
+    fnInfoCallback: () ->
+      callback
+    bScrollCollapse: true,
+    sPaginationType: "bootstrap",
+    sDom: "<'row-fluid'<'span6 " + header + "'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+    sWrapper: "dataTables_wrapper form-inline",
+    aaSorting: sorting
+    bFilter: true,
+    iDisplayLength: 30,
+    bLengthChange: false,
+    oLanguage: {
+      sSearch: "Filter: ",
+    }
+  });
+
 $('a.maintenance_mode_link').livequery ->
   $(this).on 'ajax:success', () ->
     location.reload()
@@ -41,7 +57,6 @@ $('a[data-toggle=modal]').livequery ->
       $($(this).attr('data-target')).load($(this).attr('href'))
 
 # Bootstrap popover with custom click outside of popover and close(x) icon on popover
-
 $('[data-toggle=popover]').livequery ->
   $(this).popover();
 

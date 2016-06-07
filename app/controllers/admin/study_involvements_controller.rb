@@ -52,6 +52,6 @@ class Admin::StudyInvolvementsController < Admin::AdminController
     end
 
     def study_involvment_params
-      params.require(:study_involvement).permit(:participant_id, :study_id, :notes, :start_date, :end_date, :warning_date, :state, :state_date, study_involvement_status_attributes: [:name, :date, :state])
+      params.require(:study_involvement).permit(:participant_id, :study_id, :notes, :start_date, :end_date, :warning_date, :state, :state_date, study_involvement_status_attributes: [:name, :date, :state, :_destroy, :id])
     end
 end

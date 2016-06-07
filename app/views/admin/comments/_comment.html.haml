@@ -8,5 +8,5 @@
     .span4
       .control-group
         .controls
-          = f.submit 'Save', class: 'btn btn-primary nu-primary'
-          = link_to 'Cancel', ['admin', @comment.commentable, Comment], data: { async: true, target: '#comments' }, class: 'btn btn-warning'
+          = f.submit 'Save', class: 'btn'
+          = link_to 'Cancel', ['admin', @comment.commentable, Comment], data: { async: true, target: '#comments' }, class: 'btn'

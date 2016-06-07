@@ -33,15 +33,15 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def edit?
-    can_manage? && !record.data_released? || is_researcher? && on_study? && record.new?
+    can_edit?
   end
 
   def update?
-    can_manage? && !record.data_released? || is_researcher? && on_study? && record.new?
+    can_edit?
   end
 
   def destroy?
-    can_manage? && !record.data_released? || is_researcher? && on_study? && record.new?
+    can_edit?
   end
 
   def copy?
@@ -49,23 +49,23 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def request_data?
-    (can_manage? || is_researcher? && on_study?) && !record.data_requested?
+    (can_manage? || is_researcher? && on_study?) && record.new?
   end
 
   def release_data?
-    can_manage? && !record.data_released?
+    can_manage? && (record.new? || record.data_requested?)
   end
 
   def return_data?
-    (can_manage? || is_researcher? && on_study?) && record.data_released?
+    (can_manage? && (record.data_released? || record.data_returned?) || is_researcher? && on_study? && record.data_released?)
   end
 
   def approve_return?
-    can_manage? && record.data_released?
+    can_manage? && record.data_returned?
   end
 
   def view_results?
-    can_manage? || (is_researcher? && on_study? && record.data_released?)
+    can_manage? || (is_researcher? && on_study?) && record.results_available?
   end
 
   private
@@ -75,5 +75,9 @@ class SearchPolicy < ApplicationPolicy
 
     def on_study?
       user.studies.active.include?(record.study)
+    end
+
+    def can_edit?
+      can_manage? && (record.new? || record.data_requested?) || is_researcher? && on_study? && record.new?
     end
 end

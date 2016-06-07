@@ -1,49 +1,76 @@
 - render_form ||= false
+- table_data = render_form ? { selectable: 'true' } : {}
 #results_released_returned
   .row-group
     .row-fluid
-      / This will be inserted into table header div
-      .header.table-header{ data: { target_table: 'search_result_list'} }
-        %h5
-          #{@search_participants_released.size} Participants released
-      %table.table.table-bordered.table-hover#search_result_list
-        %thead
-          %tr
-            - if render_form
-              %th= check_box_tag "selectall"
-            %th
-              ID
-            %th.span2
-              First Name
-            %th.span3
-              Last Name
-            %th.span5
-              Studies
-            %th
-              Return status
-            %th
-              Return date
-        %tbody
-          - @search_participants_returned.each do |search_participant|
-            - participant = search_participant.participant
+      %div{ class: "#{render_form ? 'span9' : 'span12'}"}
+        / This will be inserted into table header div
+        .header.table-header{ data: { target_table: 'search_result_list'} }
+          %h5
+            #{@search_participants_released.size} Participants released
+        %table.table.table-bordered.table-hover#search_result_list{ data: table_data }
+          %thead
             %tr
               - if render_form
-                - disabled = search_participant.study_involvement.study_involvement_status.state == 'approved'
+                %th.span1
+                  = check_box_tag "selectall"
+              %th.span1
+                ID
+              %th.span2
+                First Name
+              %th.span2
+                Last Name
+              %th.span2
+                Studies
+              %th.span2
+                Return status
+              %th.span3
+                Last updated
+          %tbody
+            - @search_participants_returned.each do |search_participant|
+              - participant = search_participant.participant
+              - study_involvement_status = search_participant.study_involvement.study_involvement_status
+              %tr
+                - if render_form
+                  - disabled = study_involvement_status.state == 'approved'
+                  %td
+                    - unless study_involvement_status.state == 'approved'
+                      = check_box_tag "[study_involvement_ids][]", search_participant.study_involvement.id, false, class: 'selectalloption', disabled: disabled
                 %td
-                  = check_box_tag "[study_involvement_ids][]", search_participant.study_involvement.id, false, class: 'selectalloption', disabled: disabled
-              %td
-                = participant.id
-              %td
-                = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
-              %td
-                = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
-              %td
-                = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
-              %td
-                #{search_participant.study_involvement.study_involvement_status.name.titleize}
-                %small.muted
-                  (#{search_participant.study_involvement.study_involvement_status.state.titleize})
-              %td
-                = l(search_participant.study_involvement.study_involvement_status.created_at)
+                  = participant.id
+                %td
+                  = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
+                %td
+                  = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+                %td
+                  = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
+                %td
+                  #{study_involvement_status.name.titleize}
+                  %small.muted
+                    (#{study_involvement_status.state.titleize})
+                %td
+                  %small.muted
+                    = l(study_involvement_status.updated_at)
+                    - if study_involvement_status.versions.last.whodunnit
+                      by #{User.where(id: study_involvement_status.versions.last.whodunnit).map(&:full_name).join(',')}
       - if render_form
-        = submit_tag 'Approve return', class: 'btn btn-success', id: 'approve_return'
+        #participant-return-ui.span3
+          .row-group-header{ data: { placeholder: 'Please select participants'}}
+            Set selected participants to:
+          .row-group
+            .control-group
+              = label_tag 'study_involvement_status', class: 'control-label' do
+                Completion status
+              .controls.controls-row
+                = select_tag 'study_involvement_status', grouped_options_for_select(study_involvement_status_options), include_blank: true, class: 'input-block-level'
+                %span.btn.btn-primary.help-popover{ title: 'State Flags', data: { toggle: 'modal', target: '#study_involvement_status_help'}}
+                  What do these mean?
+                = render partial: '/admin/study_involvements/help_modal'
+            .control-group
+              .controls.controls-row
+                = submit_tag 'Submit', class: 'btn btn-primary'
+
+- if current_user.admin? && (@search.data_released? || @search.data_returned?)
+  = link_to "Approve data return", approve_return_admin_search_path(@search), data: { confirm: 'Are you sure you want to approve return for this data request?'}, class: 'btn btn-success', id: 'approve_return', disabled: !policy(@search).approve_return?, method: :patch
+  %small.muted
+    Return approval locks participant states and is available when all the participants for a study are assigned a status.

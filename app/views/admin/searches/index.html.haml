@@ -3,7 +3,7 @@
   %li{class: "#{'active' if @state == 'data_requested'}"}
     = link_to "Requests submitted (#{searches.requested.count})", admin_searches_path(state: 'data_requested')
   %li{class: "#{'active' if @state == 'data_released'}"}
-    = link_to "Requests released (#{searches.released.count})", admin_searches_path(state: 'data_released')
+    = link_to "Requests released (#{searches.all_released.count})", admin_searches_path(state: 'data_released')
   %li{class: "#{'active' if @state == 'data_expiring'}"}
     = link_to "Requests expiring (#{searches.expiring.count})", admin_searches_path(state: 'data_expiring')
   %li{class: "#{'active' if @state.blank?}"}

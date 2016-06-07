@@ -1,5 +1,6 @@
 require 'spec_helper'
-ROLES = ['data_manager?', 'researcher?', 'admin?']
+ROLES   = ['data_manager?', 'researcher?', 'admin?']
+STATES  = Search.aasm.states.map(&:name)
 
 describe Admin::SearchesController do
   before(:each) do
@@ -90,28 +91,34 @@ describe Admin::SearchesController do
       end
 
       describe 'researcher on study for searches in other than "new" state' do
-        ['data_requested', 'data_released'].each do |state|
-          before(:each) do
-            allow(controller.current_user).to receive(:researcher?).and_return(true)
-            @user.studies << @study
-            @search.state = state
-            @search.save!
-            get :edit, id: @search.id
+        STATES.each do |state|
+          unless state == :new
+            before(:each) do
+              allow(controller.current_user).to receive(:researcher?).and_return(true)
+              @user.studies << @study
+              @search.state = state
+              @search.save!
+              get :edit, id: @search.id
+            end
+            include_examples 'unauthorized access: admin controller'
           end
-          include_examples 'unauthorized access: admin controller'
         end
       end
 
-      describe 'searches in "data_released" state' do
+      describe 'searches in other than "new" and "data_requested" state' do
         ROLES.each do |role|
-          before(:each) do
-            allow(controller.current_user).to receive(role.to_sym).and_return(true)
-            @user.studies << @study if role == 'researcher?'
-            @search.state = 'data_released'
-            @search.save!
-            get :edit, id: @search.id
+          STATES.each do |state|
+            unless [:new, :data_requested].include? state
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                get :edit, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
+            end
           end
-          include_examples 'unauthorized access: admin controller'
         end
       end
     end
@@ -135,26 +142,32 @@ describe Admin::SearchesController do
       end
 
       describe 'researcher on study for searches in other than "new" state' do
-        ['data_requested', 'data_released'].each do |state|
-          before(:each) do
-            allow(controller.current_user).to receive(:researcher?).and_return(true)
-            @user.studies << @study
-            @search.state = state
-            @search.save!
-            post :update, id: @search.id, search: @params
+        STATES.each do |state|
+          unless state == :new
+            before(:each) do
+              allow(controller.current_user).to receive(:researcher?).and_return(true)
+              @user.studies << @study
+              @search.state = state
+              @search.save!
+              post :update, id: @search.id, search: @params
+            end
+            include_examples 'unauthorized access: admin controller'
           end
-          include_examples 'unauthorized access: admin controller'
         end
       end
 
-      describe 'searches in "data_released" state' do
+      describe 'searches in other than "new" and "data_requested" state' do
         ROLES.each do |role|
-          before(:each) do
-            allow(controller.current_user).to receive(role.to_sym).and_return(true)
-            @user.studies << @study if role == 'researcher?'
-            @search.state = 'data_released'
-            @search.save!
-            post :update, id: @search.id, search: @params
+          STATES.each do |state|
+            unless [:new, :data_requested].include? state
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :update, id: @search.id, search: @params
+              end
+            end
           end
         end
       end
@@ -179,28 +192,34 @@ describe Admin::SearchesController do
       end
 
       describe 'researcher on study for searches in other than "new" state' do
-        ['data_requested', 'data_released'].each do |state|
-          before(:each) do
-            allow(controller.current_user).to receive(:researcher?).and_return(true)
-            @user.studies << @study
-            @search.state = state
-            @search.save!
-            post :destroy, id: @search.id
+        STATES.each do |state|
+          unless state == :new
+            before(:each) do
+              allow(controller.current_user).to receive(:researcher?).and_return(true)
+              @user.studies << @study
+              @search.state = state
+              @search.save!
+              post :destroy, id: @search.id
+            end
+            include_examples 'unauthorized access: admin controller'
           end
-          include_examples 'unauthorized access: admin controller'
         end
       end
 
-      describe 'searches in "data_released" state' do
+      describe 'searches in other than "new" and "data_requested" state' do
         ROLES.each do |role|
-          before(:each) do
-            allow(controller.current_user).to receive(role.to_sym).and_return(true)
-            @user.studies << @study if role == 'researcher?'
-            @search.state = 'data_released'
-            @search.save!
-            post :destroy, id: @search.id
+          STATES.each do |state|
+            unless [:new, :data_requested].include? state
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :destroy, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
+            end
           end
-          include_examples 'unauthorized access: admin controller'
         end
       end
     end
@@ -222,6 +241,23 @@ describe Admin::SearchesController do
         end
         include_examples 'unauthorized access: admin controller'
       end
+
+      describe 'searches in other than "new" state' do
+        ROLES.each do |role|
+          STATES.each do |state|
+            unless [:new].include? state
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :request_data, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
+            end
+          end
+        end
+      end
     end
 
     describe 'POST release_data' do
@@ -233,16 +269,20 @@ describe Admin::SearchesController do
         include_examples 'unauthorized access: admin controller'
       end
 
-      describe 'searches in "data_released" state' do
+      describe 'searches in other than "new" and "data_requested" state' do
         ROLES.each do |role|
-          before(:each) do
-            allow(controller.current_user).to receive(role.to_sym).and_return(true)
-            @user.studies << @study if role == 'researcher?'
-            @search.state = 'data_released'
-            @search.save!
-            post :release_data, id: @search.id
+          STATES.each do |state|
+            unless [:new, :data_requested].include? state
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :release_data, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
+            end
           end
-          include_examples 'unauthorized access: admin controller'
         end
       end
     end
@@ -267,15 +307,17 @@ describe Admin::SearchesController do
 
       describe 'searches in other than "data_released" state' do
         ROLES.each do |role|
-          ['new', 'data_requested'].each do |state|
-            before(:each) do
-              allow(controller.current_user).to receive(role.to_sym).and_return(true)
-              @user.studies << @study if role == 'researcher?'
-              @search.state = state
-              @search.save!
-              post :return_data, id: @search.id
+          STATES.each do |state|
+            unless state == :data_released
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :return_data, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
             end
-            include_examples 'unauthorized access: admin controller'
           end
         end
       end
@@ -308,17 +350,36 @@ describe Admin::SearchesController do
         include_examples 'unauthorized access: admin controller'
       end
 
+      describe 'searches in other than "data_returned" state' do
+        ROLES.each do |role|
+          STATES.each do |state|
+            unless state == :data_returned
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :return_data, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
+            end
+          end
+        end
+      end
+
       describe 'searches in other than "data_released" state' do
         ROLES.each do |role|
-          ['new', 'data_requested'].each do |state|
-            before(:each) do
-              allow(controller.current_user).to receive(role.to_sym).and_return(true)
-              @user.studies << @study if role == 'researcher?'
-              @search.state = state
-              @search.save!
-              post :return_data, id: @search.id
+          STATES.each do |state|
+            unless state == :data_released
+              before(:each) do
+                allow(controller.current_user).to receive(role.to_sym).and_return(true)
+                @user.studies << @study if role == 'researcher?'
+                @search.state = state
+                @search.save!
+                post :return_data, id: @search.id
+              end
+              include_examples 'unauthorized access: admin controller'
             end
-            include_examples 'unauthorized access: admin controller'
           end
         end
       end
@@ -480,28 +541,23 @@ describe Admin::SearchesController do
             expect(response).to render_template('show')
           end
 
-          it "populates released counts in 'data_released' state" do
-            @search.state = 'data_released'
-            @search.save!
+          it "populates released counts if data is available" do
+            allow_any_instance_of(Search).to receive(:results_available?).and_return(true)
             get :show, id: @search.id
             expect(assigns(:search_participants_released)).not_to be_nil
             expect(assigns(:search_participants_returned)).not_to be_nil
             expect(assigns(:search_participants_not_returned)).not_to be_nil
           end
 
-          ['data_requested', 'new'].each do |state|
-            it "does not populate released counts in '#{state}' state" do
-              @search.state = state
-              @search.save!
-              get :show, id: @search.id
-              expect(assigns(:search_participants_released)).to be_nil
-              expect(assigns(:search_participants_returned)).to be_nil
-              expect(assigns(:search_participants_not_returned)).to be_nil
-            end
+          it "does not populate released counts if data is not available" do
+            allow_any_instance_of(Search).to receive(:results_available?).and_return(false)
+            expect(assigns(:search_participants_released)).to be_nil
+            expect(assigns(:search_participants_returned)).to be_nil
+            expect(assigns(:search_participants_not_returned)).to be_nil
           end
 
-          ['data_requested', 'new', 'data_released'].each do |state|
-            if role == 'admin?' || role == 'data_manager?' || role == 'researcher?' && state == 'data_released'
+          STATES.each do |state|
+            if [:data_released, :data_returned, :data_return_approved].include? state
               it "retrieves participants for search in #{state} state" do
                 @search.state = state
                 @search.save!
@@ -520,28 +576,35 @@ describe Admin::SearchesController do
                 expect(assigns(:participants)).not_to be_nil
               end
             else
-              it "does not display participants for search in #{state} state" do
-                @search.state = state
-                @search.save!
-
-
-                get :show, id: @search.id
-                expect(assigns(:participants)).to be_nil
+              if role == 'researcher?'
+                it "does not display participants for search in #{state} state" do
+                  @search.state = state
+                  @search.save!
+                  get :show, id: @search.id
+                  expect(assigns(:participants)).to be_nil
+                end
+              else
+                it "displays participants for search in #{state} state" do
+                  @search.state = state
+                  @search.save!
+                  get :show, id: @search.id
+                  expect(assigns(:participants)).not_to be_nil
+                end
               end
             end
+          end
 
-            it 'sets comments' do
-              @search.comments.create(content: Faker::Lorem.sentence)
-              get :show, id: @search.id
-              expect(assigns(:comments).select(&:persisted?)).to match_array @search.comments.all
-            end
+          it 'sets comments' do
+            @search.comments.create(content: Faker::Lorem.sentence)
+            get :show, id: @search.id
+            expect(assigns(:comments).select(&:persisted?)).to match_array @search.comments.all
+          end
 
-            it 'builds a new comment' do
-              get :show, id: @search.id
-              expect(assigns(:comment)).to be_a Comment
-              expect(assigns(:comment)).to be_new_record
-              expect(assigns(:comment).commentable).to eq @search
-            end
+          it 'builds a new comment' do
+            get :show, id: @search.id
+            expect(assigns(:comment)).to be_a Comment
+            expect(assigns(:comment)).to be_new_record
+            expect(assigns(:comment).commentable).to eq @search
           end
         end
       end
@@ -558,9 +621,13 @@ describe Admin::SearchesController do
             end
           end
 
-          it 'renders EDIT template in HTML format' do
-            get :edit, id: @search.id
-            expect(response).to render_template('edit')
+          STATES.each do |state|
+            if role == 'researcher?' && state == :new || ['admin?', 'data_manager?'].include?(role) && [:new, :data_requested].include?(state)
+              it "renders EDIT template in HTML format for #{role} in #{state}" do
+                get :edit, id: @search.id
+                expect(response).to render_template('edit')
+              end
+            end
           end
         end
       end
@@ -577,36 +644,40 @@ describe Admin::SearchesController do
             end
           end
 
-          describe 'with valid params' do
-            it 'updates search' do
-              expect_any_instance_of(Search).to receive(:update_attributes).with(@params)
-              post :update, id: @search.id, search: @params
-            end
+          STATES.each do |state|
+            if role == 'researcher?' && state == :new || ['admin?', 'data_manager?'].include?(role) && [:new, :data_requested].include?(state)
+              describe 'with valid params' do
+                it 'updates search' do
+                  expect_any_instance_of(Search).to receive(:update_attributes).with(@params)
+                  post :update, id: @search.id, search: @params
+                end
 
-            it 'populates "notice" flash' do
-              post :create, search: @params
-              expect(flash['notice']).not_to be_nil
-            end
+                it 'populates "notice" flash' do
+                  post :create, search: @params
+                  expect(flash['notice']).not_to be_nil
+                end
 
-            it 'redirects to the search' do
-              post :update, id: @search.id, search: @params
-              expect(response).to redirect_to(controller: :searches, action: :show, id: assigns(:search).id)
-            end
-          end
+                it 'redirects to the search' do
+                  post :update, id: @search.id, search: @params
+                  expect(response).to redirect_to(controller: :searches, action: :show, id: assigns(:search).id)
+                end
+              end
 
-          describe 'with invalid params' do
-            before(:each) do
-              allow_any_instance_of(Search).to receive(:save).and_return(false)
-            end
+              describe 'with invalid params' do
+                before(:each) do
+                  allow_any_instance_of(Search).to receive(:save).and_return(false)
+                end
 
-            it 'populates "error" flash' do
-              post :update, id: @search.id, search: @params
-              expect(flash['error']).not_to be_nil
-            end
+                it 'populates "error" flash' do
+                  post :update, id: @search.id, search: @params
+                  expect(flash['error']).not_to be_nil
+                end
 
-            it 'redirects to EDIT search' do
-              post :update, id: @search.id, search: @params
-              expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
+                it 'redirects to EDIT search' do
+                  post :update, id: @search.id, search: @params
+                  expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
+                end
+              end
             end
           end
         end
@@ -643,7 +714,7 @@ describe Admin::SearchesController do
         describe "for role #{role}" do
           before(:each) do
             allow(controller.current_user).to receive(role.to_sym).and_return(true)
-             @user.studies << @study if role != 'admin?'
+            @user.studies << @study if role != 'admin?'
             ROLES.each do |other_role|
               allow(controller.current_user).to receive(other_role.to_sym).and_return(false) unless role == other_role
             end
@@ -705,7 +776,7 @@ describe Admin::SearchesController do
           @search.state = state
           @search.user  = @user
           @search.save!
-          @valid_release_data_attributes = { id: @search.id, participant_ids: [@participant.id], start_date: Date.today, end_date: Date.today, warning_date: Date.today}
+          @valid_release_data_attributes = { id: @search.id, participant_ids: [@participant.id], start_date: Date.today, end_date: Date.today + 3.days, warning_date: Date.tomorrow}
         end
 
         describe 'with valid parameters' do
@@ -777,8 +848,13 @@ describe Admin::SearchesController do
         allow(controller.current_user).to receive(:admin?).and_return(true)
         @search.state = 'data_released'
         @search.save!
-
         @valid_return_data_attributes = { id: @search.id, study_involvement_ids: [@study_involvement.id], study_involvement_status: StudyInvolvementStatus.valid_statuses.sample[:name]}
+      end
+
+      it 'redirects to provided state' do
+        params = @valid_return_data_attributes.merge({ state: 'released' })
+        post :return_data, params
+        expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'released')
       end
 
       describe 'with valid parameters' do
@@ -798,7 +874,7 @@ describe Admin::SearchesController do
 
         it 'redirects to search SHOW' do
           post :return_data, @valid_return_data_attributes
-          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'released')
+          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
         end
       end
 
@@ -814,18 +890,18 @@ describe Admin::SearchesController do
 
         it 'redirects to search SHOW' do
           post :return_data, @valid_return_data_attributes
-          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'released')
+          expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
         end
       end
     end
 
     describe 'POST approve_return' do
       before(:each) do
-        allow(controller.current_user).to receive(:admin?).and_return(true)
-        @search.state = 'data_released'
+        @search.state = 'data_returned'
         @search.save!
 
-        @valid_return_data_attributes = { id: @search.id, study_involvement_ids: [@study_involvement.id]}
+        allow_any_instance_of(Search).to receive(:data_returned?).and_return(true)
+        allow(controller.current_user).to receive(:admin?).and_return(true)
       end
 
       describe 'with valid parameters' do
@@ -835,16 +911,16 @@ describe Admin::SearchesController do
 
         it 'returns data' do
           expect_any_instance_of(Search).to receive(:process_return_approval)
-          post :approve_return, @valid_return_data_attributes
+          post :approve_return, id: @search.id
         end
 
         it 'populates "notice" flash' do
-          post :approve_return, @valid_return_data_attributes
+          post :approve_return, id: @search.id
           expect(flash['notice']).not_to be_nil
         end
 
         it 'renders SHOW' do
-          post :approve_return, @valid_return_data_attributes
+          post :approve_return, id: @search.id
           expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'returned')
         end
       end
@@ -855,12 +931,12 @@ describe Admin::SearchesController do
         end
 
         it 'populates "error" flash' do
-          post :approve_return, @valid_return_data_attributes
+          post :approve_return, id: @search.id
           expect(flash['error']).not_to be_nil
         end
 
         it 'redirects to SHOW' do
-          post :approve_return, @valid_return_data_attributes
+          post :approve_return, id: @search.id
           expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'returned')
         end
       end

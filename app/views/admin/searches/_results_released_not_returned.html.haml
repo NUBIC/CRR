@@ -1,8 +1,8 @@
 #results_released_not_returned
-  = form_for @search, url: return_data_admin_search_path(@search) do |f|
+  = form_for @search, url: return_data_admin_search_path(@search, state: @state) do |f|
     .row-group
       .row-fluid
-        .span8
+        .span9
           / This will be inserted into table header div
           .header.table-header{ data: { target_table: 'search_result_list'} }
             %h5
@@ -10,16 +10,12 @@
           %table.table.table-bordered.table-hover#search_result_list{ data: { selectable: 'true' }}
             %thead
               %tr
-                %th
+                %th.span1
                   = check_box_tag "selectall"
-                %th
-                  ID
-                %th.span2
-                  First Name
-                %th.span3
-                  Last Name
-                %th.span5
-                  Studies
+                %th.span1 ID
+                %th.span2 First name
+                %th.span2 Last name
+                %th.span6 Studies
             %tbody
               - @search_participants_not_returned.each do |search_participant|
                 - participant = search_participant.participant
@@ -33,8 +29,11 @@
                   %td
                     = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
                   %td
-                    = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
-        #participant-return-ui.span4
+                    - if current_user.admin? || current_user.data_manager?
+                      = render partial: '/admin/study_involvements/list', locals: { participant: participant }
+                    - else
+                      = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
+        #participant-return-ui.span3
           .row-group-header{ data: { placeholder: 'Please select participants'}}
             Set selected participants to:
           .row-group

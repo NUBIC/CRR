@@ -2,14 +2,14 @@
 - show_all ||= false
 %ul.unstyled.show-hide-group
   - participant.study_involvements.order('end_date DESC').each_with_index do |study_involvement, i|
-    - study_display_name = truncate(study_involvement.study.display_name, length: 50)
+
     %li{ class: "#{'more_display' if i > 2 && !show_all}" }
       .row-fluid.height-inherit
         .span8.height-inherit
           - if policy(study_involvement.study).show?
-            = link_to study_display_name, admin_participant_path(participant, tab: 'basics')
+            = link_to truncate(study_involvement.study.display_name, length: 40), admin_participant_path(participant, tab: 'basics'), title: study_involvement.study.display_name
           - else
-            = study_display_name
+            = truncate(study_involvement.study.display_name, length: 50)
           %small.muted
             = " (#{study_involvement.status})"
         .span4.height-inherit

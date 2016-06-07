@@ -27,7 +27,7 @@
     .row-fluid
       .span12
         .row-group
-          %table.table.table-bordered.table-hover#search_result_list
+          %table.table.table-bordered.table-hover#search_result_list{ data: { selectable: 'true' }}
             %thead
               %tr
                 %th= check_box_tag "selectall"
@@ -35,10 +35,9 @@
                 %th First Name
                 %th Last Name
                 %th Studies
-                %th End of Release
             %tbody
               - @participants.each do |participant|
-                %tr.show-hide-container
+                %tr
                   %td
                     = check_box_tag "[participant_ids][]", participant.id, false, class: 'selectalloption'
                   %td
@@ -50,4 +49,5 @@
                     .pull-right
                       = image_tag 'child.png' if participant.child?
                       = image_tag 'siblings.png' if participant.has_relationships?
-                  = render partial: 'participant_study_cells', locals: { participant: participant}
+                  %td
+                    = render partial: '/admin/study_involvements/list', locals: { participant: participant }

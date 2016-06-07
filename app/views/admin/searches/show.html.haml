@@ -1,13 +1,22 @@
 - search_condition_group = @search.search_condition_group
 #search
-  - if @search.data_released?
+  / Headers
+  - if @search.results_available?
     .row-fluid
       .alert.nu-well
-        %h5 Data for this search has been released on #{@search.process_date}
+        %h5
+          Data for this search has been released on #{@search.process_date}.
+          - if @search.return_completed_date
+            Data return completed on #{@search.return_completed_date}.
+          - if @search.return_approved_date
+            Data return approved on #{@search.return_approved_date}.
+
+
   - elsif @search.data_requested?
     .row-fluid
       .alert.nu-well
         %h5 Data for this search has been requested and is pending release.
+
   .row-fluid
     #search_name.span9
       %h4
@@ -18,7 +27,7 @@
 
     .span3
       .pull-right.btn-group
-        - if search_condition_group.has_conditions?
+        - if policy(@search).copy? && search_condition_group.has_conditions?
           = button_tag 'Copy to a new request', data: { toggle: 'modal', target: '#new_search' }, class: 'btn btn-small'
         - if policy(@search).edit?
           = link_to edit_admin_search_path(@search, change_name: true), data: { async: true, target: '#search_name'}, class: 'btn btn-small' do
@@ -28,7 +37,9 @@
         - if policy(@search).destroy?
           = link_to admin_search_path(@search), method: :delete, data: { confirm: "Are you sure you want to delete request #{@search.name}?" }, class: 'btn btn-danger btn-small' do
             Delete
-  - if @search.data_released?
+
+  / Search info
+  - if @search.results_available?
     .row-fluid
       .span3
         %b Start Date:
@@ -43,52 +54,32 @@
         %span
           = @search.end_date
 
-  - unless policy(@search).edit?
+  / Search conditions
+  - if policy(@search).edit?
+    #search-conditions-container.row-fluid
+      .span12.search-container
+        %h5 Filter participants by the following conditions
+        = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: search_condition_group }
+  - else
     .row-fluid
       .span12
         %small
           %a.dashed_underline{ data: { toggle: 'collapse', target: '#search-conditions-container'}}
             Show request conditions
-
-  #search-conditions-container.row-fluid{class: "#{'collapse' unless policy(@search).edit?}" }
-    .span12.search-container
-      - if policy(@search).edit?
-        %h5 Filter participants by the following conditions
-        = render partial: 'admin/search_condition_groups/search_condition_group', locals: { search_condition_group: search_condition_group }
-      - else
+    #search-conditions-container.row-fluid.collapse
+      .span12.search-container
         %h5 Participants filtered by the folowing conditions
         = render partial: 'admin/search_condition_groups/show', locals: { search_condition_group: search_condition_group }
       %br
 
+  / Search results
   - if search_condition_group.has_conditions?
-    - if @search.data_requested? || @search.new?
-      = render partial: 'results_unreleased'
-    - elsif @search.data_released?
-      .row-fluid
-        .span12
-          .row-fluid
-            .span12
-              %ul.nav.nav-tabs
-                - if current_user.admin? || current_user.data_manager?
-                  %li{ class: "#{'active' if @state.blank? }"}
-                    = link_to "All participants (#{@participants_count})", admin_search_path(@search)
-                %li{ class: "#{'active' if @state == 'released' || current_user.researcher? && @state.blank?}"}
-                  = link_to "Participants released (#{@search_participants_not_returned.size})", admin_search_path(@search, state: 'released')
-                %li{ class: "#{'active' if @state == 'returned'}"}
-                  = link_to "Participants returned (#{@search_participants_returned.size})", admin_search_path(@search, state: 'returned')
-          - if @state.blank? && current_user.admin? || current_user.data_manager?
-            = render partial: 'results_all'
-          - elsif @state == 'released' || current_user.researcher? && @state.blank?
-            = render partial: 'results_released_not_returned'
-          - elsif @state == 'returned'
-            - if policy(@search).approve_return?
-              = form_for @search, url: approve_return_admin_search_path(@search), html: { class: 'ajax-form', data: { target: '#search' }} do |f|
-                = render partial: 'results_released_returned', locals: { render_form: true }
-            - else
-              = render partial: 'results_released_returned'
-  %hr
+    = render partial: 'results'
+
+  / Search comments
   = render partial: '/admin/comments/list', locals: { commentable: @search }
 
+/ Modal for 'copy search' UI
 #new_search.modal.modal-large.hide
   .modal-header.nu
     %h5

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160522041829) do
+ActiveRecord::Schema.define(version: 20160527234147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -215,17 +215,19 @@ ActiveRecord::Schema.define(version: 20160522041829) do
 
   create_table "searches", force: :cascade do |t|
     t.integer  "study_id"
-    t.string   "state",        limit: 255
+    t.string   "state",                 limit: 255
     t.date     "request_date"
     t.date     "process_date"
     t.date     "decline_date"
     t.date     "start_date"
     t.date     "warning_date"
     t.date     "end_date"
-    t.string   "name",         limit: 255
+    t.string   "name",                  limit: 255
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.date     "return_approved_date"
+    t.date     "return_completed_date"
   end
 
   add_index "searches", ["user_id"], name: "index_searches_on_user_id", using: :btree

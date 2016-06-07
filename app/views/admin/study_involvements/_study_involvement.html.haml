@@ -44,17 +44,23 @@
       = f.fields_for :study_involvement_status do |ff|
         .control-group
           = ff.label 'study_involvement_status', class: 'control-label' do
-            Study Involvement
+            Completion status
             %span.btn-link.btn-mini.help-popover{ title: 'State Flags', data: { toggle: 'popover', content: study_involvement_status_help.html_safe, html: 'true', placement: 'right'}}
               %i.icon-question-sign
           .controls.controls-row.muted
-            = ff.label :name, 'Completion status', class: 'span3'
+            = ff.label :name, 'Status', class: 'span3'
             = ff.label :date, class: 'span2'
             = ff.label :state, class: 'span2'
+            = ff.label :name, 'Remove status', class: 'span2'
           .controls.controls-row
             = ff.select :name, StudyInvolvementStatus.valid_statuses.map{ |s| [s[:name].titleize, s[:name]]}, {}, class: 'span3'
             = ff.text_field :date, class: 'input-small date span2', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
             = ff.select :state, StudyInvolvementStatus.aasm.states_for_select, {}, class: 'span2'
+            = ff.check_box :_destroy, class: 'span2'
+            %small.muted
+              %i
+                Last updated by
+                = ff.object.versions.last.whodunnit ? User.find(ff.object.versions.last.whodunnit).full_name : 'System'
 
       .control-group
         = f.label :notes, class: 'control-label'

@@ -1,0 +1,25 @@
+- if @search.data_requested? || @search.new?
+  = render partial: 'results_unreleased'
+- elsif policy(@search).view_results?
+  .row-fluid
+    .span12
+      .row-fluid
+        .span12
+          %ul.nav.nav-tabs
+            - if current_user.admin? || current_user.data_manager?
+              %li{ class: "#{'active' if @state.blank? }"}
+                = link_to "All participants (#{@participants_count})", admin_search_path(@search)
+            %li{ class: "#{'active' if @state == 'released' || current_user.researcher? && @state.blank?}"}
+              = link_to "Participants released (#{@search_participants_not_returned.size})", admin_search_path(@search, state: 'released')
+            %li{ class: "#{'active' if @state == 'returned'}"}
+              = link_to "Participants returned (#{@search_participants_returned.size})", admin_search_path(@search, state: 'returned')
+      - if @state.blank? && current_user.admin? || current_user.data_manager?
+        = render partial: 'results_all'
+      - elsif @state == 'released' || current_user.researcher? && @state.blank?
+        = render partial: 'results_released_not_returned'
+      - elsif @state == 'returned'
+        - if policy(@search).return_data? && (current_user.admin? || current_user.data_manager?)
+          = form_for @search, url: return_data_admin_search_path(@search, state: @state) do |f|
+            = render partial: 'results_released_returned', locals: { render_form: true }
+        - else
+          = render partial: 'results_released_returned'

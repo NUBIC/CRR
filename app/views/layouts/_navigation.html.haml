@@ -34,7 +34,7 @@
           %li
             = link_to "Requests submitted (#{searches.requested.count})", admin_searches_path(state: 'data_requested')
           %li
-            = link_to "Requests released (#{searches.released.count})", admin_searches_path(state: 'data_released')
+            = link_to "Requests released (#{searches.all_released.count})", admin_searches_path(state: 'data_released')
           %li
             = link_to "Requests expiring (#{searches.expiring.count})", admin_searches_path(state: 'data_expiring')
           %li

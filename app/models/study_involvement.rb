@@ -9,7 +9,7 @@ class StudyInvolvement < ActiveRecord::Base
   has_one :search_participant_study_involvement
   has_one :search_participant, through: :search_participant_study_involvement, dependent: :destroy
 
-  accepts_nested_attributes_for :study_involvement_status, allow_destroy: true
+  accepts_nested_attributes_for :study_involvement_status, allow_destroy: true, reject_if: :all_blank
 
   # Validations
   validates_presence_of :start_date, :participant, :study, :end_date

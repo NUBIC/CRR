@@ -14,13 +14,13 @@
         .row-group-header
           .row-fluid
             .span3
-              %b Released Date:
+              %b Release Date:
               = text_field_tag 'start_date', Date.today, class: 'input-small date required', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy', id: 'search-release-date'
             .span3
               %b Warning Date:
               = text_field_tag 'warning_date', 1.week.from_now.to_date, class: 'input-small date', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy'
             .span3
-              %b End of Release:
+              %b End of Release Date:
               = text_field_tag 'end_date', 2.week.from_now.to_date, class: 'input-small date required', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy', id: 'search-end-of-release-date'
             .span3
               = f.button 'Release', class: 'btn btn-success pull-right', id: 'release', data: { confirm: 'Are you sure you want to release these participants?'}

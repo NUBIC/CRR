@@ -12,6 +12,7 @@ class SearchParticipant < ActiveRecord::Base
   validates_presence_of :search, :participant
 
   # Scopes
-  scope :released, -> { joins(:study_involvement).where(released: true)}
-  scope :returned, -> { joins(study_involvement: :study_involvement_status).where(study_involvement_statuses: { state: ['pending', 'approved']})}
+  scope :released,    -> { joins(:study_involvement).where(released: true)}
+  scope :returned,    -> { joins(study_involvement: :study_involvement_status).where(study_involvement_statuses: { state: ['pending', 'approved']})}
+  scope :extendable,  -> { joins(study_involvement: :study_involvement_status).where(study_involvement_statuses: { name: StudyInvolvementStatus::EXTENDABLE_STATUSES})}
 end

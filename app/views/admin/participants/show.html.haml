@@ -87,6 +87,7 @@
                 %thead
                   %tr
                     %th{rowspan: 2} Study Name
+                    %th{rowspan: 2} Extended
                     %th{colspan: 3, style: 'text-align: center'} Release
                     %th{colspan: 3, style: 'text-align: center'} Enrollment State
                     %th{rowspan: 2} Notes
@@ -102,6 +103,9 @@
                     %tr
                       %td
                         = link_to study_involvement.study.display_name, edit_admin_study_involvement_path(study_involvement), data: { toggle: 'modal', target: '#study'}
+                      %td
+                        - if study_involvement.extended_release?
+                          .user-circle
                       %td
                         = study_involvement.start_date
                       %td

@@ -1,7 +1,7 @@
 class Admin::SearchesController < Admin::AdminController
   include EmailNotifications
 
-  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return]
+  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return, :extend_release]
   before_action :set_studies, only: [:new, :edit, :show, :release_data ]
 
   def index
@@ -58,9 +58,10 @@ class Admin::SearchesController < Admin::AdminController
     @participants_count = participants.size
 
     if @search.results_available?
-      @search_participants_released      = @search.search_participants.released
-      @search_participants_returned      = @search_participants_released.returned
-      @search_participants_not_returned  = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
+      @search_participants_released     = @search.search_participants.released
+      @search_participants_returned     = @search_participants_released.returned
+      @search_participants_not_returned = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
+      @search_participants_extendable   = @search_participants_returned.extendable
     end
 
     @comments = @search.comments
@@ -131,12 +132,36 @@ class Admin::SearchesController < Admin::AdminController
 
   def approve_return
     authorize @search
-    @search.process_return_approval
-    if @search.save
-      flash['notice'] = 'Return approved'
-    else
-      flash['error'] = @search.errors.full_messages.to_sentence
+    errors = []
+    notices = []
+
+    if params[:participant_ids]
+      authorize @search, :extend_release?
+      @new_search = Search.new(extend_release_search_params)
+      @new_search.user_id = current_user.id
+      @new_search.study   = @search.study
+
+      options = extend_release_params.merge({ source_search: @search })
+      @new_search.process_release_extention(options)
+      @new_search.save
+
+      if @new_search.errors.any?
+        errors << @new_search.errors.full_messages.to_sentence
+      else
+        notices << %Q[ Data Request Extended:  #{view_context.link_to(@new_search.name, admin_search_path(@new_search))}]
+      end
     end
+    unless @new_search && @new_search.errors.any?
+      @search.process_return_approval
+      if @search.save
+        notices << 'Return approved'
+      else
+        errors << @search.errors.full_messages.to_sentence
+      end
+    end
+    flash['notice'] = notices.join('. ').html_safe if notices.any?
+    flash['error']  = errors.join('. ').html_safe  if errors.any?
+
     redirect_to admin_search_path(@search, state: 'returned')
   end
 
@@ -170,6 +195,15 @@ class Admin::SearchesController < Admin::AdminController
       params.require(:study_involvement_status)
       params.require(:study_involvement_ids)
       params.permit(:study_involvement_status, :id, study_involvement_ids: [])
+    end
+
+    def extend_release_search_params
+      params.require(:search).permit(:name, :start_date, :warning_date, :end_date)
+    end
+
+    def extend_release_params
+      params.require(:participant_ids)
+      params.permit(participant_ids: [])
     end
 end
 

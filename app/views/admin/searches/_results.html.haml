@@ -19,7 +19,6 @@
         = render partial: 'results_released_not_returned'
       - elsif @state == 'returned'
         - if policy(@search).return_data? && (current_user.admin? || current_user.data_manager?)
-          = form_for @search, url: return_data_admin_search_path(@search, state: @state) do |f|
-            = render partial: 'results_released_returned', locals: { render_form: true }
+          = render partial: 'results_released_returned_admin'
         - else
           = render partial: 'results_released_returned'

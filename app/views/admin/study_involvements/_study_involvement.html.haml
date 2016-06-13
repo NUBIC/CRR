@@ -41,6 +41,10 @@
           = f.text_field :end_date, value: @study_involvement.end_date, class: 'input-small date required', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
           %small.text-error
             %i Required field
+      .control-group
+        = f.label :extended_release, class: 'control-label'
+        .controls
+          = f.check_box :extended_release
       = f.fields_for :study_involvement_status do |ff|
         .control-group
           = ff.label 'study_involvement_status', class: 'control-label' do
@@ -53,14 +57,15 @@
             = ff.label :state, class: 'span2'
             = ff.label :name, 'Remove status', class: 'span2'
           .controls.controls-row
-            = ff.select :name, StudyInvolvementStatus.valid_statuses.map{ |s| [s[:name].titleize, s[:name]]}, {}, class: 'span3'
+            = ff.select :name, StudyInvolvementStatus.valid_statuses.map{ |s| [s[:name].titleize, s[:name]]}, { include_blank: true }, class: 'span3'
             = ff.text_field :date, class: 'input-small date span2', data: { provide: 'datepicker' }, placeholder: 'mm/dd/yyyy'
-            = ff.select :state, StudyInvolvementStatus.aasm.states_for_select, {}, class: 'span2'
+            = ff.select :state, StudyInvolvementStatus.aasm.states_for_select, { include_blank: true }, class: 'span2'
             = ff.check_box :_destroy, class: 'span2'
-            %small.muted
-              %i
-                Last updated by
-                = ff.object.versions.last.whodunnit ? User.find(ff.object.versions.last.whodunnit).full_name : 'System'
+            - if ff.object.versions.any?
+              %small.muted
+                %i
+                  Last updated by
+                  = ff.object.versions.last.whodunnit ? User.find(ff.object.versions.last.whodunnit).full_name : 'System'
 
       .control-group
         = f.label :notes, class: 'control-label'

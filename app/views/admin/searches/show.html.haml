@@ -11,7 +11,6 @@
           - if @search.return_approved_date
             Data return approved on #{@search.return_approved_date}.
 
-
   - elsif @search.data_requested?
     .row-fluid
       .alert.nu-well
@@ -28,7 +27,7 @@
     .span3
       .pull-right.btn-group
         - if policy(@search).copy? && search_condition_group.has_conditions?
-          = button_tag 'Copy to a new request', data: { toggle: 'modal', target: '#new_search' }, class: 'btn btn-small'
+          = button_tag 'Copy to a new request', data: { toggle: 'modal', target: '#copy_search' }, class: 'btn btn-small'
         - if policy(@search).edit?
           = link_to edit_admin_search_path(@search, change_name: true), data: { async: true, target: '#search_name'}, class: 'btn btn-small' do
             Rename
@@ -80,7 +79,7 @@
   = render partial: '/admin/comments/list', locals: { commentable: @search }
 
 / Modal for 'copy search' UI
-#new_search.modal.modal-large.hide
+#copy_search.modal.modal-large.hide
   .modal-header.nu
     %h5
       Copy #{@search.name} to a new request

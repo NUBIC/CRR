@@ -94,7 +94,51 @@ $(document).ready ->
       setReleaseButton() if $releaseButton.length
       setReturnUIVisibility() if $returnUIContainer.length
 
-  # edit page -- search UI
+  # Extended release UI
+  $('#approve_return').on 'shown', () ->
+    console.log('here')
+    $tableElement = $(this).find('table#extend_release_list')
+
+    if !$.fn.DataTable.isDataTable($tableElement)
+      table = $tableElement.dataTable
+        scrollY: '150px'
+        scrollCollapse: true
+        paging: false
+        sDom: "<'row-fluid'<'span6 data-table-info-header'><'span6'f>r>t"
+        sWrapper: "dataTables_wrapper form-inline"
+        aaSorting: [[ 1, "asc" ]]
+        aoColumnDefs: [{ 'bSortable': false, 'aTargets': [ 0 ] }]
+        bFilter: true
+        oLanguage: { sSearch: "Filter:&nbsp;" }
+        fnInitComplete: (oSettings, json)  ->
+          setTableHeader($tableElement)
+      table.fnAdjustColumnSizing()
+    else
+      table = $tableElement.DataTable();
+
+    $extendReleaseCheckboxes  = $('.selectalloption', table.fnGetNodes()).not(':disabled')
+    $extendReleaseButton      = $(this).find('input[type="submit"]#submit_extended_release')
+    extendReleaseButtonText   = $extendReleaseButton.val()
+
+    setExtendReleaseButton = () ->
+      $extendReleaseButton.attr('disabled', !$extendReleaseCheckboxes.is(':checked'))
+      count = $extendReleaseCheckboxes.filter(":checked").length
+      label = ' participant'
+      if count != 1
+        label = label + 's'
+      $extendReleaseButton.val(extendReleaseButtonText + ' ' + $extendReleaseCheckboxes.filter(":checked").length + ' ' + label)
+
+    $('#selectall_extend').on 'click', () ->
+      $extendReleaseCheckboxes.prop('checked', $(this).is(':checked'))
+      setExtendReleaseButton()
+
+    $extendReleaseCheckboxes.on 'click', () ->
+      $('#selectall_extend').prop('checked', $extendReleaseCheckboxes.filter(':checked').length == $extendReleaseCheckboxes.length)
+      setExtendReleaseButton()
+
+    setExtendReleaseButton()
+
+  # Edit page -- search UI
   $('.btn-search-condition-add').livequery ->
     $(this).on 'click', () ->
       $('.search-instructions').hide()

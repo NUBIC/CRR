@@ -93,10 +93,35 @@ describe Admin::StudyInvolvementsController do
           }.to change{StudyInvolvement.count}.by(1)
         end
 
-        it 'creates a study_involvement_status' do
-          expect {
-            post :create, study_involvement: @params
-          }.to change{StudyInvolvementStatus.count}.by(1)
+        describe 'creating a study_involvement_status' do
+          it 'creates a study_involvement_status with valid params' do
+            expect {
+              post :create, study_involvement: @params
+            }.to change{StudyInvolvementStatus.count}.by(1)
+          end
+
+          describe 'when study_involvement_status that has only state (specified by default aasm state) and destroy flag' do
+            before(:each) do
+              @params[:study_involvement_status_attributes] = { state: StudyInvolvementStatus.aasm.states.sample, _destroy: '0' }
+            end
+
+            it 'does not create a study_involvement_status' do
+              expect {
+                post :create, study_involvement: @params
+              }.not_to change{StudyInvolvementStatus.count}
+            end
+
+            it 'creates a study_involvement' do
+              expect {
+                post :create, study_involvement: @params
+              }.to change{StudyInvolvement.count}.by(1)
+            end
+
+            it 'does not raise an error' do
+              post :create, study_involvement: @params
+              expect(flash['error']).to be_nil
+            end
+          end
         end
 
         it 'redirects to participant page' do

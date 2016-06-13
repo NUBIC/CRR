@@ -1,0 +1,142 @@
+= form_for @search, url: return_data_admin_search_path(@search, state: @state) do |f|
+  #results_released_returned
+    .row-group
+      .row-fluid
+        .span9
+          / This will be inserted into table header div
+          .header.table-header{ data: { target_table: 'search_result_list'} }
+            %h5
+              #{@search_participants_released.size} Participants released
+          %table.table.table-bordered.table-hover#search_result_list{ data: { selectable: 'true' } }
+            %thead
+              %tr
+                %th.span1
+                  = check_box_tag "selectall"
+                %th.span1
+                  ID
+                %th.span2
+                  First Name
+                %th.span2
+                  Last Name
+                %th.span2
+                  Return status
+                %th
+                  Studies
+
+            %tbody
+              - @search_participants_returned.each do |search_participant|
+                - participant = search_participant.participant
+                - study_involvement_status = search_participant.study_involvement.study_involvement_status
+                %tr
+                  %td
+                    = check_box_tag "[study_involvement_ids][]", search_participant.study_involvement.id, false, class: 'selectalloption'
+                  %td
+                    = participant.id
+                  %td
+                    = link_to participant.first_name, admin_participant_path(participant)
+                  %td
+                    = link_to participant.last_name, admin_participant_path(participant)
+                  %td
+                    #{study_involvement_status.name.titleize}
+                    %small.muted
+                      (#{study_involvement_status.state.titleize})
+                  %td
+                    = render partial: '/admin/study_involvements/list', locals: { participant: participant }
+
+        #participant-return-ui.span3
+          .row-group-header{ data: { placeholder: 'Please select participants'}}
+            Set selected participants to:
+          .row-group
+            .control-group
+              = label_tag 'study_involvement_status', class: 'control-label' do
+                Completion status
+              .controls.controls-row
+                = select_tag 'study_involvement_status', grouped_options_for_select(study_involvement_status_options), include_blank: true, class: 'input-block-level'
+                %span.btn.btn-primary.help-popover{ title: 'State Flags', data: { toggle: 'modal', target: '#study_involvement_status_help'}}
+                  What do these mean?
+                = render partial: '/admin/study_involvements/help_modal'
+            .control-group
+              .controls.controls-row
+                = submit_tag 'Submit', class: 'btn btn-primary'
+.row-fluid
+  .span12
+    %p
+      - if @search_participants_extendable.any?
+        = button_tag 'Approve data return', data: { toggle: 'modal', target: '#approve_return' }, class: 'btn btn-success', disabled: @search_participants_extendable.present? && !policy(@search).extend_release?
+      - else
+        = link_to 'Approve data return', approve_return_admin_search_path(@search), data: { confirm: 'Are you sure you want to approve return for this data request?'}, class: 'btn btn-success', id: 'approve_return', method: :patch
+      %small.muted
+        Return approval locks participant states and is available when all the participants for a study are assigned a status.
+      - unless @search_participants_extendable.any?
+        %br
+        %small.muted
+          *No participants qualifying for release extension found. Release extension is allowed for participants in following states: #{StudyInvolvementStatus::EXTENDABLE_STATUSES.map(&:titleize).join(', ')}.
+
+/ Modal for 'approve return' UI
+- if @search_participants_extendable.any?
+  #approve_return.modal.modal-large.hide
+    - search = Search.new(name: @search.name, study: @search.study, start_date: Date.today, warning_date: 1.week.from_now.to_date, end_date: 2.week.from_now.to_date)
+    = form_for search, url: approve_return_admin_search_path, method: :patch, html: { class: 'validate-form' } do |f|
+      .modal-header.nu
+        %h5
+          Approve data return
+          = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
+      .modal-body
+        / This will be inserted into table header div
+        .header.table-header{ data: { target_table: 'extend_release_list'} }
+          %h5
+            #{@search_participants_extendable.size} Participants eligible for extension
+        %table.table.table-bordered.table-hover#extend_release_list
+          %thead
+            %tr
+              %th.span1
+                = check_box_tag "selectall_extend"
+              %th.span1
+                ID
+              %th.span2
+                First Name
+              %th.span2
+                Last Name
+              %th.span2
+                Return status
+          %tbody
+            - @search_participants_extendable.each do |search_participant|
+              - participant = search_participant.participant
+              - study_involvement_status = search_participant.study_involvement.study_involvement_status
+              %tr
+                %td
+                  = check_box_tag "[participant_ids][]", participant.id, false, class: 'selectalloption'
+                %td
+                  = participant.id
+                %td
+                  = link_to participant.first_name, admin_participant_path(participant)
+                %td
+                  = link_to participant.last_name, admin_participant_path(participant)
+                %td
+                  #{study_involvement_status.name.titleize}
+                  %small.muted
+                    (#{study_involvement_status.state.titleize})
+        .row-fluid
+          .span4
+            .control-group
+              = f.label :start_date, class: 'control-label'
+              .controls
+                = f.text_field :start_date, value: Date.today, class: 'input-block-level date required', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy'
+          .span4
+            .control-group
+              = f.label :warning_date, class: 'control-label'
+              .controls
+                = f.text_field :warning_date, value: 1.week.from_now.to_date, class: 'input-block-level date required', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy'
+          .span4
+            .control-group
+              = f.label :end_date, class: 'control-label'
+              .controls
+                = f.text_field :end_date, value: 2.week.from_now.to_date, class: 'input-block-level date required', data: { provide: 'datepicker'}, placeholder: 'mm/dd/yyyy'
+        .control-group
+          = f.label :name, 'Request name', class: 'control-label'
+          .controls
+            = f.text_field :name, value: @search.name, class: 'input-block-level'
+      .modal-footer
+        = f.submit 'Approve and extend release for', class: 'btn btn-success', data: { confirm: 'Are you sure you want to approve return and extend release for these participants?'}, id: 'submit_extended_release'
+        = link_to 'Approve without extension', approve_return_admin_search_path(@search), data: { confirm: 'Are you sure you want to approve return for this data request?'}, class: 'btn btn-success', id: 'approve_return', method: :patch
+        = button_tag 'Cancel', data: { dismiss: 'modal' }, aria: { hidden: true }, class: 'btn'

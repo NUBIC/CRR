@@ -44,6 +44,8 @@ group :development, :test do
   gem 'faker'
   gem 'factory_girl_rails'
   gem 'rspec-rails'
+  gem 'capybara'
+  gem 'selenium-webdriver'
   gem 'shoulda'
   gem 'webrat'
   gem 'simplecov', require: false

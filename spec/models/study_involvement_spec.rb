@@ -1,14 +1,21 @@
 require 'spec_helper'
 
 describe StudyInvolvement do
+  it { is_expected.to belong_to :study }
+  it { is_expected.to belong_to :participant }
   it { is_expected.to have_one :study_involvement_status }
+  it { is_expected.to have_one :search_participant_study_involvement }
+  it { is_expected.to have_one :search_participant }
+
   it { is_expected.to validate_presence_of :start_date }
   it { is_expected.to validate_presence_of :end_date }
   it { is_expected.to validate_presence_of :participant}
   it { is_expected.to validate_presence_of :study }
   it { is_expected.to be_versioned }
 
-  let(:study_involvement) { FactoryGirl.create(:study_involvement) }
+  let(:study) { FactoryGirl.create(:study) }
+  let(:participant) { FactoryGirl.create(:participant) }
+  let(:study_involvement) { FactoryGirl.create(:study_involvement, participant: participant, study: study) }
   let(:date) { Date.new(2013, 10, 10) }
 
   it 'creates a new instance given valid attributes' do
@@ -26,6 +33,21 @@ describe StudyInvolvement do
     it 'should be after start_date' do
       study_involvement = FactoryGirl.build(:study_involvement, start_date: date, end_date: date + 1.days)
       expect(study_involvement).to be_valid
+    end
+  end
+
+  describe 'validating participant enrollment' do
+    it 'should not allow to enroll participant twice in the same study' do
+      study_involvement = FactoryGirl.create(:study_involvement, participant: participant, study: study)
+      new_study_involvement = StudyInvolvement.new(participant: participant, study: study, start_date: date - 10.days, end_date: date + 1.days)
+      expect(new_study_involvement).not_to be_valid
+      expect(new_study_involvement.errors.full_messages).to include 'Participant had already been released to the study. If extension is needed please indicate by checking the flag below.'
+    end
+
+    it 'should allow to create extended participant enrollment' do
+      study_involvement = FactoryGirl.create(:study_involvement, participant: participant, study: study)
+      new_study_involvement = FactoryGirl.create(:study_involvement, participant: participant, study: study, extended_release: true)
+      expect(new_study_involvement).to be_valid
     end
   end
 
@@ -101,6 +123,40 @@ describe StudyInvolvement do
     it 'should be trie if end date is in past' do
       study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today - 10.days)
       expect(study_involvement).to be_inactive
+    end
+  end
+
+  describe 'original_release?' do
+    it 'returns true for study_involvements without extended_release flag' do
+      study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today)
+      expect(study_involvement).to be_original_release
+    end
+
+    it 'returns true for study_involvements with extended_release flag set to false' do
+      study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today, extended_release: false)
+      expect(study_involvement).to be_original_release
+    end
+
+    it 'returns false for study_involvements with extended_release flag set to true' do
+      study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today, extended_release: true)
+      expect(study_involvement).not_to be_original_release
+    end
+  end
+
+  describe 'extended_release?' do
+    it 'returns false for study_involvements without extended_release flag' do
+      study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today)
+      expect(study_involvement).not_to be_extended_release
+    end
+
+    it 'returns false for study_involvements with extended_release flag set to false' do
+      study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today, extended_release: false)
+      expect(study_involvement).not_to be_extended_release
+    end
+
+    it 'returns true for study_involvements with extended_release flag set to true' do
+      study_involvement = FactoryGirl.create(:study_involvement, end_date: Date.today, extended_release: true)
+      expect(study_involvement).to be_extended_release
     end
   end
 

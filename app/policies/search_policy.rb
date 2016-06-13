@@ -64,6 +64,10 @@ class SearchPolicy < ApplicationPolicy
     can_manage? && record.data_returned?
   end
 
+  def extend_release?
+    can_manage? && record.data_returned?
+  end
+
   def view_results?
     can_manage? || (is_researcher? && on_study?) && record.results_available?
   end

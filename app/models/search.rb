@@ -79,16 +79,21 @@ class Search < ActiveRecord::Base
   end
 
   # Functions
-  def result
+  def result(options={})
     return [] if search_condition_group.nil? || search_condition_group.result.nil?
-    return search_condition_group.result.reject {|p| p.has_study?(study) | p.do_not_contact? }
+    results = search_condition_group.result.reject {|p| p.do_not_contact? }
+    if options[:extended_release]
+      return results
+    else
+      return results.reject {|p| p.has_study?(study) }
+    end
   end
 
   # Methods associated with state change
 
   # Triggered after researcher submits data request and state is changed to 'data requested'
   def process_request
-    result.each {|participant| self.search_participants.create(participant: participant)}
+    self.set_search_participants
     self.request_date = Date.today
     self.save
   end
@@ -97,29 +102,24 @@ class Search < ActiveRecord::Base
   # Marks selected search participants as released and creates linked records in study_involvements table.
   # Populates release start, stop and warning dates for the search.
   def process_release(params)
-    if self.data_requested?
-      result_search_participants = self.search_participants.where(participant_id: params[:participant_ids])
-      result_search_participants.each do |search_participant|
-        search_participant.released = true
-        study_involvement = search_participant.participant.study_involvements.create(start_date: params[:start_date], end_date: params[:end_date], warning_date: params[:warning_date], study_id: study.id)
-        search_participant.study_involvement = study_involvement
-        search_participant.save
-      end
-    else
-      participants = Participant.find(params[:participant_ids])
-      participants.each do |participant|
-        search_participant  = self.search_participants.create(participant: participant, released: true)
-        study_involvement   = participant.study_involvements.create(start_date: params[:start_date],end_date: params[:end_date],warning_date: params[:warning_date], study_id: study.id)
-        search_participant.study_involvement = study_involvement
-        search_participant.save
-      end
-      (self.result - participants).each{ |participant| self.search_participants.create(participant: participant)}
-    end
     self.process_date = Date.today
-    self.start_date   = params[:start_date]
-    self.warning_date = params[:warning_date]
-    self.end_date     = params[:end_date]
+    self.start_date   ||= params[:start_date]
+    self.warning_date ||= params[:warning_date]
+    self.end_date     ||= params[:end_date]
     self.save!
+
+    self.set_search_participants(extended_release: params[:extended_release]) unless self.data_requested?
+    self.search_participants.where(participant_id: params[:participant_ids]).each do |search_participant|
+      search_participant.released           = true
+      search_participant.study_involvement  = search_participant.participant.study_involvements.create(
+        start_date: self.start_date,
+        end_date: self.end_date,
+        warning_date: self.warning_date,
+        study_id: study.id,
+        extended_release: params[:extended_release]
+      )
+      search_participant.save
+    end
   end
 
   # Called on data return event. Updates status for selected study involvements.
@@ -135,6 +135,21 @@ class Search < ActiveRecord::Base
   def process_return_approval
     study_involvements =  self.study_involvements.map{|i| i.study_involvement_status.approve!}
     self.approve_data_return!
+  end
+
+  # Called on return request extension. Copies search conditions from source search and
+  # releases participants from the provided list.
+  def process_release_extention(params)
+    source_search   = params[:source_search]
+    participant_ids = params[:participant_ids]
+
+    self.errors.add(:base, 'source search has to be provided')    if source_search.blank?
+    self.errors.add(:base, 'participant ids have to be provided') if participant_ids.blank?
+
+    unless self.errors.any?
+      self.copy(source_search)
+      self.release_data(participant_ids: participant_ids, extended_release: true)
+    end
   end
 
   # Helper methods
@@ -176,6 +191,10 @@ class Search < ActiveRecord::Base
     self.data_released? || self.data_returned? || self.data_return_approved?
   end
 
+  def set_search_participants(params={})
+    self.result(params).each {|participant| self.search_participants.create(participant: participant)}
+  end
+
   private
     def default_args
       if self.id
@@ -212,4 +231,6 @@ class Search < ActiveRecord::Base
       self.return_completed_date = Date.today
       save
     end
+
+
 end

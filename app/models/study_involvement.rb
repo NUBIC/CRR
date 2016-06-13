@@ -9,11 +9,11 @@ class StudyInvolvement < ActiveRecord::Base
   has_one :search_participant_study_involvement
   has_one :search_participant, through: :search_participant_study_involvement, dependent: :destroy
 
-  accepts_nested_attributes_for :study_involvement_status, allow_destroy: true, reject_if: :all_blank
+  accepts_nested_attributes_for :study_involvement_status, allow_destroy: true, reject_if: proc { |attributes| attributes.all?{ |k,v| ['state', '_destroy'].include?(k) || v.blank? } }
 
   # Validations
   validates_presence_of :start_date, :participant, :study, :end_date
-  validates_uniqueness_of :participant_id, scope: :study
+  validates_uniqueness_of :participant_id, scope: :study, conditions: -> { where(extended_release: [false, nil]) }, if: :original_release?, message: 'had already been released to the study. If extension is needed please indicate by checking the flag below.'
   validate :end_date_cannot_be_before_start_date
 
   # Scopes
@@ -28,6 +28,14 @@ class StudyInvolvement < ActiveRecord::Base
 
   def inactive?
     end_date.present? && end_date < Date.today
+  end
+
+  def original_release?
+    self.extended_release.blank?
+  end
+
+  def extended_release?
+    self.extended_release
   end
 
   def status

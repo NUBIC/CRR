@@ -15,6 +15,8 @@ class StudyInvolvementStatus < ActiveRecord::Base
     { name: 'no attempt',   group: 'No Contact',  description: 'No contact was attempted'}
   ].freeze
 
+  EXTENDABLE_STATUSES = [ 'scheduled', 'canceled', 'no show', 'no response' ].freeze
+
   # Dependencies
   include AASM
   has_paper_trail

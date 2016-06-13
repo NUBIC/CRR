@@ -3,7 +3,7 @@ namespace :notify do
   task :expiring_release => :environment do
     email = EmailNotification.active.release_expiring
     if email
-      Search.where(warning_date: Date.today).where('end_date is null or end_date > ?', Date.today).each do |search|
+      Search.where(warning_date: Date.today).where('end_date is null or end_date > ?', Date.today).where(state: 'data_released').each do |search|
         user_emails = search.user_emails
         if user_emails.any?
           subject = email.subject.gsub('{{search_name}}', search.name)
@@ -21,7 +21,7 @@ namespace :notify do
   task :expired_release => :environment do
     email = EmailNotification.active.release_expired
     if email
-      Search.where(end_date: Date.today).each do |search|
+      Search.where(end_date: Date.today).where(state: 'data_released').each do |search|
         user_emails = search.user_emails
         if user_emails.any?
           subject = email.subject.gsub('{{search_name}}', search.name)

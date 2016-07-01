@@ -203,11 +203,11 @@ describe Admin::AnswersController do
       end
 
       describe 'POST update' do
-        before(:each) do
-          xhr :post, :update, id: @answer.id, answer: @params
-        end
-
         describe 'with valid params' do
+          before(:each) do
+            xhr :post, :update, id: @answer.id, answer: @params
+          end
+
           it 'updates an answer' do
             expect(@answer.reload.text).to eq 'a second answer'
           end
@@ -223,7 +223,8 @@ describe Admin::AnswersController do
 
         describe 'with invalid params' do
           before(:each) do
-            allow_any_instance_of(Answer).to receive(:save).and_return(false)
+            allow_any_instance_of(Answer).to receive(:update_attributes).and_return(false)
+            xhr :post, :update, id: @answer.id, answer: @params
           end
 
           it 'does not update an answer' do
@@ -231,7 +232,6 @@ describe Admin::AnswersController do
           end
 
           it 'renders SHOW template in JS format' do
-            xhr :post, :create, answer: @params
             expect(response).to render_template('show')
           end
         end

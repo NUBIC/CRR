@@ -31,6 +31,8 @@ gem 'uglifier'
 gem 'activerecord-session_store'
 gem 'cocoon'
 
+gem "faker"
+
 # Use Capistrano for deployment
 group :development do
   gem 'capistrano'

@@ -49,6 +49,10 @@ namespace :db do
 
   desc "de-identify current database"
   task de_id: :environment do
+    if Rails.env.production?
+      raise "Please don't run this in production."
+    end
+
     ActiveRecord::Base.record_timestamps = false
     PaperTrail.enabled = false
 

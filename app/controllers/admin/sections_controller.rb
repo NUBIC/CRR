@@ -60,9 +60,10 @@ class Admin::SectionsController < Admin::AdminController
     authorize @section
     @survey = @section.survey
     @section.destroy
+    @section = nil
     @survey.reload
     respond_to do |format|
-      format.js {render 'admin/surveys/show', layout: false}
+      format.js { render 'admin/surveys/show', layout: false }
     end
   end
 

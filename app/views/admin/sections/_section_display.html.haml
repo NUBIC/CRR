@@ -2,7 +2,7 @@
 %h4
   = "Section: #{section.title}"
 - unless section.survey.active?
-  = form_tag admin_section_path(section), method: 'delete', class: 'ajax-form', data: {target: '#study_forms .accordion-inner'} do
+  = form_tag admin_section_path(section), method: 'delete', class: 'ajax-form', data: {target: '#forms'} do
     .btn-group
       = link_to 'Edit', edit_admin_section_path(section), class: 'btn btn-mini btn-primary', data: { async: true, target: "#section_#{section.id}"}
       - if policy(section).destroy?

@@ -36,7 +36,7 @@
   %ul.nav.nav-tabs
     - @survey.sections.each_with_index do |s,si|
       %li{ class: "#{'active' if (@section.nil? && si==0) || (!@section.nil? && @section.id == s.id)}"}
-        = link_to s.title, '#section_#{s.id}', data: { toggle: 'tab' }
+        = link_to s.title, "#section_#{s.id}", data: { toggle: 'tab' }
     - unless @survey.active? || !@survey.multiple_section?
       = link_to 'Add Section', new_admin_section_path(survey_id: @survey.id), class: 'btn btn-mini btn-block btn-primary nu-primary', data: { async: true, target: '.tabbable'}
     = link_to 'Preview', preview_admin_survey_path(@survey), class: 'btn btn-mini btn-block btn-success', data: { async: true, target: '#forms' }

@@ -149,6 +149,14 @@ class Admin::SearchesController < Admin::AdminController
         errors << @new_search.errors.full_messages.to_sentence
       else
         notices << %Q[ Data Request Extended:  #{view_context.link_to(@new_search.name, admin_search_path(@new_search))}]
+        email = EmailNotification.active.batch_released
+        user_emails = @new_search.user_emails
+        if email && user_emails
+          outbound_email(user_emails, email.content, email.subject)
+          notices << ' Researcher had been notified of data release'
+        else
+          flash['error'] = 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
+        end
       end
     end
     unless @new_search && @new_search.errors.any?

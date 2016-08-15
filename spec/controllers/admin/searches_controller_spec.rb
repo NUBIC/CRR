@@ -923,6 +923,67 @@ describe Admin::SearchesController do
           post :approve_return, id: @search.id
           expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id, state: 'returned')
         end
+
+        describe 'processing release extension' do
+          it 'creates a new search' do
+            post :approve_return, id: @search.id, search: {
+              name: 'Extended search',
+              start_date: Date.today,
+              warning_date: Date.today + 1,
+              end_date: Date.today + 2
+            },
+            participant_ids: [@participant.id]
+            expect(assigns(:new_search)).not_to be_nil
+            expect(assigns(:new_search).user_id).to eq @user.id
+            expect(assigns(:new_search).study).to eq @search.study
+            expect(assigns(:new_search).state).to eq 'data_released'
+          end
+
+          context 'when corresponding EmailNotification is not available' do
+            it 'generates warning message when corresponding EmailNotification is not available' do
+              email_notification = EmailNotification.batch_released
+              email_notification.deactivate
+              email_notification.save!
+
+              post :approve_return, id: @search.id, search: {
+                name: 'Extended search',
+                start_date: Date.today,
+                warning_date: Date.today + 1,
+                end_date: Date.today + 2
+              },
+              participant_ids: [@participant.id]
+
+              expect(flash['notice']).to match 'Data Request Extended:'
+              expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
+            end
+          end
+
+          context 'when corresponding EmailNotification is available' do
+            it 'sends welcome email and admin email when corresponding EmailNotification is available' do
+              expect {
+                post :approve_return, id: @search.id, search: {
+                  name: 'Extended search',
+                  start_date: Date.today,
+                  warning_date: Date.today + 1,
+                  end_date: Date.today + 2
+                },
+                participant_ids: [@participant.id]
+              }.to change(ActionMailer::Base.deliveries, :size).by(1)
+            end
+
+            it 'generates proper notification message' do
+              post :approve_return, id: @search.id, search: {
+                name: 'Extended search',
+                start_date: Date.today,
+                warning_date: Date.today + 1,
+                end_date: Date.today + 2
+              },
+              participant_ids: [@participant.id]
+
+              expect(flash['notice']).to match 'Researcher had been notified of data release.'
+            end
+          end
+        end
       end
 
       describe 'with invalid parameters' do

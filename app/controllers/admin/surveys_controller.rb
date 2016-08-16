@@ -3,9 +3,10 @@ class Admin::SurveysController < Admin::AdminController
 
   def index
    authorize Survey
+   @surveys = Survey.all
     respond_to do |format|
       format.html
-      format.js {render layout: false}
+      format.js { render layout: false }
     end
   end
 

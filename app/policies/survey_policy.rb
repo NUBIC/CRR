@@ -32,7 +32,7 @@ class SurveyPolicy < ApplicationPolicy
   end
 
   def deactivate?
-    is_admin?
+    is_admin? && !((record.adult_survey? || record.child_survey?) && Rails.env.production?)
   end
 
   def preview?

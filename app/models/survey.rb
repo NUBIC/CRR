@@ -39,6 +39,14 @@ class Survey < ActiveRecord::Base
     !active? && response_sets.empty?
   end
 
+  def adult_survey?
+    self.code == 'adult'
+  end
+
+  def child_survey?
+    self.code == 'child'
+  end
+
   #this method checks that the survey is in fact valid for activation
   #checks things like it has at least one section, at least one question etc
   def soft_errors

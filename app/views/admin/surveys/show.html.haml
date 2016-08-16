@@ -3,10 +3,11 @@
     .btn-toolbar
       = link_to 'Back to surveys', admin_surveys_path, class: 'btn btn-primary btn-block'
   - if @survey.active?
-    .span1
-      = form_for @survey, url: deactivate_admin_survey_path(@survey), html: { data: { target: '#forms' }, class: 'ajax-form'} do |f|
-        .btn-toolbar
-          = f.button 'Deactivate', class: 'btn btn-warning btn-block'
+    - if policy(@survey).deactivate?
+      .span1
+        = form_for @survey, url: deactivate_admin_survey_path(@survey), html: { data: { target: '#forms' }, class: 'ajax-form'} do |f|
+          .btn-toolbar
+            = f.button 'Deactivate', class: 'btn btn-warning btn-block'
   - else
     .span1
       = form_for @survey, url: activate_admin_survey_path(@survey), html: { data: { target: '#forms' }, class: 'ajax-form' } do |f|

@@ -1,6 +1,6 @@
 #forms
-  #additonal-data{data: {header: "Surveys (#{Survey.all.size})", url: new_admin_survey_path, target: "#forms", async: true, text: "Add a survey"}}
-  %table.display.table.table-bordered.table-hover{:id=>'survey_list'}
+  #additonal-data{ data: { header: "Surveys (#{Survey.all.size})", url: new_admin_survey_path, target: '#forms', async: true, text: 'Add a survey'}}
+  %table.display.table.table-bordered.table-hover{ id: 'survey_list' }
     %thead
       %tr
         %th Survey Title
@@ -8,9 +8,14 @@
         %th State
         %th Created
     %tbody
-      -Survey.all.each do |survey|
+      - @surveys.each do |survey|
+        - css_class = 'muted' unless survey.active?
         %tr
-          %td=link_to survey.title, admin_survey_path(survey),"data-async"=>true,"data-target"=>"#forms"
-          %td{:class=> "#{'muted' unless survey.active?}"}=survey.description
-          %td{:class=> "#{'muted' unless survey.active?}"}=survey.state.titleize
-          %td{:class=> "#{'muted' unless survey.active?}"}=survey.created_at.to_date
+          %td
+            = link_to survey.title, admin_survey_path(survey), data: { async: true, target: '#forms' }
+          %td{ class: css_class }
+            = survey.description
+          %td{ class: css_class }
+            = survey.state.titleize
+          %td{ class: css_class }
+            = survey.created_at.to_date

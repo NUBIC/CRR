@@ -7,7 +7,7 @@ describe 'admin/surveys/show.html.haml' do
     @question = @section.questions.create(text: 'question 1', response_type: 'pick_one')
     @answer = @question.answers.create(text:'answer 1')
     @answer2 = @question.answers.create(text:'answer 2')
-    allow(view).to receive(:policy).and_return(double("some policy", destroy?: true))
+    allow(view).to receive(:policy).and_return(double("some policy", destroy?: true, deactivate?: true))
     login_user
   end
 
@@ -26,10 +26,17 @@ describe 'admin/surveys/show.html.haml' do
       expect(rendered).not_to  match /Add Section/
     end
 
-    it 'should provide ability to deactivate survey' do
+    it 'should provide ability to deactivate survey if alowed' do
       assign(:survey, @survey)
       render
       expect(rendered).to  match /Deactivate/
+    end
+
+    it 'should not provide ability to deactivate survey if not alowed' do
+      allow(view).to receive(:policy).and_return(double("some policy", deactivate?: false))
+      assign(:survey, @survey)
+      render
+      expect(rendered).not_to  match /Deactivate/
     end
   end
 

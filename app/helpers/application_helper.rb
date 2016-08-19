@@ -62,7 +62,7 @@ module ApplicationHelper
   end
 
   def display_participant_header(state, count)
-    state.blank? ? "All Participants (#{count})" : state == "approved" ? "Approved Participants (#{count})" : "Participants Pending Approval (#{count})"
+    state.blank? ? "All Participants (#{count})" : "Participants #{state.titleize} (#{count})"
   end
 
   def display_address(participant)

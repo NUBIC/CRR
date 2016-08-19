@@ -25,7 +25,7 @@ class Participant < ActiveRecord::Base
   # AASM events and transitions
   aasm column: :stage do
     state :consent, initial: true
-    state :consent_denied, :demographics, :survey, :pending_approval, :approved, :withdrawn
+    state :consent_denied, :demographics, :survey, :pending_approval, :approved, :withdrawn, :suspended
 
     event :sign_consent do
       transitions to: :demographics, from: :consent
@@ -56,12 +56,17 @@ class Participant < ActiveRecord::Base
     event :withdraw do
       transitions to: :withdrawn
     end
+
+    event :suspend do
+      transitions to: :suspended
+    end
   end
 
   # Scopes
   scope :by_stage,              -> (stages){ where(stage: stages) }
   scope :pending_approval,      -> { by_stage('pending_approval').order("#{self.table_name}.created_at DESC") }
   scope :approved,              -> { by_stage('approved').order("#{self.table_name}.created_at DESC") }
+  scope :suspended,             -> { by_stage('suspended').order("#{self.table_name}.created_at DESC") }
   scope :approaching_deadlines, -> { joins(:study_involvements).by_stage('approved').where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
   scope :all_participants,      -> { by_stage(['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
   scope :search,                -> (param){ where('first_name ilike ? or last_name ilike ?',"%#{param}%","%#{param}%") }
@@ -159,6 +164,11 @@ class Participant < ActiveRecord::Base
     response_sets.order("updated_at DESC").first
   end
 
+  def recent_core_response_set
+    survey_code = child ? 'child' : 'adult'
+    self.response_sets.joins(:survey).where(surveys: { code: survey_code}).order("updated_at DESC").first
+  end
+
   def open_public_response_sets
     response_sets.where(completed_at: nil,public: true)
   end
@@ -199,5 +209,21 @@ class Participant < ActiveRecord::Base
 
   def released?(search)
     search_participants.where(search_id: search.id, released: true).any?
+  end
+
+  def birthdate
+    response_set  = self.recent_core_response_set
+    if response_set.present?
+      question      = response_set.survey.questions.where(questions: { response_type: 'birth_date' }).first
+      if question.present?
+        response_set.send("q_#{question.id}")
+      end
+    end
+  end
+
+  def age(date = nil)
+    date_of_birth = Date.parse(self.birthdate)
+    date ||= Time.now.utc.to_date
+    date.year - date_of_birth.year - ((date.month > date_of_birth.month || (date.month == date_of_birth.month && date.day >= date_of_birth.day)) ? 0 : 1)
   end
 end

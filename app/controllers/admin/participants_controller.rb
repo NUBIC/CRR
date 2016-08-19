@@ -1,5 +1,7 @@
 class Admin::ParticipantsController < Admin::AdminController
-  before_action :set_participant, only: [:show, :edit, :update, :enroll, :consent, :consent_signature, :withdraw, :verify]
+  before_action :set_participant, only: [
+    :show, :edit, :update, :enroll, :consent, :consent_signature, :withdraw, :verify, :suspend
+  ]
 
   def index
     authorize Participant
@@ -78,6 +80,12 @@ class Admin::ParticipantsController < Admin::AdminController
   def withdraw
     authorize @participant
     @participant.withdraw!
+    redirect_to admin_participants_path
+  end
+
+  def suspend
+    authorize @participant
+    @participant.suspend!
     redirect_to admin_participants_path
   end
 

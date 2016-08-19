@@ -33,4 +33,8 @@ class EmailNotification < ActiveRecord::Base
   def self.release_expired
     where(name: 'Release expired').first
   end
+
+  def self.suspended_participants
+    where(name: 'Suspended participants').first
+  end
 end

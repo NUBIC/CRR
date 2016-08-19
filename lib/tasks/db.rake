@@ -87,27 +87,36 @@ namespace :db do
     end
 
     def de_id_participant(participant, date_shift)
-      participant.email             = Faker::Internet.email                             unless participant.email.blank?
-      participant.first_name        = Faker::Name.first_name                            unless participant.first_name.blank?
-      participant.last_name         = Faker::Name.last_name                             unless participant.last_name.blank?
-      participant.primary_phone     = Faker::PhoneNumber.phone_number.split(" x")[0]    unless participant.primary_phone.blank?
-      participant.secondary_phone   = Faker::PhoneNumber.phone_number.split(" x")[0]    unless participant.secondary_phone.blank?
-      participant.address_line1     = Faker::Address.street_address                     unless participant.address_line1.blank?
-      participant.address_line2     = Faker::Address.secondary_address                  unless participant.address_line2.blank?
-      participant.city              = Faker::Address.city                               unless participant.city.blank?
-      participant.state             = Faker::Address.state                              unless participant.state.blank?
-      participant.zip               = Faker::Address.zip                                unless participant.zip.blank?
+      participant.email             = Faker::Internet.email             unless participant.email.blank?
+      participant.first_name        = Faker::Name.first_name            unless participant.first_name.blank?
+      participant.last_name         = Faker::Name.last_name             unless participant.last_name.blank?
+      participant.address_line1     = Faker::Address.street_address     unless participant.address_line1.blank?
+      participant.address_line2     = Faker::Address.secondary_address  unless participant.address_line2.blank?
+      participant.city              = Faker::Address.city               unless participant.city.blank?
+      participant.state             = Faker::Address.state              unless participant.state.blank?
+      participant.zip               = Faker::Number.number(5)           unless participant.zip.blank?
 
-      participant.primary_guardian_first_name = Faker::Name.first_name                  unless participant.primary_guardian_first_name.blank?
-      participant.primary_guardian_last_name  = Faker::Name.last_name                   unless participant.primary_guardian_last_name.blank?
-      participant.primary_guardian_email      = Faker::Internet.email                   unless participant.primary_guardian_email.blank?
-      participant.primary_guardian_phone      = Faker::PhoneNumber.phone_number.split(" x")[0]  unless participant.primary_guardian_phone.blank?
+      phone_number = -> { "#{Faker::Number.number(3)}-#{Faker::Number.number(3)}-#{Faker::Number.number(4)}" }
+      participant.primary_phone   = phone_number.call unless participant.primary_phone.blank?
+      participant.secondary_phone = phone_number.call unless participant.secondary_phone.blank?
 
-      participant.secondary_guardian_first_name = Faker::Name.first_name                  unless participant.secondary_guardian_first_name.blank?
-      participant.secondary_guardian_last_name  = Faker::Name.last_name                   unless participant.secondary_guardian_last_name.blank?
-      participant.secondary_guardian_email      = Faker::Internet.email                   unless participant.secondary_guardian_email.blank?
-      participant.secondary_guardian_phone      = Faker::PhoneNumber.phone_number.split(" x")[0]  unless participant.secondary_guardian_phone.blank?
-      participant.save(:validate=>false)
+      participant.primary_guardian_first_name =
+        Faker::Name.first_name  unless participant.primary_guardian_first_name.blank?
+      participant.primary_guardian_last_name  =
+        Faker::Name.last_name   unless participant.primary_guardian_last_name.blank?
+      participant.primary_guardian_email =
+        Faker::Internet.email   unless participant.primary_guardian_email.blank?
+      participant.primary_guardian_phone =
+        phone_number.call       unless participant.primary_guardian_phone.blank?
+      participant.secondary_guardian_first_name =
+        Faker::Name.first_name  unless participant.secondary_guardian_first_name.blank?
+      participant.secondary_guardian_last_name  =
+        Faker::Name.last_name   unless participant.secondary_guardian_last_name.blank?
+      participant.secondary_guardian_email =
+        Faker::Internet.email   unless participant.secondary_guardian_email.blank?
+      participant.secondary_guardian_phone =
+        phone_number.call       unless participant.secondary_guardian_phone.blank?
+      participant.save!
     end
 
     def de_id_account(account, date_shift)

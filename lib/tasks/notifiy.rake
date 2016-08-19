@@ -18,6 +18,7 @@ namespace :notify do
     end
   end
 
+  desc 'Notification of expired release'
   task :expired_release => :environment do
     email = EmailNotification.active.release_expired
     if email
@@ -33,6 +34,24 @@ namespace :notify do
       end
     else
       puts 'Email notification: email for expired release is not available'
+    end
+  end
+
+  desc 'Notification of suspended participants'
+  task :suspended_participants => :environment do
+    suspended_participants = []
+    Participant.where(child: true).approved.each do |participant|
+      if participant.age(Date.today + 1.month) >= 18
+        participant.suspend!
+        suspended_participants << participant
+        puts "Participant #{participant.id} is suspended due to age restrictions"
+      end
+    end
+    if suspended_participants.any?
+      email = EmailNotification.active.suspended_participants
+      if email.present?
+        EmailNotificationsMailer.generic_email(Rails.configuration.custom.app_config['contact_email'], email.content, email.subject).deliver_now!
+      end
     end
   end
 end

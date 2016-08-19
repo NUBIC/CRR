@@ -143,10 +143,18 @@
                         = cl.notes
           %br
           - if policy(@participant).edit?
-            - unless @participant.withdrawn?
-              .row-fluid
-                = form_for @participant, url: withdraw_admin_participant_path do |f|
-                  = f.button 'Withdraw Participant', class: 'btn btn-danger', data: { confirm: 'Are you sure you want to withdraw this participant?' }
+            .row-fruid
+              .span3
+                Status: #{@participant.stage}
+              - unless @participant.withdrawn?
+                .span3
+                  = form_for @participant, url: withdraw_admin_participant_path do |f|
+                    = f.button 'Withdraw Participant', class: 'btn btn-danger', data: { confirm: 'Are you sure you want to withdraw this participant?' }
+              - unless @participant.suspended?
+                .span3
+                  = form_for @participant, url: suspend_admin_participant_path do |f|
+                    = f.button 'Suspend Participant', class: 'btn btn-warning', data: { confirm: 'Are you sure you want to suspend this participant?' }
+
   - unless current_user.researcher?
     #instruments.tab-pane{ class: "#{'active' if active_surveys_tab}"}
       = render partial: 'partials/admin/participant_surveys', locals: {participant: @participant}

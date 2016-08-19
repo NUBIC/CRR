@@ -43,6 +43,10 @@ class ParticipantPolicy < ApplicationPolicy
     can_manage?
   end
 
+  def suspend?
+    can_manage?
+  end
+
   def verify?
     can_manage?
   end

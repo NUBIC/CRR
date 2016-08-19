@@ -72,6 +72,7 @@ AudiologyRegistry::Application.routes.draw do
         get   :enroll
         patch :verify
         patch :withdraw
+        patch :suspend
         post  :consent_signature
       end
     end

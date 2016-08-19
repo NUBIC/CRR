@@ -1,5 +1,5 @@
-# config valid only for Capistrano 3.1
-lock '3.4.1'
+# config valid only for Capistrano 3.6.0
+lock '3.6.0'
 
 APP_CONFIG = YAML.load(File.open('config/config.yml'))
 

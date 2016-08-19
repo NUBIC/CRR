@@ -5,7 +5,9 @@
 .row-fluid
   .well.nu-well
     %b
-      = @participant.name
+      #{@participant.name}
+      - if policy(@participant).edit?
+        (#{@participant.stage.titleize})
     = image_tag 'child.png'     if @participant.child?
     = image_tag 'siblings.png'  if @participant.has_relationships?
     - if policy(@participant).edit?
@@ -144,8 +146,6 @@
           %br
           - if policy(@participant).edit?
             .row-fruid
-              .span3
-                Status: #{@participant.stage}
               - unless @participant.withdrawn?
                 .span3
                   = form_for @participant, url: withdraw_admin_participant_path do |f|

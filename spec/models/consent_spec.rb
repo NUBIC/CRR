@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Consent do
+RSpec.describe Consent, type: :model do
   it { is_expected.to have_many(:consent_signatures) }
 
   let(:consent) { FactoryGirl.create(:consent) }

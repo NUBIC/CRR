@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::StudiesController do
+RSpec.describe Admin::StudiesController, type: :controller do
   before(:each) do
     @study = FactoryGirl.create(:study)
     login_user

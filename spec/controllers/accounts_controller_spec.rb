@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe AccountsController do
+RSpec.describe AccountsController, type: :controller do
   setup :activate_authlogic
   let(:valid_attributes) { { email: 'test@test.com', current_password: '1234', password: '1234', password_confirmation: '1234' } }
   let(:invalid_attributes) { { email: 'test', password: '1234', password_confirmation: '1234' } }
@@ -14,12 +14,20 @@ describe AccountsController do
       end
 
       it 'sends welcome email if available' do
+        Setup.email_notifications
         expect {
           post :create, {account: valid_attributes}
         }.to change(ActionMailer::Base.deliveries,:size).by(1)
       end
 
       it 'sends admin notification email if welcome email is not available' do
+        expect {
+          post :create, { account: valid_attributes }
+        }.to change(ActionMailer::Base.deliveries,:size).by(1)
+      end
+
+      it 'sends admin notification email if welcome email is deactivated' do
+        Setup.email_notifications
         email_notification = EmailNotification.active.welcome_participant
         email_notification.deactivate
         email_notification.save
@@ -103,7 +111,7 @@ describe AccountsController do
       end
     end
 
-    describe 'password' do
+    describe 'password', type: :controller do
       it 'with invalid current password generates flash error' do
         put :update, {id: account.id, account: { email: 'test@test.com', current_password: '12345' } }
         expect(flash['error']).to eq 'Current password doesn\'t match. Please try again.'
@@ -148,6 +156,10 @@ describe AccountsController do
       let(:valid_express_signup_attributes) {{ name: 'Joe', contact: 'email', email: 'joe@doe.com'}}
 
       describe 'when corresponding EmailNotification is available' do
+        before :each do
+          Setup.email_notifications
+        end
+
         it 'sends welcome email and admin email when corresponding EmailNotification is available' do
           expect {
             post :express_sign_up, valid_express_signup_attributes
@@ -160,20 +172,34 @@ describe AccountsController do
         end
       end
 
-      describe 'when corresponding EmailNotification is not available' do
-        it 'sends admin email' do
+      describe 'when corresponding EmailNotification is deactivated' do
+        before :each do
+          Setup.email_notifications
           express_sign_up_email = EmailNotification.active.express_sign_up
           express_sign_up_email.deactivate
           express_sign_up_email.save!
+        end
+
+        it 'sends admin email' do
           expect {
             post :express_sign_up, valid_express_signup_attributes
           }.to change(ActionMailer::Base.deliveries,:size).by(1)
         end
 
         it 'generates proper notification message' do
-          express_sign_up_email = EmailNotification.active.express_sign_up
-          express_sign_up_email.deactivate
-          express_sign_up_email.save!
+          post :express_sign_up, valid_express_signup_attributes
+          expect(flash['notice']).to eq 'Thank you for your interest in the Communication Research Registry. We will send a reminder to your email address.'
+        end
+      end
+
+      describe 'when corresponding EmailNotification is not set' do
+        it 'sends admin email' do
+          expect {
+            post :express_sign_up, valid_express_signup_attributes
+          }.to change(ActionMailer::Base.deliveries,:size).by(1)
+        end
+
+        it 'generates proper notification message' do
           post :express_sign_up, valid_express_signup_attributes
           expect(flash['notice']).to eq 'Thank you for your interest in the Communication Research Registry. We will send a reminder to your email address.'
         end

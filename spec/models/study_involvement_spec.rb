@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe StudyInvolvement do
+RSpec.describe StudyInvolvement, type: :model do
   it { is_expected.to belong_to :study }
   it { is_expected.to belong_to :participant }
   it { is_expected.to have_one :study_involvement_status }

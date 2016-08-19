@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Section do
+RSpec.describe Section, type: :model do
   it 'should not allow more than one section where multiple section is false' do
     survey = FactoryGirl.create(:survey, multiple_section: false)
     expect(survey.sections.size).to eq 1

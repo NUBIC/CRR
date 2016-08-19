@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::ParticipantsController do
+RSpec.describe Admin::ParticipantsController, type: :controller do
   before(:each) do
     login_user
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
@@ -134,6 +134,18 @@ describe Admin::ParticipantsController do
       end
 
       describe 'POST withdraw' do
+        it 'redirects to dashboard' do
+          post :withdraw, id: @participant.id
+          expect(response).to redirect_to(controller: :users, action: :dashboard)
+        end
+
+        it 'displays "Access Denied" flash message' do
+          post :withdraw, id: @participant.id
+          expect(flash['error']).to eq 'Access Denied'
+        end
+      end
+
+      describe 'POST suspend' do
         it 'redirects to dashboard' do
           post :withdraw, id: @participant.id
           expect(response).to redirect_to(controller: :users, action: :dashboard)
@@ -405,6 +417,14 @@ describe Admin::ParticipantsController do
         it 'transitions participant to withdrawn state' do
           post :withdraw, id: @participant.id
           expect(@participant.reload.stage).to eq 'withdrawn'
+          expect(response).to redirect_to(controller: :participants, action: :index)
+        end
+      end
+
+      describe 'POST suspend' do
+        it 'transitions participant to withdrawn state' do
+          post :suspend, id: @participant.id
+          expect(@participant.reload.stage).to eq 'suspended'
           expect(response).to redirect_to(controller: :participants, action: :index)
         end
       end

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::SectionsController do
+RSpec.describe Admin::SectionsController, type: :controller do
   before(:each) do
     @survey = FactoryGirl.create(:survey, multiple_section: true)
     @section = @survey.sections.create(title: 'section 1')
@@ -28,26 +28,11 @@ describe Admin::SectionsController do
         expect(flash['error']).to eq 'Access Denied'
       end
 
-      it 'should deny access to a billing users  attempt to create a section by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :create, { section: { survey_id: @survey.id } }
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
       it 'should deny access to an attempt to edit a section by an unauthorized user' do
         post :edit, { id: @section.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
-
-      it 'should deny access to an billing users  attempt to edit a section by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :edit, { id: @section.id }
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
 
       it 'should deny access to an attempt to update a section by an unauthorized user' do
         post :update, { id: @section.id }
@@ -55,21 +40,7 @@ describe Admin::SectionsController do
         expect(flash['error']).to eq 'Access Denied'
       end
 
-      it 'should deny access to an billing users attempt to update a section by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
-        post :update, { id: @section.id }
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
       it 'should deny access to an attempt to delete a section by an unauthorized user' do
-        post :destroy, { id: @section.id }
-        expect(response).to redirect_to(controller: :users, action: :dashboard)
-        expect(flash['error']).to eq 'Access Denied'
-      end
-
-      it 'should deny access to an billing users attempt to delete a section by an unauthorized user' do
-        allow(controller.current_user).to receive(:billing?).and_return(true)
         post :destroy, { id: @section.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'

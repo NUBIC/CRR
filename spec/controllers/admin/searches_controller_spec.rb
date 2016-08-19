@@ -1,8 +1,9 @@
-require 'spec_helper'
-ROLES   = ['data_manager?', 'researcher?', 'admin?']
-STATES  = Search.aasm.states.map(&:name)
+require 'rails_helper'
 
-describe Admin::SearchesController do
+RSpec.describe Admin::SearchesController, type: :controller do
+  ROLES   = ['data_manager?', 'researcher?', 'admin?']
+  STATES  = Search.aasm.states.map(&:name)
+
   before(:each) do
     @user               = FactoryGirl.create(:user, netid: 'test_user')
     @study              = FactoryGirl.create(:study, state: 'active')
@@ -800,7 +801,14 @@ describe Admin::SearchesController do
           end
 
           describe 'when corresponding EmailNotification is not available' do
-            it 'generates warning message' do
+            it 'generates warning message if email does not exist' do
+              post :release_data, @valid_release_data_attributes
+              expect(flash['notice']).to eq 'Participant Data Released.'
+              expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
+            end
+
+            it 'generates warning message if email is deactivated' do
+              Setup.email_notifications
               email_notification = EmailNotification.batch_released
               email_notification.deactivate
               email_notification.save!
@@ -812,6 +820,10 @@ describe Admin::SearchesController do
           end
 
           describe 'when corresponding EmailNotification is available' do
+            before :each do
+              Setup.email_notifications
+            end
+
             it 'sends welcome email and admin email when corresponding EmailNotification is available' do
               expect {
                 post :release_data, @valid_release_data_attributes
@@ -940,7 +952,22 @@ describe Admin::SearchesController do
           end
 
           context 'when corresponding EmailNotification is not available' do
+            it 'generates warning message when corresponding EmailNotification does not exist' do
+              post :approve_return, id: @search.id, search: {
+                name: 'Extended search',
+                start_date: Date.today,
+                warning_date: Date.today + 1,
+                end_date: Date.today + 2
+              },
+              participant_ids: [@participant.id]
+
+              expect(flash['notice']).to match 'Data Request Extended:'
+              expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated or emails for assosiated users are not available)'
+            end
+
             it 'generates warning message when corresponding EmailNotification is not available' do
+              Setup.email_notifications
+
               email_notification = EmailNotification.batch_released
               email_notification.deactivate
               email_notification.save!
@@ -959,6 +986,10 @@ describe Admin::SearchesController do
           end
 
           context 'when corresponding EmailNotification is available' do
+            before :each do
+              Setup.email_notifications
+            end
+
             it 'sends welcome email and admin email when corresponding EmailNotification is available' do
               expect {
                 post :approve_return, id: @search.id, search: {

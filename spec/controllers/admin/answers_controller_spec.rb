@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::AnswersController do
+RSpec.describe Admin::AnswersController, type: :controller do
   before(:each) do
     @survey   = FactoryGirl.create( :survey, multiple_section: true)
     @section  = @survey.sections.create(title: 'section 1')

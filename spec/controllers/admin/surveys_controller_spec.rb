@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::SurveysController do
+RSpec.describe Admin::SurveysController, type: :controller do
   before(:each) do
     @survey = FactoryGirl.create(:survey, multiple_section: false)
     login_user
@@ -50,7 +50,7 @@ describe Admin::SurveysController do
     end
   end
 
-  describe 'resercher' do
+  describe 'resercher', type: :controller do
     before(:each) do
       allow(controller.current_user).to receive(:data_manager?).and_return(false)
       allow(controller.current_user).to receive(:researcher?).and_return(true)

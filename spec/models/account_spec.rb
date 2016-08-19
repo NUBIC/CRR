@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Account do
+RSpec.describe Account, type: :model do
   let(:account) { FactoryGirl.create(:account) }
 
   it 'creates a new instance given valid attributes' do

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe ParticipantsController do
+RSpec.describe ParticipantsController, type: :controller do
   setup :activate_authlogic
   let(:account) { FactoryGirl.create(:account) }
   let(:participant) { FactoryGirl.create(:participant, stage: 'approved', address_line1: '123 Main St', address_line2: 'Apt #123', city: 'Chicago', state: 'IL', zip: '12345', email: 'test@test.com', primary_phone: '123-456-7890', secondary_phone: '123-345-6789')}

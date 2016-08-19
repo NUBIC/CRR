@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe SearchConditionGroup do
+RSpec.describe SearchConditionGroup, type: :model do
   before(:each) do
     @study = FactoryGirl.create(:study)
     @search = @study.searches.create( name: 'test' )

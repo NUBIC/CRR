@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe ResponseSet do
+RSpec.describe ResponseSet, type: :model do
   before(:each) do
     @participant = FactoryGirl.create(:participant)
     @survey = FactoryGirl.create(:survey, multiple_section: true)

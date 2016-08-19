@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Relationship do
+RSpec.describe Relationship, type: :model do
   let(:relationship) { FactoryGirl.create(:relationship) }
   it 'creates a new instance given valid attributes' do
     expect(relationship).not_to be_nil

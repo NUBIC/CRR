@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::UsersController do
+RSpec.describe Admin::UsersController, type: :controller do
   before(:each) do
     @user = FactoryGirl.create(:user, netid: 'test_user')
     login_user
@@ -81,7 +81,8 @@ describe Admin::UsersController do
       expect(response).to redirect_to(controller: :users, action: :index)
     end
 
-    it 'should notify user if email reminder is not available' do
+    it 'should notify user if email reminder is deactivated' do
+      Setup.email_notifications
       welcome_email = EmailNotification.active.welcome_researcher
       welcome_email.deactivate
       welcome_email.save!
@@ -89,7 +90,13 @@ describe Admin::UsersController do
       expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
     end
 
+    it 'should notify user if email reminder does not exist' do
+      expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
+    end
+
     it 'should notify researcher of created account if email reminder is available' do
+      Setup.email_notifications
       expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.to change(ActionMailer::Base.deliveries, :size).by(1)
     end
 

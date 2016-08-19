@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe SearchCondition do
+RSpec.describe SearchCondition, type: :model do
   before(:each) do
     @study = FactoryGirl.create(:study)
     @search = @study.searches.create( name: 'test' )

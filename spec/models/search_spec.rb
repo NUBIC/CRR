@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Search do
+RSpec.describe Search, type: :model do
   let(:search) { FactoryGirl.create(:search) }
   let(:date) { Date.new(2013, 10, 10) }
   let(:study) { FactoryGirl.create(:study) }

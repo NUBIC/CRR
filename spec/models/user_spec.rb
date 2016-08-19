@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe User do
+RSpec.describe User, type: :model do
   let(:user){ FactoryGirl.create(:user) }
 
   it { is_expected.to have_many(:user_studies) }

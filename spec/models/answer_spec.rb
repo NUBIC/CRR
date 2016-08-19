@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Answer do
+RSpec.describe Answer, type: :model do
   before(:each) do
     @survey   = FactoryGirl.create(:survey, multiple_section: true)
     @section  = @survey.sections.create(title: 'title')

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe ContactLog do
+RSpec.describe ContactLog, type: :model do
   let(:contact_log) { FactoryGirl.create(:contact_log) }
   it 'creates a new instance given valid attributes' do
     expect(contact_log).not_to be_nil

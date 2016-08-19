@@ -1,7 +1,8 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::EmailNotificationsController do
+RSpec.describe Admin::EmailNotificationsController, type: :controller do
   before(:each) do
+    Setup.email_notifications
     login_user
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
     @email_notification = EmailNotification.first

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::ConsentsController do
+RSpec.describe Admin::ConsentsController, type: :controller do
   before(:each) do
     @consent = FactoryGirl.create(:consent)
     login_user

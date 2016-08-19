@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Participant do
+RSpec.describe Participant, type: :model do
   let(:participant) { FactoryGirl.create(:participant) }
   it 'creates a new instance given valid attributes' do
     expect(participant).not_to be_nil

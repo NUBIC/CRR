@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::SearchConditionsController do
+RSpec.describe Admin::SearchConditionsController, type: :controller do
   before(:each) do
     login_user
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)

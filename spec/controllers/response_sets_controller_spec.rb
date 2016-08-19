@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe ResponseSetsController do
+RSpec.describe ResponseSetsController, type: :controller do
   setup :activate_authlogic
   let(:account) { FactoryGirl.create(:account) }
   let(:participant) { FactoryGirl.create(:participant) }

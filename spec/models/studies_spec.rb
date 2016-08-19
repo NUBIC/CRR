@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Study do
+RSpec.describe Study, type: :model do
   let(:date) { Date.new(2013, 10, 10) }
 
   it 'creates a new instance given valid attributes' do

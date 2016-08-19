@@ -1,7 +1,7 @@
-require 'spec_helper'
+require 'rails_helper'
 ROLES = ['data_manager?', 'researcher?', 'admin?']
 
-describe Admin::CommentsController do
+RSpec.describe Admin::CommentsController, type: :controller do
   before(:each) do
     @user         = FactoryGirl.create(:user, netid: 'test_user')
     @study        = FactoryGirl.create(:study, state: 'active')

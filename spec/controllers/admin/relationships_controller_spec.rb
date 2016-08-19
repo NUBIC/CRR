@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe Admin::RelationshipsController do
+RSpec.describe Admin::RelationshipsController, type: :controller do
   before(:each) do
     @participant1 = FactoryGirl.create(:participant)
     @participant2 = FactoryGirl.create(:participant)

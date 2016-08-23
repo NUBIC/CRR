@@ -16,6 +16,8 @@
           %li
             = link_to "Approved (#{Participant.approved.count})", admin_participants_path(state: 'approved')
           %li
+            = link_to "Suspended (#{Participant.suspended.count})", admin_participants_path(state: 'suspended')
+          %li
             = link_to "All (#{Participant.all_participants.count})", admin_participants_path
     - elsif current_user.researcher?
       %li

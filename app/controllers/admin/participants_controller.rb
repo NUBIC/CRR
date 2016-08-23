@@ -6,7 +6,7 @@ class Admin::ParticipantsController < Admin::AdminController
   def index
     authorize Participant
     participants = Participant.eager_load(:account, :origin_relationships, :destination_relationships, study_involvements: :study)
-    @participants = params[:state].blank? ? participants.all_participants : participants.send(params[:state])
+    @participants = params[:state].blank? ? participants.all_participants : participants.by_stage(params[:state])
   end
 
   def new

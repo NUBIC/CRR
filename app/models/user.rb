@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  # Dependencies
+  include AASM
+
   attr_accessor :study_tokens
 
   # Dependencies
@@ -16,6 +19,23 @@ class User < ActiveRecord::Base
 
   # Hooks
   after_create :update_from_ldap
+
+  # AASM events and transitions
+  aasm column: :state do
+    state :active, initial: true
+    state :inactive
+
+    event :activate do
+      transitions to: :active
+    end
+
+    event :deactivate do
+      transitions to: :inactive
+    end
+  end
+
+  # Scopes
+  scope :by_state, -> (state){ where(state: state) }
 
   def study_tokens=(ids)
     self.user_studies.destroy_all if ids.blank?
@@ -39,7 +59,11 @@ class User < ActiveRecord::Base
   end
 
   def has_system_access?
-    !ActiveRecord::Base::User.find_by_netid(netid).nil?
+    ActiveRecord::Base::User.active.find_by_netid(netid).present?
+  end
+
+  def active_for_authentication?
+    self.active?
   end
 
   private

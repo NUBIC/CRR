@@ -143,7 +143,12 @@ AudiologyRegistry::Application.routes.draw do
     end
 
     # users controller
-    resources :users, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :users, only: [:index, :new, :create, :edit, :update, :destroy] do
+      member do
+        patch :activate
+        patch :deactivate
+      end
+    end
   end
   get '/' =>  "account_sessions#new", :as => :public_root
 end

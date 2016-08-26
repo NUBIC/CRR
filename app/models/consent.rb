@@ -19,7 +19,7 @@ class Consent < ActiveRecord::Base
   default_scope { order('state ASC, created_at DESC') }
 
   def self.has_active_consent?
-    child_consent and adult_consent
+    child_consent.present? && adult_consent.present?
   end
 
   def self.child_consent

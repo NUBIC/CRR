@@ -1,11 +1,17 @@
 class Admin::UsersController < Admin::AdminController
   include EmailNotifications
 
-  before_action :set_user, only: [:edit, :update, :destroy]
+  before_action :set_user, only: [:edit, :update, :destroy, :activate, :deactivate]
 
   def index
     authorize User
-    @users = User.all
+    if params[:state]
+      @state = params[:state]
+    else
+      @state = 'active'
+    end
+
+    @users = User.by_state(@state)
   end
 
   def new
@@ -58,6 +64,28 @@ class Admin::UsersController < Admin::AdminController
   def dashboard
     authorize User
     redirect_to admin_participants_path if policy(Participant).index?
+  end
+
+  def activate
+    authorize @user
+    @user.activate
+    if @user.save
+      flash['notice'] = 'Successfully activated'
+    else
+      flash['error'] = @user.errors.full_messages.to_sentence
+    end
+    redirect_to admin_users_path
+  end
+
+  def deactivate
+    authorize @user
+    @user.deactivate
+    if @user.save(validate: false)
+      flash['notice'] = 'Successfully Deactivated'
+    else
+      flash['error'] = @user.errors.full_messages.to_sentence
+    end
+    redirect_to admin_users_path
   end
 
   private

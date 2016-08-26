@@ -7,7 +7,8 @@ class Admin::AdminController < ApplicationController
   def require_user
     unless user_signed_in? && current_user.has_system_access?
       flash['error'] = 'Access Denied'
-      redirect_to '/logout'
+      sign_out @user
+      redirect_to public_root_path
       return false
     end
   end

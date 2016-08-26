@@ -32,7 +32,7 @@ class Study < ActiveRecord::Base
   end
 
   def user_emails
-    users.pluck(:email).reject(&:blank?)
+    users.active.pluck(:email).reject(&:blank?)
   end
 
   private

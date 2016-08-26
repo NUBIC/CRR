@@ -132,4 +132,15 @@ module ApplicationHelper
   def study_involvement_status_options
     StudyInvolvementStatus.valid_statuses.group_by{|h| h[:group]}.map{|k,v| [k, v.map{|s| [s[:name].titleize, s[:name]]}]}
   end
+
+  def participant_contact_emails(participant)
+    contact_emails = Hash.new
+
+      contact_emails["Self - #{participant.email}"] = participant.email
+
+    contact_emails["Primary Guardian - #{primary_guardian_email}"] = primary_guardian_email unless primary_guardian_email.blank?
+    contact_emails["Secondary Guardian - #{secondary_guardian_email}"] = secondary_guardian_email unless secondary_guardian_email.blank?
+    contact_emails["Account Email - #{self.account.email}"] = self.account.email if self.account
+    contact_emails
+  end
 end

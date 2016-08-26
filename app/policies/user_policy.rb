@@ -23,6 +23,14 @@ class UserPolicy < ApplicationPolicy
     is_admin?
   end
 
+  def activate?
+    is_admin?
+  end
+
+  def deactivate?
+    is_admin?
+  end
+
   def dashboard?
     is_admin? || is_data_manager? || is_researcher?
   end

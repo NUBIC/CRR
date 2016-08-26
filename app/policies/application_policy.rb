@@ -12,14 +12,14 @@ class ApplicationPolicy
     end
 
     def is_admin?
-      user.is_a?(User) && user.admin?
+      user.is_a?(User) && user.active? && user.admin?
     end
 
     def is_data_manager?
-      user.is_a?(User) && user.data_manager?
+      user.is_a?(User) && user.active? && user.data_manager?
     end
 
     def is_researcher?
-      user.is_a?(User) && user.researcher?
+      user.is_a?(User) && user.active? && user.researcher?
     end
 end

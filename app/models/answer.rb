@@ -23,14 +23,6 @@ class Answer < ActiveRecord::Base
     self.code ||= "a_#{display_order}"
   end
 
-  def check_display_order
-    if self.display_order_changed? && question.answers.where(display_order: self.display_order).exists?
-        a = question.answers.find_by_display_order(self.display_order)
-        a.display_order = self.display_order + 1
-        a.save
-    end
-  end
-
   def proper_question_type
     errors.add(:question, 'doesn\'t support answers') unless question.multiple_choice?
   end

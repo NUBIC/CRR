@@ -1,15 +1,14 @@
 FactoryGirl.define do
   factory :study_involvement_state do
-
   end
+
   factory :search_participant_study_involvement do
-
   end
+
   factory :study_involvement_status do
     name  StudyInvolvementStatus.valid_statuses.map{|s| s[:name]}.sample
     association :study_involvement, factory: :study_involvement
   end
-
 
   sequence :irb_number do |n|
     "STU008888#{"%03d" % n}"
@@ -24,8 +23,8 @@ FactoryGirl.define do
   end
 
   factory :participant do |p|
-    p.first_name {Faker::Name.first_name}
-    p.last_name {Faker::Name.last_name}
+    p.first_name { Faker::Name.first_name }
+    p.last_name { Faker::Name.last_name }
   end
 
   factory :relationship do |r|

@@ -71,11 +71,6 @@ class Participant < ActiveRecord::Base
   scope :all_participants,      -> { by_stage(['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
   scope :search,                -> (param){ where('first_name ilike ? or last_name ilike ?',"%#{param}%","%#{param}%") }
 
-  def self.all_active_participants
-    approaching_deadlines = Participant.approaching_deadlines
-    Participant.pending_approvals | approaching_deadlines | Participant.approved.where.not(id: approaching_deadlines.map(&:id)).order('created_at DESC')
-  end
-
   def filled_states
     [:consent, :demographics, :survey]
   end
@@ -109,7 +104,7 @@ class Participant < ActiveRecord::Base
   end
 
   def has_study?(study)
-    !studies.empty? && studies.include?(study)
+    studies.present? && studies.include?(study)
   end
 
   def search_display
@@ -118,10 +113,6 @@ class Participant < ActiveRecord::Base
 
   def create_response_set(survey)
     response_sets.create(survey_id: survey.id)
-  end
-
-  def most_recent_consent_signature
-    consent_signatures.first
   end
 
   def adult_proxy?
@@ -153,11 +144,7 @@ class Participant < ActiveRecord::Base
   end
 
   def active?
-    !inactive? && self.aasm.current_state != :withdrawn
-  end
-
-  def active_studies
-    study_involvements.active.collect{|si| si.study if si.study.active? }.flatten.uniq
+    !inactive? && ![:withdrawn, :suspended].include?(self.aasm.current_state)
   end
 
   def recent_response_set
@@ -167,18 +154,6 @@ class Participant < ActiveRecord::Base
   def recent_core_response_set
     survey_code = child ? 'child' : 'adult'
     self.response_sets.joins(:survey).where(surveys: { code: survey_code}).order("updated_at DESC").first
-  end
-
-  def open_public_response_sets
-    response_sets.where(completed_at: nil,public: true)
-  end
-
-  def public_response_sets
-    response_sets
-  end
-
-  def demographics_info_completed?
-    !(first_name.blank? or last_name.blank?)
   end
 
   def related_participants

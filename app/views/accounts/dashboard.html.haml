@@ -16,7 +16,7 @@
               = link_to participant.name, participant_path(participant)
             %td
               %ul.unstyled
-                - participant.public_response_sets.each do |response_set|
+                - participant.response_sets.each do |response_set|
                   %li
                     - if response_set.complete?
                       = response_set.display_text

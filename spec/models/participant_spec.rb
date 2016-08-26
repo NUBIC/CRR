@@ -551,6 +551,90 @@ RSpec.describe Participant, type: :model do
         expect(participant.secondary_phone).to eq other.secondary_phone
       end
     end
-  end
 
+    it 'checks if participant had been released' do
+      study   = FactoryGirl.create(:study)
+      search  = FactoryGirl.create(:search, study: study)
+
+      expect(participant).not_to be_released(search)
+
+      search_participant = FactoryGirl.create(:search_participant, participant: participant, search: search)
+      expect(participant).not_to be_released(search)
+
+      study_involvement = FactoryGirl.create(:study_involvement, study: study, participant: participant)
+      expect(participant).not_to be_released(search)
+
+      search_participant_study_involvement = FactoryGirl.create(:search_participant_study_involvement, search_participant: search_participant)
+      expect(participant).not_to be_released(search)
+
+      search_participant.released = true
+      search_participant.save!
+
+      expect(participant).to be_released(search)
+    end
+
+    it 'retrieves participant`s birth date' do
+      expect(participant.birthdate).to be_nil
+
+      child_survey  = FactoryGirl.create(:survey, multiple_section: true, code: 'child')
+      child_section = child_survey.sections.create(title: 'test')
+      child_q_date  = child_section.questions.create(text: 'test2', response_type: 'date')
+      child_q_birthdate_1   = child_section.questions.create(text: 'test2', response_type: 'birth_date')
+      child_q_birthdate_2   = child_section.questions.create(text: 'test2', response_type: 'birth_date')
+      child_res = participant.response_sets.create(survey_id: child_survey.id)
+      child_res.update_attributes("q_#{child_q_date.id}".to_sym => Date.today - 1.day)
+      child_res.update_attributes("q_#{child_q_birthdate_1.id}".to_sym => Date.today)
+      child_res.update_attributes("q_#{child_q_birthdate_2.id}".to_sym => Date.today + 2.days)
+
+      adult_survey = FactoryGirl.create(:survey, multiple_section: true, code: 'adult')
+      adult_section = adult_survey.sections.create(title: 'test')
+      adult_q_date  = adult_section.questions.create(text: 'test2', response_type: 'date')
+      adult_q_birthdate_1  = adult_section.questions.create(text: 'test2', response_type: 'birth_date')
+      adult_q_birthdate_2  = adult_section.questions.create(text: 'test2', response_type: 'birth_date')
+      adult_res = participant.response_sets.create(survey_id: adult_survey.id)
+      adult_res.update_attributes("q_#{adult_q_date.id}".to_sym => Date.today + 3.month)
+      adult_res.update_attributes("q_#{adult_q_birthdate_1.id}".to_sym => Date.today + 2.month)
+      adult_res.update_attributes("q_#{adult_q_birthdate_2.id}".to_sym => Date.today + 1.month)
+
+      survey  = FactoryGirl.create(:survey, multiple_section: true)
+      section = survey.sections.create(title: 'test')
+      q_date  = section.questions.create(text: 'test2', response_type: 'date')
+      q_birthdate_1  = section.questions.create(text: 'test2', response_type: 'birth_date')
+      q_birthdate_2  = section.questions.create(text: 'test2', response_type: 'birth_date')
+      res       = participant.response_sets.create(survey_id: survey.id)
+      res.update_attributes("q_#{q_date.id}".to_sym => Date.today - 3.month)
+      res.update_attributes("q_#{q_birthdate_1.id}".to_sym => Date.today - 2.month)
+      res.update_attributes("q_#{q_birthdate_2.id}".to_sym => Date.today - 1.month)
+
+      expect(participant.birthdate).to eq adult_res.send("q_#{adult_q_birthdate_1.id}".to_sym)
+
+      participant.child = true
+      participant.save!
+      expect(participant.birthdate).to eq child_res.send("q_#{child_q_birthdate_1.id}".to_sym)
+
+      child_q_birthdate_1.destroy!
+      expect(participant.birthdate).to eq child_res.send("q_#{child_q_birthdate_2.id}".to_sym)
+
+      child_q_birthdate_2.destroy!
+      expect(participant.birthdate).to be_nil
+    end
+
+    describe 'calculates participant`s age' do
+      it 'returns age as of today' do
+        date = Date.today
+        allow(participant).to receive(:birthdate).and_return((date - 5.years).to_s)
+        expect(participant.age).to eq 5
+
+        allow(participant).to receive(:birthdate).and_return((date + 1.day - 5.years).to_s)
+        expect(participant.age).to eq 4
+      end
+
+      it 'returns age as of specified date' do
+        date = Date.today + 1.month
+        allow(participant).to receive(:birthdate).and_return((date - 5.years).to_s)
+        expect(participant.age).to eq 4
+        expect(participant.age(date)).to eq 5
+      end
+    end
+  end
 end

@@ -2,7 +2,9 @@ FactoryGirl.define do
   factory :study_involvement_state do
   end
 
-  factory :search_participant_study_involvement do
+  factory :search_participant_study_involvement do |r|
+    r.association :search_participant,  factory: :search_participant
+    r.association :study_involvement,   factory: :study_involvement
   end
 
   factory :study_involvement_status do
@@ -58,9 +60,15 @@ FactoryGirl.define do
     scg.association :search_condition_group
     scg.operator    ["|","&"].sample
   end
+
   factory :search_condition do |sc|
     sc.association :search_condition
     sc.operator   ["=","!=","<",">"].sample
+  end
+
+  factory :search_participant do |r|
+    r.association :participant, factory: :participant
+    r.association :search, factory: :search
   end
 
   factory :survey do |s|

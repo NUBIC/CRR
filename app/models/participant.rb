@@ -173,15 +173,6 @@ class Participant < ActiveRecord::Base
     end
   end
 
-  def contact_emails
-    contact_emails = Hash.new
-    contact_emails["Self - #{email}"] = email unless email.blank?
-    contact_emails["Primary Guardian - #{primary_guardian_email}"] = primary_guardian_email unless primary_guardian_email.blank?
-    contact_emails["Secondary Guardian - #{secondary_guardian_email}"] = secondary_guardian_email unless secondary_guardian_email.blank?
-    contact_emails["Account Email - #{self.account.email}"] = self.account.email if self.account
-    contact_emails
-  end
-
   def released?(search)
     search_participants.where(search_id: search.id, released: true).any?
   end

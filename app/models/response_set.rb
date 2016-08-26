@@ -19,6 +19,7 @@ class ResponseSet < ActiveRecord::Base
     return nil if survey.nil?
     self.survey.questions.each do |q|
       #creates getter and setter methods for each question
+
       self.send(:define_singleton_method, "q_#{q.id}".to_sym) do
         if q.response_type.eql?('pick_many')
           return responses.collect{|res| res.answer_id if res.question_id.eql?(q.id)}.compact

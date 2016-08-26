@@ -1,25 +1,26 @@
-=form_for @response_set,:url=>admin_response_sets_path,:html=>{:class=>"form-horizontal", :id=> "admin_new_response_set"} do |f|
-  =f.hidden_field :participant_id
+= form_for @response_set, url: admin_response_sets_path, html: { class: 'form-horizontal', id: 'admin_new_response_set'} do |f|
+  = f.hidden_field :participant_id
   .control-group
-    =f.label 'survey_id','Select Form',:class=>"control-label"
+    = f.label 'survey_id', 'Select Form', class: 'control-label'
     .controls
-      =f.select :survey_id,@surveys.map{|s|[s.title,s.id]},{:prompt => 'Select Form'}, :class => "required"
-  -if @participant.account
+      = f.select :survey_id, @surveys.map{ |s|[s.title,s.id] }, { prompt: 'Select Form' }, class: 'required'
+  - if @participant.account
     .control-group
-      =f.label :public,'Send to Participant:',:class=>"control-label"
+      = f.label :public, 'Send to Participant:', class: 'control-label'
       .controls
-        =f.check_box :public, :class => "public_survey"
+        = f.check_box :public, class: 'public_survey'
         %small
           (Please check if you want to send email notification for new survey to the participant)
     .control-group#survey_email
-      =f.label :email,'Email to send survey:', :class=>"control-label"
+      = f.label :email, 'Email to send survey:', class: 'control-label'
       .controls
-        =f.select :email, @participant.contact_emails, {prompt: 'Select email'}, :class => "required", :id => "email_select"
+        = f.select :email,participant_contact_email_options(@participant), { prompt: 'Select email' }, class: 'required', id: 'email_select'
   .row-fluid
     .control-group
       .controls
-        =f.button "Start",:class=>"btn btn-primary nu-primary"
-        =link_to "Cancel", admin_response_sets_path(:participant_id=>@participant.id),"data-async"=>true,"data-target"=>"#instruments",:class=>"btn btn-warning"
+        = f.button 'Start', class: 'btn btn-primary nu-primary'
+        = link_to 'Cancel', admin_response_sets_path(participant_id: @participant.id), data: { async: true, target: 'instruments' }, class: 'btn btn-warning'
+
 :javascript
   $(document).ready(function(){
     $('#admin_new_response_set').validate();

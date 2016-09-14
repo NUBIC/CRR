@@ -53,7 +53,7 @@ class Question < ActiveRecord::Base
   end
 
   def multiple_choice?
-    ['pick_one', 'pick_many'].include?(response_type)
+    pick_one? || pick_many?
   end
 
   def pick_many?
@@ -102,12 +102,14 @@ class Question < ActiveRecord::Base
 
   private
   def default_args
-    self.display_order = self.section.questions.size + 1 if self.display_order.blank?
-    self.code = "q_#{self.section.survey.questions.size + 1}" if self.code.blank?
+    if self.section
+      self.display_order = self.section.questions.size + 1 if self.display_order.blank?
+      self.code = "q_#{self.section.survey.questions.size + 1}" if self.code.blank?
+    end
   end
 
   def check_display_order
-    if self.display_order_changed? && section.questions.where(display_order: self.display_order).exists?
+    if self.display_order_changed? && self.section && self.section.questions.where(display_order: self.display_order).exists?
         q = section.questions.find_by_display_order(self.display_order)
         q.display_order = self.display_order + 1
         q.save
@@ -121,8 +123,10 @@ class Question < ActiveRecord::Base
   end
 
   def code_unique
-    self.section.survey.questions.each do |question|
-      errors.add(:code, 'already taken') if !question.eql?(self) && question.code.eql?(self.code)
+    if self.section.present?
+      self.section.survey.questions.each do |question|
+        errors.add(:code, 'already taken') if !question.eql?(self) && question.code.eql?(self.code)
+      end
     end
   end
 end

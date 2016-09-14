@@ -69,20 +69,21 @@ class ResponseSet < ActiveRecord::Base
     complete? ? "#{survey.title} completed on #{completed_at.to_date}" : survey.title
   end
 
-  def mandatory_questions_complete?
-    !survey.questions.any? {|q| !q.response_type.eql?('none') and q.is_mandatory? and is_unanswered?(q)}
-  end
-
-  def is_answered?(question)
-    %w(none).include?(question.response_type) or !is_unanswered?(question)
-  end
-
   def is_unanswered?(question)
     self.responses.select{|r| r.question_id.eql?(question.id)}.empty?
   end
 
+  def is_answered?(question)
+    %w(none).include?(question.response_type) || !is_unanswered?(question)
+  end
+
   def unanswered_mandatory_questions
-    self.survey.questions.select{|q|  !q.response_type.eql?('none') and q.is_mandatory? and is_unanswered?(q)}
+    self.survey.questions.select{|q| !q.response_type.eql?('none') && q.is_mandatory? && is_unanswered?(q)}
+  end
+
+
+  def mandatory_questions_complete?
+    self.unanswered_mandatory_questions.empty?
   end
 
   def status
@@ -107,7 +108,7 @@ class ResponseSet < ActiveRecord::Base
 
   private
     def send_alert
-      if self.public? and !self.email.blank?
+      if self.public? && !self.email.blank?
         SurveyMailer.new_survey_alert(self).deliver_now!
       end
     end

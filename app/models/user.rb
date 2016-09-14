@@ -54,10 +54,6 @@ class User < ActiveRecord::Base
     studies.active.collect{|s| s.active_participants}.flatten.uniq
   end
 
-  def active_study_involvements
-    studies.active.collect{|s| s.study_involvements.active}.flatten
-  end
-
   def has_system_access?
     ActiveRecord::Base::User.active.find_by_netid(netid).present?
   end
@@ -76,7 +72,11 @@ class User < ActiveRecord::Base
   def update_from_ldap
     unless Rails.env.development?
       ldap_user = Devise::LDAP::Adapter.get_ldap_entry(netid)
-      self.update_attributes(first_name: ldap_user.givenname.first, last_name: ldap_user.sn.first, email: ldap_user.mail.first)
+      self.update_attributes(
+        first_name: ldap_user.givenname.first,
+        last_name: ldap_user.sn.first,
+        email: ldap_user.mail.first
+      )
     end
   end
 end

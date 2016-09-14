@@ -14,8 +14,8 @@ class User < ActiveRecord::Base
   has_many  :comments, as: :commentable
 
   # Validations
-  validates_presence_of   :netid
-  validate                :check_netid
+  validates :netid, presence: true, uniqueness: { case_sensitive: false }
+  validate  :check_netid
 
   # Hooks
   after_create :update_from_ldap

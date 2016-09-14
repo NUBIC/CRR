@@ -4,6 +4,7 @@ RSpec.describe Admin::UsersController, type: :controller do
   before(:each) do
     @user = FactoryGirl.create(:user, netid: 'test_user')
     login_user
+    mock_ldap_entry
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
   end
 
@@ -21,27 +22,27 @@ RSpec.describe Admin::UsersController, type: :controller do
         end
       end
 
-      it 'should deny access to an attempt by a #{role} to create a user' do
+      it "should deny access to an attempt by a #{role} to create a user" do
         expect {
-          post :create, { user: { netid: 'test_user' } }
+          post :create, { user: { netid: 'test_user_1' } }
         }.not_to change{ User.count }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
-      it 'should deny access to an attempt to edit a user by a #{role}' do
+      it "should deny access to an attempt to edit a user by a #{role}" do
         post :edit, { id: @user.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
-      it 'should deny access to an attempt to update a user by a #{role}' do
+      it "should deny access to an attempt to update a user by a #{role}" do
         post :update, { id: @user.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
-      it 'should deny access to an attempt to delete a user by a #{role}' do
+      it "should deny access to an attempt to delete a user by a #{role}" do
         expect {
           put :destroy, { id: @user.id }
         }.not_to change{ User.count }
@@ -58,7 +59,7 @@ RSpec.describe Admin::UsersController, type: :controller do
 
     it 'should allow access to an attempt to create a user by an authorized user' do
       expect {
-        post :create, { user: { netid: 'test_user' } }
+        post :create, { user: { netid: 'test_user_1' } }
       }.to change{ User.count }.by(1)
       expect(response).to redirect_to(controller: :users, action: :index)
     end
@@ -86,30 +87,40 @@ RSpec.describe Admin::UsersController, type: :controller do
       welcome_email = EmailNotification.active.welcome_researcher
       welcome_email.deactivate
       welcome_email.save!
-      expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { post :create, { user: { netid: 'test_user_1', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
       expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
     end
 
     it 'should notify user if email reminder does not exist' do
-      expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { post :create, { user: { netid: 'test_user_1', researcher: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
       expect(flash['error']).to eq 'ATTENTION: Notification email message could not be sent (corresponding email could have been deactivated)'
     end
 
     it 'should notify researcher of created account if email reminder is available' do
       Setup.email_notifications
-      expect { post :create, { user: { netid: 'test_user', researcher: true  } } }.to change(ActionMailer::Base.deliveries, :size).by(1)
+      expect { post :create, { user: { netid: 'test_user_1', researcher: true  } } }.to change(ActionMailer::Base.deliveries, :size).by(1)
     end
 
     it 'should not notify data manager of created account' do
-      expect { post :create, { user: { netid: 'test_user', data_manager: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { post :create, { user: { netid: 'test_user_1', data_manager: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
     end
 
     it 'should not notify admin of created account' do
-      expect { post :create, { user: { netid: 'test_user', admin: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { post :create, { user: { netid: 'test_user_1', admin: true  } } }.not_to change(ActionMailer::Base.deliveries, :size)
     end
 
     it 'should not notify regular user of created account' do
-      expect { post :create, { user: { netid: 'test_user' } } }.not_to change(ActionMailer::Base.deliveries, :size)
+      expect { post :create, { user: { netid: 'test_user_1' } } }.not_to change(ActionMailer::Base.deliveries, :size)
     end
   end
+
+  def mock_ldap_entry
+    mock_ldap_entry = Net::LDAP::Entry.new()
+    mock_ldap_entry['givenname']  = 'Joe'
+    mock_ldap_entry['sn']         = 'Doe'
+    mock_ldap_entry['mail']       = 'joe@doe.com'
+
+    allow(Devise::LDAP::Adapter).to receive(:valid_login?).and_return(true)
+    allow(Devise::LDAP::Adapter).to receive(:get_ldap_entry).and_return(mock_ldap_entry)
+    end
 end

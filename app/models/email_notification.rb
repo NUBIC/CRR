@@ -37,4 +37,8 @@ class EmailNotification < ActiveRecord::Base
   def self.suspended_participants
     where(name: 'Suspended participants').first
   end
+
+  def self.annual_followup
+    where(name: 'Anual followup').first
+  end
 end

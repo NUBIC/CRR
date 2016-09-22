@@ -54,4 +54,20 @@ namespace :notify do
       end
     end
   end
+
+  desc 'Annual followup'
+  task :annual_followup => :environment do
+    email = EmailNotification.active.annual_followup
+    if email.present?
+      Participant.all.each do |participant|
+        if participant.birthdate.present?
+          birthdate = Date.parse(participant.birthdate)
+          if birthdate.day == Date.today.day && birthdate.month == Date.today.month
+            EmailNotificationsMailer.generic_email(participant.account.email, email.content, email.subject).deliver_now!
+            puts "Followup email had been sent to participant #{participant.id}"
+          end
+        end
+      end
+    end
+  end
 end

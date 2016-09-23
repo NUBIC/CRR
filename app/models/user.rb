@@ -9,9 +9,10 @@ class User < ActiveRecord::Base
   devise :ldap_authenticatable, :trackable, :timeoutable
 
   # Associations
-  has_many  :user_studies
+  has_many  :user_studies, dependent: :restrict_with_error
   has_many  :studies, through: :user_studies
-  has_many  :comments, as: :commentable
+  has_many  :comments, as: :commentable, dependent: :restrict_with_error
+  has_many  :searches, dependent: :restrict_with_error
 
   # Validations
   validates :netid, presence: true, uniqueness: { case_sensitive: false }

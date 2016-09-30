@@ -12,4 +12,14 @@ RSpec.describe Section, type: :model do
     expect(section).not_to be_valid
     expect(section.errors[:survey_id].size).to be >= 1
   end
+
+  it 'removes trailing spaces from title' do
+    survey = FactoryGirl.create(:survey, multiple_section: true)
+    section = survey.sections.create(title: '  test  ')
+    expect(section.title).to eq 'test'
+
+    section.title = '  test1  '
+    section.save
+    expect(section.title).to eq 'test1'
+  end
 end

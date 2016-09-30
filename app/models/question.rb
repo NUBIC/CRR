@@ -36,7 +36,7 @@ class Question < ActiveRecord::Base
   validate :validate_question_type, :code_unique
 
   # Hooks
-  before_validation :check_display_order
+  before_validation :check_display_order, :remove_trailing_spaces
   after_initialize  :default_args
 
   # Scopes
@@ -101,33 +101,37 @@ class Question < ActiveRecord::Base
   end
 
   private
-  def default_args
-    if self.section
-      self.display_order = self.section.questions.size + 1 if self.display_order.blank?
-      self.code = "q_#{self.section.survey.questions.size + 1}" if self.code.blank?
-    end
-  end
-
-  def check_display_order
-    if self.display_order_changed? && self.section && self.section.questions.where(display_order: self.display_order).exists?
-        q = section.questions.find_by_display_order(self.display_order)
-        q.display_order = self.display_order + 1
-        q.save
-    end
-  end
-
-  def validate_question_type
-    unless multiple_choice?
-      errors.add(:type, 'does not support having answers') unless answers.empty?
-    end
-  end
-
-  def code_unique
-    if self.section.present?
-      self.section.survey.questions.each do |question|
-        errors.add(:code, 'already taken') if !question.eql?(self) && question.code.eql?(self.code)
+    def default_args
+      if self.section
+        self.display_order = self.section.questions.size + 1 if self.display_order.blank?
+        self.code = "q_#{self.section.survey.questions.size + 1}" if self.code.blank?
       end
     end
-  end
+
+    def check_display_order
+      if self.display_order_changed? && self.section && self.section.questions.where(display_order: self.display_order).exists?
+          q = section.questions.find_by_display_order(self.display_order)
+          q.display_order = self.display_order + 1
+          q.save
+      end
+    end
+
+    def validate_question_type
+      unless multiple_choice?
+        errors.add(:type, 'does not support having answers') unless answers.empty?
+      end
+    end
+
+    def code_unique
+      if self.section.present?
+        self.section.survey.questions.each do |question|
+          errors.add(:code, 'already taken') if !question.eql?(self) && question.code.eql?(self.code)
+        end
+      end
+    end
+
+    def remove_trailing_spaces
+      self.text = self.text.strip if self.text.present?
+    end
 end
 

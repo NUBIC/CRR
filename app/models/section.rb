@@ -13,6 +13,7 @@ class Section < ActiveRecord::Base
 
   # Hooks
   after_initialize :default_args
+  before_validation :remove_trailing_spaces
 
   def default_args
     self.display_order ||= survey.sections.size + 1
@@ -26,4 +27,9 @@ class Section < ActiveRecord::Base
     end
     return full_list.flatten.uniq.compact
   end
+
+  private
+    def remove_trailing_spaces
+      self.title = self.title.strip if self.title.present?
+    end
 end

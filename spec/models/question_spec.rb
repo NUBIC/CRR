@@ -174,4 +174,14 @@ RSpec.describe Question, type: :model do
     expect(question2).not_to be_valid
     expect(question2.errors[:code].size).to be >= 1
   end
+
+
+  it 'removes trailing spaces from question text' do
+    question  = @section.questions.create(text: ' test1 ', response_type: 'pick_many', code: 'q_2')
+    expect(question.text).to eq 'test1'
+
+    question.text = '  test1  '
+    question.save
+    expect(question.text).to eq 'test1'
+  end
 end

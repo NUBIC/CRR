@@ -63,7 +63,7 @@ class Search < ActiveRecord::Base
   end
 
   def self.expiring
-    where("#{self.table_name}.warning_date <= '#{Date.today}' and (#{self.table_name}.end_date is null or #{self.table_name}.end_date > '#{Date.today}')")
+    where("#{self.table_name}.warning_date <= '#{Date.today}' and (#{self.table_name}.end_date is null or #{self.table_name}.end_date >= '#{Date.today}')")
   end
 
   def self.all_released

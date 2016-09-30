@@ -75,7 +75,12 @@
 
   :javascript
     function resizeSurvey() {
-      var tab_content_height = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
+      var tab_content_height_base = $(window).height()-$('#admin-survey-tab-content').offset().top-2*$('.footer').height();
+      var section_content_height = $('#section_tab_header').height()
+      var tab_content_height = section_content_height
+      if (tab_content_height_base > section_content_height) {
+        tab_content_height = tab_content_height_base
+      }
       $('#admin-survey-tab-content').height(tab_content_height).css({
           overflow: "auto"
       });

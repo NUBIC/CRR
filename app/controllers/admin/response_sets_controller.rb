@@ -1,5 +1,3 @@
-require 'csv'
-
 class Admin::ResponseSetsController < Admin::AdminController
   before_action :set_response_set, only: [:show, :edit, :update, :destroy, :load_from_file]
 
@@ -74,45 +72,11 @@ class Admin::ResponseSetsController < Admin::AdminController
 
   def load_from_file
     authorize @response_set
-    sections        = @response_set.survey.sections.to_a
-    uploaded_io     = params[:import_file]
-    pin_header      = 'PIN'
-    section_header  = 'Inst'
-    errors          = []
-    responses       = @response_set.responses
-    if uploaded_io.blank?
-      errors << 'File in not provided'
-    else
-      begin
-        CSV.new(uploaded_io.read, { headers: true }).each do |row|
-          unless row[pin_header].blank?
-            if row[pin_header] != @response_set.participant.id.to_s
-              errors << 'Participant PIN does not match'
-            else
-              section = sections.select{|s| s.title == row[section_header]}.first
-              if section.blank?
-                errors << "section '#{row[section_header]}' could not be found"
-              else
-                questions = section.questions
-                row.headers.reject{|h| [pin_header, section_header].include?(h)}.each do |header|
-                  question = questions.select{|q| q.text ==  header}.first
-                  if question.blank?
-                    errors << "question '#{header}' could not be found"
-                  else
-                    response = responses.select{|r| r.question_id == question.id}.first
-                    response ||= @response_set.responses.build(question: question)
-                    response.text = row[header]
-                  end
-                end
-              end
-            end
-          end
-        end
-      rescue Exception => e
-        errors << 'Error parsing the file' + e.inspect
-      end
+    @response_set.load_from_file(params[:import_file])
+    if @response_set.errors.any?
+      flash['error'] = @response_set.errors.full_messages.uniq.join('<br/>').html_safe
+      @response_set.errors.clear
     end
-    flash['error'] = errors.uniq.join('<br/>').html_safe if errors.any?
     render :edit
   end
 

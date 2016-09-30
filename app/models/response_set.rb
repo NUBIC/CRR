@@ -1,3 +1,5 @@
+require 'csv'
+
 class ResponseSet < ActiveRecord::Base
   # Associations
   has_many :responses, dependent: :destroy
@@ -103,6 +105,46 @@ class ResponseSet < ActiveRecord::Base
       error_string = unanswered_mandatory_questions.collect{|q| "#{q.section.title if survey.sections.size > 1}#{' - ' if survey.sections.size > 1} #{q.display_order}"  }
       self.errors.add(:questions,"#{error_string.join(',')} not answered")
       return false
+    end
+  end
+
+  def load_from_file(file)
+    sections        = self.survey.sections.to_a
+    pin_header      = 'PIN'
+    section_header  = 'Inst'
+
+    if file.blank?
+      self.errors.add(:base, 'File in not provided')
+    else
+      begin
+        CSV.new(file.read, { headers: true }).each do |row|
+          unless row[pin_header].blank?
+            if row[pin_header] != participant.id.to_s
+              self.errors.add(:base, 'Participant PIN does not match')
+            else
+              section = sections.select{|s| s.title.strip == row[section_header].strip}.first
+              if section.blank?
+                self.errors.add(:base, "section '#{row[section_header]}' could not be found")
+              else
+                questions = section.questions
+                row.headers.reject{|h| [pin_header, section_header].include?(h)}.each do |header|
+                  question = questions.select{|q| q.text.strip == header.strip}.first
+                  if question.blank?
+                    self.errors.add(:base, "section #{section.title}: question '#{header}' could not be found")
+                  else
+                    all_responses = self.responses
+                    response = all_responses.select{|r| r.question_id == question.id}.first
+                    response ||= responses.build(question: question)
+                    response.text = row[header]
+                  end
+                end
+              end
+            end
+          end
+        end
+      rescue Exception => e
+        self.errors.add(:base, 'Error parsing the file' + e.inspect)
+      end
     end
   end
 

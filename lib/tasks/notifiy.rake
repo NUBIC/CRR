@@ -63,7 +63,12 @@ namespace :notify do
         if participant.birthdate.present?
           birthdate = Date.parse(participant.birthdate)
           if birthdate.day == Date.today.day && birthdate.month == Date.today.month
-            EmailNotificationsMailer.generic_email(participant.account.email, email.content, email.subject).deliver_now!
+            emails = [participant.account.email]
+            emails << participant.email unless participant.email.blank?
+            emails << participant.primary_guardian_email unless participant.primary_guardian_email.blank?
+            emails << participant.secondary_guardian_email unless participant.secondary_guardian_email.blank?
+
+            EmailNotificationsMailer.generic_email(emails.uniq, email.content, email.subject).deliver_now!
             puts "Followup email had been sent to participant #{participant.id}"
           end
         end

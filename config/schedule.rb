@@ -25,9 +25,9 @@ set :environment, ENV['RAILS_ENV']
 case environment
 when 'staging'
   every :day, at: '6:00AM' do
-    # rake 'notify:expiring_release'
-    # rake 'notify:expired_release'
-    # rake 'notify:suspended_participants'
+    rake 'notify:expiring_release'
+    rake 'notify:expired_release'
+    rake 'notify:suspended_participants'
     rake 'notify:annual_followup'
   end
 when 'production'

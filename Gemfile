@@ -37,7 +37,7 @@ gem 'uglifier'
 
 # Use Capistrano for deployment
 group :development do
-  gem 'capistrano'
+  gem 'capistrano', '3.6.0'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
 end

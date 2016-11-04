@@ -1,0 +1,8 @@
+dn: cn=test_user,ou=people,dc=test,dc=com
+changetype: delete
+
+dn: ou=people,dc=test,dc=com
+changetype: delete
+
+dn: dc=test,dc=com
+changetype: delete

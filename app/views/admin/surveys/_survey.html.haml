@@ -3,7 +3,7 @@
 - cancel_link   = @survey.new_record? ? admin_surveys_path : admin_survey_path(@survey)
 - button_label  = @survey.new_record? ? 'Create' : 'Update'
 
-= form_for @survey, url: form_url, html: { class: 'form-horizontal validate-form ajax-form', data: { target: '#forms' }, id: form_id } do |f|
+= form_for @survey, url: form_url, html: { class: 'form-horizontal validate-form', id: form_id } do |f|
   .control-group
     = f.label :title, class: 'control-label'
     .controls
@@ -21,14 +21,18 @@
       %br
       %b NOTE:
       = 'the codes "child" and "adult" are reserved and necessary for the system to function. They are the surveys that the system uses for chid and adult enrollments respectively.'
-  .control-group
-    - if @survey.new_record?
+  - if @survey.new_record?
+    .control-group
       = f.label :multiple_section, 'Has Multiple sections?',class: 'control-label'
       .controls
         = f.check_box :multiple_section
   .control-group
+    = f.label :tier_2, 'Tier 2 data?', class: 'control-label'
     .controls
-      = f.button button_label, class: 'btn btn-mini btn-success'
-      = link_to 'Cancel', cancel_link, data: { async: true, target: '#forms'}, class: 'btn btn-mini btn-warning'
+      = f.check_box :tier_2
+  .control-group
+    .controls
+      = f.button button_label, class: 'btn btn-primary nu-primary'
+      = link_to 'Cancel', cancel_link, class: 'btn btn-warning'
 
 

@@ -5,11 +5,13 @@
   .row-fluid
     .span12
       .control-group
-        %label.control-label{ for: "#{resource_name}[netid]" } NetID
+        %label.control-label{ for: "#{resource_name}_netid" }
+          NetID
         .controls
           = text_field_tag("#{resource_name}[netid]")
       .control-group
-        %label.control-label{ for: "#{resource_name}[password]" } Password
+        %label.control-label{ for: "#{resource_name}_password" }
+          Password
         .controls
           = password_field_tag("#{resource_name}[password]")
       .control-group

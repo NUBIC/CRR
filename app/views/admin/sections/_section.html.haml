@@ -1,4 +1,4 @@
-- form_target = @section.new_record? ? '#forms' : "#section_#{@section.id}"
+- form_target = @section.new_record? ? '#survey' : "#section_#{@section.id}"
 - form_id     = @section.new_record? ? 'admin_new_section' : 'admin_edit_section'
 - form_url    = @section.new_record? ? admin_sections_path : admin_section_path(@section)
 
@@ -20,6 +20,6 @@
       .btn-group
         - button_label = @section.new_record? ? 'Create' : 'Update'
         = f.button button_label, class: "btn btn-mini btn-success"
-        = link_to 'Cancel', admin_survey_path(@section.survey), data: { async: true, target: '#forms' }, class: 'btn btn-mini btn-warning'
+        = link_to 'Cancel', admin_survey_path(@section.survey), data: { async: true, target: '#survey' }, class: 'btn btn-mini btn-warning'
 
 

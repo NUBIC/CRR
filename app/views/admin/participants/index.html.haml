@@ -16,6 +16,7 @@
         %th Studies
         %th Join Date
         %th Account Email
+        %th Tier 2
     %tbody
       - @participants.each do |participant|
         %tr.display
@@ -35,4 +36,7 @@
             = participant.created_at.to_date
           %td{ class: css_class }
             = participant.account.email if participant.account
+          %td
+            - if participant.tier_2_surveys.any?
+              .user-circle
 

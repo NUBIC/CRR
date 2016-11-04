@@ -109,7 +109,7 @@ RSpec.describe Admin::SurveysController, type: :controller do
 
       it 'should allow access to dectivate a survey by an authorized user' do
         xhr :put, :deactivate, { id: @survey.id }
-        expect(response).to render_template('show')
+        expect(response).to redirect_to(controller: :surveys, action: :show)
         expect(@survey.reload.state).to eq 'inactive'
       end
 
@@ -139,7 +139,7 @@ RSpec.describe Admin::SurveysController, type: :controller do
         expect {
            xhr :post, :create, { survey: { title: 'a second survey' }}
         }.to change{Survey.count}.by(1)
-        expect(response).to render_template('show')
+      expect(response).to redirect_to(controller: :surveys, action: :show, id: Survey.where(title: 'a second survey').last.id)
       end
 
       it 'should allow access to edit  a survey by an authorized user' do
@@ -149,7 +149,7 @@ RSpec.describe Admin::SurveysController, type: :controller do
 
       it 'should allow access to update a survey by an authorized user' do
         xhr :put, :update, { id: @survey.id, survey: { title: 'a second survey'}}
-        expect(response).to render_template('admin/surveys/show')
+        expect(response).to redirect_to(controller: :surveys, action: :show, id: @survey.id)
         expect(@survey.reload.title).to eq 'a second survey'
       end
 
@@ -158,7 +158,7 @@ RSpec.describe Admin::SurveysController, type: :controller do
         expect(@survey.reload.questions.size).to eq 1
         expect(@survey.state).to eq 'inactive'
         xhr :put, :activate, { id: @survey.id }
-        expect(response).to render_template('show')
+        expect(response).to redirect_to(controller: :surveys, action: :show, id: @survey.id)
         expect(@survey.reload.state).to eq 'active'
       end
 
@@ -166,7 +166,7 @@ RSpec.describe Admin::SurveysController, type: :controller do
         expect {
           xhr :put, :destroy, { id: @survey.id }
         }.to change{ Survey.count }.by(-1)
-        expect(response).to render_template('index')
+        expect(response).to redirect_to(controller: :surveys, action: :index)
       end
     end
 
@@ -187,7 +187,7 @@ RSpec.describe Admin::SurveysController, type: :controller do
       expect {
         xhr :post, :create, { survey: { title: 'a second survey' }}
       }.to change{Survey.count}.by(1)
-      expect(response).to render_template('admin/surveys/show')
+      expect(response).to redirect_to(controller: :surveys, action: :show, id: Survey.where(title: 'a second survey').last.id)
     end
   end
 end

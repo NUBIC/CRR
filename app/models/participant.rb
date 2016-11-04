@@ -147,6 +147,10 @@ class Participant < ActiveRecord::Base
     !inactive? && ![:withdrawn, :suspended].include?(self.aasm.current_state)
   end
 
+  def tier_2_surveys
+    response_sets.joins(:survey).where(surveys: { tier_2: true })
+  end
+
   def recent_response_set
     response_sets.order("updated_at DESC").first
   end

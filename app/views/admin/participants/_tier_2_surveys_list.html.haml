@@ -1,0 +1,13 @@
+%span.user-circle
+%small
+  %a.dashed_underline{ data: { toggle: 'modal', target: "#tier-2-surveys-#{participant.id}"}}
+    Show
+.modal.modal-medium.hide{id: "tier-2-surveys-#{participant.id}"}
+  .modal-header.nu
+    %h5
+      #{participant.first_name} #{participant.last_name} Tier 2 surveys
+      = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
+  .modal-body
+    - participant.tier_2_surveys.each do |response_set|
+      #{response_set.survey.title} - (#{response_set.complete? ? 'Complete' : 'Pending'})
+      %br

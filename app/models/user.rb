@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
   end
 
   def has_system_access?
-    ActiveRecord::Base::User.active.find_by_netid(netid).present?
+    User.active.find_by_netid(netid).present?
   end
 
   def active_for_authentication?

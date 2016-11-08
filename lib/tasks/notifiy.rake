@@ -68,8 +68,8 @@ namespace :notify do
             emails << participant.primary_guardian_email unless participant.primary_guardian_email.blank?
             emails << participant.secondary_guardian_email unless participant.secondary_guardian_email.blank?
 
-            EmailNotificationsMailer.generic_email(emails.uniq, email.content, email.subject).deliver_now!
             puts "Followup email had been sent to participant #{participant.id}"
+            EmailNotificationsMailer.generic_email(emails.uniq, email.content, email.subject, true).deliver_now!
           end
         end
       end

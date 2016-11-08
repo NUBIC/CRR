@@ -8,9 +8,9 @@ namespace :notify do
         if user_emails.any?
           subject = email.subject.gsub('{{search_name}}', search.name)
           EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver_now!
-          puts "Study '#{search.study.name}' researchers were notified of expiring release"
+          puts "#{Date.today.to_s} - Study '#{search.study.name}' researchers were notified of expiring release"
         else
-          puts "Study '#{search.study.name}' researchers could not be notified of expiring release: emails are not available"
+          puts "#{Date.today.to_s} - Study '#{search.study.name}' researchers could not be notified of expiring release: emails are not available"
         end
       end
     else
@@ -27,9 +27,9 @@ namespace :notify do
         if user_emails.any?
           subject = email.subject.gsub('{{search_name}}', search.name)
           EmailNotificationsMailer.generic_email(user_emails, email.content, subject).deliver_now!
-          puts "Study '#{search.study.name}' researchers were notified of expired release"
+          puts "#{Date.today.to_s} - Study '#{search.study.name}' researchers were notified of expired release"
         else
-          puts "Study '#{search.study.name}' researchers could not be notified of expired release: emails are not available"
+          puts "#{Date.today.to_s} - Study '#{search.study.name}' researchers could not be notified of expired release: emails are not available"
         end
       end
     else
@@ -44,7 +44,7 @@ namespace :notify do
       if participant.age(Date.today + 1.month) >= 18
         participant.suspend!
         suspended_participants << participant
-        puts "Participant #{participant.id} is suspended due to age restrictions"
+        puts "#{Date.today.to_s} - Participant #{participant.id} is suspended due to age restrictions"
       end
     end
     if suspended_participants.any?
@@ -68,8 +68,8 @@ namespace :notify do
             emails << participant.primary_guardian_email unless participant.primary_guardian_email.blank?
             emails << participant.secondary_guardian_email unless participant.secondary_guardian_email.blank?
 
-            puts "Followup email had been sent to participant #{participant.id}"
             EmailNotificationsMailer.generic_email(emails.uniq, email.content, email.subject, true).deliver_now!
+            puts "#{Date.today.to_s} - Followup email had been sent to participant #{participant.id}"
           end
         end
       end

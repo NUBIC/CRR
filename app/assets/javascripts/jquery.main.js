@@ -81,41 +81,6 @@ $(document).ready(function() {
     });
   });
 
-  $('#survey_list').livequery(function(){
-    $(this).dataTable( {
-      "fnInfoCallback ": function() {showHideMore();},
-      "bScrollCollapse": true,
-      "sPaginationType": "bootstrap",
-      "sDom": "<'row-fluid'<'span6 survey-header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-      "sWrapper": "dataTables_wrapper form-inline",
-      "aaSorting": [],
-      "bFilter": true,
-      "iDisplayLength": 30,
-      "bLengthChange": false,
-      "oLanguage": {
-          "sSearch": "Filter: ",
-      }
-    });
-  });
-
-  $('#user_list').livequery(function(){
-    showHideMore();
-    $(this).dataTable( {
-      "fnInfoCallback ": function() {showHideMore();},
-      "bScrollCollapse": true,
-      "sPaginationType": "bootstrap",
-      "sDom": "<'row-fluid'<'span6 header'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-      "sWrapper": "dataTables_wrapper form-inline",
-      "aaSorting": [],
-      "bFilter": true,
-      "iDisplayLength": 30,
-      "bLengthChange": false,
-      "oLanguage": {
-          "sSearch": "Filter: ",
-      }
-    });
-  });
-
   $('#study_participant_list').livequery(function(){
     $(this).dataTable( {
       "fnInfoCallback ": function() {showHideMore();},
@@ -278,10 +243,6 @@ $(document).ready(function() {
     if ($('#additonal-data').length) {
       $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' href=" + $('#additonal-data').data("url")+ ">"+ $('#additonal-data').data("text") + "</a>" + "</h4>"));
     }
-  });
-
-  $(".survey-header").livequery(function(){
-    $(this).append($("<h4>" + $('#additonal-data').data("header") + "<a class='btn btn-primary nu-primary' style='margin-left: 15px' data-target='"+$('#additonal-data').data("target")+"' data-async='true' href=" + $('#additonal-data').data("url")+ ">Add a survey</a>" + "</h4>"));
   });
 
   $(".study-participant-header").livequery(function(){

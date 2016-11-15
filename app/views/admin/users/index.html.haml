@@ -1,22 +1,26 @@
 %ul.nav.nav-tabs
   - searches = current_user.admin? ? Search.unscoped : Search.with_user(current_user)
-  %li{class: "#{'active' if @state == 'active' || @state.blank?}"}
-    = link_to "Active (#{User.active.count})", admin_users_path(state: 'active')
-  %li{class: "#{'active' if @state == 'inactive'}"}
-    = link_to "Inactive (#{User.inactive.count})", admin_users_path(state: 'inactive')
+  %li{ class: "#{'active' if @state == 'active' || @state.blank?}" }
+    = link_to "Active (#{User.active.size})", admin_users_path(state: 'active')
+  %li{ class: "#{'active' if @state == 'inactive'}" }
+    = link_to "Inactive (#{User.inactive.size})", admin_users_path(state: 'inactive')
 
 .tab-content
-  #additonal-data{data: {header: "Users (#{User.all.size})", url: new_admin_user_path, target: '#users', async: true, text: 'Add an user'}}
-
   #users.row-fluid
-    %table.table.table-bordered.table-hover#user_list
+    / This will be inserted into table header div
+    .header.hidden.table-header{ data: { target_table: 'users_index_table'} }
+      %h4
+        = "Users (#{User.count})"
+        = link_to 'Add an user', new_admin_user_path, class: 'btn btn-primary nu-primary'
+  .row-fluid
+    %table.table.table-bordered.table-hover#users_index_table
       %thead
         %tr
           %th Name
-          %th NetID
-          %th Admin
+          %th.span2 NetID
+          %th.span2 Admin
           %th Data Manager
-          %th Researcher
+          %th.span2 Researcher
           %th Studies
       %tbody
         - @users.each do |user|
@@ -35,10 +39,11 @@
               - if user.researcher?
                 .user-circle
             %td
-              %ul.unstyled
+              %ul.unstyled.show-hide-group
                 - user.studies.each_with_index do |study,i|
-                  %li{class: "#{'more_display' if i > 1}"}
-                    = link_to study.display_name, admin_study_path(study)
-                - if user.studies.size > 2
+                  %li{ class: "#{'more_display' if i > 2}" }
+                    .row-fluid.height-inherit
+                      = link_to study.display_name, admin_study_path(study)
+                - if user.studies.size > 3
                   %li.pull-right.btn.btn-link.show_button
                     See more...

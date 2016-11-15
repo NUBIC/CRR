@@ -9,18 +9,13 @@
         %table.table.table-bordered.table-hover#search_result_list
           %thead
             %tr
-              %th.span1
-                ID
-              %th.span2
-                First Name
-              %th.span2
-                Last Name
-              %th.span2
-                Studies
-              %th.span2
-                Return status
-              %th.span3
-                Last updated
+              %th.span1 ID
+              %th.span2 First Name
+              %th.span2 Last Name
+              %th.span2 Tier 2
+              %th.span2 Studies
+              %th.span2 Return status
+              %th.span3 Last updated
           %tbody
             - @search_participants_returned.each do |search_participant|
               - participant = search_participant.participant
@@ -32,6 +27,9 @@
                   = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
                 %td
                   = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+                %td
+                  - if participant.tier_2_surveys.any?
+                    = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
                 %td
                   = render partial: '/admin/study_involvements/link_with_modal', locals: { participant: participant }
                 %td

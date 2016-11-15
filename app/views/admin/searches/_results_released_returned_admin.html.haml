@@ -12,16 +12,12 @@
               %tr
                 %th.span1
                   = check_box_tag "selectall"
-                %th.span1
-                  ID
-                %th.span2
-                  First Name
-                %th.span2
-                  Last Name
-                %th.span2
-                  Return status
-                %th
-                  Studies
+                %th.span1 ID
+                %th.span2 First Name
+                %th.span2 Last Name
+                %th.span3 Tier 2
+                %th.span2 Return status
+                %th Studies
 
             %tbody
               - @search_participants_returned.each do |search_participant|
@@ -36,6 +32,9 @@
                     = link_to participant.first_name, admin_participant_path(participant)
                   %td
                     = link_to participant.last_name, admin_participant_path(participant)
+                  %td
+                    - if participant.tier_2_surveys.any?
+                      = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
                   %td
                     #{study_involvement_status.name.titleize}
                     %small.muted

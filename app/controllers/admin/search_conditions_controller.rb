@@ -76,6 +76,10 @@ class Admin::SearchConditionsController < Admin::AdminController
     end
 
     def set_available_questions
-      @available_questions = Question.unscoped.joins(section: :survey).where.not(response_type: 'none').order('surveys.title, questions.display_order')
+      available_questions = Question.unscoped.joins(section: :survey).where.not(response_type: 'none')
+      unless current_user.admin?
+        available_questions = available_questions.where( surveys: { tier_2: false })
+      end
+      @available_questions = available_questions.order('surveys.title, questions.display_order')
     end
 end

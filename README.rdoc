@@ -15,7 +15,13 @@ Things you may want to cover:
 
 * Database initialization
 
+* To run a local LDAP server, you will need to run a rake task and seed it with users.  There is a list of users located in /spec/ldap/base.ldif.  Modify as you see fit.  If you add a user here, you will need to also add it to file to delete the user in  /spec/ldap/clear.ldif.
+  * Start the ldap severs: bundle exec rake ldap:start
+  * Insert LDAP users: bundle exec rake ldap:insert
+  * Truncate LDAP users: bundle exec rake ldap:truncate
+
 * How to run the test suite
+
 
 * Services (job queues, cache servers, search engines, etc.)
 

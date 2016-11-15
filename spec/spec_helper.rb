@@ -16,6 +16,7 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'faker'
 require 'capybara/rspec'
 require 'simplecov'
 SimpleCov.start

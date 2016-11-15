@@ -7,10 +7,11 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'rails_helper'
+require 'spec_helper'
 require 'rspec/rails'
 require 'factory_girl_rails'
 require 'shoulda/matchers'
+require 'capybara-webkit'
 require 'database_cleaner'
 require 'authlogic/test_case'
 require 'paper_trail/frameworks/rspec'
@@ -48,7 +49,13 @@ module TestLogins
 end
 
 RSpec.configure do |config|
-# Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
+  config.include FactoryGirl::Syntax::Methods
+  config.include TestLogins
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Authlogic::TestCase
+
+  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
@@ -75,35 +82,38 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 
+  ## Database Cleaner setup
   config.before(:suite) do
-    DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
   end
 
-  config.before(:each, :clean_with_truncation) do
+  config.before(:each) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.after(:each, :clean_with_truncation) do
-    DatabaseCleaner.strategy = :transaction
-  end
   config.before(:each) do
     DatabaseCleaner.start
   end
 
-  config.after(:each) do
+  config.append_after(:each) do
     DatabaseCleaner.clean
   end
 
-  # config.before(:each) do
-  #   Setup.email_notifications
-  # end
+  Shoulda::Matchers.configure do |config|
+    config.integrate do |with|
+      with.test_framework :rspec
+      with.library :rails
+    end
+  end
 
-  config.include FactoryGirl::Syntax::Methods
-  config.include TestLogins
-  config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::ControllerHelpers, type: :view
-  config.include Authlogic::TestCase
+  Capybara.register_driver :chrome do |app|
+    Capybara::Selenium::Driver.new(app, browser: :chrome)
+  end
+  Capybara.javascript_driver = :chrome
 
   RSpec.shared_examples 'unauthorized access: admin controller' do |collection_class|
     it 'redirects to dashboard' do

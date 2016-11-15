@@ -15,8 +15,16 @@ gem 'authlogic'
 gem 'paper_trail'
 gem 'validates_timeliness'
 gem 'highline'
-
 gem 'aasm'
+gem 'activerecord-session_store'
+gem 'cocoon'
+gem 'faker'
+gem 'devise'
+gem 'devise_ldap_authenticatable'
+gem 'simple_form'
+gem 'roxml'
+gem 'whenever'
+
 # Use SCSS for stylesheets
 gem 'sass-rails'
 gem 'less-rails'
@@ -27,34 +35,24 @@ gem 'coffee-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier'
 
-# gem 'activerecord-session_store', github: 'rails/activerecord-session_store'
-gem 'activerecord-session_store'
-gem 'cocoon'
-
-gem "faker"
-
 # Use Capistrano for deployment
 group :development do
-  gem 'capistrano'
+  gem 'capistrano', '3.6.0'
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
 end
 
 group :development, :test do
   gem 'database_cleaner'
-  gem 'factory_girl'
-  gem 'faker'
   gem 'factory_girl_rails'
   gem 'rspec-rails'
+  gem 'shoulda-matchers'
   gem 'capybara'
   gem 'selenium-webdriver'
-  gem 'shoulda'
-  gem 'webrat'
+  gem 'capybara-webkit'
   gem 'simplecov', require: false
+  gem 'selenium-webdriver'
 end
-
-gem 'devise'
-gem 'devise_ldap_authenticatable'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
@@ -78,11 +76,5 @@ end
 # Use unicorn as the app server
 # gem 'unicorn'
 
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
-
 # Use debugger
 # gem 'debugger', group: [:development, :test]
-gem 'simple_form'
-gem 'roxml'
-gem 'whenever'

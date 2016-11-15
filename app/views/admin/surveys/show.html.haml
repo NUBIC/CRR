@@ -1,50 +1,57 @@
-.span12
-  .span2
-    .btn-toolbar
-      = link_to 'Back to surveys', admin_surveys_path, class: 'btn btn-primary btn-block'
-  - if @survey.active?
-    - if policy(@survey).deactivate?
-      .span1
-        = form_for @survey, url: deactivate_admin_survey_path(@survey), html: { data: { target: '#forms' }, class: 'ajax-form'} do |f|
-          .btn-toolbar
-            = f.button 'Deactivate', class: 'btn btn-warning btn-block'
-  - else
-    .span1
-      = form_for @survey, url: activate_admin_survey_path(@survey), html: { data: { target: '#forms' }, class: 'ajax-form' } do |f|
-        .btn-toolbar
-          = f.button 'Activate', class: 'btn btn-success btn-block'
-    .span1
-      .btn-toolbar
-        = link_to 'Edit', edit_admin_survey_path(@survey), class: 'btn btn-primary nu-primary btn-block', data: { async: true, target: '#forms' }
-  - if @survey.deletable?
-    = form_for @survey, url: admin_survey_path(@survey), method: :delete do |f|
-      .span1
-        .btn-toolbar
-          = f.button 'Delete', class: 'btn btn-danger btn-block'
-.row-fluid
+#survey
   .span12
-    %h2
-      = "Title: #{@survey.title}"
-.row-fluid
-  %h5.muted
-    Description:
+    .span2
+      .btn-toolbar
+        = link_to 'Back to surveys', admin_surveys_path, class: 'btn btn-primary btn-block'
+
+    - if @survey.active?
+      - if policy(@survey).deactivate?
+        .span1
+          = form_for @survey, url: deactivate_admin_survey_path(@survey) do |f|
+            .btn-toolbar
+              = f.button 'Deactivate', class: 'btn btn-warning btn-block'
+    - else
+      .span1
+        = form_for @survey, url: activate_admin_survey_path(@survey) do |f|
+          .btn-toolbar
+            = f.button 'Activate', class: 'btn btn-success btn-block'
+      .span1
+        .btn-toolbar
+          = link_to 'Edit', edit_admin_survey_path(@survey), class: 'btn btn-primary nu-primary btn-block'
+
+    - if @survey.deletable?
+      = form_for @survey, url: admin_survey_path(@survey), method: :delete do |f|
+        .span1
+          .btn-toolbar
+            = f.button 'Delete', class: 'btn btn-danger btn-block'
   .row-fluid
-    .offset1
-      %h6
-        = @survey.description
-  %hr
-.tabbable.tabs-left
-  %ul.nav.nav-tabs
-    - @survey.sections.each_with_index do |s,si|
-      %li{ class: "#{'active' if (@section.nil? && si==0) || (!@section.nil? && @section.id == s.id)}"}
-        = link_to s.title, "#section_#{s.id}", data: { toggle: 'tab' }
-    - unless @survey.active? || !@survey.multiple_section?
-      = link_to 'Add Section', new_admin_section_path(survey_id: @survey.id), class: 'btn btn-mini btn-block btn-primary nu-primary', data: { async: true, target: '.tabbable'}
-    = link_to 'Preview', preview_admin_survey_path(@survey), class: 'btn btn-mini btn-block btn-success', data: { async: true, target: '#forms' }
-    = link_to 'Back to surveys', admin_surveys_path, class: 'btn btn-mini btn-block btn-primary', data: { async: true, target: '#forms' }
-  .tab-content
-    - @survey.sections.each_with_index do |s, si|
-      .tab-pane{id: "section_#{s.id}", class: "#{'active' if (@section.nil? && si==0) || (!@section.nil? && @section.id==s.id)}"}
-        = render partial: 'admin/sections/section_display',locals: {section: s}
-.row-fluid
+    .span12
+      %h2
+        = "Title: #{@survey.title}"
+        - if @survey.tier_2
+          (
+          %span.user-circle
+          Tier 2 data)
+  .row-fluid
+    %h5.muted
+      Description:
+    .row-fluid
+      .offset1
+        %h6
+          = @survey.description
+    %hr
+  .tabbable.tabs-left
+    %ul.nav.nav-tabs
+      - @survey.sections.each_with_index do |s,si|
+        %li{ class: "#{'active' if (@section.nil? && si==0) || (!@section.nil? && @section.id == s.id)}"}
+          = link_to s.title, "#section_#{s.id}", data: { toggle: 'tab' }
+      - unless @survey.active? || !@survey.multiple_section?
+        = link_to 'Add Section', new_admin_section_path(survey_id: @survey.id), class: 'btn btn-mini btn-block btn-primary nu-primary', data: { async: true, target: '.tabbable'}
+      = link_to 'Preview', preview_admin_survey_path(@survey), class: 'btn btn-mini btn-block btn-success', data: { async: true, target: '#survey' }
+      = link_to 'Back to surveys', admin_surveys_path, class: 'btn btn-mini btn-block btn-primary'
+    .tab-content
+      - @survey.sections.each_with_index do |s, si|
+        .tab-pane{id: "section_#{s.id}", class: "#{'active' if (@section.nil? && si==0) || (!@section.nil? && @section.id==s.id)}"}
+          = render partial: 'admin/sections/section_display',locals: {section: s}
+  .row-fluid
 

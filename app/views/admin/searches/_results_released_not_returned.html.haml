@@ -15,6 +15,7 @@
                 %th.span1 ID
                 %th.span2 First name
                 %th.span2 Last name
+                %th Tier 2
                 %th.span6 Studies
             %tbody
               - @search_participants_not_returned.each do |search_participant|
@@ -28,6 +29,9 @@
                     = @search.end_date && @search.end_date > Date.today ? link_to(participant.first_name, admin_participant_path(participant)) : participant.first_name
                   %td
                     = @search.end_date && @search.end_date > Date.today ? link_to(participant.last_name, admin_participant_path(participant)) : participant.last_name
+                  %td
+                    - if participant.tier_2_surveys.any?
+                      = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
                   %td
                     - if current_user.admin? || current_user.data_manager?
                       = render partial: '/admin/study_involvements/list', locals: { participant: participant }

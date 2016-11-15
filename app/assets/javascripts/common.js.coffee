@@ -117,5 +117,3 @@ $('a[data-async=true]').livequery 'click', () ->
   else
     processAcyncRequest($link)
   false
-
-

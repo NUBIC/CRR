@@ -1,21 +1,31 @@
-#forms
-  #additonal-data{ data: { header: "Surveys (#{Survey.all.size})", url: new_admin_survey_path, target: '#forms', async: true, text: 'Add a survey'}}
-  %table.display.table.table-bordered.table-hover{ id: 'survey_list' }
+.row-fluid
+  / This will be inserted into table header div
+  .header.hidden.table-header{ data: { target_table: 'surveys_index_table'} }
+    %h4
+      = "Surveys (#{Survey.count})"
+      = link_to 'Add a survey', new_admin_survey_path, class: 'btn btn-primary nu-primary'
+.row-fluid
+  %table.display.table.table-bordered.table-hover#surveys_index_table
     %thead
       %tr
         %th Survey Title
         %th Description
         %th State
         %th Created
+        %th Tier 2
     %tbody
       - @surveys.each do |survey|
         - css_class = 'muted' unless survey.active?
         %tr
           %td
-            = link_to survey.title, admin_survey_path(survey), data: { async: true, target: '#forms' }
+            = link_to survey.title, admin_survey_path(survey)
           %td{ class: css_class }
             = survey.description
           %td{ class: css_class }
             = survey.state.titleize
           %td{ class: css_class }
             = survey.created_at.to_date
+          %td{ class: css_class }
+            - if survey.tier_2
+              %span.user-circle
+

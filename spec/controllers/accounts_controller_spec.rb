@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe AccountsController, type: :controller do
   setup :activate_authlogic
-  let(:valid_attributes) { { email: 'test@test.com', current_password: '1234', password: '1234', password_confirmation: '1234' } }
-  let(:invalid_attributes) { { email: 'test', password: '1234', password_confirmation: '1234' } }
+  let(:valid_attributes) { { email: 'test@test.com', current_password: '12345678', password: '12345678', password_confirmation: '12345678' } }
+  let(:invalid_attributes) { { email: 'test', password: '12345678', password_confirmation: '12345678' } }
 
   describe 'POST create' do
     describe 'with valid params' do
@@ -113,7 +113,7 @@ RSpec.describe AccountsController, type: :controller do
 
     describe 'password', type: :controller do
       it 'with invalid current password generates flash error' do
-        put :update, {id: account.id, account: { email: 'test@test.com', current_password: '12345' } }
+        put :update, {id: account.id, account: { email: 'test@test.com', current_password: '12345679' } }
         expect(flash['error']).to eq 'Current password doesn\'t match. Please try again.'
       end
 

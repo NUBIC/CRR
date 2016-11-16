@@ -25,6 +25,7 @@ gem 'simple_form'
 gem 'roxml'
 gem 'whenever'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
+gem 'rubyzip'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'

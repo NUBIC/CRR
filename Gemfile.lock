@@ -335,6 +335,7 @@ DEPENDENCIES
   rest-client
   roxml
   rspec-rails
+  rubyzip
   sass-rails
   sdoc
   selenium-webdriver

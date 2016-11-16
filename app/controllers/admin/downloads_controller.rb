@@ -1,3 +1,5 @@
+require 'zip'
+
 class Admin::DownloadsController < Admin::AdminController
   before_action :set_study_involvement
 

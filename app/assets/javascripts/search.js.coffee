@@ -243,6 +243,31 @@ $(document).ready ->
       $searchConditionForm = $(this).closest('form')
       showHideSecondaryAnswer($searchConditionForm)
 
+  $('table#downloads_log ').livequery ->
+    $tableElement = $(this)
+
+    $tableElement.dataTable
+      bScrollCollapse: true
+      sPaginationType: "bootstrap"
+      sDom: "<'row-fluid'<'span6 data-table-info-header'><'span6'f>r>t<'row'<'span6'i><'span6'p>>"
+      sWrapper: "dataTables_wrapper form-inline"
+      aaSorting: []
+      bFilter: true
+      iDisplayLength: 30
+      bLengthChange: false
+      oLanguage: { sSearch: "Filter:&nbsp;" }
+      fnInitComplete: (oSettings, json)  ->
+        setTableHeader($tableElement)
+
+  $('form#new_download').livequery ->
+    $form = $(this)
+    console.log $form
+
+    $form.on 'submit', () ->
+      $(this).validate()
+      if $(this).valid()
+        $(this).closest('.modal').modal('hide')
+
   validateSearchCondition = (form) ->
     $(form).validate({
       errorPlacement: (error, element) ->

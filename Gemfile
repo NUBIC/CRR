@@ -24,6 +24,7 @@ gem 'devise_ldap_authenticatable'
 gem 'simple_form'
 gem 'roxml'
 gem 'whenever'
+gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'

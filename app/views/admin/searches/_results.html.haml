@@ -13,6 +13,8 @@
               = link_to "Participants released (#{@search_participants_not_returned.size})", admin_search_path(@search, state: 'released')
             %li{ class: "#{'active' if @state == 'returned'}"}
               = link_to "Participants returned (#{@search_participants_returned.size})", admin_search_path(@search, state: 'returned')
+            %li{ class: "#{'active' if @state == 'downloads'}"}
+              = link_to "Downloads log", admin_search_path(@search, state: 'downloads')
       - if @state.blank? && (current_user.admin? || current_user.data_manager?)
         = render partial: 'results_all'
       - elsif @state == 'released' || current_user.researcher? && @state.blank?
@@ -22,3 +24,5 @@
           = render partial: 'results_released_returned_admin'
         - else
           = render partial: 'results_released_returned'
+      - elsif @state == 'downloads'
+        = render partial: 'downloads_log'

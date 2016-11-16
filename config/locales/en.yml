@@ -30,3 +30,6 @@ en:
     attributes:
       search:
         end_date: "End of release date"
+  errors:
+    messages:
+      extension_whitelist_error: "You are not allowed to upload %{extension} files, allowed types: %{allowed_types}"

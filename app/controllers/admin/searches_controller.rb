@@ -62,6 +62,7 @@ class Admin::SearchesController < Admin::AdminController
       @search_participants_returned     = @search_participants_released.returned
       @search_participants_not_returned = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
       @search_participants_extendable   = @search_participants_returned.extendable
+      @downloads = @search_participants_released.map{ |search_participant| search_participant.study_involvement.downloads}.flatten
     end
 
     @comments = @search.comments

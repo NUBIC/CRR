@@ -1,0 +1,18 @@
+#download
+  = form_for @download, url: admin_study_involvement_downloads_path(@study_involvement, @download, format: :zip), html: { class: 'form-horizontal validate-form', data: { remote: true }}  do |f|
+    .modal-header.nu
+      %h5
+        Download Tier 2 data for
+        = @study_involvement.participant.name
+        = button_tag 'x', data: { dismiss: 'modal' }, aria: { hidden: 'true' }, class: 'close'
+    .modal-body
+      .control-group
+        = f.label :consent, class: 'control-label'
+        .controls
+          = f.file_field :consent, class: 'required'
+          %small.text-error
+            %i Required field
+      .control-group
+        .controls.controls-row
+          = submit_tag 'Submit', class: 'btn btn-primary nu-primary'
+          = link_to 'Cancel', admin_search_path(@study_involvement.search_participant.search, state: 'released'), data: { dismiss: 'modal' }, aria: { hidden: true }, class: 'btn btn-warning'

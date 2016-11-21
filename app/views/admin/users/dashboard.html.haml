@@ -7,6 +7,7 @@
         %th.span3 Last Name
         %th Studies
         %th Join Date
+        %th Tier 2
     %tbody
       - current_user.active_participants.each do |participant|
         %tr.display
@@ -23,3 +24,6 @@
             = render partial: '/admin/study_involvements/list', locals: { participant: participant }
           %td
             = participant.created_at.to_date
+          %td
+            - if participant.tier_2_surveys.any?
+              .user-circle

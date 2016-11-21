@@ -32,10 +32,11 @@
                   %td
                     - if participant.tier_2_surveys.any?
                       = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
-                      &nbsp;
-                      = link_to new_admin_study_involvement_download_path(search_participant.study_involvement), class: 'dashed_underline', data: { toggle: 'modal', target: '#tier2-download' } do
-                        %small
-                          Download
+                      - if current_user.admin? || current_user.data_manager?
+                        &nbsp;
+                        = link_to new_admin_study_involvement_download_path(search_participant.study_involvement), class: 'dashed_underline', data: { toggle: 'modal', target: '#tier2-download' } do
+                          %small
+                            Download
                   %td
                     - if current_user.admin? || current_user.data_manager?
                       = render partial: '/admin/study_involvements/list', locals: { participant: participant }

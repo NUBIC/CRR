@@ -94,9 +94,12 @@ $(document).ready ->
       setReleaseButton() if $releaseButton.length
       setReturnUIVisibility() if $returnUIContainer.length
 
+    # append hidden checkboxes to the release forrm on submit
+    $('form.search_result_release_form').on 'submit', () ->
+      $checkboxes.appendTo(this);
+
   # Extended release UI
   $('#approve_return').on 'shown', () ->
-    console.log('here')
     $tableElement = $(this).find('table#extend_release_list')
 
     if !$.fn.DataTable.isDataTable($tableElement)

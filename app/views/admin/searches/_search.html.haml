@@ -1,8 +1,10 @@
 .control-group
-  = f.label :study, class: 'control-label'
-  .controls
-    = f.select :study_id, @studies.collect{|s| ["#{s.display_name} - #{s.irb_number}", s.id]}, { prompt: '' }, { class: 'input-block-level' }
+  = f.label :study_id, 'Study', class: 'control-label'
+  .controls.select
+    = f.select :study_id, @studies.collect{|s| ["#{s.display_name} - #{s.irb_number}", s.id]}, { prompt: '' }, { class: 'input-xxlarge required' }
+    %small.text-error
+      %i Required field
 .control-group
   = f.label :name, class: 'control-label'
   .controls
-    = f.text_field :name, class: 'input-block-level'
+    = f.text_field :name, class: 'input-xxlarge'

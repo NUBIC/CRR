@@ -16,7 +16,7 @@
       - if question.multiple_choice?
         - question.answers.each do |answer|
         - checked = true if display_existing_values && search_condition_values.include?(answer.id.to_s)
-          = label_tag 'search_condition[values][]', class: 'checkbox' do
+          = label_tag 'search_condition[values][]', class: 'checkbox', for: "search_condition_values_#{answer.id}" do
             = check_box_tag 'search_condition[values][]', answer.id, checked, { id: "search_condition_values_#{answer.id}"}
             = answer.text
       - else

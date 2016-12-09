@@ -168,7 +168,7 @@ class Search < ActiveRecord::Base
   end
 
   def user_emails
-    self.study.user_emails.push(self.user.email).reject(&:blank?).uniq
+    self.study.user_emails.push(self.user.email).reject(&:blank?).uniq if self.user
   end
 
   def return_status

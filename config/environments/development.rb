@@ -37,4 +37,7 @@ AudiologyRegistry::Application.configure do
   OpenSSL::SSL::SSLContext::DEFAULT_PARAMS[:verify_mode] = OpenSSL::SSL::VERIFY_NONE
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = { :host => "localhost", :port => 1025 }
+
+  Bullet.enable = true
+  Bullet.bullet_logger = true
 end

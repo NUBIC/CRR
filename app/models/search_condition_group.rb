@@ -27,7 +27,7 @@ class SearchConditionGroup < ActiveRecord::Base
   end
 
   def result
-    return [] if search_conditions.empty? and search_condition_groups.empty?
+    return [] if search_conditions.empty? && search_condition_groups.empty?
     sc_result = search_conditions.collect{|sc| sc.result}.inject(operator.to_sym)
     return sc_result if search_condition_groups.empty?
     scg_result = search_condition_groups.collect{|scg| scg.result}.inject(operator.to_sym)

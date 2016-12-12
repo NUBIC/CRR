@@ -80,8 +80,12 @@ class Search < ActiveRecord::Base
 
   # Functions
   def result(options={})
-    return [] if search_condition_group.nil? || search_condition_group.result.nil?
-    results = search_condition_group.result.reject {|p| p.do_not_contact? }
+    return [] if search_condition_group.nil?
+
+    result_all_participants = search_condition_group.result
+    return [] if result_all_participants.nil?
+
+    results = result_all_participants.reject {|p| p.do_not_contact? }
     if options[:extended_release]
       return results
     else

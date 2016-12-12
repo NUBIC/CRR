@@ -6,7 +6,7 @@ class Admin::SearchesController < Admin::AdminController
 
   def index
     authorize Search
-    searches = policy_scope(Search)
+    searches = policy_scope(Search).includes(:study, :user, :study_involvements)
 
     @state = params[:state]
     case @state
@@ -53,12 +53,12 @@ class Admin::SearchesController < Admin::AdminController
     authorize @search
     @state  = params[:state]
 
-    participants        = @search.new? ? @search.result : @search.search_participants.map(&:participant)
+    participants        = @search.new? ? @search.result : @search.search_participants.includes(:participant).map(&:participant)
     @participants       = participants if policy(@search).view_results?
     @participants_count = participants.size
 
     if @search.results_available?
-      @search_participants_released     = @search.search_participants.released
+      @search_participants_released     = @search.search_participants.includes(:participant, :study_involvement).released
       @search_participants_returned     = @search_participants_released.returned
       @search_participants_not_returned = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
       @search_participants_extendable   = @search_participants_returned.extendable
@@ -176,7 +176,7 @@ class Admin::SearchesController < Admin::AdminController
 
   private
     def set_search
-      @search = Search.find(params[:id])
+      @search = Search.includes(search_condition_group: [search_conditions: :question]).find(params[:id])
     end
 
     def set_studies

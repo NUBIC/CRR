@@ -22,6 +22,7 @@ class StudyInvolvement < ActiveRecord::Base
   scope :warning,   -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
   scope :approved,  -> { joins(:study_involvement_status).where( study_involvement_statuses: { state: 'approved' })}
   scope :pending,   -> { joins(:study_involvement_status).where( study_involvement_statuses: { state: 'pending'})}
+  default_scope { includes(:study_involvement_status) }
 
   def active?
     self.end_date >= Date.today

@@ -54,6 +54,7 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'simplecov', require: false
   gem 'selenium-webdriver'
+  gem 'bullet'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

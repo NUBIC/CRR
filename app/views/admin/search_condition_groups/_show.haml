@@ -4,7 +4,7 @@
       .muted (
     .row-fluid
       .nu-offset
-        - search_condition_group.search_conditions.each_with_index do |sc,i|
+        - search_condition_group.search_conditions.includes(:question).each_with_index do |sc,i|
           - unless i==0
             %b{ class: "nu-operator #{'text-info' if search_condition_group.is_or?} #{'text-success' if search_condition_group.is_and?}"}
               = search_condition_group.pretty_operator

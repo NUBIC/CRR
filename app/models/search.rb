@@ -199,6 +199,22 @@ class Search < ActiveRecord::Base
     self.result(params).each {|participant| self.search_participants.create(participant: participant)}
   end
 
+  # if params[:per_page] is provided, will paginate through available conditions
+  def paginated_conditions(params)
+    params.reverse_merge!({ query: '', page: 0})
+    conditions   = Question.unscoped.real.includes(section: :survey).search(params[:query]).order('surveys.id ASC, section_id ASC, questions.display_order ASC')
+
+    result = []
+    total_count = conditions.size
+    if params[:per_page].present?
+      per_page    = params[:per_page].to_i
+      page        = params[:page].to_i
+      offset      = per_page * ((page = page - 1) < 0 ? 0 : page)
+      conditions  = conditions.limit(per_page).offset(offset)
+    end
+    [total_count, conditions]
+  end
+
   private
     def default_args
       if self.id

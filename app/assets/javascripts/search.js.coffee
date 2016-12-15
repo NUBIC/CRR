@@ -169,19 +169,47 @@ $(document).ready ->
         else
           location.reload()
 
-  formatQuestion = (question) ->
-    if $(question.element).hasClass('active')
-      return $('<span class="user-circle"></span><span>' + question.text + '</span>'
-      );
-    question.text
+  # Search conditions autocompleter/dropdown initialization
+  $('.question_search').livequery ->
+    $selectElement        = $(this);
+    $searchConditionForm  = $selectElement.closest('form');
+    $submitButton         = $searchConditionForm.find('button[type="submit"]');
+    $valuesContainer      = $searchConditionForm.find('.search-condition-values');
 
-  $('.question_id_search').livequery ->
-    $(this).select2({templateResult: formatQuestion})
-    $searchConditionForm = $(this).closest('form')
-    $valuesContainer     = $searchConditionForm.find('.search-condition-values')
-    $submitButton        = $searchConditionForm.find('button[type="submit"]')
+    perPage = 30;
 
-    $(this).on 'change', () ->
+    $selectElement.select2
+      ajax:
+        url: $selectElement.attr('data-url')
+        delay: 250
+        dataType: 'json'
+        data: (params) ->
+          return {
+            query: params.term, # search term
+            page:  params.page,
+            per_page: perPage
+          };
+        processResults: (data, params) ->
+          params.page = params.page || 1;
+          return {
+            results: data.data,
+            pagination: {  more: (params.page * perPage) < data.recordsTotal }
+          }
+        cache: true
+      escapeMarkup: (markup) ->
+        return markup; # let our custom formatter work
+      templateResult: (el) ->
+        if el.search_display
+          return '<span class="user-circle"></span><span>' + el.search_display + '</span>';
+        else
+          return el.text
+      templateSelection: (el) ->
+        if el.search_display
+          return '<span>' + el.search_display + '</span>'
+        else
+          return el.text
+
+    $selectElement.on 'change', () ->
       $selectedQuestion = $(this).find('option:selected')
       if $selectedQuestion.length
         $.ajax({
@@ -197,39 +225,55 @@ $(document).ready ->
         $valuesContainer.html('')
         $submitButton.disable
 
+  # Popup list of conditions
   $('.question_list').livequery ->
     $tableElement = $(this)
 
     table = $tableElement.dataTable
-      bScrollCollapse: true
-      sPaginationType: "bootstrap"
-      sDom: "<'row-fluid'<'span6'i><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>"
-      sWrapper: "dataTables_wrapper form-inline"
-      aaSorting: []
-      aoColumnDefs: [{ 'bSortable': false, 'aTargets': [ 5 ] }]
-      bFilter: true
-      iDisplayLength: 30
-      bLengthChange: false
-      # scrollY: true
-      oLanguage: { sSearch: "Filter:&nbsp;" }
-      paging: false
+      bScrollCollapse:  true
+      sDom:             "<'row-fluid'<'span6'i><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>"
+      sWrapper:         "dataTables_wrapper form-inline"
+      # aaSorting:        []
+      # aoColumnDefs:     [{ 'bSortable': false, 'aTargets': [ 5 ] }]
+      bFilter:          true
+      processing:       true
+      bLengthChange:    false
+      ordering:         false
+      oLanguage:        { sSearch: "Filter:&nbsp;" }
+      iDisplayLength:   30
+      serverSide:       true
+      ajax:             $tableElement.attr('data-source')
+      columns: [
+        { data: 'survey_title' }
+        { data: 'survey_active_flag' }
+        { data: 'section_title' }
+        { data: 'text' }
+        { data: 'answer_values' }
+        { data: null, defaultContent: '<button class="select_question">Select</button>' }
+      ]
 
+  # Clicking on question list popup button
   $('.question_lookup').livequery ->
     $(this).on 'click', () ->
-      $(this).closest('.row-fluid').find('#question_list').modal('show')
+      $(this).closest('.row-fluid').find('.question-modal-lookup').modal('show')
       false
-
+  # Selecting a question from the popup list
   $('.select_question').livequery ->
+    $(this).addClass('button btn btn-success btn-small').attr('data-dismiss', 'modal')
     $(this).on 'click', () ->
-      $selectQuestionButton = $(this)
-      $questionDropdown = $selectQuestionButton.closest('form').find('.question_id_search')
-      $.each $questionDropdown.find('option'), () ->
-        if $(this).val() == $selectQuestionButton.attr('data-value')
-          $(this).attr('selected', 'selected')
-        else
-          $(this).removeAttr('selected')
-      false
-      $questionDropdown.trigger('change')
+      table = $(this).closest('table').dataTable()
+      data  = table.fnGetData($(this).closest('tr'))
+      $searchConditionForm  = $(this).closest('form')
+      $selectElement        = $searchConditionForm.find('select[name="search_condition[question_id]"]');
+
+      $selectedOption = $selectElement.find('option[value="' + data.id + '"]');
+      if $selectedOption.length == 0
+        $selectedOption = $('<option></option>')
+          .val(data.id)
+          .html(data.search_display)
+        $selectElement.append($selectedOption);
+      $selectedOption.attr('selected', 'selected');
+      $selectElement.val(data.id).trigger('change');
 
   $('.search-condition-group-operator').livequery ->
     $(this).on 'change', () ->
@@ -246,7 +290,8 @@ $(document).ready ->
       $searchConditionForm = $(this).closest('form')
       showHideSecondaryAnswer($searchConditionForm)
 
-  $('table#downloads_log ').livequery ->
+  # Initialize dataTable on downloads tab
+  $('table#downloads_log').livequery ->
     $tableElement = $(this)
 
     $tableElement.dataTable

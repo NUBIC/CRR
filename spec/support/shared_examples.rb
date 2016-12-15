@@ -94,9 +94,12 @@ RSpec.shared_examples 'shared examples for search conditions' do
       within '.search_condition_group_new_condition' do
         find('span.select2').click
       end
-      all('.select2-container--open ul li').each do |element|
-        within element do
-          expect(page).to have_selector('span.user-circle')
+      expect(page).to have_selector('.select2-results__option .user-circle') # make capybara wait till request is completed
+      within '.select2-results' do
+        all('.select2-container--open ul li.select2-results__option').each do |element|
+          within element do
+            expect(page).to have_selector('span.user-circle')
+          end
         end
       end
     end
@@ -112,8 +115,8 @@ RSpec.shared_examples 'shared examples for search conditions' do
           find('a.question_lookup').click
         end
 
-        expect(page).to have_selector('#question_list')
-        within('#question_list') do
+        expect(page).to have_selector('.question-modal-lookup')
+        within('.question-modal-lookup') do
           expect(page).to have_content('Search survey questions')
           @questions.each do |question|
             if question.label?
@@ -139,9 +142,9 @@ RSpec.shared_examples 'shared examples for search conditions' do
             expect(page).to have_selector('.search_condition_group_new_condition')
 
             find('.search_condition_group_new_condition a.question_lookup').click
-            expect(page).to have_selector('#question_list')
+            expect(page).to have_selector('.question_list')
 
-            all('#question_list tr').each do |tr|
+            all('.question_list tr').each do |tr|
               next unless tr.has_content?(question.text)
               within tr do
                 click_on('Select')

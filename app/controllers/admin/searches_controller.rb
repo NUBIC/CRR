@@ -1,7 +1,7 @@
 class Admin::SearchesController < Admin::AdminController
   include EmailNotifications
 
-  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return, :extend_release]
+  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return, :extend_release, :conditions]
   before_action :set_studies, only: [:new, :edit, :show, :release_data ]
 
   def index
@@ -172,6 +172,39 @@ class Admin::SearchesController < Admin::AdminController
     flash['error']  = errors.join('. ').html_safe  if errors.any?
 
     redirect_to admin_search_path(@search, state: 'returned')
+  end
+
+  def conditions
+    raise Pundit::NotAuthorizedError if @search.nil?
+    authorize @search, :edit?
+    page      = params[:page]
+    per_page  = params[:per_page]
+    query     = params[:query]
+    if params[:start] && params[:length] && params[:length].to_i > 0
+      page      ||= params[:start].to_i/params[:length].to_i + 1
+      per_page  = params[:length]
+      query     = params[:search][:value]
+    end
+    (total, paginated_conditions) = @search.paginated_conditions(query: query, page: page, per_page: per_page)
+
+    respond_to do |format|
+      format.json {
+        render json: {
+          recordsTotal:     total,
+          recordsFiltered:  total,
+          data:             paginated_conditions.as_json(
+            only: [:id, :text],
+            methods: [
+              :survey_title,
+              :survey_active_flag,
+              :section_title,
+              :search_display,
+              :answer_values
+            ]
+          )
+        }.to_json
+      }
+    end
   end
 
   private

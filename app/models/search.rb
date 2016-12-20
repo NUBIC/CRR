@@ -80,8 +80,12 @@ class Search < ActiveRecord::Base
 
   # Functions
   def result(options={})
-    return [] if search_condition_group.nil? || search_condition_group.result.nil?
-    results = search_condition_group.result.reject {|p| p.do_not_contact? }
+    return [] if search_condition_group.nil?
+
+    result_all_participants = search_condition_group.result
+    return [] if result_all_participants.nil?
+
+    results = result_all_participants.reject {|p| p.do_not_contact? }
     if options[:extended_release]
       return results
     else
@@ -168,7 +172,7 @@ class Search < ActiveRecord::Base
   end
 
   def user_emails
-    self.study.user_emails.push(self.user.email).reject(&:blank?).uniq
+    self.study.user_emails.push(self.user.email).reject(&:blank?).uniq if self.user
   end
 
   def return_status
@@ -193,6 +197,22 @@ class Search < ActiveRecord::Base
 
   def set_search_participants(params={})
     self.result(params).each {|participant| self.search_participants.create(participant: participant)}
+  end
+
+  # if params[:per_page] is provided, will paginate through available conditions
+  def paginated_conditions(params)
+    params.reverse_merge!({ query: '', page: 0})
+    conditions   = Question.unscoped.real.includes(section: :survey).search(params[:query]).order('surveys.id ASC, section_id ASC, questions.display_order ASC')
+
+    result = []
+    total_count = conditions.size
+    if params[:per_page].present?
+      per_page    = params[:per_page].to_i
+      page        = params[:page].to_i
+      offset      = per_page * ((page = page - 1) < 0 ? 0 : page)
+      conditions  = conditions.limit(per_page).offset(offset)
+    end
+    [total_count, conditions]
   end
 
   private

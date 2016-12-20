@@ -1,11 +1,9 @@
 .row-fluid
   .span12
     .well.nu-well Please select request criteria
-.row-fluid
-  .span7
-    = form_for @search, url: admin_searches_path, html: { class: 'form-horizontal'} do |f|
-      = render partial: 'search', locals: { f: f }
-      .control-group
-        .controls
-          = f.button 'Start', class: 'btn btn-primary nu-primary'
-          = link_to 'Cancel', admin_searches_path, class: 'btn btn-warning'
+= form_for @search, url: admin_searches_path, html: { class: 'form-horizontal validate-form'} do |f|
+  = render partial: 'search', locals: { f: f }
+  .control-group
+    .controls
+      = f.button 'Start', class: 'btn btn-primary nu-primary'
+      = link_to 'Cancel', admin_searches_path, class: 'btn btn-warning'

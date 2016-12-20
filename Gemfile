@@ -24,6 +24,8 @@ gem 'devise_ldap_authenticatable'
 gem 'simple_form'
 gem 'roxml'
 gem 'whenever'
+gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
+gem 'rubyzip'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -52,6 +54,7 @@ group :development, :test do
   gem 'capybara-webkit'
   gem 'simplecov', require: false
   gem 'selenium-webdriver'
+  gem 'bullet'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

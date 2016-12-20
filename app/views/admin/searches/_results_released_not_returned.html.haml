@@ -15,7 +15,7 @@
                 %th.span1 ID
                 %th.span2 First name
                 %th.span2 Last name
-                %th Tier 2
+                %th.span3 Tier 2
                 %th.span6 Studies
             %tbody
               - @search_participants_not_returned.each do |search_participant|
@@ -32,6 +32,11 @@
                   %td
                     - if participant.tier_2_surveys.any?
                       = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
+                      - if current_user.admin? || current_user.data_manager?
+                        &nbsp;
+                        = link_to new_admin_study_involvement_download_path(search_participant.study_involvement), class: 'dashed_underline', data: { toggle: 'modal', target: '#tier2-download' } do
+                          %small
+                            Download
                   %td
                     - if current_user.admin? || current_user.data_manager?
                       = render partial: '/admin/study_involvements/list', locals: { participant: participant }
@@ -52,3 +57,5 @@
             .control-group
               .controls.controls-row
                 = submit_tag 'Submit', class: 'btn btn-primary'
+
+#tier2-download.modal.modal-large.hide

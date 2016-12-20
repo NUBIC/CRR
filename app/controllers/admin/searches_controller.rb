@@ -1,12 +1,12 @@
 class Admin::SearchesController < Admin::AdminController
   include EmailNotifications
 
-  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return, :extend_release]
+  before_action :set_search, only: [:edit, :show, :update, :destroy, :request_data, :release_data, :return_data, :approve_return, :extend_release, :conditions]
   before_action :set_studies, only: [:new, :edit, :show, :release_data ]
 
   def index
     authorize Search
-    searches = policy_scope(Search)
+    searches = policy_scope(Search).includes(:study, :user, :study_involvements)
 
     @state = params[:state]
     case @state
@@ -53,15 +53,16 @@ class Admin::SearchesController < Admin::AdminController
     authorize @search
     @state  = params[:state]
 
-    participants        = @search.new? ? @search.result : @search.search_participants.map(&:participant)
+    participants        = @search.new? ? @search.result : @search.search_participants.includes(:participant).map(&:participant)
     @participants       = participants if policy(@search).view_results?
     @participants_count = participants.size
 
     if @search.results_available?
-      @search_participants_released     = @search.search_participants.released
+      @search_participants_released     = @search.search_participants.includes(:participant, :study_involvement).released
       @search_participants_returned     = @search_participants_released.returned
       @search_participants_not_returned = @search_participants_released.where.not(id: @search_participants_returned.pluck(:id))
       @search_participants_extendable   = @search_participants_returned.extendable
+      @downloads = @search_participants_released.map{ |search_participant| search_participant.study_involvement.downloads}.flatten
     end
 
     @comments = @search.comments
@@ -173,9 +174,42 @@ class Admin::SearchesController < Admin::AdminController
     redirect_to admin_search_path(@search, state: 'returned')
   end
 
+  def conditions
+    raise Pundit::NotAuthorizedError if @search.nil?
+    authorize @search, :edit?
+    page      = params[:page]
+    per_page  = params[:per_page]
+    query     = params[:query]
+    if params[:start] && params[:length] && params[:length].to_i > 0
+      page      ||= params[:start].to_i/params[:length].to_i + 1
+      per_page  = params[:length]
+      query     = params[:search][:value]
+    end
+    (total, paginated_conditions) = @search.paginated_conditions(query: query, page: page, per_page: per_page)
+
+    respond_to do |format|
+      format.json {
+        render json: {
+          recordsTotal:     total,
+          recordsFiltered:  total,
+          data:             paginated_conditions.as_json(
+            only: [:id, :text],
+            methods: [
+              :survey_title,
+              :survey_active_flag,
+              :section_title,
+              :search_display,
+              :answer_values
+            ]
+          )
+        }.to_json
+      }
+    end
+  end
+
   private
     def set_search
-      @search = Search.find(params[:id])
+      @search = Search.includes(search_condition_group: [search_conditions: :question]).find(params[:id])
     end
 
     def set_studies

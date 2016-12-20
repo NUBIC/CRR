@@ -24,7 +24,7 @@
         %small
           Study: #{@search.study.display_name}
 
-    .span3
+    .span3.search-controls
       .pull-right.btn-group
         - if policy(@search).copy? && search_condition_group.has_conditions?
           = button_tag 'Copy to a new request', data: { toggle: 'modal', target: '#copy_search' }, class: 'btn btn-small'
@@ -76,7 +76,8 @@
     = render partial: 'results'
 
   / Search comments
-  = render partial: '/admin/comments/list', locals: { commentable: @search }
+  #comments
+    = render partial: '/admin/comments/list', locals: { commentable: @search }
 
 / Modal for 'copy search' UI
 #copy_search.modal.modal-large.hide

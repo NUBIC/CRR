@@ -1,10 +1,10 @@
-= form_for @search, url: admin_search_path(@search) do |f|
+= form_for @search, url: admin_search_path(@search), html: { class: 'validate-form' } do |f|
   .row-fluid
     .span12
       - if params[:change_name]
         %h3
           Name:
-          = f.text_field :name
+          = f.text_field :name, class: 'required'
           .btn-group
             = f.submit 'Continue', class: 'btn btn-success btn-small'
             = link_to 'Cancel', admin_search_path(@search), class: 'btn btn-warning btn-small'

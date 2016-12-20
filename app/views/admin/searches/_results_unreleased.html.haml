@@ -34,6 +34,7 @@
                 %th ID
                 %th First Name
                 %th Last Name
+                %th Tier 2
                 %th Studies
             %tbody
               - @participants.each do |participant|
@@ -49,5 +50,8 @@
                     .pull-right
                       = image_tag 'child.png' if participant.child?
                       = image_tag 'siblings.png' if participant.has_relationships?
+                  %td
+                    - if participant.tier_2_surveys.any?
+                      = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
                   %td
                     = render partial: '/admin/study_involvements/list', locals: { participant: participant }

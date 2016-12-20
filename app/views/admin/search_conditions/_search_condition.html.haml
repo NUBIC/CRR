@@ -20,16 +20,43 @@
     .span4.search-condition-question
       = f.hidden_field :search_condition_group_id
       .input-append.input-block-level
-        = f.select :question_id, available_questions.collect{|question| [question.search_display, question.id, class: question.section.survey.state]}, {include_blank: true}, class: 'question_id_search input-block-level', data: { placeholder: 'Select a question'}
-        = link_to '#', class: 'btn question_lookup' do
+        - if search_condition.question_id
+          - options   = [[ search_condition.question.search_display, search_condition.question_id ]]
+          - selected  = search_condition.question_id
+        - else
+          - options   = ['','']
+          - selected  = nil
+        = f.select :question_id, options_for_select(options, selected), {}, class: 'question_search input-block-level', data: { placeholder: 'Select a question', url: conditions_admin_search_path(@search, format: :json)}
+        = link_to '#', class: 'btn question_lookup', data: { target: '#question_list'} do
           %i.icon-question-search
           = image_tag 'question_search.png'
 
-      = render partial: 'question_modal_list', locals: { available_questions: available_questions }
     .span5.offset1.search-condition-values{ data: { source: values_admin_search_conditions_path(id: search_condition.id) }}
       = render partial: 'values_form', locals: { question: search_condition.question }
 
     .span2.pull-right.text-right
       .btn-group
-        = f.button 'Save', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?, data: { disable_with: 'Saving...'}
+        = f.button 'Save', class: 'btn btn-success btn-small', disabled: search_condition.question.blank?
         = link_to 'Cancel', admin_search_path(id: search_condition.get_search), class: 'btn btn-warning btn-small'
+
+    .question-modal-lookup.modal.hide.large
+      .modal-header
+        %button.close{ data: { dismiss: 'modal' } }
+          &times;
+        %h5
+          Search survey questions
+      .modal-body
+        .row-fluid
+          .span12
+            %table.table.table-bordered.table-hover.question_list{ data: { source: conditions_admin_search_path(@search, format: :json) }}
+              %thead
+                %tr
+                  %th Survey
+                  %th Active
+                  %th Section
+                  %th Text
+                  %th Answers
+                  %th
+      .modal-footer
+        %button.btn{ data: { dismiss: 'modal' }}
+          Close

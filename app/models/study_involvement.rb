@@ -8,6 +8,7 @@ class StudyInvolvement < ActiveRecord::Base
   has_one :study_involvement_status, dependent: :destroy
   has_one :search_participant_study_involvement
   has_one :search_participant, through: :search_participant_study_involvement, dependent: :destroy
+  has_many :downloads, dependent: :restrict_with_error
 
   accepts_nested_attributes_for :study_involvement_status, allow_destroy: true, reject_if: proc { |attributes| attributes.all?{ |k,v| ['state', '_destroy'].include?(k) || v.blank? } }
 
@@ -21,6 +22,7 @@ class StudyInvolvement < ActiveRecord::Base
   scope :warning,   -> { where("warning_date <= '#{Date.today}' and (end_date is null or end_date > '#{Date.today}')") }
   scope :approved,  -> { joins(:study_involvement_status).where( study_involvement_statuses: { state: 'approved' })}
   scope :pending,   -> { joins(:study_involvement_status).where( study_involvement_statuses: { state: 'pending'})}
+  default_scope { includes(:study_involvement_status) }
 
   def active?
     self.end_date >= Date.today

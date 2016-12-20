@@ -35,6 +35,11 @@
                   %td
                     - if participant.tier_2_surveys.any?
                       = render partial: '/admin/participants/tier_2_surveys_list', locals: { participant: participant }
+                      - if current_user.admin? || current_user.data_manager?
+                        &nbsp;
+                        = link_to new_admin_study_involvement_download_path(search_participant.study_involvement), class: 'dashed_underline', data: { toggle: 'modal', target: '#tier2-download' } do
+                          %small
+                            Download
                   %td
                     #{study_involvement_status.name.titleize}
                     %small.muted
@@ -139,3 +144,5 @@
         = f.submit 'Approve and extend release for', class: 'btn btn-success', data: { confirm: 'Are you sure you want to approve return and extend release for these participants?'}, id: 'submit_extended_release'
         = link_to 'Approve without extension', approve_return_admin_search_path(@search), data: { confirm: 'Are you sure you want to approve return for this data request?'}, class: 'btn btn-success', id: 'approve_return', method: :patch
         = button_tag 'Cancel', data: { dismiss: 'modal' }, aria: { hidden: true }, class: 'btn'
+
+#tier2-download.modal.modal-large.hide

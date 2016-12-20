@@ -25,7 +25,7 @@ class SearchPolicy < ApplicationPolicy
   end
 
   def create?
-    can_manage? || is_researcher? && on_study?
+    record.study.blank? || can_manage? || is_researcher? && on_study?
   end
 
   def show?

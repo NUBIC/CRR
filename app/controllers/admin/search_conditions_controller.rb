@@ -1,6 +1,8 @@
 class Admin::SearchConditionsController < Admin::AdminController
   before_action :set_search_condidion, only: [:edit, :show, :update, :destroy]
-  before_action :set_available_questions
+  before_action :set_search, only: [:edit, :show, :update, :destroy]
+
+  # before_action :set_available_questions
 
   # def index
   #   authorize SearchCondition
@@ -9,11 +11,13 @@ class Admin::SearchConditionsController < Admin::AdminController
 
   def new
     @search_condition = SearchCondition.new(search_condition_group_id: params[:search_condition_group_id])
+    set_search
     authorize @search_condition
   end
 
   def create
     @search_condition = SearchCondition.new(search_condition_params)
+    set_search
     authorize @search_condition
 
     if @search_condition.save
@@ -76,10 +80,12 @@ class Admin::SearchConditionsController < Admin::AdminController
     end
 
     def set_available_questions
-      available_questions = Question.unscoped.joins(section: :survey).where.not(response_type: 'none')
-      unless current_user.admin?
-        available_questions = available_questions.where( surveys: { tier_2: false })
-      end
-      @available_questions = available_questions.order('surveys.title, questions.display_order')
+      available_questions   = Question.unscoped.includes(:answers, section: :survey)
+      available_questions   = available_questions.where( surveys: { tier_2: false }) unless current_user.admin?
+      @available_questions  = available_questions.order('surveys.title, questions.display_order').reject{|q| q.label?}
+    end
+
+    def set_search
+      @search = @search_condition.get_search
     end
 end

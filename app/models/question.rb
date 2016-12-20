@@ -24,7 +24,7 @@ class Question < ActiveRecord::Base
   }.freeze
 
   # Associations
-  belongs_to :section
+  belongs_to :section, inverse_of: :questions
   has_many   :answers, dependent: :destroy
 
   # Validations
@@ -41,9 +41,10 @@ class Question < ActiveRecord::Base
 
   # Scopes
   default_scope {order('display_order ASC')}
+  scope :real, -> { where.not(response_type: 'none') }
 
   def self.search(param)
-    unscoped.joins(section: :survey).where('text ilike ? ', "%#{param}%").where("response_type != 'none'").order('surveys.title, questions.display_order')
+    unscoped.joins(section: :survey).where('text ilike ? OR surveys.title ilike ? OR sections.title ilike ?', "%#{param}%", "%#{param}%", "%#{param}%").where("response_type != 'none'").order('surveys.title, questions.display_order')
   end
 
   def soft_errors
@@ -93,19 +94,37 @@ class Question < ActiveRecord::Base
   end
 
   def search_display
-    "#{section.survey.title} - #{section.title} - #{text}"
+    "#{survey_title} - #{section_title} - #{text}"
   end
 
   def survey_title
     section.survey.title
   end
 
+  def survey_active_flag
+    '<div class="user-circle input-append">'.html_safe if section.survey.active?
+  end
+
+  def section_title
+    section.title
+  end
+
+  def answer_values
+    if true_date?
+      '[date]'
+    elsif number?
+      '[number]'
+    elsif long_text? || short_text?
+      '[free text]'
+    elsif multiple_choice?
+      answers.map(&:text).join('<br/>').html_safe
+    end
+  end
+
   private
     def default_args
-      if self.section
-        self.display_order = self.section.questions.size + 1 if self.display_order.blank?
-        self.code = "q_#{self.section.survey.questions.size + 1}" if self.code.blank?
-      end
+      self.display_order = self.section.questions.size + 1 if self.display_order.blank? && self.section
+      self.code = "q_#{self.section.survey.questions.size + 1}" if self.code.blank? && self.section
     end
 
     def check_display_order

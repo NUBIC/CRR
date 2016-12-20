@@ -8,7 +8,7 @@
           = f.button 'Request results', class: 'btn btn-success'
 
 - if policy(@search).release_data?
-  = form_for @search, url: release_data_admin_search_path(@search) do |f|
+  = form_for @search, url: release_data_admin_search_path(@search), html: { class: 'search_result_release_form'} do |f|
     .row-fluid
       .span12
         .row-group-header

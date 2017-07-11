@@ -137,7 +137,7 @@ class Search < ActiveRecord::Base
   # Called on return approval. Updates all study involvement statuses to 'approved' state
   # and changes search status to 'data_return_approved'
   def process_return_approval
-    study_involvements =  self.study_involvements.map{|i| i.study_involvement_status.approve!}
+    study_involvements =  self.study_involvements.reject{|i| i.study_involvement_status.state == 'approved'}.map{|i| i.study_involvement_status.approve!}
     self.approve_data_return!
   end
 

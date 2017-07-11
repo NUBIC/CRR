@@ -15,12 +15,13 @@
           %li= msg
   .row-fluid
     .span12
-      =simple_form_for @response_set,  url: admin_response_set_path(@response_set), html: { class: "validate-form edit_response_set_form"} do |f|
+      = simple_form_for @response_set,  url: admin_response_set_path(@response_set), html: { class: "validate-form edit_response_set_form"} do |f|
         .tabbable.tabs-left#admin-survey-tabs
           -if @response_set.survey.sections.size > 1
             %ul.nav.nav-tabs.span2#section_tab_header
               - @response_set.survey.sections.each_with_index do |s,si|
-                %li{class: "#{'active' if si==0}"}=link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
+                %li{class: "#{'active' if si==0}"}
+                  =link_to s.title,"#section_#{s.id}","data-toggle"=>"tab"
               = link_to "Exit", admin_participant_path(@response_set.participant, tab: "surveys"), class: "btn btn-primary nu-primary btn-block"
           .error-msg.offset2
           .tab-content.offset2#admin-survey-tab-content
@@ -29,23 +30,8 @@
                 .row-fluid.section-title
                   %h3
                     =s.title
-                -s.questions.each_with_index do |q,i|
-                  .row-fluid
-                    .span12
-                      -if q.pick_one?
-                        -if q.answers.size > 7
-                          .radio-inline
-                            =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, as: :radio_buttons,required: q.is_mandatory?,hint: q.help_text, label_html: {class: "#{'label-required' if q.is_mandatory?}"}
-                        -else
-                          =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, as: :radio_buttons,required: q.is_mandatory?,hint: q.help_text, label_html: {class: "#{'label-required' if q.is_mandatory?}"}
-                      -elsif q.pick_many?
-                        =f.input "q_#{q.id}".to_sym, collection: q.answers, label_method: :text, value_method: :id,label: q.text, as: :check_boxes,required: q.is_mandatory?,hint: q.help_text, label_html: {class: "#{'label-required' if q.is_mandatory?}"}
-                      -elsif q.label?
-                        %b
-                          =q.text.html_safe
-                      -else
-                        =f.input "q_#{q.id}".to_sym,label: q.text ,as: Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym,required: q.is_mandatory?,hint: q.help_text,required_text: "true",input_html: {class: "#{'input-medium' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.date? or q.birth_date?} #{'birth-date' if q.birth_date?}", placeholder: "#{'MM/DD/YYYY' if q.date? or q.birth_date?}",rows: 3 }, label_html: {class: "#{'label-required' if q.is_mandatory?}"}
-                      %hr
+                - s.questions.each_with_index do |q,i|
+                  = render partial: 'response_sets/question', locals: { f: f, q: q }
                 .btn-toolbar.row-fluid
                   .span6
                     - unless si == 0

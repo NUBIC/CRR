@@ -31,6 +31,14 @@ class ResponseSetPolicy < ApplicationPolicy
     can_manage?
   end
 
+  def download?
+    can_manage?
+  end
+
+  def file_upload?
+    can_manage?
+  end
+
   private
     def is_participant_owner?
       is_public_user? && user == record.participant.account

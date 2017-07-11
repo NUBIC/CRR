@@ -39,6 +39,11 @@ class Admin::DownloadsController < Admin::AdminController
                   zip_file.add(csv_filename, csv_temp_file.path)
                   csv_temp_files << csv_temp_file
                 end
+
+                file_uploads = response_set.responses.joins(:question).where(questions: {response_type: 'file_upload'})
+                file_uploads.each do |response|
+                  zip_file.add(response.file_upload_identifier, response.file_upload.path)
+                end
               end
             end
             zip_data = File.read(zip_temp_file.path)

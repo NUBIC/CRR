@@ -29,9 +29,8 @@ module Helpers
 
       set_surveys unless @survey.present?
 
-      @question     = @questions.reject(&:label?).sample
+      @question     = @questions.reject(&:label?).reject(&:file_upload?).sample
       response_set  = @participant1.response_sets.create(survey: @survey)
-
       create_response(response_set, @question)
       create_search_condition(@question)
 

@@ -80,7 +80,7 @@ class Admin::SearchConditionsController < Admin::AdminController
     end
 
     def set_available_questions
-      available_questions   = Question.unscoped.includes(:answers, section: :survey)
+      available_questions   = Question.unscoped.where.not(response_type: 'file_upload').includes(:answers, section: :survey)
       available_questions   = available_questions.where( surveys: { tier_2: false }) unless current_user.admin?
       @available_questions  = available_questions.order('surveys.title, questions.display_order').reject{|q| q.label?}
     end

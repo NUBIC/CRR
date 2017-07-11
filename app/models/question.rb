@@ -1,6 +1,7 @@
 class Question < ActiveRecord::Base
   # Globals
-  VALID_RESPONSE_TYPES            = ['pick_one', 'pick_many', 'number', 'short_text', 'long_text', 'date', 'none', 'birth_date'].freeze
+  VALID_RESPONSE_TYPES  = ['pick_one', 'pick_many', 'number', 'short_text', 'long_text', 'date', 'none', 'birth_date', 'file_upload'].freeze
+
   FORM_RESPONSE_TYPE_TRANSLATION  = {
     'pick_one'    => 'select',
     'pick_many'   => 'check_box',
@@ -9,7 +10,8 @@ class Question < ActiveRecord::Base
     'long_text'   => 'text',
     'date'        => 'string',
     'none'        => 'none',
-    'birth_date'  => 'string'
+    'birth_date'  => 'string',
+    'file_upload' => 'file'
   }.freeze
 
   VIEW_RESPONSE_TYPE_TRANSLATION  = {
@@ -20,7 +22,8 @@ class Question < ActiveRecord::Base
     'long_text'   => 'Long Text',
     'date'        => 'Date',
     'birth_date'  => 'Birth Date',
-    'none'        => 'Instruction (no response)'
+    'none'        => 'Instruction (no response)',
+    'file_upload' => "File Upload"
   }.freeze
 
   # Associations
@@ -42,9 +45,10 @@ class Question < ActiveRecord::Base
   # Scopes
   default_scope {order('display_order ASC')}
   scope :real, -> { where.not(response_type: 'none') }
+  scope :not_file, -> { where.not(response_type: 'file_upload') }
 
   def self.search(param)
-    unscoped.joins(section: :survey).where('text ilike ? OR surveys.title ilike ? OR sections.title ilike ?', "%#{param}%", "%#{param}%", "%#{param}%").where("response_type != 'none'").order('surveys.title, questions.display_order')
+    unscoped.joins(section: :survey).where('text ilike ? OR surveys.title ilike ? OR sections.title ilike ?', "%#{param}%", "%#{param}%", "%#{param}%").real.order('surveys.title, questions.display_order')
   end
 
   def soft_errors
@@ -91,6 +95,10 @@ class Question < ActiveRecord::Base
 
   def label?
     response_type.eql?('none')
+  end
+
+  def file_upload?
+    response_type.eql?('file_upload')
   end
 
   def search_display

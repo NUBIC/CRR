@@ -101,6 +101,7 @@ RSpec.configure do |config|
 
   config.append_after(:each) do
     DatabaseCleaner.clean
+    DownloadHelpers::clear_downloads
   end
 
   Shoulda::Matchers.configure do |config|
@@ -111,8 +112,20 @@ RSpec.configure do |config|
   end
 
   Capybara.register_driver :chrome do |app|
-    Capybara::Selenium::Driver.new(app, browser: :chrome)
+    # http://stackoverflow.com/questions/37391879/download-location-selenium-webdriver-cucumber-chrome
+    Capybara::Selenium::Driver.new(app,
+      browser: :chrome,
+      desired_capabilities: {
+        'chromeOptions' => {
+          'prefs' => {
+            'download.default_directory' => DownloadHelpers::PATH.to_s,
+            'download.prompt_for_download' => false,
+          }
+        }
+      }
+    )
   end
+
   Capybara.javascript_driver = :chrome
 
   RSpec.shared_examples 'unauthorized access: admin controller' do |collection_class|

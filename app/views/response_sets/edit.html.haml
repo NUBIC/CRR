@@ -29,25 +29,7 @@
                 %h3
                   = s.title
               - s.questions.each_with_index do |q,i|
-                .row-fluid
-                  .span12
-                    - input_id    = "q_#{q.id}".to_sym
-                    - label_class = q.is_mandatory? ? 'label-required' : ''
-                    - if q.pick_one?
-                      - if q.answers.size > 7
-                        .radio-inline
-                          = f.input input_id, collection: q.answers, label_method: :text, value_method: :id, label: q.text, as: :radio_buttons, required: q.is_mandatory?, hint: q.help_text, label_html: { class: label_class }
-                      - else
-                        = f.input input_id, collection: q.answers, label_method: :text, value_method: :id, label: q.text, as: :radio_buttons,required: q.is_mandatory?, hint: q.help_text, label_html: { class: label_class }
-                    - elsif q.pick_many?
-                      = f.input input_id.to_sym, collection: q.answers, label_method: :text, value_method: :id, label: q.text, as: :check_boxes, required: q.is_mandatory?, hint: q.help_text, label_html: {class: label_class}
-                    - elsif q.label?
-                      %b
-                        = q.text.html_safe
-                    - else
-                      - input_class = "#{'input-medium' if q.number?} #{'input-block-level'if q.long_text?} #{'input-small date' if q.true_date?} #{'birth-date' if q.birth_date?}"
-                      = f.input input_id, label: q.text, as: Question::FORM_RESPONSE_TYPE_TRANSLATION[q.response_type].to_sym, required: q.is_mandatory?, hint: q.help_text, required_text: "true", input_html: { class: input_class, placeholder: "#{'MM/DD/YYYY' if q.true_date?}", rows: 3 }, label_html: { class: label_class }
-                    %hr
+                = render partial: 'question', locals: { f: f, q: q }
               .btn-toolbar.row-fluid
                 .span6
                   - unless si == 0

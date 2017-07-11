@@ -1,4 +1,6 @@
 class Response < ActiveRecord::Base
+  mount_uploader :file_upload, ResponseUploader
+
   # Associations
   belongs_to :response_set
   belongs_to :question
@@ -25,7 +27,13 @@ class Response < ActiveRecord::Base
   end
 
   def to_s
-    question.multiple_choice? ? answer.text : self.text
+    if question.multiple_choice?
+      answer.text
+    elsif question.file_upload?
+      self.file_upload.file.nil? ? '' : file_upload_identifier
+    else
+      self.text
+    end
   end
 
   private

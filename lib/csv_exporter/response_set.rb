@@ -36,7 +36,7 @@ module CSVExporter
 
     def answer_fields(record=nil)
       {
-        'answer_value' => ->(record){ record.text if record },
+        'answer_value' => ->(record){ record.to_s if record },
         'answer_code'  => ->(record){ record && record.is_a?(Answer) ? record.code : nil}
       }
     end

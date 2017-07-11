@@ -74,7 +74,7 @@ RSpec.shared_examples 'shared examples for search conditions' do
       within('.select2-container--open ul') do
         expect(page).not_to have_selector('span.user-circle')
         @questions.each do |question|
-          if question.label?
+          if question.label? || question.file_upload?
             expect(page).not_to have_content("#{@survey.title} - #{question.section.title} - #{question.text}")
           else
             expect(page).to have_content("#{@survey.title} - #{question.section.title} - #{question.text}")
@@ -119,7 +119,7 @@ RSpec.shared_examples 'shared examples for search conditions' do
         within('.question-modal-lookup') do
           expect(page).to have_content('Search survey questions')
           @questions.each do |question|
-            if question.label?
+            if question.label? || question.file_upload?
               expect(page).not_to have_content(question.text)
             else
               expect(page).to have_content(question.section.survey.title)
@@ -134,7 +134,7 @@ RSpec.shared_examples 'shared examples for search conditions' do
       end
 
       Question::VALID_RESPONSE_TYPES.each_with_index do |response_type, i|
-        unless response_type == 'none'
+        unless ['none', 'file_upload'].include? response_type
           it "allows to select a #{response_type} question", js: true do
             question = @questions.select{ |q| q.response_type == response_type }.first
             visit path

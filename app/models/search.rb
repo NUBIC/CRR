@@ -202,7 +202,7 @@ class Search < ActiveRecord::Base
   # if params[:per_page] is provided, will paginate through available conditions
   def paginated_conditions(params)
     params.reverse_merge!({ query: '', page: 0})
-    conditions   = Question.unscoped.real.includes(section: :survey).search(params[:query]).order('surveys.id ASC, section_id ASC, questions.display_order ASC')
+    conditions   = Question.unscoped.includes(section: :survey).search(params[:query]).real.not_file.order('surveys.id ASC, section_id ASC, questions.display_order ASC')
 
     result = []
     total_count = conditions.size

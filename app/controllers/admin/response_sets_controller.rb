@@ -1,5 +1,5 @@
 class Admin::ResponseSetsController < Admin::AdminController
-  before_action :set_response_set, only: [:show, :edit, :update, :destroy, :load_from_file]
+  before_action :set_response_set, only: [:show, :edit, :update, :destroy, :load_from_file, :download]
 
   def index
     authorize ResponseSet
@@ -78,6 +78,20 @@ class Admin::ResponseSetsController < Admin::AdminController
       @response_set.errors.clear
     end
     render :edit
+  end
+
+  def download
+    authorize @response_set
+
+    question = @response_set.survey.questions.find(params[:question_id])               if params[:question_id].present?
+    response = @response_set.responses.detect{|res| res.question_id.eql?(question.id)} if question.present?
+
+    if response.present? && response.file_upload.present?
+      return send_file response.file_upload.path, disposition: 'attachment', x_sendfile: true
+    else
+      flash['error'] = 'Could not locate the file'
+      redirect_to edit_admin_response_set_path(@response_set.reload)
+    end
   end
 
   private

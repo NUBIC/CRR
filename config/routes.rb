@@ -91,6 +91,7 @@ AudiologyRegistry::Application.routes.draw do
     resources :response_sets, only: [:index, :new, :create, :edit, :update, :destroy] do
       member do
         patch :load_from_file
+        get   :download
       end
     end
 

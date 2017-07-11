@@ -23,18 +23,19 @@ class ResponseSet < ActiveRecord::Base
       #creates getter and setter methods for each question
 
       self.send(:define_singleton_method, "q_#{q.id}".to_sym) do
-        if q.response_type.eql?('pick_many')
+        if q.pick_many?
           return responses.collect{|res| res.answer_id if res.question_id.eql?(q.id)}.compact
-        elsif q.response_type.eql?('pick_one')
+        elsif q.pick_one?
           r = responses.detect{|response| response.question_id.eql?(q.id)}
           return r.nil? ? nil : r.answer.id
         else
           r = responses.detect{|response| response.question_id.eql?(q.id)}
-          return r.nil? ? '' : r.text
+          return r.nil? ? '' : r.to_s
         end
       end
+
       self.send(:define_singleton_method, "q_#{q.id}=".to_sym) do |args|
-        if q.response_type.eql?('pick_many')
+        if q.pick_many?
           args.reject!{|a| a.empty?}
           new_ids = args.collect{|arg| arg.to_i}
           question_responses = self.responses.select{|response| response.question_id.eql?(q.id)}
@@ -46,18 +47,37 @@ class ResponseSet < ActiveRecord::Base
           (new_ids-answer_ids).each do |answer_id|
             r = responses.create(question_id: q.id, answer_id: answer_id)
           end
-        elsif q.response_type.eql?('pick_one')
+        elsif q.pick_one?
           return responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy} if args.blank?
           responses.select{|response| response.question_id.eql?(q.id)}.each{|r| r.destroy unless r.answer.id.eql?(args.to_i)}
           r = responses.detect{|res| res.question_id.eql?(q.id) && res.answer_id.eql?(args.to_i)} || responses.create(question_id: q.id, answer_id: args.to_i)
-        elsif ['number', 'long_text', 'short_text', 'date', 'birth_date'].include?(q.response_type)
-            if args.blank?
-              responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy}
-            else
-              r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
-              r.text = args
-              r.save
-            end
+        elsif q.file_upload?
+          r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
+          r.file_upload = args
+          r.save
+        elsif q.number? || q.long_text? || q.short_text? || q.date? || q.birth_date?
+          if args.blank?
+            responses.select{|response| response.question_id.eql?(q.id)}.each{|res| res.destroy}
+          else
+            r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
+            r.text = args
+            r.save
+          end
+        end
+      end
+
+      if q.file_upload?
+        self.send(:define_singleton_method, "q_#{q.id}_remove_file_upload".to_sym) do
+          r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
+          r.remove_file_upload
+        end
+      end
+
+      if q.file_upload?
+        self.send(:define_singleton_method, "q_#{q.id}_remove_file_upload=".to_sym) do |args|
+          r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
+          r.remove_file_upload = args
+          r.save
         end
       end
     end

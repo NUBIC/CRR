@@ -21,13 +21,19 @@ class Admin::DownloadsController < Admin::AdminController
           zip_filename  = "CRR_participant_#{participant.id}_tier_2_data_#{Date.today.strftime('%m_%d_%Y')}"
           set_zip_streaming_headers(zip_filename)
 
-          zip_temp_file   = Tempfile.new(zip_filename)
+          zip_temp_file   = Tempfile.new(zip_filename, Rails.root.join('tmp'))
           csv_temp_files  = []
           begin
             Zip::File.open(zip_temp_file.path, Zip::File::CREATE) do |zip_file|
               participant.tier_2_surveys.includes(:participant, :survey, :responses).each do |response_set|
-                csv_filename  = "CRR_participant_#{participant.id}_#{response_set.survey.title}_#{Date.today.strftime('%m_%d_%Y')}.csv"
-                csv_temp_file = Tempfile.new(csv_filename)
+                csv_filename  = [
+                  'CRR_participant',
+                  participant.id,
+                  response_set.survey.title.parameterize('_'),
+                  "#{response_set.complete? ? 'complete' : 'pending'}",
+                  "created_#{response_set.created_at.strftime('%m_%d_%Y')}"
+                ].join('_') + '.csv'
+                csv_temp_file = Tempfile.new(csv_filename, Rails.root.join('tmp'))
                 begin
                   CSV.open(csv_temp_file.path, 'wb') do |csv|
                     CSVExporter::ResponseSet.new(response_set: response_set).each do |row|
@@ -42,7 +48,7 @@ class Admin::DownloadsController < Admin::AdminController
 
                 file_uploads = response_set.responses.joins(:question).where(questions: {response_type: 'file_upload'})
                 file_uploads.each do |response|
-                  zip_file.add(response.file_upload_identifier, response.file_upload.path)
+                  zip_file.add(response.file_upload_identifier, response.file_upload.path) if response.file_upload_identifier.present?
                 end
               end
             end

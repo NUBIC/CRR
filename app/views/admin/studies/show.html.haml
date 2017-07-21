@@ -101,6 +101,7 @@
                 %th.span2 First Name
                 %th.span2 Last Name
                 %th.span2 Currently released to this study
+                %th.span2 Release name
                 %th.span2 Status on this study
                 %th.span2 Start of Release
                 %th.span2 End of Release
@@ -117,6 +118,8 @@
                   %td
                     - if si.active?
                       .user-circle
+                  %td
+                    = si.search_participant.search.display_name if si.search_participant
                   %td
                     = si.status.titleize
                   %td

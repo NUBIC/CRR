@@ -86,12 +86,27 @@ class SearchCondition < ActiveRecord::Base
     participants = Participant.joins(response_sets: :responses).where(responses: {question_id: question.id}, stage: 'approved')
     if operator_type == LIST_OPERATOR_TYPE
       participants = participants.where("#{search_subject} #{operator} (?)", search_values)
+    elsif @is_calculated_date
+      case operator
+      when 'between'
+        participants = participants.where("#{search_subject} #{operator} ? AND ?", *search_values.reverse)
+      when '<'
+        participants = participants.where("#{search_subject} > ?", search_values.first)
+      when '<='
+        participants = participants.where("#{search_subject} >= ?", search_values.first)
+      when '>'
+        participants = participants.where("#{search_subject} < ?", search_values.first)
+      when '>='
+        participants = participants.where("#{search_subject} <= ?", search_values.first)
+      else
+        participants = participants.where("#{search_subject} #{operator} ?", search_values.first)
+      end
     elsif operator == 'between'
-      participants
       participants = participants.where("#{search_subject} #{operator} ? AND ?", *search_values)
     else
       participants = participants.where("#{search_subject} #{operator} ?", search_values.first)
     end
+    participants
   end
 
   def get_search

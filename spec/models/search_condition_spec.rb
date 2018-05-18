@@ -256,16 +256,26 @@ RSpec.describe SearchCondition, type: :model do
 
         it 'should return participants that fit search "<" condition' do
           search_condition = @search_condition_group.search_conditions.create(question: @q_date,operator: '<', values: ['4 years ago'])
-          expect(search_condition.result).to match_array [@participant1]
+          expect(search_condition.result).to match_array [@participant2]
+        end
+
+        it 'should return participants that fit search "<=" condition' do
+          search_condition = @search_condition_group.search_conditions.create(question: @q_date,operator: '<', values: ['4 years ago'])
+          expect(search_condition.result).to match_array [@participant2]
         end
 
         it 'should return participants that fit search ">" condition' do
           search_condition = @search_condition_group.search_conditions.create(question: @q_date,operator: '>', values: ['4 years ago'])
-          expect(search_condition.result).to match_array [@participant2]
+          expect(search_condition.result).to match_array [@participant1]
+        end
+
+        it 'should return participants that fit search ">=" condition' do
+          search_condition = @search_condition_group.search_conditions.create(question: @q_date,operator: '>', values: ['4 years ago'])
+          expect(search_condition.result).to match_array [@participant1]
         end
 
         it 'should return participants that fit search "between" condition' do
-          search_condition = @search_condition_group.search_conditions.create(question: @q_date,operator: 'between', values: ['4 years ago', '1 years ago'])
+          search_condition = @search_condition_group.search_conditions.create(question: @q_date,operator: 'between', values: ['1 years ago', '4 years ago'])
           expect(search_condition.result).to match_array [@participant2]
         end
       end

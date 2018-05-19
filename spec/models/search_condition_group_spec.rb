@@ -174,4 +174,148 @@ RSpec.describe SearchConditionGroup, type: :model do
       expect(@new_search_condition_group.search_condition_groups.size).to eq @source_search_condition_group.search_condition_groups.size
     end
   end
+
+  describe 'reseting search results' do
+    context 'submitted searches' do
+      it 'allows to reset results for released searches on create' do
+        rs = @participant1.response_sets.create(survey: @survey)
+        rs.responses.create(question: @q_date, text: '12/12/2013')
+        rs2 = @participant2.response_sets.create(survey: @survey)
+        rs2.responses.create(question: @q_date, text: '12/12/2015')
+
+        search_condition1 = @search_condition_group.search_conditions.create( question: @q_date, operator: '>', values: ['12/12/2011'])
+
+        @search.request_data
+        @search.save!
+        expect(@search.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+
+        @search_condition_group.operator = '&'
+        @search_condition_group.save
+
+        search_condition_group = @search_condition_group.search_condition_groups.create
+        search_condition2      = search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
+
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]
+      end
+
+      it 'allows to reset results for released searches on update' do
+        rs = @participant1.response_sets.create(survey: @survey)
+        rs.responses.create(question: @q_date, text: '12/12/2013')
+        rs2 = @participant2.response_sets.create(survey: @survey)
+        rs2.responses.create(question: @q_date, text: '12/12/2015')
+
+        search_condition1 = @search_condition_group.search_conditions.create( question: @q_date, operator: '>', values: ['12/12/2011'])
+        search_condition2 = @search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
+
+        @search.request_data
+        @search.save!
+        expect(@search.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+
+        @search_condition_group.reload
+        @search_condition_group.operator = '&'
+        @search_condition_group.save
+
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]
+      end
+
+      it 'allows to reset results for released searches on destroy' do
+        rs = @participant1.response_sets.create(survey: @survey)
+        rs.responses.create(question: @q_date, text: '12/12/2013')
+        rs2 = @participant2.response_sets.create(survey: @survey)
+        rs2.responses.create(question: @q_date, text: '12/12/2015')
+
+        @search_condition_group.operator = '&'
+        @search_condition_group.save
+
+        search_condition1 = @search_condition_group.search_conditions.create( question: @q_date, operator: '>', values: ['12/12/2011'])
+        search_condition_group = @search_condition_group.search_condition_groups.create
+        search_condition2      = search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
+
+        @search.request_data
+        @search.save!
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]
+
+        puts @search.search_participants.inspect
+        @search_condition_group.reload
+        search_condition_group.reload
+        search_condition_group.destroy
+        puts @search.search_participants.inspect
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+      end
+    end
+
+    context 'released searches' do
+      it 'does not allow to reset results for released searches on create' do
+        rs = @participant1.response_sets.create(survey: @survey)
+        rs.responses.create(question: @q_date, text: '12/12/2013')
+        rs2 = @participant2.response_sets.create(survey: @survey)
+        rs2.responses.create(question: @q_date, text: '12/12/2015')
+
+        search_condition1 = @search_condition_group.search_conditions.create( question: @q_date, operator: '>', values: ['12/12/2011'])
+
+        @search.request_data
+        @search.save!
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+
+        @search.release_data(participant_ids: [@participant1.id])
+        @search.save!
+
+        @search_condition_group.operator = '&'
+        @search_condition_group.save
+
+        search_condition_group = @search_condition_group.search_condition_groups.create
+        search_condition2      = search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
+
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+      end
+
+      it 'does not allow to reset results for released searches on update' do
+        rs = @participant1.response_sets.create(survey: @survey)
+        rs.responses.create(question: @q_date, text: '12/12/2013')
+        rs2 = @participant2.response_sets.create(survey: @survey)
+        rs2.responses.create(question: @q_date, text: '12/12/2015')
+
+        search_condition1 = @search_condition_group.search_conditions.create( question: @q_date, operator: '>', values: ['12/12/2011'])
+        search_condition2 = @search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
+
+        @search.request_data
+        @search.save!
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+
+        @search.release_data(participant_ids: [@participant1.id])
+        @search.save!
+
+        @search_condition_group.reload
+        @search_condition_group.operator = '&'
+        @search_condition_group.save
+
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
+      end
+
+      it 'does not allow to reset results for released searches on destroy' do
+        rs = @participant1.response_sets.create(survey: @survey)
+        rs.responses.create(question: @q_date, text: '12/12/2013')
+        rs2 = @participant2.response_sets.create(survey: @survey)
+        rs2.responses.create(question: @q_date, text: '12/12/2015')
+
+        @search_condition_group.operator = '&'
+        @search_condition_group.save
+
+        search_condition1 = @search_condition_group.search_conditions.create( question: @q_date, operator: '>', values: ['12/12/2011'])
+        search_condition_group = @search_condition_group.search_condition_groups.create
+        search_condition2      = search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
+
+        @search.request_data
+        @search.save!
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]
+
+        @search.release_data(participant_ids: [@participant1.id])
+        @search.save!
+
+        @search_condition_group.reload
+        search_condition_group.reload.destroy
+        expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]
+      end
+    end
+  end
 end

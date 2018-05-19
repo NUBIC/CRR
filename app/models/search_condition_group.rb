@@ -21,6 +21,8 @@ class SearchConditionGroup < ActiveRecord::Base
 
   # Hooks
   before_validation :validate_presence_of_operator
+  after_save        :reset_search_results
+  after_destroy     :reset_search_results
 
   def presence_of_search_or_search_condition_group
     return false if self.search.blank? && self.search_condition_group.blank?
@@ -75,6 +77,14 @@ class SearchConditionGroup < ActiveRecord::Base
     source_record.search_condition_groups.each do |source_search_condition_group|
       search_condition_group = self.search_condition_groups.build
       search_condition_group.copy(source_search_condition_group)
+    end
+  end
+
+  def reset_search_results
+    parent_search = self.get_search
+    if parent_search.data_requested?
+      parent_search.search_participants.destroy_all
+      parent_search.set_search_participants
     end
   end
 end

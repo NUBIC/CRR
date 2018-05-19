@@ -19,8 +19,9 @@ class SearchCondition < ActiveRecord::Base
 
   # Hooks
   after_initialize  :set_search_attributes, unless: :new_record?
-  after_save        :set_search_attributes
+  after_save        :set_search_attributes, :reset_search_results
   before_validation :set_date_values, :cleanup_values
+  after_destroy     :reset_search_results
 
   def set_date_values
     if question && calculated_date_units && question.true_date? && !calculated_date_units.reject(&:blank?).empty? && !calculated_date_numbers.reject(&:blank?).empty?
@@ -151,5 +152,13 @@ class SearchCondition < ActiveRecord::Base
     self.operator     = source_record.operator
     self.question_id  = source_record.question_id
     self.values       = source_record.values
+  end
+
+  def reset_search_results
+    parent_search = self.get_search
+    if parent_search.data_requested?
+      parent_search.search_participants.destroy_all
+      parent_search.set_search_participants
+    end
   end
 end

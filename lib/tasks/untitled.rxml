@@ -1,0 +1,54 @@
+file_name = "#{Rails.root}/tmp/export-#{Date.today.to_s(:db)}.csv"
+CSV.open(file_name, 'w') do |csv|
+  header = [
+    'First Name',
+    'Last Name',
+    'Studies',
+    'Join Date',
+    'Account Email',
+    'Tier 2',
+    'Contact',
+    'Primary Guardian',
+    'Secondary Guardian',
+    'Source',
+  ]
+  adult_survey = Survey.adult_survey
+  child_survey = Survey.child_survey
+  [adult_survey, child_survey].each do |survey|
+    questions = Question.where("response_type != 'none'").joins(:section).where(sections: { survey_id: survey.id }).reorder('sections.display_order, questions.display_order')
+    header.concat(questions.map{|q| "#{survey.name}: #{q.text}"}))
+  end
+  csv << header
+
+  Participant.approved.all.each do |p|
+    row = [
+      p.first_name,
+      p.last_name,
+      p.studies.map(&:irb_number).join('|'),
+      p.created_at.strftime('%m/%d/%Y'),
+      p.account.present? ? p.account.email : '',
+      p.tier_2_surveys.any? ? 'yes' : 'no',
+      p.address,
+      [p.primary_guardian_first_name, p.primary_guardian_last_name, p.primary_guardian_email, p.primary_guardian_phone].join(', '),
+      [p.secondary_guardian_first_name, p.secondary_guardian_last_name, p.secondary_guardian_email, p.secondary_guardian_phone].join(', '),
+      p.hear_about_registry
+    ]
+    [adult_survey, child_survey].each do |survey|
+      p.response_sets.joins(:survey).where(survey_id: survey.id).each do |response_set|
+        questions = Question.where("response_type != 'none'").joins(:section).where(sections: { survey_id: survey.id }).reorder('sections.display_order, questions.display_order')
+        questions.each do |question|
+          if response_set.respond_to?("q_#{question.id}".to_sym)
+            if question.multiple_choice?
+              row << Answer.where(id: response_set.send("q_#{question.id}".to_sym)).map(&:text).join('|')
+            else
+              row << response_set.send("q_#{question.id}".to_sym)
+            end
+          else
+            row << ''
+          end
+        end
+      end
+    end
+    csv << row
+  end
+end

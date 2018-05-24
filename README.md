@@ -144,5 +144,7 @@ We use one-user deployment strategy.
 ```console
   cap staging deploy:setup
   cap staging deploy
-```
 
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.

@@ -10,20 +10,6 @@ dn: ou=people,dc=test,dc=com
 objectClass: organizationalUnit
 ou: people
 
-dn: cn=yab944,ou=people,dc=test,dc=com
-objectClass: inetOrgPerson
-objectClass: authorizations
-objectClass: organizationalPerson
-objectClass: person
-objectClass: top
-sn: yab944
-mail: yab944@test_user.me
-givenname: yab944
-uid: yab944
-cn: yab944
-authorizationRole: blogUser
-userPassword: {SHA}qvTGHdzF6KLavt4PO0gs2a6pQ00=
-
 dn: cn=test_user,ou=people,dc=test,dc=com
 objectClass: inetOrgPerson
 objectClass: authorizations
@@ -35,19 +21,5 @@ mail: test_user@test_user.me
 givenname: test_user
 uid: test_user
 cn: test_user
-authorizationRole: blogUser
-userPassword: {SHA}qvTGHdzF6KLavt4PO0gs2a6pQ00=
-
-dn: cn=other_test_user,ou=people,dc=test,dc=com
-objectClass: inetOrgPerson
-objectClass: authorizations
-objectClass: organizationalPerson
-objectClass: person
-objectClass: top
-sn: other_test_user
-mail: other_test_user@test_user.me
-givenname: other_test_user
-uid: other_test_user
-cn: other_test_user
 authorizationRole: blogUser
 userPassword: {SHA}qvTGHdzF6KLavt4PO0gs2a6pQ00=

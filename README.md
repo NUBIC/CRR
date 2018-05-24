@@ -1,8 +1,6 @@
-== Communication Research Registry Application
+# Communication Research Registry Application
 
-
-Prerequisites
--------------
+## Prerequisites
 
 Application:
 * ruby 2.1.2
@@ -12,10 +10,8 @@ Application:
 Testing:
 * chromedriver
 
-Configuration and Setup
--------------
-
-## Setting up config files
+## Configuration and Setup
+### Set up config files
 create /etc/nubic/db/crr.yml
 
 ```yaml
@@ -42,8 +38,9 @@ cucumber:
   <<: *test
 ```
 
-```yaml
 create /etc/nubic/ldap-crr.yml
+
+```yaml
 
 ## Authorizations
 # Uncomment out the merging for each enviornment that you'd like to include.
@@ -83,7 +80,7 @@ test:
   ssl: false
 ```
 
-## Install bundled gems and setup database
+### Install bundled gems and setup database
 
 ```console
 $ bundle install
@@ -91,7 +88,7 @@ $ bundle exec rake db:create
 $ bundle exec rake db:migrate
 ```
 
-## Local LDAP setup
+### Setup local LDAP
 
 Having local LDAP running is handy for development and testing purposes. Modify 'lib/ldap/base.ldif' to set up a password for a test_user or add more users
 
@@ -106,9 +103,7 @@ To start the LDAP server
 $rake ldap:start
 ``
 
-Database creation
-
-## Create admin user record in the database
+### Create admin user record in the database
 
 ```console
 $ bundle exec rails console
@@ -119,14 +114,12 @@ u.save!
 quit
 ```
 
-Testing
--------------
+## Testing
 ```console
 $ bundle exec rspec
 ```
 
-Deployment
--------------
+## Deployment
 We use one-user deployment strategy.
 
   First-time deployment:
@@ -145,6 +138,3 @@ We use one-user deployment strategy.
   cap staging deploy:setup
   cap staging deploy
 
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.

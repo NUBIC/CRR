@@ -65,7 +65,7 @@ module Admin
                   find("input[name='response_set[q_#{question.id}]']").click # to avoid weird reformatting of the date
                   fill_in(question.text, with: answer_text)
                 elsif question.file_upload?
-                  answer_text  = 'README.rdoc'
+                  answer_text  = 'README.md'
                   attach_file(question.text, Rails.root.join(answer_text))
                 elsif question.pick_many?
                   answer_text  = 'answer 2'

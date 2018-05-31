@@ -26,6 +26,34 @@ RSpec.describe SearchCondition, type: :model do
   it { is_expected.to validate_presence_of :operator }
 
 
+  describe 'validations' do
+    describe 'returning error for values in reversed ordercondition for conditions with "between" operator' do
+      before(:each) do
+      end
+
+      it 'works for calculated date values' do
+        search_condition = @search_condition_group.search_conditions.build(question: @q_date, operator: 'between')
+        search_condition.calculated_date_units    = ['years ago', 'days ago']
+        search_condition.calculated_date_numbers  = [5,4]
+        expect(search_condition).not_to be_valid
+        expect(search_condition.errors.full_messages).to include 'Smaller value should be entered first'
+      end
+
+      it 'works for date values' do
+        search_condition = @search_condition_group.search_conditions.build(question: @q_date, operator: 'between')
+        search_condition.values  = ['12/10/2017', '12/15/2013']
+        expect(search_condition).not_to be_valid
+        expect(search_condition.errors.full_messages).to include 'Smaller value should be entered first'
+      end
+
+      it 'works for numerical values' do
+        search_condition = @search_condition_group.search_conditions.create(question: @q_number, operator: 'between', values: ['10', '09'])
+        expect(search_condition).not_to be_valid
+        expect(search_condition.errors.full_messages).to include 'Smaller value should be entered first'
+      end
+    end
+  end
+
   describe 'methods' do
     describe 'setting date values' do
       before(:each) do
@@ -35,37 +63,37 @@ RSpec.describe SearchCondition, type: :model do
       end
 
       it 'transcribes calculated date values into values' do
-        @search_condition.set_date_values
+        @search_condition.set_values_from_calculated_date_attributes
         expect(@search_condition.values).to match_array(['4 years ago', '5 days ago'])
       end
 
       it 'does not set values if questions is not set' do
         @search_condition.question = nil
-        @search_condition.set_date_values
+        @search_condition.set_values_from_calculated_date_attributes
         expect(@search_condition.values).to be_empty
       end
 
       it 'does not set values if calculated date units are not set' do
         @search_condition.calculated_date_units = nil
-        @search_condition.set_date_values
+        @search_condition.set_values_from_calculated_date_attributes
         expect(@search_condition.values).to be_empty
       end
 
       it 'does not set values if questions is not a date question' do
         @search_condition.question = @q_number
-        @search_condition.set_date_values
+        @search_condition.set_values_from_calculated_date_attributes
         expect(@search_condition.values).to be_empty
       end
 
       it 'does not set values if calculated_date_units are not set to actual values' do
         @search_condition.calculated_date_units = ['', nil]
-        @search_condition.set_date_values
+        @search_condition.set_values_from_calculated_date_attributes
         expect(@search_condition.values).to be_empty
       end
 
       it 'does not set values if calculated_date_numbers are not set to actual values' do
         @search_condition.calculated_date_numbers = [nil, '']
-        @search_condition.set_date_values
+        @search_condition.set_values_from_calculated_date_attributes
         expect(@search_condition.values).to be_empty
       end
     end

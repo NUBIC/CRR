@@ -7,7 +7,7 @@ class SearchCondition < ActiveRecord::Base
 
   # Attributes
   serialize :values, Array
-  attr_accessor :search_values, :calculated_date_units, :calculated_date_numbers, :search_subject, :is_calculated_date
+  attr_accessor :search_values, :calculated_date_units, :calculated_date_numbers, :search_subject
 
   # Associations
   belongs_to :search_condition_group
@@ -16,14 +16,15 @@ class SearchCondition < ActiveRecord::Base
   # Validations
   validates_presence_of  :question, :values, :operator
   validates_inclusion_of :operator, in: ->(record) { operators_by_type(operator_type_for_question(record.question)).map{|o| o[:symbol]}}
+  validate :check_values_order
 
   # Hooks
   after_initialize  :set_search_attributes, unless: :new_record?
   after_save        :set_search_attributes, :reset_search_results
-  before_validation :set_date_values, :cleanup_values
+  before_validation :set_values_from_calculated_date_attributes, :cleanup_values
   after_destroy     :reset_search_results
 
-  def set_date_values
+  def set_values_from_calculated_date_attributes
     if question && calculated_date_units && question.true_date? && !calculated_date_units.reject(&:blank?).empty? && !calculated_date_numbers.reject(&:blank?).empty?
       self.values = []
       calculated_date_units.each_with_index do |calculated_date_unit, i|
@@ -39,6 +40,27 @@ class SearchCondition < ActiveRecord::Base
     operator_type = self.class.operator_type_for_question(question)
     operator_hash = self.class.operators_by_type(operator_type).find{|o| o[:symbol] == operator}
     self.values = [self.values.first] unless (operator_type == LIST_OPERATOR_TYPE) || (operator_hash[:cardinality] && operator_hash[:cardinality] > 1)
+  end
+
+  def check_values_order
+    if self.operator == 'between' && values.any?
+      correct_order = true
+      if question.true_date?
+        if is_calculated_date
+          set_search_attributes
+          correct_order = false if calculated_date_numbers.last.to_i < calculated_date_numbers.first.to_i
+        else
+          correct_order = false if Date.parse(values.last) < Date.parse(values.first)
+        end
+      else
+        correct_order = false if values.last.to_i < values.first.to_i
+      end
+      self.errors.add(:base, 'Smaller value should be entered first') unless correct_order
+    end
+  end
+
+  def is_calculated_date
+    question.true_date? && values.map{|value| m = value.match("#{CALCULATED_DATE_UNITS.values.join('|')}")}.any?
   end
 
   def set_search_attributes
@@ -58,9 +80,7 @@ class SearchCondition < ActiveRecord::Base
     @calculated_date_numbers  = []
     if values.any?
       # this logic assumes that all date values are formatted in the same way - either as a date or as a string representation
-      @is_calculated_date = question.true_date? && values.map{|value| m = value.match("#{CALCULATED_DATE_UNITS.values.join('|')}")}.any?
-
-      if @is_calculated_date
+      if is_calculated_date
         current_date = Date.today
         CALCULATED_DATE_UNITS.each do |method, calculated_date_unit|
           values.each do |value|
@@ -87,7 +107,7 @@ class SearchCondition < ActiveRecord::Base
     participants = Participant.joins(response_sets: :responses).where(responses: {question_id: question.id}, stage: 'approved')
     if operator_type == LIST_OPERATOR_TYPE
       participants = participants.where("#{search_subject} #{operator} (?)", search_values)
-    elsif @is_calculated_date
+    elsif is_calculated_date
       case operator
       when 'between'
         participants = participants.where("#{search_subject} #{operator} ? AND ?", *search_values.reverse)
@@ -117,7 +137,7 @@ class SearchCondition < ActiveRecord::Base
   def display_values
     if question.multiple_choice? and !values.blank?
       display_values = question.answers.where(id: values).map(&:text).join('&nbsp;<small class="muted"><i>or</i></small><br/>').html_safe
-    elsif @is_calculated_date
+    elsif is_calculated_date
       display_values = values.map.with_index{|value, i| "#{value} (#{search_values[i]})"}.join(',<br/>').html_safe
     else
       display_values = values.join(',<br/>').html_safe

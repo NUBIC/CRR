@@ -30,7 +30,7 @@
   :operator_type: number
 
 - :symbol: 'between'
-  :text: 'between'
+  :text: 'between (smaller value first)'
   :unique_identifier: is_between
   :operator_type: number
   :cardinality: 2

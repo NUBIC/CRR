@@ -1,4 +1,4 @@
-class StudyInvolvementStatus < ActiveRecord::Base
+class StudyInvolvementStatus < ApplicationRecord
   # Globals
   # VALID_STATUSES = ['none', 'enrolled', 'declined', 'no contact', 'withdrew', 'excluded', 'completed'].freeze
 

@@ -1,4 +1,4 @@
-class Search < ActiveRecord::Base
+class Search < ApplicationRecord
   # Dependencies
   include AASM
 

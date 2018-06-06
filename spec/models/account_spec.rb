@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Account, type: :model do
-  let(:account) { FactoryGirl.create(:account) }
+  let(:account) { FactoryBot.create(:account) }
 
   it 'creates a new instance given valid attributes' do
     expect(account).not_to be_nil
@@ -14,13 +14,13 @@ RSpec.describe Account, type: :model do
   it { is_expected.to have_many(:participants) }
 
   before(:each) do
-    @p1 = FactoryGirl.create(:participant, stage: :survey, account: account)
-    @p2 = FactoryGirl.create(:participant, stage: :pending_approval, account: account)
-    @p3 = FactoryGirl.create(:participant, stage: :approved, account: account)
-    @p4 = FactoryGirl.create(:participant, stage: :consent, account: account)
-    @p5 = FactoryGirl.create(:participant, stage: :demographics, account: account)
-    @p6 = FactoryGirl.create(:participant, stage: :withdrawn, account: account)
-    @p7 = FactoryGirl.create(:participant, stage: :consent_denied, account: account)
+    @p1 = FactoryBot.create(:participant, stage: :survey, account: account)
+    @p2 = FactoryBot.create(:participant, stage: :pending_approval, account: account)
+    @p3 = FactoryBot.create(:participant, stage: :approved, account: account)
+    @p4 = FactoryBot.create(:participant, stage: :consent, account: account)
+    @p5 = FactoryBot.create(:participant, stage: :demographics, account: account)
+    @p6 = FactoryBot.create(:participant, stage: :withdrawn, account: account)
+    @p7 = FactoryBot.create(:participant, stage: :consent_denied, account: account)
   end
 
   describe '#all_participants' do
@@ -70,22 +70,22 @@ RSpec.describe Account, type: :model do
 
     it 'should be false if participant is proxy participant' do
       account.participants.destroy_all
-      FactoryGirl.create(:account_participant, :participant => FactoryGirl.create(:participant, stage: :survey),
+      FactoryBot.create(:account_participant, :participant => FactoryBot.create(:participant, stage: :survey),
         account: account, proxy: true)
       expect(account.has_self_participant?).to be false
     end
 
     it 'should be false if participant is withdrawn participant' do
       account.participants.destroy_all
-      FactoryGirl.create(:account_participant, :participant => FactoryGirl.create(:participant, stage: :withdrawn), account: account)
+      FactoryBot.create(:account_participant, :participant => FactoryBot.create(:participant, stage: :withdrawn), account: account)
       expect(account.has_self_participant?).to be false
     end
   end
 
   describe '#child_proxy_particpant' do
     it 'should return first participant with child flag true and proxy flag false' do
-      par = FactoryGirl.create(:participant, stage: :survey, child: true)
-      FactoryGirl.create(:account_participant, :participant => par, account: account, proxy: true)
+      par = FactoryBot.create(:participant, stage: :survey, child: true)
+      FactoryBot.create(:account_participant, :participant => par, account: account, proxy: true)
       expect(account.child_proxy_participant).to eq par
     end
 
@@ -100,8 +100,8 @@ RSpec.describe Account, type: :model do
 
   describe '#adult_proxy_particpant' do
     it 'should return first adult participant with child flag false and proxy flag true' do
-      par = FactoryGirl.create(:participant, stage: :survey, child: false)
-      FactoryGirl.create(:account_participant, :participant => @par, account: account, proxy: true)
+      par = FactoryBot.create(:participant, stage: :survey, child: false)
+      FactoryBot.create(:account_participant, :participant => @par, account: account, proxy: true)
       expect(account.adult_proxy_participant).to eq @par
     end
 
@@ -110,8 +110,8 @@ RSpec.describe Account, type: :model do
     end
 
     it 'should be nil if no proxy participants in account' do
-      par = FactoryGirl.create(:participant, stage: :survey, child: false)
-      FactoryGirl.create(:account_participant, :participant => @par, account: account, proxy: false)
+      par = FactoryBot.create(:participant, stage: :survey, child: false)
+      FactoryBot.create(:account_participant, :participant => @par, account: account, proxy: false)
       expect(account.adult_proxy_participant).to be_nil
     end
   end

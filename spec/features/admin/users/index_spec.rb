@@ -32,11 +32,11 @@ module Admin
         include_context 'admin login'
         before(:each) do
           @user          = User.find_by_netid('test_user')
-          @inactive_user = FactoryGirl.create(:user, netid: 'other_test_user')
+          @inactive_user = FactoryBot.create(:user, netid: 'other_test_user')
           @inactive_user.deactivate
           @inactive_user.save!
           (1..3).each do |i|
-            @user.studies << FactoryGirl.create(:study)
+            @user.studies << FactoryBot.create(:study)
           end
         end
 
@@ -83,7 +83,7 @@ module Admin
 
         it 'allows to see a full list of user studies', js: true do
           (1..3).each do |i|
-            @user.studies << FactoryGirl.create(:study)
+            @user.studies << FactoryBot.create(:study)
           end
 
           visit path

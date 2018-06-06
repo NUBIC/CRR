@@ -1,10 +1,10 @@
 # config valid only for Capistrano 3.6.0
 lock '3.6.0'
 
-APP_CONFIG = YAML.load(File.open('config/config.yml'))
+DEPLOY_CONFIG = YAML.load(File.open('config/deploy_config.yml'))
 
-set :application,  APP_CONFIG['application']
-set :repo_url,     APP_CONFIG['repository']
+set :application,  DEPLOY_CONFIG['application']
+set :repo_url,     DEPLOY_CONFIG['repository']
 
 set :rvm_type, :system
 set :rvm_ruby_version, '2.1.2'
@@ -68,9 +68,9 @@ NameVirtualHost *:80
 NameVirtualHost *:443
 
 <VirtualHost *:80>
-  ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
-  ServerAlias #{ APP_CONFIG[ fetch(:stage).to_s ]['server_alias'] }
-  Redirect permanent / https://#{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }/
+  ServerName #{ DEPLOY_CONFIG[ fetch(:stage).to_s ]['server_name'] }
+  ServerAlias #{ DEPLOY_CONFIG[ fetch(:stage).to_s ]['server_alias'] }
+  Redirect permanent / https://#{ DEPLOY_CONFIG[ fetch(:stage).to_s ]['server_name'] }/
 </VirtualHost>
 
 <VirtualHost *:443>
@@ -78,7 +78,7 @@ NameVirtualHost *:443
   PassengerAppEnv #{ fetch(:stage) }
   PassengerRuby /usr/local/rvm/wrappers/ruby-#{ fetch(:rvm_ruby_version) }/ruby
 
-  ServerName #{ APP_CONFIG[ fetch(:stage).to_s ]['server_name'] }
+  ServerName #{ DEPLOY_CONFIG[ fetch(:stage).to_s ]['server_name'] }
 
   SSLEngine On
   SSLCertificateFile /etc/pki/tls/certs/crr_nubic_northwestern_edu_cert.cer

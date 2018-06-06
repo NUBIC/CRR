@@ -4,8 +4,8 @@ RSpec.describe Admin::SearchConditionsController, type: :controller do
   before(:each) do
     login_user
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
-    @study = FactoryGirl.create(:study)
-    @survey       = FactoryGirl.create(:survey, multiple_section: false)
+    @study = FactoryBot.create(:study)
+    @survey       = FactoryBot.create(:survey, multiple_section: false)
     @section      = @survey.sections.first
     @q_pick_many  = @section.questions.create(text: 'test',  response_type: 'pick_many',  is_mandatory: true, code: 'q_many')
     @pm_a1 = @q_pick_many.answers.create(text: 'one')
@@ -29,48 +29,48 @@ RSpec.describe Admin::SearchConditionsController, type: :controller do
 
       describe 'POST create' do
         it 'redirects to dashboard' do
-          post :create, search_condition: @valid_params
+          post :create, params: { search_condition: @valid_params }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :create, search_condition: @valid_params
+          post :create, params: { search_condition: @valid_params }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST update' do
         it 'redirects to dashboard' do
-          post :update, id: @search_condition.id, search_condition: @valid_params
+          post :update, params: { id: @search_condition.id, search_condition: @valid_params }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :update, id: @search_condition.id, search_condition: @valid_params
+          post :update, params: { id: @search_condition.id, search_condition: @valid_params }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST destroy' do
         it 'redirects to dashboard' do
-          post :destroy, id: @search_condition.id
+          post :destroy, params: { id: @search_condition.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :destroy, id: @search_condition.id
+          post :destroy, params: { id: @search_condition.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'GET values' do
         it 'redirects to dashboard' do
-          get :values, id: @search_condition.id
+          get :values, params: { id: @search_condition.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          get :values, id: @search_condition.id
+          get :values, params: { id: @search_condition.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
@@ -87,12 +87,12 @@ RSpec.describe Admin::SearchConditionsController, type: :controller do
         describe 'with valid parameters' do
           it 'creates a search_condition' do
             expect {
-              post :create, search_condition: @valid_params
+              post :create, params: { search_condition: @valid_params }
             }.to change{SearchCondition.count}.by(1)
           end
 
           it 'renders show view' do
-            post :create, search_condition: @valid_params
+            post :create, params: { search_condition: @valid_params }
             expect(response).to render_template('show')
           end
         end
@@ -100,17 +100,17 @@ RSpec.describe Admin::SearchConditionsController, type: :controller do
         describe 'with invalid parameters' do
           it 'does not create a participant' do
             expect {
-              post :create, search_condition: @invalid_params
+              post :create, params: { search_condition: @invalid_params }
             }.not_to change{SearchCondition.count}
           end
 
           it 'renders new view' do
-            post :create, search_condition: @invalid_params
+            post :create, params: { search_condition: @invalid_params }
             expect(response).to render_template('new')
           end
 
           it 'displays error message' do
-            post :create, search_condition: @invalid_params
+            post :create, params: { search_condition: @invalid_params }
             expect(flash['error']).not_to be_nil
           end
         end
@@ -119,14 +119,14 @@ RSpec.describe Admin::SearchConditionsController, type: :controller do
       describe 'POST update' do
         describe 'with valid parameters' do
           it 'renders show view' do
-            post :update, id: @search_condition.id, search_condition: @valid_params
+            post :update, params: { id: @search_condition.id, search_condition: @valid_params }
             expect(response).to render_template('show')
           end
         end
 
         describe 'with invalid parameters' do
           before(:each) do
-            post :update, id: @search_condition.id, search_condition: @invalid_params
+            post :update, params: { id: @search_condition.id, search_condition: @invalid_params }
           end
 
           it 'renders edit view' do
@@ -142,24 +142,24 @@ RSpec.describe Admin::SearchConditionsController, type: :controller do
       describe 'POST destroy' do
         it 'destroys search_condition' do
           expect {
-            post :destroy, id: @search_condition.id
+            post :destroy, params: { id: @search_condition.id }
           }.to change{SearchCondition.count}.by(-1)
         end
 
         it 'redirects to participant page' do
-          post :destroy, id: @search_condition.id
+          post :destroy, params: { id: @search_condition.id }
           expect(response).to redirect_to(controller: :searches, action: :show, id: @search.id)
         end
       end
 
       describe 'GET values' do
         it 'renders values view' do
-          get :values, id: @search_condition.id
+          get :values, params: { id: @search_condition.id }
           expect(response).to render_template('values')
         end
 
         it 'assigns question if requested through params' do
-          get :values, id: @search_condition.id, question_id: @q_pick_many.id
+          get :values, params: { id: @search_condition.id, question_id: @q_pick_many.id }
           expect(assigns(:question)).to eq @q_pick_many
         end
       end

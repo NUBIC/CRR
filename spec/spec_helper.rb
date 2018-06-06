@@ -19,6 +19,7 @@
 require 'faker'
 require 'capybara/rspec'
 require 'simplecov'
+require './lib/setup'
 SimpleCov.start
 
 RSpec.configure do |config|

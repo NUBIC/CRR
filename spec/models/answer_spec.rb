@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Answer, type: :model do
   before(:each) do
-    @survey   = FactoryGirl.create(:survey, multiple_section: true)
+    @survey   = FactoryBot.create(:survey, multiple_section: true)
     @section  = @survey.sections.create(title: 'title')
     @question = @section.questions.create(text: 'hello', response_type: 'pick_many')
   end

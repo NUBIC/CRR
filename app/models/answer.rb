@@ -1,4 +1,4 @@
-class Answer < ActiveRecord::Base
+class Answer < ApplicationRecord
   # Associations
   belongs_to :question
   has_many :responses

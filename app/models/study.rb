@@ -1,4 +1,4 @@
-class Study < ActiveRecord::Base
+class Study < ApplicationRecord
   # Dependencies
   include WithActiveState
 

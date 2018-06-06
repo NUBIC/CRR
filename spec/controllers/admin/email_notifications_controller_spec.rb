@@ -38,60 +38,60 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
 
       describe 'GET show' do
         it 'redirects to dashboard' do
-          get :show, id: @email_notification.id
+          get :show, params: { id: @email_notification.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          get :show, id: @email_notification.id
+          get :show, params: { id: @email_notification.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'GET edit' do
         it 'redirects to dashboard' do
-          get :edit, id: @email_notification.id
+          get :edit, params: { id: @email_notification.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          get :edit, id: @email_notification.id
+          get :edit, params: { id: @email_notification.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST update' do
         it 'redirects to dashboard' do
-          post :update, id: @email_notification.id, email_notification: @valid_params
+          post :update, params: { id: @email_notification.id, email_notification: @valid_params }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :update, id: @email_notification.id, email_notification: @valid_params
+          post :update, params: { id: @email_notification.id, email_notification: @valid_params }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST deactivate' do
         it 'redirects to dashboard' do
-          post :deactivate, id: @email_notification.id
+          post :deactivate, params: { id: @email_notification.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :deactivate, id: @email_notification.id
+          post :deactivate, params: { id: @email_notification.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST activate' do
         it 'redirects to dashboard' do
-          post :activate, id: @email_notification.id
+          post :activate, params: { id: @email_notification.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :activate, id: @email_notification.id
+          post :activate, params: { id: @email_notification.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
@@ -119,7 +119,7 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
 
     describe 'GET show' do
       before(:each) do
-        get :show, id: @email_notification.id
+        get :show, params: { id: @email_notification.id }
       end
 
       it 'renders show template' do
@@ -133,7 +133,7 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
 
     describe 'GET edit' do
       before(:each) do
-        get :edit, id: @email_notification.id
+        get :edit, params: { id: @email_notification.id }
       end
 
       it 'renders edit template' do
@@ -154,12 +154,12 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
         it 'redirects to email notifications page if email notification is inactive' do
           @email_notification.deactivate
           @email_notification.save
-          post :update, id: @email_notification.id, email_notification: @valid_params
+          post :update, params: { id: @email_notification.id, email_notification: @valid_params }
           expect(response).to redirect_to(controller: :email_notifications, action: :index)
         end
 
         it 'redirects to dashboard if email notification is active' do
-          post :update, id: @email_notification.id, email_notification: @valid_params
+          post :update, params: { id: @email_notification.id, email_notification: @valid_params }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
       end
@@ -168,7 +168,7 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
         before(:each) do
           @email_notification.deactivate
           @email_notification.save
-          post :update, id: @email_notification.id, email_notification: @invalid_params
+          post :update, params: { id: @email_notification.id, email_notification: @invalid_params }
         end
 
         it 'redirects to email notifications page' do
@@ -181,14 +181,14 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
       end
 
       it 'it redirects to dashboard if email notification is active and  parameters are invalid' do
-        post :update, id: @email_notification.id, email_notification: @valid_params
+        post :update, params:{ id: @email_notification.id, email_notification: @valid_params }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
       end
     end
 
     describe 'POST deactivate' do
       before(:each) do
-        post :deactivate, id: @email_notification.id
+        post :deactivate, params: { id: @email_notification.id }
       end
 
       it 'redirects to email notifications page' do
@@ -202,7 +202,7 @@ RSpec.describe Admin::EmailNotificationsController, type: :controller do
 
     describe 'POST activate' do
       before(:each) do
-        post :activate, id: @email_notification.id
+        post :activate, params: { id: @email_notification.id }
       end
 
       it 'redirects to email notifications page' do

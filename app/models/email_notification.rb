@@ -1,4 +1,4 @@
-class EmailNotification < ActiveRecord::Base
+class EmailNotification < ApplicationRecord
   # Dependencies
   include WithActiveState
 

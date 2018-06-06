@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Admin::QuestionsController, type: :controller do
   before(:each) do
-    @survey = FactoryGirl.create( :survey, multiple_section: true)
+    @survey = FactoryBot.create( :survey, multiple_section: true)
     @section = @survey.sections.create( title: 'section 1')
     @question = @section.questions.create( text: 'question 1', response_type: 'short_text')
     login_user
@@ -24,25 +24,25 @@ RSpec.describe Admin::QuestionsController, type: :controller do
       end
 
       it 'should deny access to an attempt to create a question by an unauthorized user' do
-        post :create, { question: { section_id: @section.id}}
+        post :create, params: { question: { section_id: @section.id}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to edit a question by an unauthorized user' do
-        post :edit, { id: @question.id }
+        post :edit, params: { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to update a question by an unauthorized user' do
-        post :update, { id: @question.id }
+        post :update, params: { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to delete a question by an unauthorized user' do
-        post :destroy, { id: @question.id }
+        post :destroy, params: { id: @question.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
@@ -62,26 +62,26 @@ RSpec.describe Admin::QuestionsController, type: :controller do
       end
 
       it 'should deny access to an attempt to create a question by an authorized user' do
-        xhr :post, :create, { question: { section_id: @section.id, title: 'a second question'}}
+        post :create, xhr: true, params: { question: { section_id: @section.id, title: 'a second question'}}
         expect(@section.reload.questions.size).to eq 1
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to edit  a question by an authorized user' do
-        get :edit, { id: @question.id}
+        get :edit, params: { id: @question.id}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to update a question by an authorized user' do
-        xhr :put, :update, { id: @question.id, question: { title: 'a second question'}}
+        put :update, xhr: true, params: { id: @question.id, question: { title: 'a second question'}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to delete a question by an authorized user' do
-        xhr :put, :destroy, { id: @question.id, question: { title: 'a second question'}}
+        put :destroy, xhr: true, params: { id: @question.id, question: { title: 'a second question'}}
         expect(@survey.questions.size).to eq 1
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
@@ -90,31 +90,31 @@ RSpec.describe Admin::QuestionsController, type: :controller do
 
     describe 'inactive survey' do
       it 'should allow access to an attempt to create a question by an authorized user' do
-        xhr :post, :create, { question: { section_id: @section.id, text: 'a second question', response_type: 'date'}}
+        post :create, xhr: true, params: { question: { section_id: @section.id, text: 'a second question', response_type: 'date'}}
         expect(response).to render_template('show')
         expect(@section.reload.questions.size).to eq 2
       end
 
       it 'should allow access to edit  a question by an authorized user' do
-        get :edit, { id: @question.id}
+        get :edit, params: { id: @question.id}
         expect(response).to render_template('edit')
       end
 
       it 'should allow access to update a question by an authorized user' do
-        xhr :put, :update, { id: @question.id, question: { text: 'a second question'}}
+        put :update, xhr: true, params: { id: @question.id, question: { text: 'a second question'}}
         expect(response).to render_template('show')
         expect(@question.reload.text).to eq 'a second question'
       end
 
       it 'should allow access to delete a question by an authorized user' do
-        xhr :put, :destroy, { id: @question.id, question: { title: 'a second question'}}
+        put :destroy, xhr: true, params: { id: @question.id, question: { title: 'a second question'}}
         expect(response).to render_template('sections/show')
         expect(@survey.questions.size).to eq 0
       end
     end
 
     it 'should allow access to view a question by an authorized user' do
-      get :show, { id: @question.id}
+      get :show, params: { id: @question.id}
       expect(response).to render_template('show')
     end
   end

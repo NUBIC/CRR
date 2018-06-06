@@ -2,14 +2,14 @@ require 'rails_helper'
 
 RSpec.describe SearchConditionGroup, type: :model do
   before(:each) do
-    @study = FactoryGirl.create(:study)
+    @study = FactoryBot.create(:study)
     @search = @study.searches.create( name: 'test' )
-    @participant1 = FactoryGirl.create(:participant, stage: 'approved')
-    @participant2 = FactoryGirl.create(:participant, stage: 'approved')
-    @participant3 = FactoryGirl.create(:participant, stage: 'approved')
+    @participant1 = FactoryBot.create(:participant, stage: 'approved')
+    @participant2 = FactoryBot.create(:participant, stage: 'approved')
+    @participant3 = FactoryBot.create(:participant, stage: 'approved')
     @search_condition_group = @search.search_condition_group
 
-    @survey       = FactoryGirl.create(:survey, multiple_section: false)
+    @survey       = FactoryBot.create(:survey, multiple_section: false)
     @section      = @survey.sections.first
     @q_number     = @section.questions.create(text: 'test2', response_type: 'number',     is_mandatory: true, code: 'q_number')
     @q_date       = @section.questions.create(text: 'test2', response_type: 'date',       is_mandatory: true)
@@ -235,11 +235,9 @@ RSpec.describe SearchConditionGroup, type: :model do
         @search.save!
         expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]
 
-        puts @search.search_participants.inspect
         @search_condition_group.reload
         search_condition_group.reload
         search_condition_group.destroy
-        puts @search.search_participants.inspect
         expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1, @participant2]
       end
     end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Section, type: :model do
   it 'should not allow more than one section where multiple section is false' do
-    survey = FactoryGirl.create(:survey, multiple_section: false)
+    survey = FactoryBot.create(:survey, multiple_section: false)
     expect(survey.sections.size).to eq 1
 
     survey.reload
@@ -14,7 +14,7 @@ RSpec.describe Section, type: :model do
   end
 
   it 'removes trailing spaces from title' do
-    survey = FactoryGirl.create(:survey, multiple_section: true)
+    survey = FactoryBot.create(:survey, multiple_section: true)
     section = survey.sections.create(title: '  test  ')
     expect(section.title).to eq 'test'
 

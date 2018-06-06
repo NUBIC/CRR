@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2.6'
+gem 'rails', '~> 5.2.0'
 gem 'pg'
 gem 'haml'
 gem 'american_date'
@@ -26,6 +26,7 @@ gem 'roxml'
 gem 'whenever'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'rubyzip'
+gem 'bootsnap'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -46,7 +47,7 @@ end
 
 group :development, :test do
   gem 'database_cleaner'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'rspec-rails'
   gem 'shoulda-matchers'
   gem 'capybara'
@@ -55,6 +56,9 @@ group :development, :test do
   gem 'simplecov', require: false
   gem 'selenium-webdriver'
   gem 'bullet'
+  gem 'listen'
+  gem 'puma'
+  gem 'rails-controller-testing'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes

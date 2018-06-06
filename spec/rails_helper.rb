@@ -9,7 +9,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'spec_helper'
 require 'rspec/rails'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require 'shoulda/matchers'
 require 'capybara-webkit'
 require 'database_cleaner'
@@ -43,13 +43,13 @@ module TestLogins
   def login_user
     @request.env['devise.mapping'] = Devise.mappings[:user]
     user = User.find_by_netid('test_user')
-    user ||= FactoryGirl.create(:user, netid: 'test_user')
+    user ||= FactoryBot.create(:user, netid: 'test_user')
     sign_in user
   end
 end
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.include TestLogins
   config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Devise::Test::ControllerHelpers, type: :view

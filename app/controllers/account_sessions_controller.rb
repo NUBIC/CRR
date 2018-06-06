@@ -15,7 +15,7 @@ class AccountSessionsController < PublicController
   end
 
   def create
-    @account_session = AccountSession.new(params[:account_session])
+    @account_session = AccountSession.new(account_session_params.to_h)
     authorize @account_session
     if @account_session.save
       redirect_to dashboard_path
@@ -29,11 +29,15 @@ class AccountSessionsController < PublicController
     @account_session = AccountSession.find
     authorize @account_session
     @account_session.destroy
-    redirect_to AudiologyRegistry::Application.config.crr_website_url
+    redirect_to Rails.configuration.crr_website_url
   end
 
   def back_to_website
     authorize AccountSession
-    redirect_to current_user ? :public_logout : AudiologyRegistry::Application.config.crr_website_url
+    redirect_to current_user ? :public_logout : Rails.configuration.crr_website_url
+  end
+
+  def account_session_params
+    params.require(:account_session).permit(:email, :password)
   end
 end

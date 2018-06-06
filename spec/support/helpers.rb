@@ -1,7 +1,7 @@
 module Helpers
   def set_surveys
     unless @survey.present?
-      @survey     = FactoryGirl.create(:survey, multiple_section: true)
+      @survey     = FactoryBot.create(:survey, multiple_section: true)
       @section_1  = @survey.sections.create(title: 'section 1')
       @section_2  = @survey.sections.create(title: 'section 2')
       @questions  = []
@@ -19,13 +19,13 @@ module Helpers
 
   def set_results
     unless @participant1.present?
-      @participant1 = FactoryGirl.create(:participant, stage: 'approved')
-      @participant2 = FactoryGirl.create(:participant, stage: 'approved')
+      @participant1 = FactoryBot.create(:participant, stage: 'approved')
+      @participant2 = FactoryBot.create(:participant, stage: 'approved')
       @studies      = []
       2.times do
-        @studies << FactoryGirl.create(:study)
+        @studies << FactoryBot.create(:study)
       end
-      FactoryGirl.create(:study_involvement, participant: @participant1, study: @studies.first)
+      FactoryBot.create(:study_involvement, participant: @participant1, study: @studies.first)
 
       set_surveys unless @survey.present?
 
@@ -35,7 +35,7 @@ module Helpers
       create_search_condition(@question)
 
       40.times do
-        participant = FactoryGirl.create(:participant, stage: 'approved')
+        participant = FactoryBot.create(:participant, stage: 'approved')
         response_set = participant.response_sets.create(survey: @survey)
         create_response(response_set, @question)
       end

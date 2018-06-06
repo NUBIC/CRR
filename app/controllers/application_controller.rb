@@ -35,9 +35,9 @@ class ApplicationController < ActionController::Base
     end
 
     def check_maintenance_mode
-      if Rails.configuration.custom.maintenance_mode
+      if Rails.configuration.maintenance_mode
         unless current_user && current_user.is_a?(User) && current_user.active? && current_user.admin? || current_user.blank? && ['users', 'sessions'].include?(controller_name)
-          render '/public/maintenance.html', layout: false
+          render file: '/public/maintenance.html', layout: false
         end
       end
     end

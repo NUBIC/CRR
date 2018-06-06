@@ -1,4 +1,4 @@
-class Section < ActiveRecord::Base
+class Section < ApplicationRecord
   # Associations
   has_many :questions, dependent: :destroy
   belongs_to :survey

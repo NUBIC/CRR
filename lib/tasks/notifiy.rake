@@ -50,7 +50,7 @@ namespace :notify do
     if suspended_participants.any?
       email = EmailNotification.active.suspended_participants
       if email.present?
-        EmailNotificationsMailer.generic_email(Rails.configuration.custom.app_config['contact_email'], email.content, email.subject).deliver_now!
+        EmailNotificationsMailer.generic_email(Rails.configuration.contact_email, email.content, email.subject).deliver_now!
       end
     end
   end

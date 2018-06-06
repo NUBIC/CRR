@@ -103,7 +103,7 @@ class Admin::SearchesController < Admin::AdminController
 
   def release_data
     authorize @search
-    @search.release_data(nil, release_data_params)
+    @search.release_data(release_data_params)
     if @search.save
       flash['notice'] = 'Participant Data Released.'
       email = EmailNotification.active.batch_released

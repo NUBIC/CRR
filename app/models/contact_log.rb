@@ -1,4 +1,4 @@
-class ContactLog < ActiveRecord::Base
+class ContactLog < ApplicationRecord
   # Globals
   MODES = ['phone', 'email', 'in_person', 'mail'].freeze
 

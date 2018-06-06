@@ -2,13 +2,13 @@ require 'rails_helper'
 
 RSpec.describe SearchCondition, type: :model do
   before(:each) do
-    @study = FactoryGirl.create(:study)
+    @study = FactoryBot.create(:study)
     @search = @study.searches.create( name: 'test' )
     @search_condition_group = @search.search_condition_group
-    @participant1 = FactoryGirl.create(:participant, stage: 'approved')
-    @participant2 = FactoryGirl.create(:participant, stage: 'approved')
+    @participant1 = FactoryBot.create(:participant, stage: 'approved')
+    @participant2 = FactoryBot.create(:participant, stage: 'approved')
 
-    @survey       = FactoryGirl.create(:survey, multiple_section: false)
+    @survey       = FactoryBot.create(:survey, multiple_section: false)
     @section      = @survey.sections.first
     @q_number     = @section.questions.create(text: 'test2', response_type: 'number',     is_mandatory: true, code: 'q_number')
     @q_date       = @section.questions.create(text: 'test2', response_type: 'date',       is_mandatory: true)
@@ -348,7 +348,6 @@ RSpec.describe SearchCondition, type: :model do
 
           @search_condition_group.reload
           @search_condition_group.operator = '&'
-          @search_condition_group.save
           search_condition2 = @search_condition_group.search_conditions.create( question: @q_date, operator: '<', values: ['12/12/2014'])
 
           expect(@search.reload.search_participants.map(&:participant)).to match_array [@participant1]

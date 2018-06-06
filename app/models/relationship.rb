@@ -1,4 +1,4 @@
-class Relationship < ActiveRecord::Base
+class Relationship < ApplicationRecord
   # Globals
   CATEGORIES = ['Sibling or Half sibling', 'Child', 'Parent', 'Guardian', 'Spouse', 'Not Applicable'].freeze
   CATEGORIES_DESTINATION_TRANSLATION = {

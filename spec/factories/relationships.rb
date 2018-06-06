@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :relationship do |r|
     r.category 'Child'
     r.association :origin, factory: :participant

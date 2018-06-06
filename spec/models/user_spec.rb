@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  let(:user){ FactoryGirl.create(:user, netid: 'test_user') }
+  let(:user){ FactoryBot.create(:user, netid: 'test_user') }
 
   subject { user }
   it { is_expected.to have_many(:user_studies) }
@@ -22,8 +22,8 @@ RSpec.describe User, type: :model do
 
     describe 'assigning studies through study tokens' do
       it 'adds studies to a user' do
-        s_1 = FactoryGirl.create(:study)
-        s_2 = FactoryGirl.create(:study)
+        s_1 = FactoryBot.create(:study)
+        s_2 = FactoryBot.create(:study)
         expect(user.studies).to be_empty
 
         user.study_tokens = [s_1.id, s_2.id].join(',')
@@ -31,8 +31,8 @@ RSpec.describe User, type: :model do
       end
 
       it 'removes studies from a user' do
-        s_1 = FactoryGirl.create(:study)
-        s_2 = FactoryGirl.create(:study)
+        s_1 = FactoryBot.create(:study)
+        s_2 = FactoryBot.create(:study)
         user.studies = [s_1, s_2]
         expect(user.studies).to match_array([s_1, s_2])
 
@@ -42,9 +42,9 @@ RSpec.describe User, type: :model do
       end
 
       it 'updates user studies' do
-        s_1 = FactoryGirl.create(:study)
-        s_2 = FactoryGirl.create(:study)
-        s_3 = FactoryGirl.create(:study)
+        s_1 = FactoryBot.create(:study)
+        s_2 = FactoryBot.create(:study)
+        s_3 = FactoryBot.create(:study)
         user.studies = [s_1, s_2]
 
         user.study_tokens = [s_1.id, s_3.id].join(',')
@@ -63,17 +63,17 @@ RSpec.describe User, type: :model do
     end
 
     it 'returns active participant for associated studies' do
-      s_1 = FactoryGirl.create(:study, state: 'active')
-      s_2 = FactoryGirl.create(:study)
-      s_3 = FactoryGirl.create(:study)
+      s_1 = FactoryBot.create(:study, state: 'active')
+      s_2 = FactoryBot.create(:study)
+      s_3 = FactoryBot.create(:study)
       user.studies = [s_1, s_2]
 
-      study_involvement_1 = FactoryGirl.create(:study_involvement, study: s_1, end_date: Date.today + 2.days)
-      study_involvement_2 = FactoryGirl.create(:study_involvement, study: s_2, end_date: Date.today + 2.days)
-      study_involvement_3 = FactoryGirl.create(:study_involvement, study: s_3, end_date: Date.today + 2.days)
-      FactoryGirl.create(:study_involvement, study: s_1)
-      FactoryGirl.create(:study_involvement, study: s_2)
-      FactoryGirl.create(:study_involvement, study: s_3)
+      study_involvement_1 = FactoryBot.create(:study_involvement, study: s_1, end_date: Date.today + 2.days)
+      study_involvement_2 = FactoryBot.create(:study_involvement, study: s_2, end_date: Date.today + 2.days)
+      study_involvement_3 = FactoryBot.create(:study_involvement, study: s_3, end_date: Date.today + 2.days)
+      FactoryBot.create(:study_involvement, study: s_1)
+      FactoryBot.create(:study_involvement, study: s_2)
+      FactoryBot.create(:study_involvement, study: s_3)
 
       expect(user.reload.active_participants).to match_array([study_involvement_1.participant])
     end

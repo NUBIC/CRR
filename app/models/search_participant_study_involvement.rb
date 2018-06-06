@@ -1,4 +1,4 @@
-class SearchParticipantStudyInvolvement < ActiveRecord::Base
+class SearchParticipantStudyInvolvement < ApplicationRecord
   belongs_to :search_participant
   belongs_to :study_involvement
 

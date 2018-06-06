@@ -1,6 +1,6 @@
 require 'csv'
 
-class ResponseSet < ActiveRecord::Base
+class ResponseSet < ApplicationRecord
   # Associations
   has_many :responses, dependent: :destroy
   has_many :answers, through: :responses

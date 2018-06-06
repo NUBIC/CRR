@@ -3,9 +3,9 @@ require 'support/shared_context'
 
 module Admin
   RSpec.describe 'updating a survey', type: :feature do
-    let(:survey)                    { FactoryGirl.create(:survey, multiple_section: false) }
+    let(:survey)                    { FactoryBot.create(:survey, multiple_section: false) }
     let(:section)                   { survey.sections.first }
-    let(:multiple_sections_survey)  { FactoryGirl.create(:survey, multiple_section: true) }
+    let(:multiple_sections_survey)  { FactoryBot.create(:survey, multiple_section: true) }
 
     let(:path)      { admin_survey_path(survey.id) }
 

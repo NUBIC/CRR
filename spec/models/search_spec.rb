@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe Search, type: :model do
-  let(:search) { FactoryGirl.create(:search) }
+  let(:search) { FactoryBot.create(:search) }
   let(:date) { Date.new(2013, 10, 10) }
-  let(:study) { FactoryGirl.create(:study) }
+  let(:study) { FactoryBot.create(:study) }
   it 'creates a new instance given valid attributes' do
     expect(search).not_to be_nil
   end

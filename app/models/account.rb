@@ -1,4 +1,4 @@
-class Account < ActiveRecord::Base
+class Account < ApplicationRecord
   acts_as_authentic do |c|
     c.validate_email_field = false
     c.logged_in_timeout = 10.minutes

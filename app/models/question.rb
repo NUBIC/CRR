@@ -1,4 +1,4 @@
-class Question < ActiveRecord::Base
+class Question < ApplicationRecord
   # Globals
   VALID_RESPONSE_TYPES  = ['pick_one', 'pick_many', 'number', 'short_text', 'long_text', 'date', 'none', 'birth_date', 'file_upload'].freeze
 

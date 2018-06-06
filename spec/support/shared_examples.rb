@@ -687,11 +687,11 @@ RSpec.shared_examples 'shared examples for unreleased requests' do
 
   describe 'changing study' do
     let(:inactive_studies) {
-      (0..3).each{ FactoryGirl.create(:study) }
+      (0..3).each{ FactoryBot.create(:study) }
       Study.inactive
     }
     let(:active_studies) {
-      (0..3).each{ FactoryGirl.create(:study, state: 'active') }
+      (0..3).each{ FactoryBot.create(:study, state: 'active') }
       Study.active
     }
     let(:options) {

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe ResponseSet, type: :model do
   before(:each) do
-    @participant = FactoryGirl.create(:participant)
-    @survey = FactoryGirl.create(:survey, multiple_section: true)
+    @participant = FactoryBot.create(:participant)
+    @survey = FactoryBot.create(:survey, multiple_section: true)
     @section = @survey.sections.create(title: 'test')
 
     @q_date       = @section.questions.create(text: 'test2', response_type: 'date', is_mandatory: true)

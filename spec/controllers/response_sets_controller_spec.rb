@@ -2,11 +2,11 @@ require 'rails_helper'
 
 RSpec.describe ResponseSetsController, type: :controller do
   setup :activate_authlogic
-  let(:account) { FactoryGirl.create(:account) }
-  let(:participant) { FactoryGirl.create(:participant) }
+  let(:account) { FactoryBot.create(:account) }
+  let(:participant) { FactoryBot.create(:participant) }
 
   before(:each) do
-    account_participant = FactoryGirl.create(:account_participant, account: account, participant: participant, proxy: true)
+    account_participant = FactoryBot.create(:account_participant, account: account, participant: participant, proxy: true)
     @survey         = setup_survey('survey')
     @response_set   = participant.response_sets.create(survey: @survey)
     @invalid_params = { survey_id: nil }
@@ -22,12 +22,12 @@ RSpec.describe ResponseSetsController, type: :controller do
 
         it 'creates a response_set' do
           expect {
-            post :create, participant_id: participant.id, response_set: { survey_id: @another_survey.id }
+            post :create, params: { participant_id: participant.id, response_set: { survey_id: @another_survey.id }}
           }.to change{ ResponseSet.count }.by(1)
         end
 
         it 'redirect_to to the edit page' do
-          post :create, participant_id: participant.id, response_set: { survey_id: @another_survey.id }
+          post :create, params: { participant_id: participant.id, response_set: { survey_id: @another_survey.id }}
           expect(response).to redirect_to(controller: :response_sets, action: :edit, id: participant.response_sets.last.id)
         end
       end
@@ -35,12 +35,12 @@ RSpec.describe ResponseSetsController, type: :controller do
       describe 'with invalid parameters' do
         it 'does not create a response_set' do
           expect {
-            post :create, participant_id: participant.id
+            post :create, params: { participant_id: participant.id }
           }.not_to change{ ResponseSet.count }
         end
 
         it 'redirect_to to the enroll page' do
-          post :create, participant_id: participant.id
+          post :create, params: { participant_id: participant.id }
           expect(response).to redirect_to(controller: :participants, action: :enroll, id: participant.id)
         end
       end
@@ -48,19 +48,19 @@ RSpec.describe ResponseSetsController, type: :controller do
 
     describe 'GET show' do
       it 'assigns @survey' do
-        get :show, id: @response_set.id
+        get :show, params: { id: @response_set.id }
         expect(assigns(:survey)).to eq @response_set.survey
       end
 
       it 'renders show template' do
-        get :show, id: @response_set.id
+        get :show, params: { id: @response_set.id }
         expect(response).to render_template('show')
       end
     end
 
     describe 'GET edit' do
       it 'assigns @survey' do
-        get :edit, id: @response_set.id
+        get :edit, params: { id: @response_set.id }
         expect(assigns(:survey)).to eq @response_set.survey
       end
 
@@ -72,23 +72,23 @@ RSpec.describe ResponseSetsController, type: :controller do
         end
 
         it 'as a first section by default' do
-          get :edit, id: @response_set.id
+          get :edit, params: { id: @response_set.id }
           expect(assigns(:section)).to eq @response_set.survey.sections.first
         end
 
         it 'by section_id if provided' do
-          get :edit, {id: @response_set.id, section_id: @section.id}
+          get :edit, params: { id: @response_set.id, section_id: @section.id }
           expect(assigns(:section)).to eq @section
         end
       end
 
       it 'renders edit template' do
-        get :edit, id: @response_set.id
+        get :edit, params: { id: @response_set.id }
         expect(response).to render_template('edit')
       end
 
       it 'responds to xhr edit request' do
-        xhr :get, :edit, id: @response_set.id
+        get :edit, xhr: true, params: { id: @response_set.id }
         expect(response).to render_template('edit')
       end
     end
@@ -96,22 +96,22 @@ RSpec.describe ResponseSetsController, type: :controller do
     describe 'POST update' do
       describe 'with invalid response set parameters' do
         it 'redirects to edit page in html format' do
-          post :update, id: @response_set.id, response_set: @invalid_params
+          post :update, params: { id: @response_set.id, response_set: @invalid_params }
           expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @response_set.id)
         end
 
         it 'assigns errors to flash in html format' do
-          post :update, id: @response_set.id, response_set: @invalid_params
+          post :update, params: { id: @response_set.id, response_set: @invalid_params }
           expect(flash['error']).to match(/Survey can't be blank/)
         end
 
         it 'renders edit page in js format' do
-          xhr :post, :update, id: @response_set.id, response_set: @invalid_params
+          post :update, xhr: true, params: { id: @response_set.id, response_set: @invalid_params }
           expect(response).to render_template('edit')
         end
 
         it 'assigns errors to flash in js format' do
-          xhr :post, :update, id: @response_set.id, response_set: @invalid_params
+          post :update, xhr: true, params: { id: @response_set.id, response_set: @invalid_params }
           expect(flash['error']).to match(/Survey can't be blank/)
         end
 
@@ -122,44 +122,44 @@ RSpec.describe ResponseSetsController, type: :controller do
 
           describe 'if finish parameter is not specified' do
             it 'redirects to edit page in html format' do
-              post :update, id: @response_set.id, response_set: @invalid_params
+              post :update, params: { id: @response_set.id, response_set: @invalid_params }
               expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @response_set.id)
             end
 
             it 'assigns errors to flash in html format' do
-              post :update, id: @response_set.id, response_set: @invalid_params
+              post :update, params: { id: @response_set.id, response_set: @invalid_params }
               expect(flash['error']).to match(/Survey can't be blank/)
             end
 
             it 'renders edit page in js format' do
-              xhr :post, :update, id: @response_set.id, response_set: @invalid_params
+              post :update, xhr: true, params: { id: @response_set.id, response_set: @invalid_params }
               expect(response).to render_template('edit')
             end
 
             it 'assigns errors to flash in js format' do
-              xhr :post, :update, id: @response_set.id, response_set: @invalid_params
+              post :update, xhr: true, params: { id: @response_set.id, response_set: @invalid_params }
               expect(flash['error']).to match(/Survey can't be blank/)
             end
           end
 
           describe 'if finish parameter is specified' do
             it 'redirects to edit page in html format' do
-              post :update, id: @response_set.id, response_set: @invalid_params
+              post :update, params: { id: @response_set.id, response_set: @invalid_params }
               expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @response_set.id)
             end
 
             it 'assigns errors to flash in html format' do
-              post :update, id: @response_set.id, response_set: @invalid_params
+              post :update, params: { id: @response_set.id, response_set: @invalid_params }
               expect(flash['error']).to match(/Survey can't be blank/)
             end
 
             it 'renders edit page in js format' do
-              xhr :post, :update, id: @response_set.id, response_set: @invalid_params
+              post :update, xhr: true, params: { id: @response_set.id, response_set: @invalid_params }
               expect(response).to render_template('edit')
             end
 
             it 'assigns errors to flash in js format' do
-              xhr :post, :update, id: @response_set.id, response_set: @invalid_params
+              post :update, xhr: true, params: { id: @response_set.id, response_set: @invalid_params }
               expect(flash['error']).to match(/Survey can't be blank/)
             end
           end
@@ -168,12 +168,12 @@ RSpec.describe ResponseSetsController, type: :controller do
 
       describe 'with valid response set parameters' do
         it 'redirects to edit page in html format' do
-          post :update, id: @response_set.id, response_set: @valid_params
+          post :update, params: { id: @response_set.id, response_set: @valid_params }
           expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @response_set.id)
         end
 
         it 'renders edit page in js format' do
-          xhr :post, :update, id: @response_set.id, response_set: @valid_params
+          post :update, xhr: true, params: { id: @response_set.id, response_set: @valid_params }
           expect(response).to render_template('edit')
         end
 
@@ -184,19 +184,19 @@ RSpec.describe ResponseSetsController, type: :controller do
 
           describe 'if finish parameter is not specified' do
             it 'redirects to edit page in html format' do
-              post :update, id: @response_set.id, response_set: @valid_params
+              post :update, params: { id: @response_set.id, response_set: @valid_params }
               expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @response_set.id)
             end
 
             it 'renders edit page in js format' do
-              xhr :post, :update, id: @response_set.id, response_set: @valid_params
+              post :update, xhr: true, params: { id: @response_set.id, response_set: @valid_params }
               expect(response).to render_template('edit')
             end
           end
 
           describe 'if finish parameter is specified' do
             it 'redirects to dashboard in html format' do
-              post :update, id: @response_set.id, response_set: @valid_params, button: 'finish'
+              post :update, params: { id: @response_set.id, response_set: @valid_params, button: 'finish' }
               expect(response).to redirect_to("/dashboard?participant_id=#{participant.id}")
             end
           end
@@ -208,59 +208,59 @@ RSpec.describe ResponseSetsController, type: :controller do
 
   describe 'unauthorized access' do
     before(:each) do
-      AccountSession.create(FactoryGirl.create(:account, email: 'other@test.con'))
+      AccountSession.create(FactoryBot.create(:account, email: 'other@test.con'))
     end
 
     describe 'POST create' do
       it 'does not create a response_set' do
         expect {
-          post :create, participant_id: participant.id
+          post :create, params: { participant_id: participant.id }
         }.not_to change{ ResponseSet.count }
       end
 
       it 'redirect_to to the logout page' do
-        post :create, participant_id: participant.id
+        post :create, params: { participant_id: participant.id }
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
 
       it 'displays "Access Denied" flash message' do
-        post :create, participant_id: participant.id
+        post :create, params: { participant_id: participant.id }
         expect(flash['error']).to eq 'Access Denied'
       end
     end
 
     describe 'GET show' do
       it 'redirect_to to the logout page' do
-        get :show, id: @response_set.id
+        get :show, params: { id: @response_set.id }
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
 
       it 'displays "Access Denied" flash message' do
-        get :show, id: @response_set.id
+        get :show, params: { id: @response_set.id }
         expect(flash['error']).to eq 'Access Denied'
       end
     end
 
     describe 'GET edit' do
       it 'redirect_to to the logout page' do
-        get :edit, id: @response_set.id
+        get :edit, params: { id: @response_set.id }
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
 
       it 'displays "Access Denied" flash message' do
-        get :edit, id: @response_set.id
+        get :edit, params: { id: @response_set.id }
         expect(flash['error']).to eq 'Access Denied'
       end
     end
 
     describe 'POST update' do
       it 'redirect_to to the logout page' do
-        post :update, id: @response_set.id
+        post :update, params: { id: @response_set.id }
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
 
       it 'displays "Access Denied" flash message' do
-        post :update, id: @response_set.id
+        post :update, params: { id: @response_set.id }
         expect(flash['error']).to eq 'Access Denied'
       end
     end
@@ -268,7 +268,7 @@ RSpec.describe ResponseSetsController, type: :controller do
 
   private
     def setup_survey(code)
-      survey = FactoryGirl.create(:survey, code: code, multiple_section: false)
+      survey = FactoryBot.create(:survey, code: code, multiple_section: false)
       survey.sections.first.questions.create(text: 'question 1', response_type: 'date')
       survey.state = 'active'
       survey.save

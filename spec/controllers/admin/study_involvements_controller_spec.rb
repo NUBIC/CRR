@@ -4,10 +4,10 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
   before(:each) do
     login_user
     allow(controller.current_user).to receive(:has_system_access?).and_return(true)
-    @participant        = FactoryGirl.create(:participant, stage: 'approved')
-    @study              = FactoryGirl.create(:study)
+    @participant        = FactoryBot.create(:participant, stage: 'approved')
+    @study              = FactoryBot.create(:study)
     @params             = { participant_id: @participant.id, study_id: @study.id, start_date: Date.today, end_date: Date.tomorrow, study_involvement_status_attributes: { name: StudyInvolvementStatus.valid_statuses.sample[:name] }}
-    @study_involvement  = FactoryGirl.create(:study_involvement)
+    @study_involvement  = FactoryBot.create(:study_involvement)
   end
 
   describe 'unauthorized access' do
@@ -26,35 +26,35 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
 
       describe 'GET new' do
         before(:each) do
-          get :new, participant_id: @participant.id
+          get :new, params: { participant_id: @participant.id }
         end
         include_examples 'unauthorized access: admin controller'
       end
 
       describe 'POST create' do
         before(:each) do
-          post :create, study_involvement: @params
+          post :create, params: { study_involvement: @params }
         end
         include_examples 'unauthorized access: admin controller'
       end
 
       describe 'GET edit' do
         before(:each) do
-          get :edit, id: @study_involvement.id
+          get :edit, params: { id: @study_involvement.id }
         end
         include_examples 'unauthorized access: admin controller'
       end
 
       describe 'POST update' do
         before(:each) do
-          post :update, id: @study_involvement.id, study_involvement: @params
+          post :update, params: { id: @study_involvement.id, study_involvement: @params }
         end
         include_examples 'unauthorized access: admin controller'
       end
 
       describe 'POST destroy' do
         before(:each) do
-          post :destroy, id: @study_involvement.id
+          post :destroy, params: { id: @study_involvement.id }
         end
         include_examples 'unauthorized access: admin controller'
       end
@@ -68,7 +68,7 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
 
     describe 'GET new' do
       before(:each) do
-        get :new, participant_id: @participant.id
+        get :new, params: { participant_id: @participant.id }
       end
 
       it 'renders new template' do
@@ -89,14 +89,14 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
       describe 'with valid parameters' do
         it 'creates a study_involvement' do
           expect {
-            post :create, study_involvement: @params
+            post :create, params: { study_involvement: @params }
           }.to change{StudyInvolvement.count}.by(1)
         end
 
         describe 'creating a study_involvement_status' do
           it 'creates a study_involvement_status with valid params' do
             expect {
-              post :create, study_involvement: @params
+              post :create, params: { study_involvement: @params }
             }.to change{StudyInvolvementStatus.count}.by(1)
           end
 
@@ -107,25 +107,25 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
 
             it 'does not create a study_involvement_status' do
               expect {
-                post :create, study_involvement: @params
+                post :create, params: { study_involvement: @params }
               }.not_to change{StudyInvolvementStatus.count}
             end
 
             it 'creates a study_involvement' do
               expect {
-                post :create, study_involvement: @params
+                post :create, params: { study_involvement: @params }
               }.to change{StudyInvolvement.count}.by(1)
             end
 
             it 'does not raise an error' do
-              post :create, study_involvement: @params
+              post :create, params: { study_involvement: @params }
               expect(flash['error']).to be_nil
             end
           end
         end
 
         it 'redirects to participant page' do
-          post :create, study_involvement: @params
+          post :create, params: { study_involvement: @params }
           expect(response).to redirect_to(controller: :participants, action: :show, id: @participant.id)
         end
       end
@@ -133,12 +133,12 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
       describe 'with invalid parameters' do
         before(:each) do
           allow_any_instance_of(StudyInvolvement).to receive(:save).and_return(false)
-          post :create, study_involvement: @params
+          post :create, params: { study_involvement: @params }
         end
 
         it 'does not create a participant' do
           expect {
-            post :create, study_involvement: @params
+            post :create, params: { study_involvement: @params }
           }.not_to change{StudyInvolvement.count}
         end
 
@@ -154,7 +154,7 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
 
     describe 'GET edit' do
       before(:each) do
-        get :edit, id: @study_involvement.id
+        get :edit, params: { id: @study_involvement.id }
       end
 
       it 'renders edit template' do
@@ -173,7 +173,7 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
       it 'uses study involvement state if available' do
         study_involvement_status = @study_involvement.build_study_involvement_status(name: StudyInvolvementStatus.valid_statuses.sample[:name])
         study_involvement_status.save!
-        get :edit, id: @study_involvement.id
+        get :edit, params: { id: @study_involvement.id }
         expect(assigns(:study_involvement).study_involvement_status).to eq study_involvement_status
       end
     end
@@ -181,7 +181,7 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
     describe 'POST update' do
       describe 'with valid parameters' do
         it 'redirects to participant page' do
-          post :update, id: @study_involvement.id, study_involvement: @params
+          post :update, params: { id: @study_involvement.id, study_involvement: @params }
           expect(response).to redirect_to(controller: :participants, action: :show, id: @participant.id)
         end
       end
@@ -189,7 +189,7 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
       describe 'with invalid parameters' do
         before(:each) do
           allow_any_instance_of(StudyInvolvement).to receive(:save).and_return(false)
-          post :update, id: @study_involvement.id, study_involvement: @params
+          post :update, params: { id: @study_involvement.id, study_involvement: @params }
         end
 
         it 'redirects to edit involvement page' do
@@ -205,12 +205,12 @@ RSpec.describe Admin::StudyInvolvementsController, type: :controller do
     describe 'POST destroy' do
       it 'destroys study_involvement' do
         expect {
-          post :destroy, id: @study_involvement.id
+          post :destroy, params: { id: @study_involvement.id }
         }.to change{StudyInvolvement.count}.by(-1)
       end
 
       it 'redirects to participant page' do
-        post :destroy, id: @study_involvement.id
+        post :destroy, params: { id: @study_involvement.id }
         expect(response).to redirect_to(controller: :participants, action: :show, id: @study_involvement.participant.id)
       end
     end

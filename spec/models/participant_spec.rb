@@ -625,7 +625,7 @@ RSpec.describe Participant, type: :model do
         allow(participant).to receive(:birthdate).and_return((date - 5.years).to_s)
         expect(participant.age).to eq 5
 
-        allow(participant).to receive(:birthdate).and_return((date + 1.day - 5.years).to_s)
+        allow(participant).to receive(:birthdate).and_return((date + 3.days - 5.years).to_s)
         expect(participant.age).to eq 4
       end
 

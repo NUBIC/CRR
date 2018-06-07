@@ -5,8 +5,16 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def index
     authorize Participant
-    participants = Participant.includes(:account, :origin_relationships, :destination_relationships, study_involvements: :study)
-    @participants = params[:state].blank? ? participants.all_participants : participants.by_stage(params[:state])
+    respond_to do |format|
+      format.html do
+        participants = Participant.includes(
+          :account,
+          response_sets: { survey: :sections},
+          study_involvements: [:study_involvement_status, :study]
+        )
+        @participants = params[:state].blank? ? participants.all_participants : participants.by_stage(params[:state])
+      end
+    end
   end
 
   def new

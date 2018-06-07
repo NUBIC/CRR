@@ -7,7 +7,7 @@ class Participant < ApplicationRecord
   has_many :surveys, through: :response_sets
   has_many :contact_logs, dependent: :destroy
   has_many :study_involvements, -> { order('end_date DESC') }, dependent: :destroy
-  has_many :origin_relationships, class_name: 'Relationship', foreign_key: 'origin_id', dependent: :destroy
+  has_many :origin_relationships,      class_name: 'Relationship', foreign_key: 'origin_id',      dependent: :destroy
   has_many :destination_relationships, class_name: 'Relationship', foreign_key: 'destination_id', dependent: :destroy
   has_many :consent_signatures, dependent: :destroy
   has_many :studies, through: :study_involvements
@@ -85,7 +85,7 @@ class Participant < ApplicationRecord
   end
 
   def has_relationships?
-    relationships.size > 0
+    origin_relationships.size > 0 || destination_relationships.size > 0
   end
 
   def has_followup_survey?
@@ -148,7 +148,11 @@ class Participant < ApplicationRecord
   end
 
   def tier_2_surveys
-    response_sets.joins(:survey).where(surveys: { tier_2: true })
+    if response_sets.loaded?
+      response_sets.select{|r| r.survey.tier_2 }
+    else
+      response_sets.includes(:survey).where(surveys: { tier_2: true })
+    end
   end
 
   def recent_response_set

@@ -7,7 +7,7 @@ set :application,  DEPLOY_CONFIG['application']
 set :repo_url,     DEPLOY_CONFIG['repository']
 
 set :rvm_type, :system
-set :rvm_ruby_version, '2.1.2'
+set :rvm_ruby_version, '2.5.1'
 
 # Default branch is :master
 ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call

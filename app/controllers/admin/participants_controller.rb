@@ -1,3 +1,5 @@
+require './lib/csv_exporter/participant'
+
 class Admin::ParticipantsController < Admin::AdminController
   before_action :set_participant, only: [
     :show, :edit, :update, :enroll, :consent, :consent_signature, :withdraw, :verify, :suspend
@@ -13,6 +15,21 @@ class Admin::ParticipantsController < Admin::AdminController
           study_involvements: [:study_involvement_status, :study]
         )
         @participants = params[:state].blank? ? participants.all_participants : participants.by_stage(params[:state])
+      end
+      format.csv do
+        participants = Participant.approved
+        filename = "crr_approved_participants_#{Date.today.strftime('%m_%d_%Y')}"
+        response.headers['Content-Type']              = 'text/csv'
+        response.headers['Content-Disposition']       = "attachment; filename=\"#{filename}.csv\""
+        response.headers['Content-Transfer-Encoding'] = 'binary'
+        response.headers['Last-Modified']             = Time.now.ctime.to_s
+        self.response_body = CSVExporter::Participant.new(
+          participants: participants,
+          participant_export_params:  participant_export_params,
+          survey_export_params:       survey_export_params.to_h,
+          section_export_params:      section_export_params.to_h,
+          question_export_params:     question_export_params.to_h
+        )
       end
     end
   end
@@ -63,7 +80,7 @@ class Admin::ParticipantsController < Admin::AdminController
 
   def global
     authorize Participant
-    @participants = Participant.all.reject{|par| par.inactive?}
+    @participants = Participant.includes(:origin_relationships, :destination_relationships, :account).where.not(stage: Participant::INACTIVE_STAGES)
   end
 
   def enroll
@@ -111,6 +128,10 @@ class Admin::ParticipantsController < Admin::AdminController
     end
   end
 
+  def export
+    authorize Participant
+  end
+
   private
     def set_participant
       @participant = Participant.find(params[:id])
@@ -134,5 +155,32 @@ class Admin::ParticipantsController < Admin::AdminController
     def create_and_redirect_response_set(participant)
       response_set = participant.create_response_set(participant.child? ? Survey.child_survey : Survey.adult_survey)
       redirect_to(edit_admin_response_set_path(response_set))
+    end
+
+    def participant_export_params
+      params.require(:participant).permit(
+        :id,
+        :first_name,
+        :last_name,
+        :studies,
+        :join_date,
+        :account_email,
+        :tier_2,
+        :contact_information,
+        :source,
+        :relationships
+      )
+    end
+
+    def survey_export_params
+      params.fetch(:survey, {}).permit(id: [])
+    end
+
+    def section_export_params
+      params.fetch(:section, {}).permit(id: [])
+    end
+
+    def question_export_params
+      params.fetch(:question, {}).permit(id: [])
     end
 end

@@ -34,6 +34,18 @@ class ResponseSet < ApplicationRecord
         end
       end
 
+      self.send(:define_singleton_method, "q_#{q.id}_string".to_sym) do
+        if q.pick_many?
+          return responses.collect{|res| res.answer.text if res.question_id.eql?(q.id)}.compact.join('|')
+        elsif q.pick_one?
+          r = responses.detect{|response| response.question_id.eql?(q.id)}
+          return r.nil? ? nil : r.answer.text
+        else
+          r = responses.detect{|response| response.question_id.eql?(q.id)}
+          return r.nil? ? '' : r.to_s
+        end
+      end
+
       self.send(:define_singleton_method, "q_#{q.id}=".to_sym) do |args|
         if q.pick_many?
           args.reject!{|a| a.empty?}

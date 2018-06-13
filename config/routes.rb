@@ -68,6 +68,7 @@ Rails.application.routes.draw do
       collection do
         get :search
         get :global
+        get :export
       end
       member do
         get   :enroll
@@ -145,6 +146,9 @@ Rails.application.routes.draw do
         patch :activate
         patch :deactivate
         get   :preview
+      end
+      collection do
+        get :nodes
       end
     end
 

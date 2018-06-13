@@ -86,6 +86,24 @@ class Admin::SurveysController < Admin::AdminController
     end
   end
 
+  def nodes
+    authorize Survey
+    respond_to do |format|
+      format.json do
+        if params[:survey_id]
+          nodes = Section.joins(:survey).where(surveys: { id: params[:survey_id]})
+        elsif params[:section_id]
+          nodes = Question.real.joins(:section).where(sections: { id: params[:section_id]})
+        else
+          nodes = Survey.all
+        end
+        respond_to do |format|
+          format.json { render json: nodes.to_json(only: [], methods: [:node_unique_id, :node_parent, :has_children, :node_text, :id, :node_type]) }
+        end
+      end
+    end
+  end
+
   private
     def set_survey
       @survey = Survey.find(params[:id])

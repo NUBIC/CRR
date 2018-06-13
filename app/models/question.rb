@@ -43,9 +43,9 @@ class Question < ApplicationRecord
   after_initialize  :default_args
 
   # Scopes
-  default_scope {order('display_order ASC')}
-  scope :real, -> { where.not(response_type: 'none') }
-  scope :not_file, -> { where.not(response_type: 'file_upload') }
+  default_scope {order('questions.display_order ASC')}
+  scope :real,        -> { where.not(response_type: 'none') }
+  scope :not_file,    -> { where.not(response_type: 'file_upload') }
 
   def self.search(param)
     unscoped.joins(section: :survey).where('text ilike ? OR surveys.title ilike ? OR sections.title ilike ?', "%#{param}%", "%#{param}%", "%#{param}%").real.order('surveys.title, questions.display_order')
@@ -101,6 +101,10 @@ class Question < ApplicationRecord
     response_type.eql?('file_upload')
   end
 
+  def text?
+    long_text? || short_text?
+  end
+
   def search_display
     "#{survey_title} - #{section_title} - #{text}"
   end
@@ -122,10 +126,43 @@ class Question < ApplicationRecord
       '[date]'
     elsif number?
       '[number]'
-    elsif long_text? || short_text?
+    elsif text?
       '[free text]'
     elsif multiple_choice?
       answers.map(&:text).join('<br/>').html_safe
+    end
+  end
+
+  # methods to allow for custom JSON generation
+  def node_type
+    self.class.name.parameterize
+  end
+
+  def node_text
+    self.text
+  end
+
+  def node_unique_id
+    "#{self.node_type}_#{self.id}".parameterize
+  end
+
+  def has_children
+    false
+  end
+
+  def node_parent
+    "#{self.section.class.name}_#{self.section.id}".parameterize
+  end
+
+  def search_subject
+    if multiple_choice?
+      'answer_id'
+    elsif number?
+      'text::decimal'
+    elsif true_date?
+      'text::date'
+    elsif text?
+      'lower(text)'
     end
   end
 

@@ -55,6 +55,10 @@ class ParticipantPolicy < ApplicationPolicy
     can_manage?
   end
 
+  def export?
+    can_manage?
+  end
+
   private
     def is_owner?
       is_public_user? && user == record.account

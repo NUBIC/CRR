@@ -28,6 +28,27 @@ class Section < ApplicationRecord
     return full_list.flatten.uniq.compact
   end
 
+  # methods to allow for custom JSON generation
+  def node_type
+    self.class.name.parameterize
+  end
+
+  def node_text
+    self.title
+  end
+
+  def node_unique_id
+    "#{self.node_type}_#{self.id}".parameterize
+  end
+
+  def has_children
+    true
+  end
+
+  def node_parent
+    "#{self.survey.class.name}_#{self.survey.id}".parameterize
+  end
+
   private
     def remove_trailing_spaces
       self.title = self.title.strip if self.title.present?

@@ -1,0 +1,39 @@
+%h4
+  Export data
+
+#export
+  = form_tag admin_participants_path(format: :csv), method: :get do
+    .row-fluid
+      .span12
+        %b Participant Data
+    .row-fluid
+      .span12.participant-export-options
+        %ul
+          %li{ data: { jstree: '{ "selected" : true, "disabled" : true }', type: 'participant', id: 'id' }}
+            ID
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'first_name' }}
+            First name
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'last_name' }}
+            Last name
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'studies' }}
+            Studies
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'join_date' }}
+            Join date
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'account_email' }}
+            Account email
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'tier_2' }}
+            Tier 2
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'contact_information' }}
+            Contact information
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'source' }}
+            Source
+          %li{ data: { jstree: '{ "selected" : true }', type: 'participant', id: 'relationships' }}
+            Relationships
+    .row-fluid
+      .span12
+        %b Surveys
+    .row-fluid
+      .span12.survey-export-options{ data: { url: nodes_admin_surveys_path(format: :json)}}
+    .row-fluid
+      .span12
+        = button_tag 'Export', id: 'export-data', class: 'btn btn-success export-data'

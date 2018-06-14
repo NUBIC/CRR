@@ -76,6 +76,8 @@
             = link_to 'Manage Participants', global_admin_participants_path
           %li
             = link_to "Manage Email Notifications", admin_email_notifications_path
+          %li
+            = link_to "Export participants", export_admin_participants_path
 
     %li.dropdown
       = link_to '#', class: 'dropdown-toggle', data: { toggle: 'dropdown'} do
@@ -84,5 +86,3 @@
       %ul.dropdown-menu
         %li
           = link_to 'Logout', destroy_user_session_path, method: :delete
-
-

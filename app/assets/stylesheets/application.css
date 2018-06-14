@@ -19,7 +19,7 @@
  *= require token-input-facebook
  *= require token-input
  *= require validate
- *= require jstree.min
+ *= require jstree
  *= require nu
  *= require search
  *= require email_notification

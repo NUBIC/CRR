@@ -1,5 +1,5 @@
 # Communication Research Registry Application
-[Communication Research Registry Software]](https://commresearchregistry.soc.northwestern.edu/for-developers/) - Additional information for developers
+[Communication Research Registry Software](https://commresearchregistry.soc.northwestern.edu/for-developers/) - Additional information for developers
 
 ## Prerequisites
 

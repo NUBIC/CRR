@@ -1,4 +1,5 @@
 # Communication Research Registry Application
+[Communication Research Registry Software]](https://commresearchregistry.soc.northwestern.edu/for-developers/) - Additional information for developers
 
 ## Prerequisites
 
@@ -137,4 +138,3 @@ We use one-user deployment strategy.
 ```console
   cap staging deploy:setup
   cap staging deploy
-

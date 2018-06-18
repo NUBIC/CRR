@@ -98,4 +98,3 @@ class Survey < ApplicationRecord
       self.deactivate if self.state.blank?
     end
 end
-

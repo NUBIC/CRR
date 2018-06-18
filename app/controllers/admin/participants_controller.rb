@@ -25,7 +25,7 @@ class Admin::ParticipantsController < Admin::AdminController
         response.headers['Last-Modified']             = Time.now.ctime.to_s
         self.response_body = CSVExporter::Participant.new(
           participants: participants,
-          participant_export_params:  participant_export_params,
+          participant_export_params:  participant_export_params.to_h,
           survey_export_params:       survey_export_params.to_h,
           section_export_params:      section_export_params.to_h,
           question_export_params:     question_export_params.to_h

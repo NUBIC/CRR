@@ -2,38 +2,28 @@ require 'csv'
 
 module CSVExporter
   class Participant
-    attr_accessor :participants, :participant_selected_fields,
+    attr_accessor :participants, :participant_export_params,
                   :question_export_params, :section_export_params,
-                  :survey_export_params, :selected_questions, :selected_surveys,
+                  :survey_export_params, :selected_questions,
                   :participant_fields, :survey_fields
 
     def initialize(options={})
-      raise 'Participants need to be provided' unless options[:participants].present?
-      @participants                 = options[:participants]
-      @participant_selected_fields  = options[:participant_export_params]
-      @question_export_params       = options[:question_export_params]
-      @section_export_params        = options[:section_export_params]
-      @survey_export_params         = options[:survey_export_params]
-      @selected_questions           = get_selected_questions
-      @selected_surveys             = get_selected_surveys
-      @participant_fields           = get_participant_fields
-      @survey_fields                = get_survey_fields
-    end
+      raise 'Participants need to be provided'                            unless options[:participants].present?
+      raise 'At least one participant export field needs to be selected'  unless options[:participant_export_params].present?
+      @participants               = options[:participants]
+      @participant_fields         = get_participant_fields
+      @participant_export_params  = options[:participant_export_params]
 
-    def get_selected_questions
-      all_questions = Question.real.includes(section: :survey)
-      questions_by_survey  = all_questions.where(sections: { survey_id: survey_export_params[:id]})
-      questions_by_section = all_questions.where(section_id: section_export_params[:id])
-      questions_by_id      = all_questions.where(id: question_export_params[:id])
-      questions_by_survey.or(questions_by_section).or(questions_by_id).reorder('surveys.state ASC', 'surveys.created_at DESC', 'sections.display_order', 'questions.display_order')
-    end
-
-    def get_selected_surveys
-      all_surveys   = Survey.includes(sections: :questions)
-      surveys_by_id       = all_surveys.where(id: survey_export_params.to_h[:id])
-      surveys_by_section  = all_surveys.where(sections: { section_id: section_export_params.to_h[:id] })
-      surveys_by_question = all_surveys.where(sections: { questions: { question_id: section_export_params.to_h[:id] }})
-      surveys_by_id.or(surveys_by_section).or(surveys_by_question)
+      unknown_participant_fields  = @participant_export_params.keys - @participant_fields.keys
+      raise "Unknown participant export field(s): #{unknown_participant_fields.join(', ')}" if unknown_participant_fields.any?
+      options[:question_export_params] ||= {}
+      options[:section_export_params]  ||= {}
+      options[:survey_export_params]   ||= {}
+      @question_export_params           = options[:question_export_params]
+      @section_export_params            = options[:section_export_params]
+      @survey_export_params             = options[:survey_export_params]
+      @selected_questions               = get_selected_questions
+      @survey_fields                    = get_survey_fields
     end
 
     def get_participant_fields(record = nil)
@@ -81,33 +71,41 @@ module CSVExporter
       }
     end
 
+    def get_selected_questions
+      all_questions = Question.real.includes(section: :survey)
+      questions_by_survey  = all_questions.where(sections: { survey_id: survey_export_params[:id]})
+      questions_by_section = all_questions.where(section_id: section_export_params[:id])
+      questions_by_id      = all_questions.where(id: question_export_params[:id])
+      questions_by_survey.or(questions_by_section).or(questions_by_id).reorder('surveys.state ASC', 'surveys.created_at DESC', 'sections.display_order', 'questions.display_order')
+    end
+
     def get_survey_fields(record = nil)
       fields_hash = {}
       @selected_questions.pluck('surveys.title', 'sections.title', 'questions.text', 'questions.id').map do |q|
         q_id = q.pop
-        fields_hash[q_id] = { label: q.join(':'), method: ->(record){ record.send("q_#{q_id}_string".to_sym) if record }}
+        fields_hash[q_id] = { label: q.join(': '), method: ->(record){ record.send("q_#{q_id}_string".to_sym) if record }}
       end
       fields_hash
     end
 
     def each(&block)
-      how_long = Benchmark.measure do
+      # how_long = Benchmark.measure do
         headers = participant_headers + survey_headers
         yield CSV.generate_line(headers)
 
         @participants.includes(:studies, :account, response_sets: [survey: { sections: :questions }, responses: [:question, :answer]]).find_in_batches do |group|
           group.each do |participant|
             data = participant_data(participant)
-            data.push(*survey_data(participant)) if @selected_surveys
+            data.push(*survey_data(participant)) if @selected_questions
             yield CSV.generate_line(data)
           end
         end
-      end
-      Rails.logger.info "Little my says, it took #{how_long}"
+      # end
+      # Rails.logger.info "Little my says, it took #{how_long}"
     end
 
     def participant_headers
-      participant_fields.select{|k,v| participant_selected_fields.has_key?(k)}.map{|k,v| v[:label]}
+      participant_fields.select{|k,v| participant_export_params.has_key?(k)}.map{|k,v| v[:label]}
     end
 
     def survey_headers
@@ -115,7 +113,7 @@ module CSVExporter
     end
 
     def participant_data(participant)
-      participant_fields.select{|k,v| participant_selected_fields.has_key?(k)}.map{|k, v| v[:method].call(participant)}
+      participant_fields.select{|k,v| participant_export_params.has_key?(k)}.map{|k, v| v[:method].call(participant)}
     end
 
     def survey_data(participant)

@@ -83,9 +83,7 @@ class ResponseSet < ApplicationRecord
           r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
           r.remove_file_upload
         end
-      end
 
-      if q.file_upload?
         self.send(:define_singleton_method, "q_#{q.id}_remove_file_upload=".to_sym) do |args|
           r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
           r.remove_file_upload = args

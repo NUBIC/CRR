@@ -3,9 +3,9 @@ require 'support/shared_context'
 
 module Admin
   RSpec.describe 'filling in a survey', type: :feature do
-    let(:participant) { FactoryGirl.create(:participant, stage: 'approved') }
+    let(:participant) { FactoryBot.create(:participant, stage: 'approved') }
     let!(:survey)      {
-      survey        = FactoryGirl.create(:survey)
+      survey        = FactoryBot.create(:survey)
       section       = survey.sections.create(title: 'section 1')
       new_question  = section.questions.create(text: "question #{@response_type}", response_type: response_type)
       if new_question.multiple_choice?

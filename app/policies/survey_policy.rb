@@ -39,6 +39,10 @@ class SurveyPolicy < ApplicationPolicy
     is_admin?
   end
 
+  def nodes?
+    is_admin?
+  end
+
   private
     def inactive_survey?
       record.inactive?

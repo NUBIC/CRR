@@ -1,6 +1,6 @@
 RSpec.shared_context 'user login' do
   before :each do
-    account = FactoryGirl.create(:account)
+    account = FactoryBot.create(:account)
 
     visit public_root_path
     click_on('Log in')
@@ -15,7 +15,7 @@ end
 RSpec.shared_context 'researcher login' do
   before :each do
     @user = User.find_by_netid('test_user')
-    @user = FactoryGirl.create(:user, netid: 'test_user') unless @user
+    @user = FactoryBot.create(:user, netid: 'test_user') unless @user
     @user.researcher   = true
     @user.admin        = false
     @user.data_manager = false
@@ -31,7 +31,7 @@ end
 RSpec.shared_context 'admin login' do
   before :each do
     @user = User.find_by_netid('test_user')
-    @user = FactoryGirl.create(:user, netid: 'test_user') unless @user
+    @user = FactoryBot.create(:user, netid: 'test_user') unless @user
     @user.researcher   = false
     @user.admin        = true
     @user.data_manager = false
@@ -48,7 +48,7 @@ end
 RSpec.shared_context 'data manager login' do
   before :each do
     @user = User.find_by_netid('test_user')
-    @user = FactoryGirl.create(:user, netid: 'test_user') unless @user
+    @user = FactoryBot.create(:user, netid: 'test_user') unless @user
     @user.researcher   = false
     @user.admin        = false
     @user.data_manager = true

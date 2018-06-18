@@ -23,13 +23,13 @@ set :output, { standard: 'cron.log'}
 set :environment, ENV['RAILS_ENV']
 
 case environment
-when 'staging'
-  every :day, at: '6:00AM' do
-    rake 'notify:expiring_release'
-    rake 'notify:expired_release'
-    rake 'notify:suspended_participants'
-    rake 'notify:annual_followup'
-  end
+# when 'staging'
+#   every :day, at: '6:00AM' do
+#     rake 'notify:expiring_release'
+#     rake 'notify:expired_release'
+#     rake 'notify:suspended_participants'
+#     rake 'notify:annual_followup'
+#   end
 when 'production'
   every :day, at: '6:00AM' do
     rake 'notify:expiring_release'

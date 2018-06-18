@@ -1,4 +1,4 @@
-class StudyInvolvement < ActiveRecord::Base
+class StudyInvolvement < ApplicationRecord
   # Dependencies
   has_paper_trail
 

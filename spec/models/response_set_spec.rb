@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe ResponseSet, type: :model do
   before(:each) do
-    @participant = FactoryGirl.create(:participant)
-    @survey = FactoryGirl.create(:survey, multiple_section: true)
+    @participant = FactoryBot.create(:participant)
+    @survey = FactoryBot.create(:survey, multiple_section: true)
     @section = @survey.sections.create(title: 'test')
 
     @q_date       = @section.questions.create(text: 'test2', response_type: 'date', is_mandatory: true)
@@ -32,169 +32,223 @@ RSpec.describe ResponseSet, type: :model do
   describe 'question methods' do
     it 'should create getter setters that correspond to questions in survey' do
       expect(@response_set).to respond_to("q_#{@q_pick_many.id}".to_sym)
+      expect(@response_set).to respond_to("q_#{@q_pick_many.id}_string".to_sym)
       expect(@response_set).to respond_to("q_#{@q_pick_many.id}=".to_sym)
     end
 
-    it 'should accept values for pick many' do
-      @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
-      expect(@response_set.reload.responses.size).to eq 2
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id).size).to eq 2
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a1.id).size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a2.id).size).to eq 1
+    context 'for pick many questions' do
+      it 'should accept values' do
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
+        expect(@response_set.reload.responses.size).to eq 2
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id).size).to eq 2
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a1.id).size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a2.id).size).to eq 1
+      end
+
+      it 'should properly replace value' do
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
+        expect(@response_set.reload.responses.size).to eq 2
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id).size).to eq 2
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a1.id).size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a2.id).size).to eq 1
+
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a3.id}", "#{@pm_a4.id}"])
+        expect(@response_set.reload.responses.size).to eq 2
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id).size).to eq 2
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a3.id).size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a4.id).size).to eq 1
+      end
+
+      it 'should reject answers with the wrong question id' do
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@po_a1.id}", "#{@po_a2.id}"])
+        expect(@response_set.reload.responses.size).to eq 0
+      end
+
+      it 'should properly erase value' do
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
+        expect(@response_set.reload.responses.size).to eq 2
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => [])
+        expect(@response_set.reload.responses.size).to eq 0
+      end
+
+      it 'should return answers' do
+        @response_set.update_attributes!("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
+        expect(@response_set.reload.send("q_#{@q_pick_many.id}".to_sym)).to match_array([@pm_a1.id, @pm_a2.id])
+      end
+
+      it 'should return string of answers' do
+        @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
+        expect(@response_set.reload.send("q_#{@q_pick_many.id}_string".to_sym)).to eq [@pm_a1.text, @pm_a2.text].join('|')
+      end
     end
 
-    it 'should properly replace value for pick many' do
-      @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
-      expect(@response_set.reload.responses.size).to eq 2
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id).size).to eq 2
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a1.id).size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a2.id).size).to eq 1
+    context 'for pick one questions' do
+      it 'should insert values' do
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a1.id).size).to eq 1
+      end
 
-      @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a3.id}", "#{@pm_a4.id}"])
-      expect(@response_set.reload.responses.size).to eq 2
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id).size).to eq 2
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a3.id).size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_many.id, answer_id: @pm_a4.id).size).to eq 1
+      it 'should insert different value' do
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a1.id).size).to eq 1
+
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a2.id}")
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a2.id).size).to eq 1
+      end
+
+      it 'should erase values' do
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a1.id).size).to eq 1
+
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => '')
+        expect(@response_set.reload.responses.size).to eq 0
+      end
+
+      it 'should reject answers with the wrong question id' do
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@pm_a1.id}")
+        expect(@response_set.reload.responses.size).to eq 0
+      end
+
+      it 'should return answers' do
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
+        expect(@response_set.reload.send("q_#{@q_pick_one.id}".to_sym)).to eq @po_a1.id
+      end
+
+      it 'should return string of answers' do
+        @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
+        expect(@response_set.reload.send("q_#{@q_pick_one.id}_string".to_sym)).to eq @po_a1.text
+      end
     end
 
-    it 'pick many should reject answers with the wrong question id' do
-      @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@po_a1.id}", "#{@po_a2.id}"])
-      expect(@response_set.reload.responses.size).to eq 0
+    context 'date' do
+      it 'should insert value' do
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
+      end
+
+      it 'should properly erase value' do
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
+
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '')
+        expect(@response_set.reload.responses.size).to eq 0
+        expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to be_blank
+      end
+
+      it 'should not insert bad value' do
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '44/44/2098')
+        expect(@response_set.reload.responses.size).to eq 0
+        expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to be_blank
+      end
+
+      it 'should not overwrite previously inserted value when bad value is entered' do
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
+
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '54/23/2134')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
+      end
+
+      it 'should return string of answers' do
+        @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
+        expect(@response_set.send("q_#{@q_date.id}_string".to_sym).to_s).to eq '12-12-2013'
+      end
     end
 
-    it 'should properly erase value for pick many' do
-      @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => ["#{@pm_a1.id}", "#{@pm_a2.id}"])
-      expect(@response_set.reload.responses.size).to eq 2
-      @response_set.update_attributes("q_#{@q_pick_many.id}".to_sym => [])
-      expect(@response_set.reload.responses.size).to eq 0
+    context 'short_text' do
+      it 'should insert value for short_text' do
+        @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => 'we are in the business of shoting hoops')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_short_text.id}".to_sym).to_s).to eq 'we are in the business of shoting hoops'
+      end
+
+      it 'should properly erase value for short_text' do
+        @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => 'we are in the business of shoting hoops')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_short_text.id}".to_sym).to_s).to eq 'we are in the business of shoting hoops'
+
+        @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => '')
+        expect(@response_set.reload.responses.size).to eq 0
+        expect(@response_set.send("q_#{@q_short_text.id}".to_sym).to_s).to be_blank
+      end
+
+      it 'should return string of answers' do
+        @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => 'we are in the business of shoting hoops')
+        expect(@response_set.send("q_#{@q_short_text.id}_string".to_sym).to_s).to eq 'we are in the business of shoting hoops'
+      end
     end
 
-    it 'should insert values for pick one' do
-      @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a1.id).size).to eq 1
+    context 'long_text' do
+      it 'should insert value for long_text' do
+        text = Faker::Lorem.paragraph
+        @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => text)
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_long_text.id}".to_sym).to_s).to eq text
+      end
+
+      it 'should properly erase value for long_text' do
+        text = Faker::Lorem.paragraph
+        @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => text)
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_long_text.id}".to_sym).to_s).to eq text
+
+        @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => '')
+        expect(@response_set.reload.responses.size).to eq 0
+        expect(@response_set.send("q_#{@q_long_text.id}".to_sym).to_s).to be_blank
+      end
+
+      it 'should return string of answers' do
+        text = Faker::Lorem.paragraph
+        @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => text)
+        expect(@response_set.send("q_#{@q_long_text.id}_string".to_sym).to_s).to eq text
+      end
     end
 
-    it 'should insert different value for pick one' do
-      @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a1.id).size).to eq 1
+    context 'number' do
+      it 'should insert value for number' do
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
+      end
 
-      @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a2.id}")
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a2.id).size).to eq 1
-    end
+      it 'should not insert bad value for number' do
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456fadsfd')
+        expect(@response_set.reload.responses.size).to eq 0
+        expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to be_blank
+      end
 
-    it 'should erase values for pick one' do
-      @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@po_a1.id}")
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.reload.responses.where(question_id: @q_pick_one.id, answer_id: @po_a1.id).size).to eq 1
+      it 'should not erase previously inserted number when bad number is provided' do
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
 
-      @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => '')
-      expect(@response_set.reload.responses.size).to eq 0
-    end
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456fadsfdf')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
+      end
 
-    it 'pick one should reject answers with the wrong question id' do
-      @response_set.update_attributes("q_#{@q_pick_one.id}".to_sym => "#{@pm_a1.id}")
-      expect(@response_set.reload.responses.size).to eq 0
-    end
+      it 'should erase value for number' do
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
+        expect(@response_set.reload.responses.size).to eq 1
+        expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
 
-    it 'should insert value for date' do
-      @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
-    end
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '')
+        expect(@response_set.reload.responses.size).to eq 0
+        expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to be_blank
+      end
 
-    it 'should properly erase value for date' do
-      @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
-
-      @response_set.update_attributes("q_#{@q_date.id}".to_sym => '')
-      expect(@response_set.reload.responses.size).to eq 0
-      expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to be_blank
-    end
-
-    it 'should not insert bad value for date' do
-      @response_set.update_attributes("q_#{@q_date.id}".to_sym => '44/44/2098')
-      expect(@response_set.reload.responses.size).to eq 0
-      expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to be_blank
-    end
-
-    it 'should not overwrite previously inserted value when bad value is entered for date' do
-      @response_set.update_attributes("q_#{@q_date.id}".to_sym => '12-12-2013')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
-
-      @response_set.update_attributes("q_#{@q_date.id}".to_sym => '54/23/2134')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_date.id}".to_sym).to_s).to eq '12-12-2013'
-    end
-
-    it 'should insert value for short_text' do
-      @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => 'we are in the business of shoting hoops')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_short_text.id}".to_sym).to_s).to eq 'we are in the business of shoting hoops'
-    end
-
-    it 'should properly erase value for short_text' do
-      @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => 'we are in the business of shoting hoops')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_short_text.id}".to_sym).to_s).to eq 'we are in the business of shoting hoops'
-
-      @response_set.update_attributes("q_#{@q_short_text.id}".to_sym => '')
-      expect(@response_set.reload.responses.size).to eq 0
-      expect(@response_set.send("q_#{@q_short_text.id}".to_sym).to_s).to be_blank
-    end
-
-    it 'should insert value for long_text' do
-      text = Faker::Lorem.paragraph
-      @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => text)
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_long_text.id}".to_sym).to_s).to eq text
-    end
-
-    it 'should properly erase value for short_text' do
-      text = Faker::Lorem.paragraph
-      @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => text)
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_long_text.id}".to_sym).to_s).to eq text
-
-      @response_set.update_attributes("q_#{@q_long_text.id}".to_sym => '')
-      expect(@response_set.reload.responses.size).to eq 0
-      expect(@response_set.send("q_#{@q_long_text.id}".to_sym).to_s).to be_blank
-    end
-
-    it 'should insert value for number' do
-      @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
-    end
-
-    it 'should not insert bad value for number' do
-      @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456fadsfd')
-      expect(@response_set.reload.responses.size).to eq 0
-      expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to be_blank
-    end
-
-    it 'should not erase previously inserted number when bad number is provided' do
-      @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
-
-      @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456fadsfdf')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
-    end
-
-    it 'should erase value for number' do
-      @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
-      expect(@response_set.reload.responses.size).to eq 1
-      expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to eq '3456'
-
-      @response_set.update_attributes("q_#{@q_number.id}".to_sym => '')
-      expect(@response_set.reload.responses.size).to eq 0
-      expect(@response_set.send("q_#{@q_number.id}".to_sym).to_s).to be_blank
+      it 'should return string of answers' do
+        @response_set.update_attributes("q_#{@q_number.id}".to_sym => '3456')
+        expect(@response_set.send("q_#{@q_number.id}_string".to_sym).to_s).to eq '3456'
+      end
     end
   end
 

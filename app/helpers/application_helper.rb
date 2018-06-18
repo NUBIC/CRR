@@ -96,7 +96,7 @@ module ApplicationHelper
   def search_condition_group_operator_options
     options = []
     SearchConditionGroup.group_operators.each do |operator|
-      operator_text = SearchConditionGroup.operator_text(operator[:symbol], SearchConditionGroup::GROUP_OPERATOR_TYPE)
+      operator_text = SearchConditionGroup.operator_text(operator[:symbol], Enum::Operator::GROUP_OPERATOR_TYPE)
       operator_display = operator_text == 'AND' ? 'All' : operator_text == 'OR' ? 'Any' : operator_text
       options << [operator_display, operator[:symbol]]
     end

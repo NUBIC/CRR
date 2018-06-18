@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :survey do
-    title             Faker::Company.name
+    title             { Faker::Company.name }
     multiple_section  true
   end
 end

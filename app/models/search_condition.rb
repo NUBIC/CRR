@@ -1,4 +1,4 @@
-class SearchCondition < ActiveRecord::Base
+class SearchCondition < ApplicationRecord
   # Globals
   CALCULATED_DATE_UNITS   = { years_ago: 'years ago', months_ago: 'months ago', days_ago: 'days ago' }.freeze
 
@@ -39,7 +39,7 @@ class SearchCondition < ActiveRecord::Base
     return unless question
     operator_type = self.class.operator_type_for_question(question)
     operator_hash = self.class.operators_by_type(operator_type).find{|o| o[:symbol] == operator}
-    self.values = [self.values.first] unless (operator_type == LIST_OPERATOR_TYPE) || (operator_hash[:cardinality] && operator_hash[:cardinality] > 1)
+    self.values = [self.values.first] unless list_operator?(operator_type) || (operator_hash[:cardinality] && operator_hash[:cardinality] > 1)
   end
 
   def check_values_order
@@ -105,7 +105,7 @@ class SearchCondition < ActiveRecord::Base
     operator_type = self.class.operator_type_for_question(question)
 
     participants = Participant.joins(response_sets: :responses).where(responses: {question_id: question.id}, stage: 'approved')
-    if operator_type == LIST_OPERATOR_TYPE
+    if list_operator?(operator_type)
       participants = participants.where("#{search_subject} #{operator} (?)", search_values)
     elsif is_calculated_date
       case operator
@@ -147,11 +147,11 @@ class SearchCondition < ActiveRecord::Base
   def self.operator_type_for_question(question)
     return unless question
     if question.multiple_choice?
-      LIST_OPERATOR_TYPE
+      list_operator_type
     elsif question.number? || question.true_date?
-      NUMERIC_OPERATOR_TYPE
+      numeric_operator_type
     else
-      TEXT_OPERATOR_TYPE
+      text_operator_type
     end
   end
 

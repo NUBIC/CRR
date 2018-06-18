@@ -1,4 +1,6 @@
-class Participant < ActiveRecord::Base
+class Participant < ApplicationRecord
+  INACTIVE_STAGES = [:consent, :demographics, :consent_denied].freeze
+
   # Dependencies
   include AASM
 
@@ -7,7 +9,7 @@ class Participant < ActiveRecord::Base
   has_many :surveys, through: :response_sets
   has_many :contact_logs, dependent: :destroy
   has_many :study_involvements, -> { order('end_date DESC') }, dependent: :destroy
-  has_many :origin_relationships, class_name: 'Relationship', foreign_key: 'origin_id', dependent: :destroy
+  has_many :origin_relationships,      class_name: 'Relationship', foreign_key: 'origin_id',      dependent: :destroy
   has_many :destination_relationships, class_name: 'Relationship', foreign_key: 'destination_id', dependent: :destroy
   has_many :consent_signatures, dependent: :destroy
   has_many :studies, through: :study_involvements
@@ -64,9 +66,6 @@ class Participant < ActiveRecord::Base
 
   # Scopes
   scope :by_stage,              -> (stages){ where(stage: stages) }
-  scope :pending_approval,      -> { by_stage('pending_approval').order("#{self.table_name}.created_at DESC") }
-  scope :approved,              -> { by_stage('approved').order("#{self.table_name}.created_at DESC") }
-  scope :suspended,             -> { by_stage('suspended').order("#{self.table_name}.created_at DESC") }
   scope :approaching_deadlines, -> { joins(:study_involvements).by_stage('approved').where("study_involvements.start_date IS NOT NULL and ((study_involvements.warning_date <= '#{Date.today}' or study_involvements.warning_date IS NULL) and (end_date is null or end_date > '#{Date.today}'))")}
   scope :all_participants,      -> { by_stage(['approved', 'pending_approval']).order("#{self.table_name}.created_at DESC") }
   scope :search,                -> (param){ where('first_name ilike ? or last_name ilike ?',"%#{param}%","%#{param}%") }
@@ -85,7 +84,7 @@ class Participant < ActiveRecord::Base
   end
 
   def has_relationships?
-    relationships.size > 0
+    origin_relationships.size > 0 || destination_relationships.size > 0
   end
 
   def has_followup_survey?
@@ -140,7 +139,7 @@ class Participant < ActiveRecord::Base
   end
 
   def inactive?
-    [:consent, :demographics, :consent_denied].include?(self.aasm.current_state)
+    INACTIVE_STAGES.include?(self.aasm.current_state)
   end
 
   def active?
@@ -148,7 +147,11 @@ class Participant < ActiveRecord::Base
   end
 
   def tier_2_surveys
-    response_sets.joins(:survey).where(surveys: { tier_2: true })
+    if response_sets.loaded?
+      response_sets.select{|r| r.survey.tier_2 }
+    else
+      response_sets.includes(:survey).where(surveys: { tier_2: true })
+    end
   end
 
   def recent_response_set
@@ -195,5 +198,21 @@ class Participant < ActiveRecord::Base
     date_of_birth = Date.parse(self.birthdate)
     date ||= Time.now.utc.to_date
     date.year - date_of_birth.year - ((date.month > date_of_birth.month || (date.month == date_of_birth.month && date.day >= date_of_birth.day)) ? 0 : 1)
+  end
+
+  def relationships_string
+    primary_guardian_info = [
+      primary_guardian_first_name,
+      primary_guardian_last_name,
+      primary_guardian_email,
+      primary_guardian_phone
+    ].reject(&:blank?).join(', ')
+    secondary_guardian_info = [
+      secondary_guardian_first_name,
+      secondary_guardian_last_name,
+      secondary_guardian_email,
+      secondary_guardian_phone
+    ].reject(&:blank?).join(', ')
+    [ primary_guardian_info, secondary_guardian_info].reject(&:blank?).join('|')
   end
 end

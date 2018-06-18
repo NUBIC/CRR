@@ -7,7 +7,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
     @adult_survey = setup_survey('adult')
     @child_survey = setup_survey('child')
     @params = { first_name: 'Joe', last_name: 'Doe'}
-    @participant = FactoryGirl.create(:participant, first_name: 'Joe', last_name: 'Doe', stage: 'approved', address_line1: '123 Main St', address_line2: 'Apt #123', city: 'Chicago', state: 'IL', zip: '12345', email: 'test@test.com', primary_phone: '123-456-7890', secondary_phone: '123-345-6789')
+    @participant = FactoryBot.create(:participant, first_name: 'Joe', last_name: 'Doe', stage: 'approved', address_line1: '123 Main St', address_line2: 'Apt #123', city: 'Chicago', state: 'IL', zip: '12345', email: 'test@test.com', primary_phone: '123-456-7890', secondary_phone: '123-345-6789')
 
   end
 
@@ -51,48 +51,48 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
       describe 'POST create' do
         it 'redirects to dashboard' do
-          post :create, participant: @params
+          post :create, params: { participant: @params }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :create, participant: @params
+          post :create, params: { participant: @params }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'GET show' do
         it 'redirects to dashboard' do
-          get :show, id: @participant.id
+          get :show, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          get :show, id: @participant.id
+          get :show, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'GET edit' do
         it 'redirects to dashboard' do
-          get :edit, id: @participant.id
+          get :edit, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          get :edit, id: @participant.id
+          get :edit, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST update' do
         it 'redirects to dashboard' do
-          post :update, id: @participant.id, participant: @params
+          post :update, params: { id: @participant.id, participant: @params }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :update, id: @participant.id, participant: @params
+          post :update, params: { id: @participant.id, participant: @params }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
@@ -111,60 +111,60 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
       describe 'GET enroll' do
         it 'redirects to dashboard' do
-          get :enroll, id: @participant.id
+          get :enroll, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          get :enroll, id: @participant.id
+          get :enroll, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST consent signature' do
         it 'redirects to dashboard' do
-          post :consent_signature, id: @participant.id
+          post :consent_signature, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :consent_signature, id: @participant.id
+          post :consent_signature, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST withdraw' do
         it 'redirects to dashboard' do
-          post :withdraw, id: @participant.id
+          post :withdraw, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :withdraw, id: @participant.id
+          post :withdraw, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST suspend' do
         it 'redirects to dashboard' do
-          post :withdraw, id: @participant.id
+          post :withdraw, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :withdraw, id: @participant.id
+          post :withdraw, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
 
       describe 'POST verify' do
         it 'redirects to dashboard' do
-          post :verify, id: @participant.id
+          post :verify, params: { id: @participant.id }
           expect(response).to redirect_to(controller: :users, action: :dashboard)
         end
 
         it 'displays "Access Denied" flash message' do
-          post :verify, id: @participant.id
+          post :verify, params: { id: @participant.id }
           expect(flash['error']).to eq 'Access Denied'
         end
       end
@@ -195,16 +195,16 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
             allow(controller.current_user).to receive(r.to_sym).and_return(false)
           end
         end
-        @study  = FactoryGirl.create(:study)
+        @study  = FactoryBot.create(:study)
         @study.activate
         @study.save
-        @study_involvement  = FactoryGirl.create(:study_involvement, study: @study, participant: @participant, start_date: Date.today, end_date: Date.tomorrow)
+        @study_involvement  = FactoryBot.create(:study_involvement, study: @study, participant: @participant, start_date: Date.today, end_date: Date.tomorrow)
         allow(controller.current_user).to receive(:studies).and_return(Study.where(id: @study.id))
       end
 
       describe 'GET show' do
         it 'renders show template' do
-          get :show, id: @participant.id
+          get :show, params: { id: @participant.id }
           expect(response).to render_template('show')
         end
       end
@@ -243,12 +243,12 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
         describe 'with valid parameters' do
           it 'creates participant' do
             expect {
-              post :create, participant: @params
+              post :create, params: { participant: @params }
             }.to change{ Participant.count }.by(1)
           end
 
           it 'redirects to participant enrollment page' do
-            post :create, participant: @params
+            post :create, params: { participant: @params }
             expect(response).to redirect_to(controller: :participants, action: :enroll, id: Participant.last.id)
           end
         end
@@ -256,7 +256,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
         describe 'with invalid parameters' do
           before(:each) do
             allow_any_instance_of(Participant).to receive(:save).and_return(false)
-            post :create, participant: @params
+            post :create, params: { participant: @params }
           end
 
           it 'renders new template' do
@@ -271,14 +271,14 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
       describe 'GET show' do
         it 'renders show template' do
-          get :show, id: @participant.id
+          get :show, params: { id: @participant.id }
           expect(response).to render_template('show')
         end
       end
 
       describe 'GET edit' do
         it 'renders edit template' do
-          get :edit, id: @participant.id
+          get :edit, params: { id: @participant.id }
           expect(response).to render_template('edit')
         end
       end
@@ -286,7 +286,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
       describe 'POST update' do
         describe 'with valid parameters' do
           it 'redirects to participant page' do
-            post :update, id: @participant.id, participant: @params
+            post :update, params: { id: @participant.id, participant: @params }
             expect(response).to redirect_to( controller: :participants, action: :show, id: @participant.id)
           end
 
@@ -294,7 +294,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
             it 'transfers participant to survey state' do
               @participant.stage = 'demographics'
               @participant.save
-              post :update, id: @participant.id, participant: @params
+              post :update, params: { id: @participant.id, participant: @params }
               expect(@participant.reload).to be_survey
             end
           end
@@ -308,20 +308,20 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
               it 'creates a new response set' do
                 expect {
-                  post :update, id: @participant.id, participant: @params
+                  post :update, params: { id: @participant.id, participant: @params }
                 }.to change{ ResponseSet.count }.by(1)
                 expect(@participant.response_sets.size).to eq 1
               end
 
               it 'redirects to new response_set edit page' do
-                post :update, id: @participant.id, participant: @params
+                post :update, params: { id: @participant.id, participant: @params }
                 expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @participant.reload.response_sets.last.id)
               end
 
               it 'creates a new response set for a child survey if participant is a child proxy' do
                 @participant.child = true
                 @participant.save
-                post :update, id: @participant.id, participant: @params
+                post :update, params: { id: @participant.id, participant: @params }
                 expect(@participant.response_sets.last.survey).to eq @child_survey
               end
             end
@@ -334,12 +334,12 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
           end
 
           it 'renders error flash' do
-            post :update, id: @participant.id, participant: @params
+            post :update, params: { id: @participant.id, participant: @params }
             expect(flash['error']).not_to be_nil
           end
 
           it 'renders edit template' do
-            post :update, id: @participant.id, participant: @params
+            post :update, params: { id: @participant.id, participant: @params }
             expect(response).to render_template('edit')
           end
         end
@@ -354,12 +354,12 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
       describe 'GET enroll' do
         it 'returns the participant' do
-          get :enroll, id: @participant.id
+          get :enroll, params: { id: @participant.id }
           expect(flash['error']).to be_nil
         end
 
         it 'renders enroll template' do
-          get :enroll, id: @participant.id
+          get :enroll, params: { id: @participant.id }
           expect(response).to render_template('enroll')
         end
 
@@ -372,13 +372,13 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
           describe 'when response set does not exist' do
             it 'creates a new response set' do
               expect {
-                get :enroll, id: @participant.id
+                get :enroll, params: { id: @participant.id }
               }.to change{ ResponseSet.count }.by(1)
               expect(@participant.response_sets.size).to eq 1
             end
 
             it 'redirects to new response_set edit page' do
-              get :enroll, id: @participant.id
+              get :enroll, params: { id: @participant.id }
               expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @participant.reload.response_sets.last.id)
             end
           end
@@ -387,13 +387,13 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
             it 'uses existing response if available' do
               @participant.create_response_set(@adult_survey)
               expect {
-                get :enroll, id: @participant.id
+                get :enroll, params: { id: @participant.id }
               }.not_to change{ ResponseSet.count }
               expect(@participant.response_sets.size).to eq 1
             end
 
             it 'redirects to new response_set edit page' do
-              get :enroll, id: @participant.id
+              get :enroll, params: { id: @participant.id }
               expect(response).to redirect_to(controller: :response_sets, action: :edit, id: @participant.response_sets.last.id)
             end
           end
@@ -407,7 +407,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
         end
 
         it 'transitions participant to consented state' do
-          post :consent_signature, id: @participant.id, consent_signature: { date: Date.today, consent_id: @adult_survey.id, proxy_name: 'Little My', proxy_relationship: 'Parent'}
+          post :consent_signature, params: { id: @participant.id, consent_signature: { date: Date.today, consent_id: @adult_survey.id, proxy_name: 'Little My', proxy_relationship: 'Parent'}}
           expect(@participant.reload.stage).to eq 'demographics'
           expect(response).to redirect_to(controller: :participants, action: :enroll, id: @participant.id)
         end
@@ -415,7 +415,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
       describe 'POST withdraw' do
         it 'transitions participant to withdrawn state' do
-          post :withdraw, id: @participant.id
+          post :withdraw, params: { id: @participant.id }
           expect(@participant.reload.stage).to eq 'withdrawn'
           expect(response).to redirect_to(controller: :participants, action: :index)
         end
@@ -423,7 +423,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
       describe 'POST suspend' do
         it 'transitions participant to withdrawn state' do
-          post :suspend, id: @participant.id
+          post :suspend, params: { id: @participant.id }
           expect(@participant.reload.stage).to eq 'suspended'
           expect(response).to redirect_to(controller: :participants, action: :index)
         end
@@ -434,7 +434,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
           @participant.stage = 'pending_approval'
           @participant.save!
 
-          post :verify, id: @participant.id
+          post :verify, params: { id: @participant.id }
           expect(@participant.reload.stage).to eq 'approved'
           expect(response).to redirect_to(controller: :participants, action: :show, id: @participant.id)
         end
@@ -447,9 +447,9 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
         end
 
         it 'finds participant by name' do
-          p_1 = FactoryGirl.create(:participant, first_name: 'Joe', last_name: 'Moe')
-          p_2 = FactoryGirl.create(:participant, first_name: 'Linn', last_name: 'Din')
-          get :search, q: 'oe', format: :json
+          p_1 = FactoryBot.create(:participant, first_name: 'Joe', last_name: 'Moe')
+          p_2 = FactoryBot.create(:participant, first_name: 'Linn', last_name: 'Din')
+          get :search, params: { q: 'oe' }, format: :json
           expect(JSON.parse(response.body)).to match_array([@participant, p_1].map{|p| { 'id' => p.id, 'search_display' => p.search_display}})
         end
       end
@@ -458,7 +458,7 @@ RSpec.describe Admin::ParticipantsController, type: :controller do
 
   private
     def setup_survey(code)
-      survey = FactoryGirl.create(:survey, code: code, multiple_section: false)
+      survey = FactoryBot.create(:survey, code: code, multiple_section: false)
       survey.sections.first.questions.create(text: 'question 1', response_type: 'date')
       survey.state = 'active'
       survey.save

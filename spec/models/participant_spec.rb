@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Participant, type: :model do
-  let(:participant) { FactoryGirl.create(:participant) }
-  let(:account) { FactoryGirl.create(:account) }
+  let(:participant) { FactoryBot.create(:participant) }
+  let(:account) { FactoryBot.create(:account) }
 
   it 'creates a new instance given valid attributes' do
     expect(participant).not_to be_nil
@@ -25,23 +25,23 @@ RSpec.describe Participant, type: :model do
         '1234567899'
       ].each do |phone|
         it "allows #{phone} as valid primary_phone" do
-          participant = FactoryGirl.create(:participant, primary_phone: phone)
+          participant = FactoryBot.create(:participant, primary_phone: phone)
           expect(participant).to be_valid
         end
 
         it "allows #{phone} as valid secondary_phone" do
-          participant = FactoryGirl.create(:participant, secondary_phone: phone)
+          participant = FactoryBot.create(:participant, secondary_phone: phone)
           expect(participant).to be_valid
         end
       end
 
       it 'does not allow phone with alphabets as a valid primary_phone' do
-        participant = FactoryGirl.build(:participant, primary_phone: '123ABC3456')
+        participant = FactoryBot.build(:participant, primary_phone: '123ABC3456')
         expect(participant).not_to be_valid
       end
 
       it 'does not allow phone with alphabets as a valid secondary_phone' do
-        participant = FactoryGirl.build(:participant, secondary_phone: '123ABC3456')
+        participant = FactoryBot.build(:participant, secondary_phone: '123ABC3456')
         expect(participant).not_to be_valid
       end
     end
@@ -50,7 +50,7 @@ RSpec.describe Participant, type: :model do
   describe 'scopes' do
     before(:each) do
       Participant.aasm.states.map(&:name).each do |state|
-        FactoryGirl.create(:participant, stage: state)
+        FactoryBot.create(:participant, stage: state)
       end
     end
 
@@ -94,8 +94,8 @@ RSpec.describe Participant, type: :model do
 
     describe 'searching for participants approaching deadlines' do
       before :each do
-        @enrolled_participant = FactoryGirl.create(:participant, stage: 'approved')
-        @study_involvement    = FactoryGirl.create(:study_involvement, participant: @enrolled_participant, warning_date: nil, end_date: Date.tomorrow)
+        @enrolled_participant = FactoryBot.create(:participant, stage: 'approved')
+        @study_involvement    = FactoryBot.create(:study_involvement, participant: @enrolled_participant, warning_date: nil, end_date: Date.tomorrow)
       end
 
       it 'includes approved participants with undefined enrollment warninng date and end date set in future' do
@@ -159,9 +159,9 @@ RSpec.describe Participant, type: :model do
     end
 
     it 'allows to search by first_name or last_name' do
-      par1 = FactoryGirl.create(:participant, first_name: 'Jacob')
-      par2 = FactoryGirl.create(:participant, last_name: 'jim')
-      par3 = FactoryGirl.create(:participant, first_name: 'My', last_name: 'Little')
+      par1 = FactoryBot.create(:participant, first_name: 'Jacob')
+      par2 = FactoryBot.create(:participant, last_name: 'jim')
+      par3 = FactoryBot.create(:participant, first_name: 'My', last_name: 'Little')
 
       partcipants = Participant.search('j')
       expect(partcipants).not_to be_empty
@@ -178,19 +178,19 @@ RSpec.describe Participant, type: :model do
 
     describe '#name' do
       it 'joins first name and last name' do
-        participant = FactoryGirl.build(:participant, first_name: 'Brian', last_name: 'Lee')
+        participant = FactoryBot.build(:participant, first_name: 'Brian', last_name: 'Lee')
         expect(participant.name).to eq 'Brian Lee'
       end
     end
 
     it 'returns relationships as both origin_relationships and destination_relationships' do
-      sib1 = FactoryGirl.create(:participant, first_name: 'Jacob')
-      sib2 = FactoryGirl.create(:participant)
-      parent = FactoryGirl.create(:participant, first_name: 'Martha')
+      sib1 = FactoryBot.create(:participant, first_name: 'Jacob')
+      sib2 = FactoryBot.create(:participant)
+      parent = FactoryBot.create(:participant, first_name: 'Martha')
 
-      @rel1 = FactoryGirl.create(:relationship, origin: sib1, destination: sib2)
-      @rel2 = FactoryGirl.create(:relationship, category: 'Parent', origin: parent, destination: sib1)
-      @rel3 = FactoryGirl.create(:relationship, category: 'Parent', origin: parent, destination: sib2)
+      @rel1 = FactoryBot.create(:relationship, origin: sib1, destination: sib2)
+      @rel2 = FactoryBot.create(:relationship, category: 'Parent', origin: parent, destination: sib1)
+      @rel3 = FactoryBot.create(:relationship, category: 'Parent', origin: parent, destination: sib2)
 
       @relationships = sib1.relationships
 
@@ -198,19 +198,19 @@ RSpec.describe Participant, type: :model do
     end
 
     it 'checks if participant has relationships' do
-      child = FactoryGirl.create(:participant, first_name: 'Jacob')
-      parent = FactoryGirl.create(:participant, first_name: 'Martha')
+      child = FactoryBot.create(:participant, first_name: 'Jacob')
+      parent = FactoryBot.create(:participant, first_name: 'Martha')
 
       expect(parent).not_to have_relationships
 
-      relationship = FactoryGirl.create(:relationship, category: 'Parent', origin: parent, destination: child)
+      relationship = FactoryBot.create(:relationship, category: 'Parent', origin: parent, destination: child)
       expect(parent.reload).to have_relationships
     end
 
     describe 'has_followup_survey?' do
       it 'should return false if participant has child survey' do
-        survey = FactoryGirl.create(:survey, multiple_section: true, code: 'child')
-        FactoryGirl.create(:response_set, participant: participant, survey: survey)
+        survey = FactoryBot.create(:survey, multiple_section: true, code: 'child')
+        FactoryBot.create(:response_set, participant: participant, survey: survey)
         expect(participant).not_to have_followup_survey
       end
     end
@@ -226,32 +226,32 @@ RSpec.describe Participant, type: :model do
         ['123 Main St', 'Apt #111', 'Chicago', '', nil, 'prints out correctly with striping out empty "state" and "zip"', '123 Main St Apt #111 Chicago']
       ].each do |a_1, a_2, c, s, z, test, result|
         it "#{test}" do
-          participant = FactoryGirl.build(:participant, address_line1: a_1, address_line2: a_2, city: c, state: s, zip: z)
+          participant = FactoryBot.build(:participant, address_line1: a_1, address_line2: a_2, city: c, state: s, zip: z)
           expect(participant.address).to eq "#{result}"
         end
       end
 
       it 'returns nil for all nil or empty address field' do
-        participant = FactoryGirl.build(:participant)
+        participant = FactoryBot.build(:participant)
         expect(participant.address).to be_nil
       end
     end
 
     describe 'on_study?' do
-      let(:study) { FactoryGirl.create(:study, state: 'active') }
+      let(:study) { FactoryBot.create(:study, state: 'active') }
 
       it 'returns true if participant has any study involvement with start date is in past and end date is in future' do
-        FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
+        FactoryBot.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
         expect(participant).to be_on_study
       end
 
       it 'returns false if participant has any study involvement with start date is in future' do
-        si = FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.from_now, end_date: 4.days.from_now)
+        si = FactoryBot.create(:study_involvement, participant: participant, study: study, start_date: 2.days.from_now, end_date: 4.days.from_now)
         expect(participant).not_to be_on_study
       end
 
       it 'returns false if participant has any study involvement with end date is in past' do
-        FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 4.days.ago, end_date: 2.days.ago)
+        FactoryBot.create(:study_involvement, participant: participant, study: study, start_date: 4.days.ago, end_date: 2.days.ago)
         expect(participant).not_to be_on_study
       end
 
@@ -260,14 +260,14 @@ RSpec.describe Participant, type: :model do
         study.state = 'inactive'
         study.save
         study.reload
-        FactoryGirl.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
+        FactoryBot.create(:study_involvement, participant: participant, study: study, start_date: 2.days.ago, end_date: 2.days.from_now)
         expect(participant).to be_on_study
       end
     end
 
     it 'checks if participant is on a study' do
-      study = FactoryGirl.create(:study, state: 'active')
-      study_involvement = FactoryGirl.create(:study_involvement, participant: participant)
+      study = FactoryBot.create(:study, state: 'active')
+      study_involvement = FactoryBot.create(:study_involvement, participant: participant)
 
       expect(participant).to have_study(study_involvement.study)
       expect(participant).not_to have_study(study)
@@ -275,53 +275,53 @@ RSpec.describe Participant, type: :model do
 
     describe 'seach_display' do
       it 'includes names' do
-        participant = FactoryGirl.build(:participant, first_name: 'Brian', last_name: 'Lee')
+        participant = FactoryBot.build(:participant, first_name: 'Brian', last_name: 'Lee')
         expect(participant.search_display).to eq 'Brian Lee'
       end
 
       it 'includes names and address' do
-        participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', first_name: 'Brian', last_name: 'Lee')
+        participant = FactoryBot.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', first_name: 'Brian', last_name: 'Lee')
         expect(participant.search_display).to eq 'Brian Lee - 123 Main St Apt #111 Chicago, IL 12345'
       end
 
       it 'includes names, address and email' do
-        participant = participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com', first_name: 'Brian', last_name: 'Lee')
+        participant = participant = FactoryBot.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com', first_name: 'Brian', last_name: 'Lee')
         expect(participant.search_display).to eq 'Brian Lee - 123 Main St Apt #111 Chicago, IL 12345 - email@test.com'
       end
 
       it 'includes names' do
-        participant = FactoryGirl.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com', primary_phone: '1234567890', first_name: 'Brian', last_name: 'Lee')
+        participant = FactoryBot.build(:participant, address_line1: '123 Main St', address_line2: 'Apt #111', city: 'Chicago', state: 'IL', zip: '12345', email: 'email@test.com', primary_phone: '1234567890', first_name: 'Brian', last_name: 'Lee')
         expect(participant.search_display).to eq 'Brian Lee - 123 Main St Apt #111 Chicago, IL 12345 - email@test.com - 1234567890'
       end
     end
 
     it 'allows to create a new response set for a survey' do
-      survey = FactoryGirl.create(:survey)
+      survey = FactoryBot.create(:survey)
       expect{ participant.create_response_set(survey) }.to change{ ResponseSet.count }.by(1)
     end
 
     describe 'adult_proxy?' do
       it 'retruns true if account_participant has proxy and participant is not child' do
         participant.child = false
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: true)
         expect(participant).to be_adult_proxy
       end
 
       it 'retruns false if account_participant has proxy and participant is child' do
         participant.child = true
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: true)
         expect(participant).not_to be_adult_proxy
       end
 
       it 'retruns false if account_participant has no proxy and participant is child' do
         participant.child = true
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: false)
         expect(participant).not_to be_adult_proxy
       end
 
       it 'retruns false if account_participant has no proxy and participant is not child' do
         participant.child = false
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: false)
         expect(participant).not_to be_adult_proxy
       end
     end
@@ -329,37 +329,37 @@ RSpec.describe Participant, type: :model do
     describe 'child_proxy?' do
       it 'retruns true if account_participant has proxy and participant is child' do
         participant.child = true
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: true)
         expect(participant).to be_child_proxy
       end
 
       it 'retruns false if account_participant has proxy and participant is not child' do
         participant.child = false
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: true)
         expect(participant).not_to be_child_proxy
       end
 
       it 'retruns false if account_participant has no proxy and participant is child' do
         participant.child = true
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: false)
         expect(participant).not_to be_child_proxy
       end
 
       it 'retruns false if account_participant has no proxy and participant is not child' do
         participant.child = false
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: false)
         expect(participant).not_to be_child_proxy
       end
     end
 
     describe 'proxy?' do
       it 'retruns true if account_participant has proxy' do
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: true)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: true)
         expect(participant).to be_proxy
       end
 
       it 'retruns false if account_participant has proxy' do
-        FactoryGirl.create(:account_participant, participant: participant, account: account, proxy: false)
+        FactoryBot.create(:account_participant, participant: participant, account: account, proxy: false)
         expect(participant).not_to be_proxy
       end
     end
@@ -384,7 +384,7 @@ RSpec.describe Participant, type: :model do
       Participant.aasm.states.map(&:name).each do |state|
         if [:demographics, :completed, :survey, :pending_approval, :approved].include? state
           it "should return true if participant has state '#{state.to_s}' and has consent" do
-            FactoryGirl.create(:consent_signature, consent: FactoryGirl.create(:consent), participant: participant)
+            FactoryBot.create(:consent_signature, consent: FactoryBot.create(:consent), participant: participant)
             participant.stage = state
             expect(participant).to be_consented
           end
@@ -395,7 +395,7 @@ RSpec.describe Participant, type: :model do
           end
         else
           it "should return false if participant has state '#{state.to_s}' and has consent" do
-            FactoryGirl.create(:consent_signature, consent: FactoryGirl.create(:consent), participant: participant)
+            FactoryBot.create(:consent_signature, consent: FactoryBot.create(:consent), participant: participant)
             participant.stage = state
             expect(participant).not_to be_consented
           end
@@ -457,10 +457,10 @@ RSpec.describe Participant, type: :model do
     end
 
     it 'should return last response_set' do
-      survey = FactoryGirl.create(:survey, multiple_section: true)
-      res1 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
-      res2 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
-      res3 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
+      survey = FactoryBot.create(:survey, multiple_section: true)
+      res1 = FactoryBot.create(:response_set, participant: participant, survey: survey)
+      res2 = FactoryBot.create(:response_set, participant: participant, survey: survey)
+      res3 = FactoryBot.create(:response_set, participant: participant, survey: survey)
       res2.updated_at = Time.now + 10.minutes
       res2.save
       expect(participant.recent_response_set).to eq res2
@@ -468,40 +468,40 @@ RSpec.describe Participant, type: :model do
 
     describe 'recent_core_response_set' do
       it 'should return last "child" survey response_set for a child participant' do
-        child_survey = FactoryGirl.create(:survey, multiple_section: true, code: 'child')
-        adult_survey = FactoryGirl.create(:survey, multiple_section: true, code: 'adult')
-        survey       = FactoryGirl.create(:survey, multiple_section: true)
-        res1 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
-        res2 = FactoryGirl.create(:response_set, participant: participant, survey: child_survey)
-        res3 = FactoryGirl.create(:response_set, participant: participant, survey: adult_survey)
-        res4 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
-        res5 = FactoryGirl.create(:response_set, participant: participant, survey: child_survey)
-        res6 = FactoryGirl.create(:response_set, participant: participant, survey: adult_survey)
+        child_survey = FactoryBot.create(:survey, multiple_section: true, code: 'child')
+        adult_survey = FactoryBot.create(:survey, multiple_section: true, code: 'adult')
+        survey       = FactoryBot.create(:survey, multiple_section: true)
+        res1 = FactoryBot.create(:response_set, participant: participant, survey: survey)
+        res2 = FactoryBot.create(:response_set, participant: participant, survey: child_survey)
+        res3 = FactoryBot.create(:response_set, participant: participant, survey: adult_survey)
+        res4 = FactoryBot.create(:response_set, participant: participant, survey: survey)
+        res5 = FactoryBot.create(:response_set, participant: participant, survey: child_survey)
+        res6 = FactoryBot.create(:response_set, participant: participant, survey: adult_survey)
         participant.child = true
 
         expect(participant.recent_core_response_set).to eq res5
       end
 
       it 'should return last "adult" survey response_set for an adult participant' do
-        child_survey = FactoryGirl.create(:survey, multiple_section: true, code: 'child')
-        adult_survey = FactoryGirl.create(:survey, multiple_section: true, code: 'adult')
-        survey       = FactoryGirl.create(:survey, multiple_section: true)
-        res1 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
-        res2 = FactoryGirl.create(:response_set, participant: participant, survey: child_survey)
-        res3 = FactoryGirl.create(:response_set, participant: participant, survey: adult_survey)
-        res4 = FactoryGirl.create(:response_set, participant: participant, survey: survey)
-        res5 = FactoryGirl.create(:response_set, participant: participant, survey: child_survey)
-        res6 = FactoryGirl.create(:response_set, participant: participant, survey: adult_survey)
+        child_survey = FactoryBot.create(:survey, multiple_section: true, code: 'child')
+        adult_survey = FactoryBot.create(:survey, multiple_section: true, code: 'adult')
+        survey       = FactoryBot.create(:survey, multiple_section: true)
+        res1 = FactoryBot.create(:response_set, participant: participant, survey: survey)
+        res2 = FactoryBot.create(:response_set, participant: participant, survey: child_survey)
+        res3 = FactoryBot.create(:response_set, participant: participant, survey: adult_survey)
+        res4 = FactoryBot.create(:response_set, participant: participant, survey: survey)
+        res5 = FactoryBot.create(:response_set, participant: participant, survey: child_survey)
+        res6 = FactoryBot.create(:response_set, participant: participant, survey: adult_survey)
 
         expect(participant.recent_core_response_set).to eq res6
       end
     end
 
     it 'returns related active participants' do
-      FactoryGirl.create(:account_participant, participant: participant, account: account)
+      FactoryBot.create(:account_participant, participant: participant, account: account)
       Participant.aasm.states.map(&:name).each do |state|
-        other_participant = FactoryGirl.create(:participant, stage: state)
-        FactoryGirl.create(:account_participant, participant: other_participant, account: account)
+        other_participant = FactoryBot.create(:participant, stage: state)
+        FactoryBot.create(:account_participant, participant: other_participant, account: account)
       end
 
       related_participants = participant.related_participants
@@ -512,7 +512,7 @@ RSpec.describe Participant, type: :model do
     end
 
     describe '#copy_from' do
-      let(:other) { FactoryGirl.create(:participant, address_line1: '123 Main St', address_line2: 'Apt #123', city: 'Chicago',
+      let(:other) { FactoryBot.create(:participant, address_line1: '123 Main St', address_line2: 'Apt #123', city: 'Chicago',
         state: 'IL', zip: '12345', email: 'test@test.com', primary_phone: '123-456-7890', secondary_phone: '123-345-6789')}
 
       before(:each) do
@@ -553,18 +553,18 @@ RSpec.describe Participant, type: :model do
     end
 
     it 'checks if participant had been released' do
-      study   = FactoryGirl.create(:study)
-      search  = FactoryGirl.create(:search, study: study)
+      study   = FactoryBot.create(:study)
+      search  = FactoryBot.create(:search, study: study)
 
       expect(participant).not_to be_released(search)
 
-      search_participant = FactoryGirl.create(:search_participant, participant: participant, search: search)
+      search_participant = FactoryBot.create(:search_participant, participant: participant, search: search)
       expect(participant).not_to be_released(search)
 
-      study_involvement = FactoryGirl.create(:study_involvement, study: study, participant: participant)
+      study_involvement = FactoryBot.create(:study_involvement, study: study, participant: participant)
       expect(participant).not_to be_released(search)
 
-      search_participant_study_involvement = FactoryGirl.create(:search_participant_study_involvement, search_participant: search_participant)
+      search_participant_study_involvement = FactoryBot.create(:search_participant_study_involvement, search_participant: search_participant)
       expect(participant).not_to be_released(search)
 
       search_participant.released = true
@@ -576,7 +576,7 @@ RSpec.describe Participant, type: :model do
     it 'retrieves participant`s birth date' do
       expect(participant.birthdate).to be_nil
 
-      child_survey  = FactoryGirl.create(:survey, multiple_section: true, code: 'child')
+      child_survey  = FactoryBot.create(:survey, multiple_section: true, code: 'child')
       child_section = child_survey.sections.create(title: 'test')
       child_q_date  = child_section.questions.create(text: 'test2', response_type: 'date')
       child_q_birthdate_1   = child_section.questions.create(text: 'test2', response_type: 'birth_date')
@@ -586,7 +586,7 @@ RSpec.describe Participant, type: :model do
       child_res.update_attributes("q_#{child_q_birthdate_1.id}".to_sym => Date.today)
       child_res.update_attributes("q_#{child_q_birthdate_2.id}".to_sym => Date.today + 2.days)
 
-      adult_survey = FactoryGirl.create(:survey, multiple_section: true, code: 'adult')
+      adult_survey = FactoryBot.create(:survey, multiple_section: true, code: 'adult')
       adult_section = adult_survey.sections.create(title: 'test')
       adult_q_date  = adult_section.questions.create(text: 'test2', response_type: 'date')
       adult_q_birthdate_1  = adult_section.questions.create(text: 'test2', response_type: 'birth_date')
@@ -596,7 +596,7 @@ RSpec.describe Participant, type: :model do
       adult_res.update_attributes("q_#{adult_q_birthdate_1.id}".to_sym => Date.today + 2.month)
       adult_res.update_attributes("q_#{adult_q_birthdate_2.id}".to_sym => Date.today + 1.month)
 
-      survey  = FactoryGirl.create(:survey, multiple_section: true)
+      survey  = FactoryBot.create(:survey, multiple_section: true)
       section = survey.sections.create(title: 'test')
       q_date  = section.questions.create(text: 'test2', response_type: 'date')
       q_birthdate_1  = section.questions.create(text: 'test2', response_type: 'birth_date')
@@ -625,7 +625,7 @@ RSpec.describe Participant, type: :model do
         allow(participant).to receive(:birthdate).and_return((date - 5.years).to_s)
         expect(participant.age).to eq 5
 
-        allow(participant).to receive(:birthdate).and_return((date + 1.day - 5.years).to_s)
+        allow(participant).to receive(:birthdate).and_return((date + 3.days - 5.years).to_s)
         expect(participant.age).to eq 4
       end
 

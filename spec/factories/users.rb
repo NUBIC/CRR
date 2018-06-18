@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence :netid do |n|
     "tes#{"%03d" % n}"
   end

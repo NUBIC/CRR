@@ -27,12 +27,12 @@ module Admin
     let(:path)            { new_admin_search_path }
     let(:inactive_studies) {
       studies = []
-      (0..3).each{ studies << FactoryGirl.create(:study) }
+      (0..3).each{ studies << FactoryBot.create(:study) }
       studies
     }
     let(:active_studies) {
       studies = []
-      (0..3).each{ studies << FactoryGirl.create(:study, state: 'active') }
+      (0..3).each{ studies << FactoryBot.create(:study, state: 'active') }
       studies
     }
     describe 'unauthorized access' do

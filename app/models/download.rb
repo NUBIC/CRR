@@ -1,4 +1,4 @@
-class Download < ActiveRecord::Base
+class Download < ApplicationRecord
   mount_uploader :consent, Tier2ConsentUploader
 
   # Associations

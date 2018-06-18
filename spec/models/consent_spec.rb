@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Consent, type: :model do
-  let(:consent) { FactoryGirl.create(:consent) }
+  let(:consent) { FactoryBot.create(:consent) }
 
   it { is_expected.to have_many(:consent_signatures).dependent(:restrict_with_error) }
   it { is_expected.to validate_presence_of :state}
@@ -36,8 +36,8 @@ RSpec.describe Consent, type: :model do
   it 'finds active child consent' do
     expect(Consent.child_consent).to be nil
 
-    child_consent = FactoryGirl.create(:consent, consent_type: 'Child')
-    adult_consent = FactoryGirl.create(:consent, consent_type: 'Adult')
+    child_consent = FactoryBot.create(:consent, consent_type: 'Child')
+    adult_consent = FactoryBot.create(:consent, consent_type: 'Adult')
     expect(Consent.child_consent).to be nil
 
     child_consent.activate
@@ -50,8 +50,8 @@ RSpec.describe Consent, type: :model do
   it 'finds active adult consent' do
     expect(Consent.adult_consent).to be nil
 
-    child_consent = FactoryGirl.create(:consent, consent_type: 'Child')
-    adult_consent = FactoryGirl.create(:consent, consent_type: 'Adult')
+    child_consent = FactoryBot.create(:consent, consent_type: 'Child')
+    adult_consent = FactoryBot.create(:consent, consent_type: 'Adult')
     expect(Consent.adult_consent).to be nil
 
     child_consent.activate
@@ -64,9 +64,9 @@ RSpec.describe Consent, type: :model do
   it 'checks if consents are active' do
     expect(Consent.has_active_consent?).to be false
 
-    child_consent = FactoryGirl.create(:consent, consent_type: 'Child')
+    child_consent = FactoryBot.create(:consent, consent_type: 'Child')
     expect(Consent.has_active_consent?).to be false
-    adult_consent = FactoryGirl.create(:consent, consent_type: 'Adult')
+    adult_consent = FactoryBot.create(:consent, consent_type: 'Adult')
     expect(Consent.has_active_consent?).to be false
 
     child_consent.activate

@@ -43,10 +43,10 @@ module Admin
         include_context 'admin login'
 
         before(:each) do
-          @submitted_request  = FactoryGirl.create(:submitted_request)
-          @released_request   = FactoryGirl.create(:released_request)
-          @expiring_request   = FactoryGirl.create(:expiring_request)
-          @expired_request    = FactoryGirl.create(:expired_request)
+          @submitted_request  = FactoryBot.create(:submitted_request)
+          @released_request   = FactoryBot.create(:released_request)
+          @expiring_request   = FactoryBot.create(:expiring_request)
+          @expired_request    = FactoryBot.create(:expired_request)
 
           @requests = [@submitted_request, @released_request, @expiring_request, @expired_request]
         end
@@ -143,10 +143,10 @@ module Admin
         include_context 'researcher login'
 
         before(:each) do
-          @submitted_request  = FactoryGirl.create(:submitted_request)
-          @released_request   = FactoryGirl.create(:released_request)
-          @expiring_request   = FactoryGirl.create(:expiring_request)
-          @expired_request    = FactoryGirl.create(:expired_request)
+          @submitted_request  = FactoryBot.create(:submitted_request)
+          @released_request   = FactoryBot.create(:released_request)
+          @expiring_request   = FactoryBot.create(:expiring_request)
+          @expired_request    = FactoryBot.create(:expired_request)
 
           @requests = [@submitted_request, @released_request, @expiring_request, @expired_request]
         end

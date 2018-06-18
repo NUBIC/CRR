@@ -15,8 +15,8 @@ class Admin::AdminController < ApplicationController
 
   def set_maintenance_mode
     authorize current_user, :set_maintenance_mode?
-    Rails.configuration.custom.maintenance_mode = params[:maintenance_mode] == 'true' ? true : false
-    render nothing: true
+    Rails.configuration.maintenance_mode = params[:maintenance_mode] == 'true' ? true : false
+    head :ok
   end
 
   private

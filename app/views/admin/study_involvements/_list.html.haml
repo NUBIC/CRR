@@ -1,7 +1,7 @@
 - participant ||= @participant
 - show_all ||= false
 %ul.unstyled.show-hide-group.fixed-width-participant-list
-  - participant.study_involvements.includes(:study).order('end_date DESC').each_with_index do |study_involvement, i|
+  - participant.study_involvements.each_with_index do |study_involvement, i|
 
     %li{ class: "#{'more_display' if i > 2 && !show_all}" }
       .row-fluid.height-inherit

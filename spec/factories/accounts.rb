@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :account do
-    email                 "test@test.com"
+    email                 { Faker::Internet.email }
     password              "12345678"
     password_confirmation "12345678"
   end

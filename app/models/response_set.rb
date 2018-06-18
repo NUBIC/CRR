@@ -1,6 +1,6 @@
 require 'csv'
 
-class ResponseSet < ActiveRecord::Base
+class ResponseSet < ApplicationRecord
   # Associations
   has_many :responses, dependent: :destroy
   has_many :answers, through: :responses
@@ -28,6 +28,18 @@ class ResponseSet < ActiveRecord::Base
         elsif q.pick_one?
           r = responses.detect{|response| response.question_id.eql?(q.id)}
           return r.nil? ? nil : r.answer.id
+        else
+          r = responses.detect{|response| response.question_id.eql?(q.id)}
+          return r.nil? ? '' : r.to_s
+        end
+      end
+
+      self.send(:define_singleton_method, "q_#{q.id}_string".to_sym) do
+        if q.pick_many?
+          return responses.collect{|res| res.answer.text if res.question_id.eql?(q.id)}.compact.join('|')
+        elsif q.pick_one?
+          r = responses.detect{|response| response.question_id.eql?(q.id)}
+          return r.nil? ? nil : r.answer.text
         else
           r = responses.detect{|response| response.question_id.eql?(q.id)}
           return r.nil? ? '' : r.to_s
@@ -71,9 +83,7 @@ class ResponseSet < ActiveRecord::Base
           r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
           r.remove_file_upload
         end
-      end
 
-      if q.file_upload?
         self.send(:define_singleton_method, "q_#{q.id}_remove_file_upload=".to_sym) do |args|
           r = responses.detect{|res| res.question_id.eql?(q.id)} || responses.create(question_id: q.id)
           r.remove_file_upload = args

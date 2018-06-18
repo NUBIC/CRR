@@ -1,4 +1,4 @@
-class SearchParticipant < ActiveRecord::Base
+class SearchParticipant < ApplicationRecord
   # Associations
   belongs_to :search
   belongs_to :participant

@@ -1,4 +1,4 @@
-class Response < ActiveRecord::Base
+class Response < ApplicationRecord
   mount_uploader :file_upload, ResponseUploader
 
   # Associations

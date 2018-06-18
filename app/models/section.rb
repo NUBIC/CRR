@@ -1,4 +1,4 @@
-class Section < ActiveRecord::Base
+class Section < ApplicationRecord
   # Associations
   has_many :questions, dependent: :destroy
   belongs_to :survey
@@ -26,6 +26,27 @@ class Section < ActiveRecord::Base
       full_list << q.soft_errors
     end
     return full_list.flatten.uniq.compact
+  end
+
+  # methods to allow for custom JSON generation
+  def node_type
+    self.class.name.parameterize
+  end
+
+  def node_text
+    self.title
+  end
+
+  def node_unique_id
+    "#{self.node_type}_#{self.id}".parameterize
+  end
+
+  def has_children
+    true
+  end
+
+  def node_parent
+    "#{self.survey.class.name}_#{self.survey.id}".parameterize
   end
 
   private

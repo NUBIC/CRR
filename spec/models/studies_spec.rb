@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Study, type: :model do
   let(:date)  { Date.new(2013, 10, 10) }
-  let(:study) { FactoryGirl.create(:study)}
+  let(:study) { FactoryBot.create(:study)}
 
   it { is_expected.to validate_presence_of :state }
   it { is_expected.to have_many(:study_involvements) }
@@ -14,10 +14,10 @@ RSpec.describe Study, type: :model do
   it 'returns active participants' do
     expect(study.active_participants).to be_empty
 
-    study_involvement = FactoryGirl.create(:study_involvement, study: study)
+    study_involvement = FactoryBot.create(:study_involvement, study: study)
     expect(study.active_participants).to be_empty
 
-    study_involvement_1 = FactoryGirl.create(:study_involvement, study: study, end_date: Date.today + 2.days)
+    study_involvement_1 = FactoryBot.create(:study_involvement, study: study, end_date: Date.today + 2.days)
     expect(study.active_participants).to match_array([study_involvement_1.participant])
   end
 
@@ -35,7 +35,7 @@ RSpec.describe Study, type: :model do
 
   it 'returns user emails' do
     user = User.find_by_netid('test_user')
-    user ||= FactoryGirl.create(:user, netid: 'test_user')
+    user ||= FactoryBot.create(:user, netid: 'test_user')
 
     study.users = [user]
     expect(study.user_emails).to match_array([user.email])

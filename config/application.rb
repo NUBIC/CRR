@@ -1,41 +1,56 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env)
+Bundler.require(*Rails.groups)
 
 module AudiologyRegistry
   class Application < Rails::Application
-    config.autoload_paths += [config.root.join('lib')]
-    config.encoding = 'utf-8'
+    # Be sure to restart your server when you modify this file.
+
+    # This file contains migration options to ease your Rails 5.2 upgrade.
+
+    # Once upgraded flip defaults one by one to migrate to the new default.
+
+    # Read the Guide for Upgrading Ruby on Rails for more info on each option.
+
+    # Make Active Record use stable #cache_key alongside new #cache_version method.
+    # This is needed for recyclable cache keys.
+    # Rails.application.config.active_record.cache_versioning = true
+
+    # Use AES-256-GCM authenticated encryption for encrypted cookies.
+    # Also, embed cookie expiry in signed or encrypted cookies for increased security.
+
+    # This option is not backwards compatible with earlier Rails versions.
+    # It's best enabled when your entire app is migrated and stable on 5.2.
+
+    # Existing cookies will be converted on read then written with the new scheme.
+    # Rails.application.config.action_dispatch.use_authenticated_cookie_encryption = true
+
+    # Use AES-256-GCM authenticated encryption as default cipher for encrypting messages
+    # instead of AES-256-CBC, when use_authenticated_message_encryption is set to true.
+    # Rails.application.config.active_support.use_authenticated_message_encryption = true
+
+    # Add default protection from forgery to ActionController::Base instead of in
+    # ApplicationController.
+    # Rails.application.config.action_controller.default_protect_from_forgery = true
+
+    # Store boolean values are in sqlite3 databases as 1 and 0 instead of 't' and
+    # 'f' after migrating old data.
+    # Rails.application.config.active_record.sqlite3.represent_boolean_as_integer = true
+
+    # Use SHA-1 instead of MD5 to generate non-sensitive digests, such as the ETag header.
+    # Rails.application.config.active_support.use_sha1_digests = true
+
     # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
+    # the framework and any gems in your application.
 
-    # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
-    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = 'Central Time (US & Canada)'
-    config.active_record.raise_in_transactional_callbacks = true
-
-    config.before_configuration do
-      env_file = File.join(Rails.root, 'config', 'config.yml')
-      APP_CONFIG = YAML.load(File.open(env_file))
-
-      operators_config = File.join(Rails.root, 'config', 'operators.yml')
-      OPERATORS = YAML.load(File.open(operators_config))
-    end
-    config.custom = ActiveSupport::OrderedOptions.new
-    config.custom.app_config        = APP_CONFIG
-    config.custom.search_operators  = OPERATORS
-    config.custom.maintenance_mode  = false
-
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
-    config.action_mailer.smtp_settings = { :address => "smtprelay.northwestern.edu", :port => 25, :domain => "northwestern.edu" }
-    config.action_mailer.delivery_method = :smtp
-    config.action_mailer.default_url_options = { :host => "http#{'s' unless Rails.env == 'development'}://#{config.custom.app_config[Rails.env]['server_name']}" }
+    config.maintenance_mode = false
+    config.contact_email    = 'commresearchregistry@northwestern.edu'
+    config.crr_website_url  = 'http://commresearchregistry.northwestern.edu/'
   end
 end

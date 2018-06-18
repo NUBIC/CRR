@@ -1,4 +1,4 @@
-class Consent < ActiveRecord::Base
+class Consent < ApplicationRecord
   # Globals
   TYPES         = ['Adult','Child'].freeze
   RELATIONSHIPS = ['Parent', 'Legal Guardian', 'Authorized Agent', 'Spouse'].freeze

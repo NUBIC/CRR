@@ -1,4 +1,4 @@
-- maintenance_mode = Rails.configuration.custom.maintenance_mode
+- maintenance_mode = Rails.configuration.maintenance_mode
 
 = link_to image_tag('crr_logo.png'), admin_default_path, class: 'brand'
 - if user_signed_in?
@@ -76,6 +76,8 @@
             = link_to 'Manage Participants', global_admin_participants_path
           %li
             = link_to "Manage Email Notifications", admin_email_notifications_path
+          %li
+            = link_to "Export participants", export_admin_participants_path
 
     %li.dropdown
       = link_to '#', class: 'dropdown-toggle', data: { toggle: 'dropdown'} do
@@ -84,5 +86,3 @@
       %ul.dropdown-menu
         %li
           = link_to 'Logout', destroy_user_session_path, method: :delete
-
-

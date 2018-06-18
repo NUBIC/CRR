@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence :irb_number do |n|
     "STU008888#{"%03d" % n}"
   end

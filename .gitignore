@@ -17,6 +17,7 @@ public/assets/*
 rerun.txt
 coverage.data
 coverage/*
+spec/examples.txt
 webrat-*.html
 lib/tasks/alz_enotis_import/
 

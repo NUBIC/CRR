@@ -3,8 +3,8 @@ require 'support/shared_context'
 
 module Admin
   RSpec.describe 'updating an user', type: :feature do
-    let(:user) { User.find_by_netid('test_user') || FactoryGirl.create(:user, netid: 'test_user') }
-    let(:other_user) { User.find_by_netid('test_user') || FactoryGirl.create(:user, netid: 'test_user') }
+    let(:user) { User.find_by_netid('test_user') || FactoryBot.create(:user, netid: 'test_user') }
+    let(:other_user) { User.find_by_netid('test_user') || FactoryBot.create(:user, netid: 'test_user') }
 
     let(:path) { edit_admin_user_path(user.id) }
 
@@ -46,7 +46,7 @@ module Admin
 
         it 'allows to add studies', js: true do
           (1..2).each do |i|
-            FactoryGirl.create(:study, state: 'active')
+            FactoryBot.create(:study, state: 'active')
           end
           visit path
           fill_in('token-input-user_study_tokens', with: Study.first.name)
@@ -62,7 +62,7 @@ module Admin
 
         it 'allows to remove studies', js: true do
           (1..2).each do |i|
-            user.studies << FactoryGirl.create(:study, state: 'active')
+            user.studies << FactoryBot.create(:study, state: 'active')
           end
           visit path
           expect(page).to have_selector('p', text: /#{Study.first.name}/)
@@ -82,7 +82,7 @@ module Admin
         end
 
         it 'allows to deactivate active user', js: true do
-          other_user = FactoryGirl.create(:user, netid: 'other_test_user')
+          other_user = FactoryBot.create(:user, netid: 'other_test_user')
           visit edit_admin_user_path(other_user.id)
           accept_confirm do
             click_on('Deactivate')
@@ -95,7 +95,7 @@ module Admin
         end
 
         it 'allows to activate inactive user', js: true do
-          other_user = FactoryGirl.create(:user, netid: 'other_test_user')
+          other_user = FactoryBot.create(:user, netid: 'other_test_user')
           other_user.deactivate
           other_user.save!
 

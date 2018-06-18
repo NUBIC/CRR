@@ -33,7 +33,7 @@ module Admin
 
         before(:each) do
           (1..3).each do |i|
-            FactoryGirl.create(:survey)
+            FactoryBot.create(:survey)
           end
         end
 

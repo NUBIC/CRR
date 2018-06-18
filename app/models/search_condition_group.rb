@@ -1,14 +1,13 @@
-class SearchConditionGroup < ActiveRecord::Base
+class SearchConditionGroup < ApplicationRecord
   # Globals
   DEFAULT_GROUP_OPERATOR = '|'.freeze
-
 
   # Dependencies
   include SearchOperator
 
   # Associations
-  belongs_to  :search_condition_group
-  belongs_to  :search
+  belongs_to  :search_condition_group, optional: true
+  belongs_to  :search, optional: true
   has_many    :search_conditions
   has_many    :search_condition_groups
 
@@ -63,7 +62,7 @@ class SearchConditionGroup < ActiveRecord::Base
   end
 
   def pretty_operator
-    pretty_operator_by_type(GROUP_OPERATOR_TYPE)
+    pretty_operator_by_type(group_operator_type)
   end
 
   def copy(source_record)

@@ -4,26 +4,25 @@ RSpec.describe AccountsController, type: :controller do
   setup :activate_authlogic
   let(:valid_attributes) { { email: 'test@test.com', current_password: '12345678', password: '12345678', password_confirmation: '12345678' } }
   let(:invalid_attributes) { { email: 'test', password: '12345678', password_confirmation: '12345678' } }
+  let(:create_params)         {{ params: { account: valid_attributes }}}
+  let(:invalid_create_params) {{ params: { account: invalid_attributes }}}
+  let(:edit_params)           {{ params: { id: account.id }}}
+  let(:update_params)         {{ params: { id: account.id, account: valid_attributes }}}
+  let(:invalid_update_params) {{ params: { id: account.id, account: invalid_attributes }}}
 
   describe 'POST create' do
     describe 'with valid params' do
       it 'creates a new Account' do
-        expect {
-          post :create, {account: valid_attributes}
-        }.to change(Account, :count).by(1)
+        expect { post :create, create_params }.to change(Account, :count).by(1)
       end
 
       it 'sends welcome email if available' do
         Setup.email_notifications
-        expect {
-          post :create, {account: valid_attributes}
-        }.to change(ActionMailer::Base.deliveries,:size).by(1)
+        expect { post :create, create_params }.to change(ActionMailer::Base.deliveries,:size).by(1)
       end
 
       it 'sends admin notification email if welcome email is not available' do
-        expect {
-          post :create, { account: valid_attributes }
-        }.to change(ActionMailer::Base.deliveries,:size).by(1)
+        expect { post :create, create_params }.to change(ActionMailer::Base.deliveries,:size).by(1)
       end
 
       it 'sends admin notification email if welcome email is deactivated' do
@@ -31,114 +30,111 @@ RSpec.describe AccountsController, type: :controller do
         email_notification = EmailNotification.active.welcome_participant
         email_notification.deactivate
         email_notification.save
-        expect {
-          post :create, {account: valid_attributes}
-        }.to change(ActionMailer::Base.deliveries,:size).by(1)
+        expect { post :create, create_params }.to change(ActionMailer::Base.deliveries,:size).by(1)
       end
 
       it 'assigns a newly created account as @account' do
-        post :create, { account: valid_attributes }
+        post :create, create_params
         expect(assigns(:account)).to be_a(Account)
-        # expect(assigns(:account)).to be_persisted
       end
 
       it 'redirects to the dashboard page' do
-        post :create, {account: valid_attributes}
+        post :create, create_params
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns a newly created but unsaved account as @account' do
-        post :create, {account: invalid_attributes}
+        post :create, invalid_create_params
         expect(assigns(:account)).to be_a_new(Account)
       end
 
       it 're-renders the \'new\' template' do
-        post :create, {account: invalid_attributes}
+        post :create, invalid_create_params
         expect(response).to redirect_to('/user_login#sign_up')
       end
     end
   end
 
   describe 'GET edit' do
-    let(:account) { FactoryGirl.create(:account) }
+    let(:account) { FactoryBot.create(:account) }
 
     describe 'unauthorized access' do
-      let(:other_account) { FactoryGirl.create(:account, email: 'test1@test.com') }
+      let(:other_account) { FactoryBot.create(:account, email: 'test1@test.com') }
       it 'redirects to dashboard page if user is logged in and tried to edit other user\'s account' do
         AccountSession.create(other_account)
-        get :edit, {id: account.id}
+        get :edit, edit_params
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
     end
 
     describe 'authorized access' do
       it 'renders edit page' do
-        get :edit, {id: account.id}
+        get :edit, edit_params
         expect(response).to render_template('edit')
       end
     end
   end
 
   describe 'PUT update' do
-    let(:account) { FactoryGirl.create(:account) }
+    let(:account) { FactoryBot.create(:account) }
     describe 'with valid params' do
       it 'updates the requested account' do
-        put :update, { id: account.id, account: valid_attributes }
+        put :update, update_params
       end
 
       it 'assigns the requested account as @account' do
-        put :update, {id: account.id, account: valid_attributes}
+        put :update, update_params
         expect(assigns(:account)).to eq(account)
       end
 
       it 'redirects to the dashboard page' do
-        put :update, {id: account.id, account: valid_attributes}
+        put :update, update_params
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
     end
 
     describe 'with invalid params' do
       it 'assigns the account as @account' do
-        put :update, {id: account.id, account: invalid_attributes}
+        put :update, invalid_update_params
         expect(assigns(:account)).to eq(account)
       end
 
       it 're-renders the \'edit\' template' do
-        put :update, {id: account.id, account: invalid_attributes}
+        put :update, invalid_update_params
         expect(response).to render_template('edit')
       end
     end
 
     describe 'password', type: :controller do
       it 'with invalid current password generates flash error' do
-        put :update, {id: account.id, account: { email: 'test@test.com', current_password: '12345679' } }
+        put :update, params: { id: account.id, account: { email: 'test@test.com', current_password: '12345679' }}
         expect(flash['error']).to eq 'Current password doesn\'t match. Please try again.'
       end
 
       it 're-renders the \'edit\' template' do
-        put :update, {id: account.id, account: invalid_attributes}
+        put :update, invalid_update_params
         expect(response).to render_template('edit')
       end
     end
 
     describe 'unauthorized access' do
-      let(:other_account) { FactoryGirl.create(:account, email: 'test1@test.com') }
+      let(:other_account) { FactoryBot.create(:account, email: 'test1@test.com') }
       it 'redirects to logout page if user is logged in and tried to update other user\'s account' do
         AccountSession.create(other_account)
-        put :update, {id: account.id, account: valid_attributes}
+        put :update, update_params
         expect(response).to redirect_to(controller: :accounts, action: :dashboard)
       end
     end
   end
 
   describe 'GET dashboard' do
-    let(:account) { FactoryGirl.create(:account) }
+    let(:account) { FactoryBot.create(:account) }
 
     it 'deletes inactive participants' do
       Participant.aasm.states.map(&:name).each do |state|
-        account.participants << FactoryGirl.create(:participant, state: state)
+        account.participants << FactoryBot.create(:participant, state: state)
       end
 
       expect(account.participants.length).to eq Participant.aasm.states.length
@@ -153,7 +149,7 @@ RSpec.describe AccountsController, type: :controller do
 
   describe 'POST express_sign_up' do
     describe 'with valid email contact params' do
-      let(:valid_express_signup_attributes) {{ name: 'Joe', contact: 'email', email: 'joe@doe.com'}}
+      let(:valid_express_signup_attributes) {{ params: { name: 'Joe', contact: 'email', email: 'joe@doe.com'}}}
 
       describe 'when corresponding EmailNotification is available' do
         before :each do
@@ -212,7 +208,7 @@ RSpec.describe AccountsController, type: :controller do
     end
 
     describe 'with valid phone contact params' do
-      let(:valid_express_signup_attributes) {{ name: 'Joe', contact: 'phone', phone: '123-456-7891'}}
+      let(:valid_express_signup_attributes) {{ params: { name: 'Joe', contact: 'phone', phone: '123-456-7891'}}}
 
       it 'sends admin email' do
         expect {
@@ -232,7 +228,7 @@ RSpec.describe AccountsController, type: :controller do
     end
 
     describe 'with invalid params' do
-      let(:invalid_express_signup_attributes) {{ name: 'Joe' }}
+      let(:invalid_express_signup_attributes) {{ params: { name: 'Joe' }}}
 
       it 're-renders the \'express_sign_up\' template' do
         post :express_sign_up, invalid_express_signup_attributes
@@ -241,7 +237,7 @@ RSpec.describe AccountsController, type: :controller do
 
       it 'keeps entered parameters' do
         post :express_sign_up, invalid_express_signup_attributes
-        expect(controller.params[:name]).to eq invalid_express_signup_attributes[:name]
+        expect(controller.params[:name]).to eq invalid_express_signup_attributes[:params][:name]
       end
     end
   end

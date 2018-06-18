@@ -9,7 +9,7 @@ end
 
 module Admin
   RSpec.describe 'displaying', type: :feature do
-    let(:search)  { FactoryGirl.create(:search, study: FactoryGirl.create(:study, state: 'active')) }
+    let(:search)  { FactoryBot.create(:search, study: FactoryBot.create(:study, state: 'active')) }
     let(:path)    { admin_search_path(search) }
 
     describe 'an unreleased request' do

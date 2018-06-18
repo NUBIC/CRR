@@ -2,8 +2,8 @@ require 'rails_helper'
 
 RSpec.describe Admin::RelationshipsController, type: :controller do
   before(:each) do
-    @participant1 = FactoryGirl.create(:participant)
-    @participant2 = FactoryGirl.create(:participant)
+    @participant1 = FactoryBot.create(:participant)
+    @participant2 = FactoryBot.create(:participant)
     @category = Relationship::CATEGORIES.sample
     @relationship = Relationship.create(origin_id: @participant1.id, destination_id: @participant2.id, category: @category)
     login_user
@@ -25,25 +25,25 @@ RSpec.describe Admin::RelationshipsController, type: :controller do
       end
 
       it "should deny access to an attempt by a #{role} to create a relationship" do
-        post :create, { relationship: { origin_id: @participant1.id, destination_id: @participant2.id, category: @category}}
+        post :create, params: { relationship: { origin_id: @participant1.id, destination_id: @participant2.id, category: @category}}
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to edit a relationship by a #{role}' do
-        post :edit, { id: @relationship.id, participant_id: @participant1.id }
+        post :edit, params: { id: @relationship.id, participant_id: @participant1.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to update a relationship by a #{role}' do
-        post :update, { id: @relationship.id }
+        post :update, params: { id: @relationship.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
 
       it 'should deny access to an attempt to delete a relationship by a #{role}' do
-        post :destroy, { id: @relationship.id }
+        post :destroy, params: { id: @relationship.id }
         expect(response).to redirect_to(controller: :users, action: :dashboard)
         expect(flash['error']).to eq 'Access Denied'
       end
@@ -65,33 +65,33 @@ RSpec.describe Admin::RelationshipsController, type: :controller do
       end
 
       it 'should allow access to an attempt to create a relationship by an #{role}' do
-        participant3 = FactoryGirl.create(:participant)
-        post :create, { relationship: { category: @category, origin_id: participant3.id, destination_id: @participant2.id} }
+        participant3 = FactoryBot.create(:participant)
+        post :create, params: { relationship: { category: @category, origin_id: participant3.id, destination_id: @participant2.id} }
         expect(response).to redirect_to(controller: :participants, action: :show, id: participant3.id)
       end
 
       it 'should create a relationship' do
-        participant3 = FactoryGirl.create(:participant)
+        participant3 = FactoryBot.create(:participant)
         expect {
-          post :create, { relationship: { category: @category, origin_id: participant3.id, destination_id: @participant2.id} }
+          post :create, params: { relationship: { category: @category, origin_id: participant3.id, destination_id: @participant2.id} }
         }.to change{Relationship.count}.by(1)
       end
 
       it 'should allow access to edit  a relationship by an #{role}' do
-        get :edit, { id: @relationship.id, participant_id: @participant1.id }
+        get :edit, params: { id: @relationship.id, participant_id: @participant1.id }
         expect(response).to render_template('edit')
       end
 
       it 'should allow access to update a relationship by an #{role}' do
         category = Relationship::CATEGORIES.sample
-        put :update, { id: @relationship.id, relationship: { category: category } }
+        put :update, params: { id: @relationship.id, relationship: { category: category } }
         expect(response).to redirect_to(controller: :participants, action: :show, id: @participant1.id)
         expect(@relationship.reload.category).to eq category
       end
 
       it 'should allow access to delete a relationship by an #{role}' do
         expect {
-          put :destroy, { id: @relationship.id }
+          put :destroy, params: { id: @relationship.id }
         }.to change{ Relationship.count }.by(-1)
         expect(response).to redirect_to(controller: :participants, action: :show, id: @participant1.id)
       end

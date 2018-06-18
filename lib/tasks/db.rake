@@ -5,7 +5,7 @@ require 'highline/import'
 
 namespace :db do
   task :pg_setup => :environment do
-    ar_config      = HashWithIndifferentAccess.new(ActiveRecord::Base.connection.instance_variable_get("@config"))
+    ar_config      = HashWithIndifferentAccess.new(ApplicationRecord.connection.instance_variable_get("@config"))
     fail 'This only works for postgres' unless ar_config[:adapter] == "postgresql"
     @app_name      = Rails.configuration.custom.app_config['application']
     @backup_folder = %w(production staging).include?(Rails.env) ? "/var/www/apps/#{@app_name}/shared/db_backups" : File.join(Rails.root,"tmp","db_backups")
@@ -34,7 +34,7 @@ namespace :db do
   desc 'clear expired sessions'
   task :clear_expired_sessions => :environment do
     sql = "DELETE FROM sessions WHERE updated_at < '#{Date.today - 1.day}'"
-    ActiveRecord::Base.connection.execute(sql)
+    ApplicationRecord.connection.execute(sql)
   end
 
   desc "remove accounts, example: rake db:remove_accounts['test1@email.com test2@email.com test3@email.com'] "
@@ -53,7 +53,7 @@ namespace :db do
       raise "Please don't run this in production."
     end
 
-    ActiveRecord::Base.record_timestamps = false
+    ApplicationRecord.record_timestamps = false
     PaperTrail.enabled = false
 
     fail "I cannot, in good conscience, let you do this in production" if Rails.env.production?

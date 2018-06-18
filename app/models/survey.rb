@@ -1,4 +1,4 @@
-class Survey < ActiveRecord::Base
+class Survey < ApplicationRecord
   # Dependencies
   include WithActiveState
 
@@ -61,6 +61,28 @@ class Survey < ActiveRecord::Base
     return activation_errors.flatten.uniq.compact
   end
 
+  # methods to allow for custom JSON generation
+  def node_type
+    self.class.name.parameterize
+  end
+
+  def node_text
+    text = self.title
+    text << ' (inactive)' unless self.active?
+    text
+  end
+
+  def node_unique_id
+    "#{self.node_type}_#{self.id}".parameterize
+  end
+
+  def has_children
+    true
+  end
+
+  def node_parent
+    '#'
+  end
   private
     def activation_check
       if active?
@@ -76,4 +98,3 @@ class Survey < ActiveRecord::Base
       self.deactivate if self.state.blank?
     end
 end
-

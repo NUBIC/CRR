@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :download do
     user_id 1
     date "2016-11-15 12:41:40"

@@ -25,4 +25,5 @@
 //= require jquery.tokeninput
 //= require jquery.validate.custom
 //= require select2.min
+//= require jstree
 //= require_tree .

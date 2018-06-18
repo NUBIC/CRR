@@ -1,4 +1,5 @@
-AudiologyRegistry::Application.routes.draw do
+Rails.application.routes.draw do
+
   devise_for :users, path_names: { sign_in: 'login', sign_out: 'logout' }
 
   # account_sessions controller (public)
@@ -67,6 +68,7 @@ AudiologyRegistry::Application.routes.draw do
       collection do
         get :search
         get :global
+        get :export
       end
       member do
         get   :enroll
@@ -144,6 +146,9 @@ AudiologyRegistry::Application.routes.draw do
         patch :activate
         patch :deactivate
         get   :preview
+      end
+      collection do
+        get :nodes
       end
     end
 

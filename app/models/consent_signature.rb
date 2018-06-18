@@ -1,4 +1,4 @@
-class ConsentSignature < ActiveRecord::Base
+class ConsentSignature < ApplicationRecord
   # Associations
   belongs_to :consent
   belongs_to :participant

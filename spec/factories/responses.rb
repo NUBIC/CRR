@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :response do
     association :response_set
     association :question

@@ -27,6 +27,7 @@ gem 'whenever'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'rubyzip'
 gem 'bootsnap'
+gem 'sprockets', '~> 3.7.2'
 
 # Use SCSS for stylesheets
 gem 'sass-rails'

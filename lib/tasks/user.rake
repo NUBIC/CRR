@@ -7,8 +7,9 @@ namespace :users do
         user.update_attributes(first_name: ldap_user.givenname.first, last_name: ldap_user.sn.first, email: ldap_user.mail.first)
       else
         puts "user could not be found in LDAP directory: #{user.netid}"
+        user.deactivate
+        user.save
       end
     end
   end
 end
-

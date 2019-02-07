@@ -36,5 +36,6 @@ when 'production'
     rake 'notify:expired_release'
     rake 'notify:suspended_participants'
     rake 'notify:annual_followup'
+    rake 'users:ldap_update'
   end
 end

@@ -38,4 +38,8 @@ class UserPolicy < ApplicationPolicy
   def set_maintenance_mode?
     is_admin?
   end
+
+  def update_from_ldap?
+    is_admin?
+  end
 end

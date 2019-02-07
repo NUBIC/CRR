@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :survey do
     title             { Faker::Company.name }
-    multiple_section  true
+    multiple_section  { true }
   end
 end

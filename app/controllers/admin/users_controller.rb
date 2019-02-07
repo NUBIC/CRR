@@ -1,7 +1,7 @@
 class Admin::UsersController < Admin::AdminController
   include EmailNotifications
 
-  before_action :set_user, only: [:edit, :update, :destroy, :activate, :deactivate]
+  before_action :set_user, only: [:edit, :update, :destroy, :activate, :deactivate, :update_from_ldap ]
 
   def index
     authorize User
@@ -88,6 +88,17 @@ class Admin::UsersController < Admin::AdminController
     redirect_to admin_users_path
   end
 
+  def update_from_ldap
+    authorize @user
+    @user.update_from_ldap
+    if @user.save
+      flash['notice'] = 'Successfully updated user from LDAP'
+    else
+      flash['error'] = @user.errors.full_messages.to_sentence
+    end
+    redirect_to admin_users_path
+  end
+
   private
     def set_user
       @user = User.find(params[:id])
@@ -97,4 +108,3 @@ class Admin::UsersController < Admin::AdminController
       params.require(:user).permit(:netid,:researcher,:admin,:data_manager,:study_tokens)
     end
 end
-

@@ -45,5 +45,6 @@
         - if @user.persisted?
           - if @user.active?
             = link_to 'Deactivate', deactivate_admin_user_path, class: 'btn btn-danger', method: :patch, data: { confirm: 'Are you sure you want to deactivate this user?' }
+            = link_to 'Update from LDAP', update_from_ldap_admin_user_path, class: 'btn btn-primary nu-primary', method: :patch, data: { confirm: 'Are you sure you want to update this user?' }
           - else
             = link_to 'Activate', activate_admin_user_path, class: 'btn btn-danger', method: :patch, data: { confirm: 'Are you sure you want to activate this user?' }

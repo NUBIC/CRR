@@ -63,13 +63,6 @@ class User < ApplicationRecord
     self.active?
   end
 
-  private
-    def check_netid
-      unless Rails.env.development?
-        errors.add(:netid, 'Not recognized') unless Devise::LDAP::Adapter.valid_login?(netid)
-      end
-    end
-
   def update_from_ldap
     unless Rails.env.development?
       ldap_user = Devise::LDAP::Adapter.get_ldap_entry(netid)
@@ -80,4 +73,11 @@ class User < ApplicationRecord
       )
     end
   end
+
+  private
+    def check_netid
+      unless Rails.env.development?
+        errors.add(:netid, 'Not recognized') unless Devise::LDAP::Adapter.valid_login?(netid)
+      end
+    end
 end

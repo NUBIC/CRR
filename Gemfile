@@ -52,9 +52,8 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'capybara'
   gem 'selenium-webdriver'
-  gem 'capybara-webkit'
+  gem 'chromedriver-helper'
   gem 'simplecov', require: false
-  gem 'selenium-webdriver'
   gem 'bullet'
   gem 'listen'
   gem 'puma'

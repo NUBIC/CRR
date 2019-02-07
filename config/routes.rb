@@ -157,6 +157,7 @@ Rails.application.routes.draw do
       member do
         patch :activate
         patch :deactivate
+        patch :update_from_ldap
       end
     end
   end

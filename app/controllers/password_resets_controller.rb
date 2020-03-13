@@ -11,6 +11,7 @@ class PasswordResetsController < PublicController
       flash['notice'] = 'Instructions to reset your password have been emailed to you'
       redirect_to public_login_url
     else
+      authorize Account.new, :reset_password_create?
       flash['error'] = "Unknown email address: #{params[:email]}."
       redirect_to public_login_url(anchor: 'password_reset_tab')
     end

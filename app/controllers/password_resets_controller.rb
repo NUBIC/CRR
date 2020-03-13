@@ -4,8 +4,8 @@ class PasswordResetsController < PublicController
 
   def create
     @account = Account.find_by_email(params[:email])
-    authorize @account, :reset_password_create?
     if @account
+      authorize @account, :reset_password_create?
       @account.reset_token
       PasswordResetMailer.password_reset_instructions(@account).deliver_now!
       flash['notice'] = 'Instructions to reset your password have been emailed to you'
@@ -21,9 +21,8 @@ class PasswordResetsController < PublicController
   end
 
   def update
-    @account.update_attributes(password_params)
     authorize @account, :reset_password_update?
-
+    @account.update_attributes(password_params)
     if @account.save
       redirect_to dashboard_path
     else

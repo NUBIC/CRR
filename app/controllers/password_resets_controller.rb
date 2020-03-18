@@ -4,13 +4,14 @@ class PasswordResetsController < PublicController
 
   def create
     @account = Account.find_by_email(params[:email])
-    authorize @account, :reset_password_create?
     if @account
+      authorize @account, :reset_password_create?
       @account.reset_token
       PasswordResetMailer.password_reset_instructions(@account).deliver_now!
       flash['notice'] = 'Instructions to reset your password have been emailed to you'
       redirect_to public_login_url
     else
+      authorize Account.new, :reset_password_create?
       flash['error'] = "Unknown email address: #{params[:email]}."
       redirect_to public_login_url(anchor: 'password_reset_tab')
     end
@@ -21,9 +22,8 @@ class PasswordResetsController < PublicController
   end
 
   def update
-    @account.update_attributes(password_params)
     authorize @account, :reset_password_update?
-
+    @account.update_attributes(password_params)
     if @account.save
       redirect_to dashboard_path
     else

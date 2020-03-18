@@ -100,4 +100,5 @@ Rails.application.configure do
       :sender_address => %w(CRR-noreply@northwestern.edu),
       :exception_recipients => %w(y-bushmanova@northwestern.edu)
     }
+  Rails.application.routes.default_url_options[:host] = 'crr.nubic.northwestern.edu'
 end

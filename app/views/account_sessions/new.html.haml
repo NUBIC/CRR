@@ -65,7 +65,9 @@
       .control-group
         .controls
           = submit_tag 'Create an Account', class: 'btn btn-success nu-primary'
-
+          %br
+          %small
+            Desktop browser only
   #login_tab.tab-pane
     = form_for @account_session, html: { class: 'form-horizontal' }  do |f|
       .row-fluid
@@ -84,6 +86,9 @@
       .control-group
         .controls
           = f.button 'Login', class: 'btn btn-success nu-primary'
+          %br
+          %small
+            Desktop browser only
 
   #express_sign_up.tab-pane
     = form_tag express_sign_up_accounts_path, method: :post, class: 'form-horizontal' do
